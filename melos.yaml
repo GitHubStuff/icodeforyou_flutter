@@ -1,0 +1,9 @@
+name: icodeforyou_flutter
+
+packages:
+  - packages/*
+  - packages/**
+
+scripts:
+  analyze:
+    exec: dart analyze .
