@@ -1,0 +1,89 @@
+# ───────── Flutter / Dart / FVM / Melos ─────────
+.dart_tool/
+.packages
+.pub/
+build/
+pubspec.lock
+pubspec_overrides.yaml
+.flutter-plugins
+.flutter-plugins-dependencies
+flutter_*.yaml
+
+.fvm/
+.fvm/flutter_sdk
+
+.melos_tool/
+
+# ───────── IDEs ─────────
+**/.idea/
+**/.vscode/
+*.iml
+*.ipr
+*.iws
+
+# ───────── Android ─────────
+**/android/.gradle/
+**/android/local.properties
+**/android/key.properties
+**/android/build/
+.gradle/
+*.gradle
+**/gradlew*
+
+# ───────── iOS / macOS ─────────
+**/Pods/
+**/.symlinks/
+**/Flutter/.generated/
+**/DerivedData/
+**/*.xcworkspace
+**/*.xcodeproj
+**/*.xcuserstate
+**/*.pbxuser
+**/*.dSYM
+**/*.mobileprovision
+**/*.xcarchive
+
+# ───────── Web / Desktop ─────────
+**/*.dart.js
+**/*.js.map
+**/linux/Flutter/ephemeral/
+**/windows/Flutter/ephemeral/
+
+# ───────── Example apps ─────────
+**/example/.dart_tool/
+**/example/.pub/
+**/example/build/
+**/example/pubspec.lock
+**/example/.idea/
+**/example/.vscode/
+**/example/.fvm/
+
+# ───────── Secrets ─────────
+**/google-services.json
+**/FirebaseConfig.plist
+**/*.jks
+**/*.keystore
+**/*.p12
+**/*.pem
+**/*.key
+**/*.crt
+
+# ───────── CI/CD ─────────
+.github/
+.jenkins/
+.circleci/
+.travis.yml
+*.log
+*.out
+*.err
+
+# ───────── Coverage ─────────
+coverage/
+lcov.info
+
+# ───────── Misc ─────────
+.DS_Store
+*.tmp
+*.bak
+*.rej
+*.swp
