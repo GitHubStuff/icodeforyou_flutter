@@ -1,7 +1,44 @@
 name: icodeforyou_flutter
+publish_to: none
+description: Collection of flutter packages
+
+workspace:
+  - packages/datetime_ext
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ^3.8.1
 
 dev_dependencies:
-  melos: ^6.3.3
+  melos: ^7.0.0-dev.9
+
+melos:
+  scripts:
+    analyze:
+      run: dart analyze .
+    
+    build:
+      run: dart run build_runner build --delete-conflicting-outputs
+    
+    test_coverage:
+      description: Run tests with coverage in all packages
+      exec: flutter test --coverage
+    
+    coverage_merge:
+      description: Merge coverage reports from all packages
+      run: |
+        mkdir -p coverage
+        if ls packages/*/coverage/lcov.info 1> /dev/null 2>&1; then
+          lcov --add-tracefile packages/*/coverage/lcov.info -o coverage/lcov.info
+          genhtml coverage/lcov.info -o coverage/html
+          echo "✅ Merged coverage report: coverage/html/index.html"
+          open coverage/html/index.html
+        else
+          echo "❌ No coverage files found. Run 'melos run test_coverage' first."
+        fi
+    
+    coverage_clean:
+      description: Clean all coverage data
+      run: |
+        rm -rf coverage/
+        find packages -name "coverage" -type d -exec rm -rf {} +
+        echo "🧹 Coverage data cleaned"
