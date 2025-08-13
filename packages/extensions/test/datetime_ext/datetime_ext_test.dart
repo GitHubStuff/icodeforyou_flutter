@@ -85,16 +85,11 @@ void main() {
       // Set a very low threshold to trigger delay mechanism
       DateTimeExt.driftThreshold = 1;
 
-      final startTime = DateTime.now();
-
       // Make enough calls to virtually guarantee triggering the delay
       final results = <DateTime>[];
       for (int i = 0; i < 100; i++) {
         results.add(await DateTimeExt.unique());
       }
-
-      final endTime = DateTime.now();
-      final duration = endTime.difference(startTime);
 
       // Verify all timestamps are unique (proves the mechanism worked)
       final timestamps = results.map((dt) => dt.microsecondsSinceEpoch).toSet();

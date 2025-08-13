@@ -1,4 +1,4 @@
-# pubspect.yaml icodeforyou_flutter
+# pubspec.yaml icodeforyou_flutter
 name: icodeforyou_flutter
 publish_to: none
 description: Collection of flutter packages
@@ -25,33 +25,40 @@ melos:
       exec: flutter test --coverage
     
     coverage_merge:
-      description: Merge coverage reports from all packages
+      description: Merge coverage reports from all workspace packages
       run: |
         mkdir -p coverage
         rm -f coverage/lcov.info
         
-        if ls packages/*/coverage/lcov.info 1> /dev/null 2>&1; then
-          # Process each package's coverage file individually
-          for package_dir in packages/*/; do
-            package_name=$(basename "$package_dir")
-            lcov_file="${package_dir}coverage/lcov.info"
+        # Find all coverage files in the entire workspace dynamically
+        coverage_files=$(find . -path "./coverage" -prune -o -name "lcov.info" -path "*/coverage/lcov.info" -print)
+        
+        if [ -n "$coverage_files" ]; then
+          echo "Found coverage files:"
+          echo "$coverage_files"
+          
+          # Process each coverage file
+          for lcov_file in $coverage_files; do
+            # Extract the package path: ./packages/extensions/coverage/lcov.info -> packages/extensions
+            package_path=$(echo "$lcov_file" | sed 's|^\./||' | sed 's|/coverage/lcov\.info$||')
+            package_dir=$(dirname "$package_path")
+            package_name=$(basename "$package_path")
             
-            if [ -f "$lcov_file" ]; then
-              echo "Processing coverage for $package_name..."
-              # Create a temporary file with corrected paths
-              temp_file="coverage/temp_${package_name}.info"
-              sed "s|SF:lib/|SF:packages/${package_name}/lib/|g" "$lcov_file" > "$temp_file"
-              
-              # Add to the main coverage file
-              if [ -f coverage/lcov.info ]; then
-                lcov --add-tracefile coverage/lcov.info --add-tracefile "$temp_file" -o coverage/lcov.info
-              else
-                cp "$temp_file" coverage/lcov.info
-              fi
-              
-              # Clean up temp file
-              rm "$temp_file"
+            echo "Processing coverage for $package_dir/$package_name..."
+            
+            # Create a temporary file with corrected paths
+            temp_file="coverage/temp_${package_dir//\//_}_${package_name}.info"
+            sed "s|SF:lib/|SF:${package_path}/lib/|g" "$lcov_file" > "$temp_file"
+            
+            # Add to the main coverage file
+            if [ -f coverage/lcov.info ]; then
+              lcov --add-tracefile coverage/lcov.info --add-tracefile "$temp_file" -o coverage/lcov.info
+            else
+              cp "$temp_file" coverage/lcov.info
             fi
+            
+            # Clean up temp file
+            rm "$temp_file"
           done
           
           # Generate HTML report
@@ -69,8 +76,22 @@ melos:
         fi
 
     coverage_clean:
-      description: Clean all coverage data
+      description: Clean all coverage data from workspace
       run: |
         rm -rf coverage/
-        find packages -name "coverage" -type d -exec rm -rf {} +
-        echo "🧹 Coverage data cleaned"
+        find . -name "coverage" -type d -not -path "./coverage" -exec rm -rf {} +
+        echo "🧹 Coverage data cleaned from entire workspace"
+
+    list_packages:
+      description: List all packages in workspace
+      run: |
+        echo "📦 Workspace packages:"
+        find . -name "pubspec.yaml" -not -path "./pubspec.yaml" -exec dirname {} \; | sort
+
+    test_all:
+      description: Run tests in all packages
+      exec: flutter test
+
+    analyze_all:
+      description: Analyze all packages
+      exec: dart analyze .
