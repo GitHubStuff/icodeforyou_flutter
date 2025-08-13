@@ -1,9 +1,10 @@
+# pubspect.yaml icodeforyou_flutter
 name: icodeforyou_flutter
 publish_to: none
 description: Collection of flutter packages
 
 workspace:
-  - packages/datetime_ext
+  - packages/extensions
 
 environment:
   sdk: ^3.8.1
@@ -27,15 +28,46 @@ melos:
       description: Merge coverage reports from all packages
       run: |
         mkdir -p coverage
+        rm -f coverage/lcov.info
+        
         if ls packages/*/coverage/lcov.info 1> /dev/null 2>&1; then
-          lcov --add-tracefile packages/*/coverage/lcov.info -o coverage/lcov.info
-          genhtml coverage/lcov.info -o coverage/html
+          # Process each package's coverage file individually
+          for package_dir in packages/*/; do
+            package_name=$(basename "$package_dir")
+            lcov_file="${package_dir}coverage/lcov.info"
+            
+            if [ -f "$lcov_file" ]; then
+              echo "Processing coverage for $package_name..."
+              # Create a temporary file with corrected paths
+              temp_file="coverage/temp_${package_name}.info"
+              sed "s|SF:lib/|SF:packages/${package_name}/lib/|g" "$lcov_file" > "$temp_file"
+              
+              # Add to the main coverage file
+              if [ -f coverage/lcov.info ]; then
+                lcov --add-tracefile coverage/lcov.info --add-tracefile "$temp_file" -o coverage/lcov.info
+              else
+                cp "$temp_file" coverage/lcov.info
+              fi
+              
+              # Clean up temp file
+              rm "$temp_file"
+            fi
+          done
+          
+          # Generate HTML report
+          genhtml coverage/lcov.info -o coverage/html --ignore-errors source
           echo "✅ Merged coverage report: coverage/html/index.html"
-          open coverage/html/index.html
+          
+          if [ -f coverage/html/index.html ]; then
+            open coverage/html/index.html
+          else
+            echo "⚠️  HTML file wasn't created"
+            lcov --summary coverage/lcov.info
+          fi
         else
           echo "❌ No coverage files found. Run 'melos run test_coverage' first."
         fi
-    
+
     coverage_clean:
       description: Clean all coverage data
       run: |

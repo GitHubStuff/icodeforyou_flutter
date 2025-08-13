@@ -1,8 +1,13 @@
-import 'package:flutter/foundation.dart' show visibleForTesting;
+// datetime_ext.dart
+import 'package:flutter/foundation.dart';
 
-extension DateTimeHelper on DateTime {
+extension DateTimeExt on DateTime {
   static int _lastMicroseconds = 0;
   static int maxDrift = 0;
+
+  // Make drift threshold configurable for testing
+  @visibleForTesting
+  static int driftThreshold = 500;
 
   static Future<DateTime> unique() async {
     int currentMicros = DateTime.now().microsecondsSinceEpoch;
@@ -12,7 +17,8 @@ extension DateTimeHelper on DateTime {
       if (maxDrift < drift) {
         maxDrift = drift;
       }
-      if (drift > 500) {
+      if (drift > driftThreshold) {
+        // Use configurable threshold
         while (DateTime.now().microsecondsSinceEpoch < currentMicros) {
           await Future.delayed(Duration(milliseconds: 1));
         }
@@ -27,5 +33,6 @@ extension DateTimeHelper on DateTime {
   static void reset() {
     _lastMicroseconds = 0;
     maxDrift = 0;
+    driftThreshold = 500; // Reset to default
   }
 }

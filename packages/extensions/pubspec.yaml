@@ -1,4 +1,4 @@
-name: datetime_ext
+name: extensions
 description: "A new Flutter package project."
 version: 0.0.1
 homepage: https://www.icodeforyou.com
@@ -6,7 +6,7 @@ resolution: workspace
 
 environment:
   sdk: ^3.8.1
-  flutter: ">=1.17.0"
+  flutter: ">=3.24.0"
 
 dependencies:
   flutter:
