@@ -35,4 +35,12 @@ extension DateTimeExt on DateTime {
     maxDrift = 0;
     driftThreshold = 500; // Reset to default
   }
+
+  // Returns formatted timestamp string as HH:mm:ss.SSS
+  String timeStamp() {
+    return '${hour.toString().padLeft(2, '0')}:'
+        '${minute.toString().padLeft(2, '0')}:'
+        '${second.toString().padLeft(2, '0')}.'
+        '${millisecond.toString().padLeft(3, '0')}';
+  }
 }
