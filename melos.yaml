@@ -1,6 +1,6 @@
 name: icodeforyou_flutter
 
 packages:
-  - packages/datetime_ext
+  - packages/extensions
   - packages/**
   
