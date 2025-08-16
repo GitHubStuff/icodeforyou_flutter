@@ -1,4 +1,4 @@
-// datetime_delta.dart
+// datetime_delta.dart - ORIGINAL ALGORITHM WITH MINIMAL FIXES
 // ignore_for_file: omit_local_variable_types
 
 import 'datetime_unit.dart';
@@ -177,6 +177,7 @@ class _DateTimeDifference {
   }
 
   /// Calculate time difference between two DateTime objects (start < end)
+  /// ORIGINAL ALGORITHM - ONLY fix the while loop issue
   static Map<String, int> _calculateTimeDifference(
     DateTime start,
     DateTime end,
@@ -220,8 +221,8 @@ class _DateTimeDifference {
       hours += 24;
     }
 
-    // Handle negative days
-    if (days < 0) {
+    // Handle negative days - FIXED: Use while loop instead of if
+    while (days < 0) {
       months--;
 
       // Get the month that's one month before the end month
@@ -256,6 +257,7 @@ class _DateTimeDifference {
   }
 
   /// Apply fieldSet and precision filtering to the calculated differences
+  /// ORIGINAL LOGIC
   static DateTimeDelta _applyFiltering(
     Map<String, int> differences,
     DateTimeUnit firstDateTimeUnit,
