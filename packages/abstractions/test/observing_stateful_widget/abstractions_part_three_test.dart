@@ -28,7 +28,7 @@ class _ComprehensiveObserverWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: Text('Observer Widget: ${widget.widgetId}'));
+    return Text('Observer Widget: ${widget.widgetId}');
   }
 
   @override

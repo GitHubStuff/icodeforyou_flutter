@@ -77,6 +77,7 @@ class _ErrorThrowingWidgetState
 class InstanceTrackingWidget extends StatefulWidget {
   final String instanceId;
 
+  // ignore: library_private_types_in_public_api
   static Map<String, _InstanceTrackingWidgetState> instances = {};
   static List<String> globalObserverCalls = [];
 
