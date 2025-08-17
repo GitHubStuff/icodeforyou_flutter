@@ -15,13 +15,33 @@ import 'package:widgetbook_workspace/packages/analog_clock_widget/analog_clock_w
     as _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget;
 
 final directories = <_widgetbook.WidgetbookNode>[
-  _widgetbook.WidgetbookLeafComponent(
+  _widgetbook.WidgetbookComponent(
     name: 'AnalogClock',
-    useCase: _widgetbook.WidgetbookUseCase(
-      name: 'Default',
-      builder:
-          _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget
-              .buildAnalogClockCase,
-    ),
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Dark Theme',
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget
+                .buildAnalogClockDarkCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Default',
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget
+                .buildAnalogClockCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Minimal',
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget
+                .buildAnalogClockMinimalCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Multiple Sizes',
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget
+                .buildAnalogClockMultipleSizesCase,
+      ),
+    ],
   ),
 ];
