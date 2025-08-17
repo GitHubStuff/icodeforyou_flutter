@@ -59,10 +59,12 @@ class DateTimeDelta {
     if (hours != null && hours! > 0) parts.add('${hours}h');
     if (minutes != null && minutes! > 0) parts.add('${minutes}m');
     if (seconds != null && seconds! > 0) parts.add('${seconds}s');
-    if (milliseconds != null && milliseconds! > 0)
+    if (milliseconds != null && milliseconds! > 0) {
       parts.add('${milliseconds}ms');
-    if (microseconds != null && microseconds! > 0)
-      parts.add('${microseconds}μs');
+    }
+    if (microseconds != null && microseconds! > 0) {
+      parts.add('$microsecondsμs');
+    }
 
     if (parts.isEmpty) return '0';
 

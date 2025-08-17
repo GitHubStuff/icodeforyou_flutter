@@ -1,0 +1,29 @@
+# pubspec.yaml analog_clock_widget
+# Flutter 3.32.8 / Dart 3.8.1
+# Minimal dependencies for abstractions packagename: analog_clock_widget
+
+name: analog_clock_widget
+description: "Package to handle all abstract classes"
+version: 0.0.1
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.8.1
+  flutter: ">=3.32.8"
+
+dependencies:
+  abstractions:
+    path: ../abstractions
+  extensions:
+    path: ../extensions
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: ^5.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

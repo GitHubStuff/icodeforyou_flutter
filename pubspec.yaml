@@ -4,7 +4,10 @@ publish_to: none
 description: Collection of flutter packages
 
 workspace:
+  - packages/abstractions
+  - packages/analog_clock_widget
   - packages/extensions
+  - packages/widgetbook_workspace
 
 environment:
   sdk: ^3.8.1
@@ -12,86 +15,58 @@ environment:
 dev_dependencies:
   melos: ^7.0.0-dev.9
 
+# Add this to your main workspace pubspec.yaml melos scripts section
+
 melos:
   scripts:
+    # Existing scripts...
     analyze:
       run: dart analyze .
     
+    # Build runner specifically for widgetbook
+    widgetbook_build:
+      description: Build widgetbook components
+      run: |
+        cd packages/widgetbook_workspace
+        dart run build_runner build --delete-conflicting-outputs
+        echo "✅ Widgetbook build completed"
+    
+    # Watch mode for widgetbook development
+    widgetbook_watch:
+      description: Watch and rebuild widgetbook components
+      run: |
+        cd packages/widgetbook_workspace
+        echo "👀 Starting widgetbook watch mode (Press Ctrl+C to stop)"
+        dart run build_runner watch --delete-conflicting-outputs
+    
+    # Clean widgetbook generated files
+    widgetbook_clean:
+      description: Clean widgetbook generated files
+      run: |
+        cd packages/widgetbook_workspace
+        dart run build_runner clean
+        echo "🧹 Widgetbook generated files cleaned"
+    
+    # Run widgetbook
+    widgetbook:
+      description: Run widgetbook for development
+      run: |
+        cd packages/widgetbook_workspace
+        flutter run -d chrome
+    
+    # Build all packages that have build_runner
     build:
-      run: dart run build_runner build --delete-conflicting-outputs
+      description: Run build_runner in packages that need it
+      exec: dart run build_runner build --delete-conflicting-outputs
+      packageFilters:
+        dependsOn: "build_runner"
     
-    test_coverage:
-      description: Run tests with coverage in all packages
-      exec: flutter test --coverage
-    
-    coverage_merge:
-      description: Merge coverage reports from all workspace packages
-      run: |
-        mkdir -p coverage
-        rm -f coverage/lcov.info
-        
-        # Find all coverage files in the entire workspace dynamically
-        coverage_files=$(find . -path "./coverage" -prune -o -name "lcov.info" -path "*/coverage/lcov.info" -print)
-        
-        if [ -n "$coverage_files" ]; then
-          echo "Found coverage files:"
-          echo "$coverage_files"
-          
-          # Process each coverage file
-          for lcov_file in $coverage_files; do
-            # Extract the package path: ./packages/extensions/coverage/lcov.info -> packages/extensions
-            package_path=$(echo "$lcov_file" | sed 's|^\./||' | sed 's|/coverage/lcov\.info$||')
-            package_dir=$(dirname "$package_path")
-            package_name=$(basename "$package_path")
-            
-            echo "Processing coverage for $package_dir/$package_name..."
-            
-            # Create a temporary file with corrected paths
-            temp_file="coverage/temp_${package_dir//\//_}_${package_name}.info"
-            sed "s|SF:lib/|SF:${package_path}/lib/|g" "$lcov_file" > "$temp_file"
-            
-            # Add to the main coverage file
-            if [ -f coverage/lcov.info ]; then
-              lcov --add-tracefile coverage/lcov.info --add-tracefile "$temp_file" -o coverage/lcov.info
-            else
-              cp "$temp_file" coverage/lcov.info
-            fi
-            
-            # Clean up temp file
-            rm "$temp_file"
-          done
-          
-          # Generate HTML report
-          genhtml coverage/lcov.info -o coverage/html --ignore-errors source
-          echo "✅ Merged coverage report: coverage/html/index.html"
-          
-          if [ -f coverage/html/index.html ]; then
-            open coverage/html/index.html
-          else
-            echo "⚠️  HTML file wasn't created"
-            lcov --summary coverage/lcov.info
-          fi
-        else
-          echo "❌ No coverage files found. Run 'melos run test_coverage' first."
-        fi
+    # Watch all packages that have build_runner
+    build_watch:
+      description: Run build_runner in watch mode for packages that need it
+      exec: dart run build_runner watch --delete-conflicting-outputs
+      packageFilters:
+        dependsOn: "build_runner"
 
-    coverage_clean:
-      description: Clean all coverage data from workspace
-      run: |
-        rm -rf coverage/
-        find . -name "coverage" -type d -not -path "./coverage" -exec rm -rf {} +
-        echo "🧹 Coverage data cleaned from entire workspace"
-
-    list_packages:
-      description: List all packages in workspace
-      run: |
-        echo "📦 Workspace packages:"
-        find . -name "pubspec.yaml" -not -path "./pubspec.yaml" -exec dirname {} \; | sort
-
-    test_all:
-      description: Run tests in all packages
-      exec: flutter test
-
-    analyze_all:
-      description: Analyze all packages
-      exec: dart analyze .
+flutter:
+  uses-material-design: true

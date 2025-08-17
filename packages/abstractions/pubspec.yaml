@@ -1,0 +1,24 @@
+# pubspec.yaml
+# Flutter 3.32.8 / Dart 3.8.1
+# Minimal dependencies for abstractions package
+
+name: abstractions
+description: "Package to handle all abstract classes"
+version: 0.0.1
+resolution: workspace
+
+environment:
+  sdk: ^3.8.1
+  flutter: ">=3.32.8"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: ^5.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
