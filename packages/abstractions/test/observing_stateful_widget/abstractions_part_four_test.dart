@@ -1,5 +1,5 @@
 // abstractions_part_four_test.dart
-// Flutter 3.32.8 / Dart 3.8.1
+// Flutter 3.32.8 / Dart ">3.9.0"
 // Critical edge cases and failure modes that could break the widget in production
 import 'package:abstractions/abstractions.dart' show ObservingStatefulWidget;
 import 'package:flutter/material.dart';
@@ -393,7 +393,7 @@ void main() {
         await tester.pumpWidget(MaterialApp(home: Placeholder()));
 
         // Flutter throws an assertion error for missing super.dispose()
-        expect(tester.takeException(), isA<AssertionError>());
+        expect(tester.takeException(), isA<FlutterError>());
 
         expect(state.methodCalls, contains('dispose-start'));
         expect(state.disposeCompleted, isTrue);

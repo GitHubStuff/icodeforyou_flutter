@@ -13,14 +13,14 @@ void main() {
 
     test('radius assertion works correctly', () {
       expect(() => AnalogClock(radius: 30), returnsNormally);
-      expect(() => AnalogClock(radius: 29.9), throwsA(isA<AssertionError>()));
+      expect(() => AnalogClock(radius: 29.9), throwsA(isA<ArgumentError>()));
       expect(() => AnalogClock(radius: 1000), returnsNormally);
     });
 
     testWidgets('throws assertion error for radius below minimum', (
       WidgetTester tester,
     ) async {
-      expect(() => AnalogClock(radius: 20), throwsA(isA<AssertionError>()));
+      expect(() => AnalogClock(radius: 20), throwsA(isA<ArgumentError>()));
     });
 
     testWidgets('renders without throwing', (WidgetTester tester) async {

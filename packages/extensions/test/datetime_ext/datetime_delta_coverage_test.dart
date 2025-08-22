@@ -2,8 +2,7 @@
 // Specifically targets uncovered lines in datetime_delta.dart
 
 import 'package:extensions/datetime_ext/datetime_delta.dart' show DateTimeDelta;
-import 'package:extensions/datetime_ext/datetime_ext.dart' show swap;
-import 'package:extensions/datetime_ext/datetime_unit.dart';
+import 'package:extensions/datetime_ext/datetime_unit.dart' show DateTimeUnit;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -39,7 +38,7 @@ void main() {
         ),
         throwsA(
           anyOf([
-            isA<AssertionError>(), // Debug mode (line 138)
+            isA<ArgumentError>(), // Debug mode (line 138)
             isA<
               ArgumentError
             >(), // Release mode (line 144) - uncoverable in debug
@@ -118,7 +117,7 @@ void main() {
         throwsA(
           anyOf([
             isA<ArgumentError>(), // In release mode
-            isA<AssertionError>(), // In debug mode
+            isA<ArgumentError>(), // In debug mode
           ]),
         ),
       );
@@ -137,7 +136,7 @@ void main() {
           precision: DateTimeUnit.hour, // index 3 (larger unit)
         ),
         throwsA(
-          isA<AssertionError>().having(
+          isA<ArgumentError>().having(
             (e) => e.message,
             'message',
             contains(
@@ -148,10 +147,32 @@ void main() {
       );
     });
 
-    test('AssertionError with specific message format', () {
+    test('General ArgumentError with specific message format', () {
       final startTime = DateTime.utc(2024, 1, 1);
       final endTime = DateTime.utc(2024, 1, 2);
-
+      expect(
+        () => DateTimeDelta.delta(
+          startTime: startTime,
+          endTime: endTime,
+          firstDateTimeUnit: DateTimeUnit.second,
+          precision: DateTimeUnit.minute,
+        ),
+        throwsA(
+          isA<ArgumentError>().having(
+            (e) => e.message,
+            'message',
+            allOf([
+              contains('firstDateTimeUnit'),
+              contains('cannot be smaller than'),
+              contains('precision'),
+            ]),
+          ),
+        ),
+      );
+    });
+    test('ArgumentError with specific message format', () {
+      final startTime = DateTime.utc(2024, 1, 1);
+      final endTime = DateTime.utc(2024, 1, 2);
       expect(
         () => DateTimeDelta.delta(
           startTime: startTime,
@@ -160,31 +181,15 @@ void main() {
           precision: DateTimeUnit.minute, // index 4 (larger unit)
         ),
         throwsA(
-          isA<AssertionError>().having(
+          isA<ArgumentError>().having(
             (e) => e.message,
             'message',
-            contains('Either increase precision or decrease firstDateTimeUnit'),
+            contains(
+              'Either set precision to DateTimeUnit.second or set firstDateTimeUnit to DateTimeUnit.minute or larger',
+            ),
           ),
         ),
       );
-    });
-
-    test('swap function works correctly', () {
-      // Test the swap utility function directly
-      final result = swap(1, 2);
-      expect(result.$1, 2);
-      expect(result.$2, 1);
-
-      final stringResult = swap('hello', 'world');
-      expect(stringResult.$1, 'world');
-      expect(stringResult.$2, 'hello');
-
-      final dateResult = swap(
-        DateTime.utc(2024, 1, 1),
-        DateTime.utc(2024, 1, 2),
-      );
-      expect(dateResult.$1, DateTime.utc(2024, 1, 2));
-      expect(dateResult.$2, DateTime.utc(2024, 1, 1));
     });
 
     test('various precision/firstDateTimeUnit error combinations', () {
@@ -200,7 +205,7 @@ void main() {
           firstDateTimeUnit: DateTimeUnit.minute, // index 4
           precision: DateTimeUnit.hour, // index 3
         ),
-        throwsAssertionError,
+        throwsArgumentError,
       );
 
       // Test second > minute (should fail) - second is index 5, minute is index 4
@@ -212,7 +217,7 @@ void main() {
           firstDateTimeUnit: DateTimeUnit.second, // index 5
           precision: DateTimeUnit.minute, // index 4
         ),
-        throwsAssertionError,
+        throwsArgumentError,
       );
 
       // Test microsecond > millisecond (should fail) - usec is index 7, msec is index 6
@@ -224,7 +229,7 @@ void main() {
           firstDateTimeUnit: DateTimeUnit.usec, // index 7
           precision: DateTimeUnit.msec, // index 6
         ),
-        throwsAssertionError,
+        throwsArgumentError,
       );
     });
 
@@ -336,7 +341,7 @@ void main() {
       expect(
         () => DateTimeDelta.delta(startTime: startTime, endTime: endTime),
         anyOf([
-          throwsA(isA<AssertionError>()), // If assertions enabled
+          throwsA(isA<ArgumentError>()), // If assertions enabled
           returnsNormally, // If assertions disabled (release mode)
         ]),
       );
@@ -359,7 +364,7 @@ void main() {
           endTime: endTimeNonUtc,
         ),
         anyOf([
-          throwsA(isA<AssertionError>()), // If assertions enabled
+          throwsA(isA<ArgumentError>()), // If assertions enabled
           returnsNormally, // If assertions disabled (release mode)
         ]),
       );

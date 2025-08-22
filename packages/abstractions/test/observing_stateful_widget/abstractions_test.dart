@@ -1,5 +1,5 @@
 // observing_stateful_widget_test.dart
-// Flutter 3.32.8 / Dart 3.8.1
+// Flutter 3.32.8 / Dart ">3.9.0"
 import 'package:abstractions/abstractions.dart' show ObservingStatefulWidget;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

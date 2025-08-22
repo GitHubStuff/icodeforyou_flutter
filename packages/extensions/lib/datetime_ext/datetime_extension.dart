@@ -1,7 +1,6 @@
 // datetime_ext.dart
+import 'package:extensions/datetime_ext/datetime_unit.dart' show DateTimeUnit;
 import 'package:flutter/foundation.dart';
-
-import 'datetime_unit.dart' show DateTimeUnit;
 
 extension DateTimeExt on DateTime {
   static int _lastMicroseconds = 0;

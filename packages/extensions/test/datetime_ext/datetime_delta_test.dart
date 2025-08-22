@@ -1,6 +1,5 @@
 // datetime_delta_test.dart
-import 'package:extensions/datetime_ext/datetime_delta.dart' show DateTimeDelta;
-import 'package:extensions/datetime_ext/datetime_unit.dart' show DateTimeUnit;
+import 'package:extensions/datetime_ext/datetime_ext.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -11,7 +10,7 @@ void main() {
 
       expect(
         () => DateTimeDelta.delta(startTime: localTime, endTime: utcTime),
-        throwsA(isA<AssertionError>()),
+        throwsA(isA<ArgumentError>()),
       );
     });
 
@@ -21,7 +20,7 @@ void main() {
 
       expect(
         () => DateTimeDelta.delta(startTime: utcTime, endTime: localTime),
-        throwsA(isA<AssertionError>()),
+        throwsA(isA<ArgumentError>()),
       );
     });
 
@@ -48,7 +47,7 @@ void main() {
             firstDateTimeUnit: DateTimeUnit.msec,
             precision: DateTimeUnit.second,
           ),
-          throwsA(isA<AssertionError>()),
+          throwsA(isA<ArgumentError>()),
         );
       },
     );

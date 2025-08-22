@@ -1,6 +1,6 @@
-// datetime_unit.dart enum
-import 'package:extensions/datetime_ext/datetime_extension.dart';
+// datetime_unit.dart
 
+/// DateTime unit enumeration with time conversion constants and utility methods.
 enum DateTimeUnit {
   year,
   month,
@@ -17,7 +17,6 @@ enum DateTimeUnit {
   static const num kSecondsPerMinute = 60;
   static const num kMsecPerSecond = 1000;
   static const num kUsecPerMsec = 1000;
-
   static const num kDaysPlaceholder = 0;
   static const num kDaysJanuary = 31;
   static const num kDaysFebruary = 28;
@@ -66,20 +65,40 @@ enum DateTimeUnit {
   }
 }
 
-/// -----------------------------------
-/// Enum to represent the relation between two DateTime objects
-enum DateTimeOrdering {
-  before,
-  now,
-  after;
+/// Extension on DateTime to provide truncation functionality.
+extension DateTimeExtensions on DateTime {
+  /// Truncates the DateTime to the specified DateTimeUnit precision.
+  /// All smaller units are reset to their minimum values.
+  /// Preserves the timezone (UTC vs local) of the original DateTime.
+  DateTime truncate({required DateTimeUnit atDateTimeUnit}) {
+    final constructor = isUtc ? DateTime.utc : DateTime.new;
 
-  /// Returns the relation between startEvent and endEvent
-  /// If startEvent is before endEvent, it returns DateTimeRelation.before
-  /// If startEvent is after endEvent, it returns DateTimeRelation.after
-  /// If startEvent is the same as endEvent, it returns DateTimeRelation.now
-  static DateTimeOrdering direction(DateTime startEvent, DateTime endEvent) {
-    if (startEvent.isBefore(endEvent)) return DateTimeOrdering.before;
-    if (startEvent.isAfter(endEvent)) return DateTimeOrdering.after;
-    return DateTimeOrdering.now;
+    switch (atDateTimeUnit) {
+      case DateTimeUnit.year:
+        return constructor(year);
+      case DateTimeUnit.month:
+        return constructor(year, month);
+      case DateTimeUnit.day:
+        return constructor(year, month, day);
+      case DateTimeUnit.hour:
+        return constructor(year, month, day, hour);
+      case DateTimeUnit.minute:
+        return constructor(year, month, day, hour, minute);
+      case DateTimeUnit.second:
+        return constructor(year, month, day, hour, minute, second);
+      case DateTimeUnit.msec:
+        return constructor(year, month, day, hour, minute, second, millisecond);
+      case DateTimeUnit.usec:
+        return constructor(
+          year,
+          month,
+          day,
+          hour,
+          minute,
+          second,
+          millisecond,
+          microsecond,
+        );
+    }
   }
 }

@@ -10,14 +10,13 @@ workspace:
   - packages/widgetbook_workspace
 
 environment:
-  sdk: ^3.8.1
+  sdk: ">=3.9.0"
 
 dependency_overrides:
   accessibility_tools: ^2.6.0
 
 dev_dependencies:
-  melos: ^7.0.0-dev.9
-
+  melos: ^7.1.0
 
 melos:
   scripts:
@@ -102,12 +101,17 @@ melos:
       run: |
         echo "📦 Workspace packages:"
         find . -name "pubspec.yaml" -not -path "./pubspec.yaml" -exec dirname {} \; | sort
-
+  
     test_all:
       description: Run tests in all packages sequentially to avoid Flutter lock conflicts
       run: |
         echo "🧪 Running tests sequentially to avoid Flutter lock conflicts..."
-        
+    
+        # Track failed packages
+        failed_packages=""
+        total_packages=0
+        tested_packages=0
+    
         # Find packages with test directories
         for package_dir in packages/*/; do
           if [ -d "${package_dir}test" ]; then
@@ -115,16 +119,65 @@ melos:
             echo ""
             echo "📦 Testing $package_name..."
             cd "$package_dir"
-            flutter test || echo "⚠️  Tests failed in $package_name"
+            total_packages=$((total_packages + 1))
+            tested_packages=$((tested_packages + 1))
+        
+            if ! flutter test; then
+              echo "❌  Tests failed in $package_name"
+              if [ -z "$failed_packages" ]; then
+                failed_packages="$package_name"
+              else
+                failed_packages="$failed_packages, $package_name"
+              fi
+            fi
             cd - > /dev/null
           else
             package_name=$(basename "$package_dir")
             echo "⏭️  Skipping $package_name (no test directory)"
+            total_packages=$((total_packages + 1))
           fi
         done
+    
         echo ""
         echo "✅ Test run completed!"
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "📊 SUMMARY"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "Total packages: $total_packages"
+        echo "Tested packages: $tested_packages"
+    
+        if [ -n "$failed_packages" ]; then
+          echo "❌ FAILED: $failed_packages"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          exit 1
+        else
+          echo "✅ All tests passed!"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        fi
+    test_coverage:
+      description: Run tests with coverage in all packges (auto-detects Flutter vs Dart)
+      run: |
+        echo "🧪 Running coverage tests with auto-detection..."
+        for package_dir in packages/*/; do
+          if [ -d "${package_dir}test" ]; then
+            package_name=$(basename "$package_dir")
+            echo ""
+            echo "📦 Testing $package_name..."
+            cd "$package_dir"
 
+            if grep -q "flutter:" pubspec.yaml; then
+              echo "🦋 Flutter package detected - using flutter test"
+              flutter test --coverage
+            else
+              echo "🎯 Dart package detected - using dart test"
+              dart test --coverage=coverage
+            fi
+            cd - > /dev/null
+          fi
+        done
+        echo "✅ Coverage generation completed for all packages!"
+        
     # Run widgetbook
     widgetbook:
       description: Run widgetbook for development

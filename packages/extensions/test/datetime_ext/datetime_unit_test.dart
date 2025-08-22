@@ -1,5 +1,6 @@
 // datetime_unit_test.dart
 import 'package:extensions/datetime_ext/datetime_ext.dart';
+import 'package:extensions/datetime_ext/datetime_ordering.dart' show DateTimeOrdering;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

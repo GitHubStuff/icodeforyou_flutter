@@ -19,28 +19,16 @@ final directories = <_widgetbook.WidgetbookNode>[
     name: 'AnalogClock',
     useCases: [
       _widgetbook.WidgetbookUseCase(
-        name: 'Dark Theme',
-        builder:
-            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget
-                .buildAnalogClockDarkCase,
-      ),
-      _widgetbook.WidgetbookUseCase(
         name: 'Default',
         builder:
             _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget
                 .buildAnalogClockCase,
       ),
       _widgetbook.WidgetbookUseCase(
-        name: 'Minimal',
+        name: 'Full features',
         builder:
             _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget
-                .buildAnalogClockMinimalCase,
-      ),
-      _widgetbook.WidgetbookUseCase(
-        name: 'Multiple Sizes',
-        builder:
-            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget
-                .buildAnalogClockMultipleSizesCase,
+                .buildAnalogClockDarkCase,
       ),
     ],
   ),

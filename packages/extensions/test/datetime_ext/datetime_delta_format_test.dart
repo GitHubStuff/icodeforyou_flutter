@@ -3,7 +3,7 @@
 
 import 'package:extensions/datetime_ext/datetime_delta.dart' show DateTimeDelta;
 import 'package:extensions/datetime_ext/datetime_delta_format.dart';
-import 'package:extensions/datetime_ext/datetime_unit.dart';
+import 'package:extensions/datetime_ext/datetime_unit.dart' show DateTimeUnit;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -45,7 +45,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
         endTime: DateTime.utc(2024, 1, 1, 12, 30, 0),
       );
-      
+
       final result = delta.format(r'$*{h} $*{m}');
       expect(result, '2 30');
     });
@@ -55,7 +55,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
         endTime: DateTime.utc(2024, 1, 1, 12, 0, 0),
       );
-      
+
       final result = delta.format(r'$*{Y} $*{M} $*{D} $*{h} $*{m} $*{s}');
       expect(result.trim(), '2'); // Only hours should show
     });
@@ -65,7 +65,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
         endTime: DateTime.utc(2024, 1, 1, 12, 0, 0),
       );
-      
+
       final result = delta.format(r'$*{Y}y $*{h}h');
       expect(result, 'y 2h'); // Literal 'y' and 'h' always show
     });
@@ -75,7 +75,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
         endTime: DateTime.utc(2024, 1, 1, 12, 0, 0),
       );
-      
+
       final result = delta.format(r'$*{Yy} $*{hh}');
       expect(result.trim(), '02'); // 'y' hidden with Y, 'h' shown with hours
     });
@@ -87,7 +87,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
         endTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
       );
-      
+
       final result = delta.format(r'${Y} ${M} ${D} ${h}');
       expect(result, '0 0 0 0');
     });
@@ -97,7 +97,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
         endTime: DateTime.utc(2024, 1, 1, 12, 0, 0),
       );
-      
+
       final result = delta.format(r'${*Y} ${*h} ${D}');
       expect(result.trim(), '2 0'); // Y hidden, h shown, D always shown
     });
@@ -109,7 +109,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 0, 0, 0),
         endTime: DateTime.utc(2024, 1, 3, 0, 0, 0),
       );
-      
+
       final result = delta.format(r'${D} $*{h>} $*{m>} $*{s>}');
       expect(result, '2 0 0 0'); // All cascade due to D > 0
     });
@@ -119,7 +119,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 10, 5, 0),
         endTime: DateTime.utc(2024, 1, 1, 12, 7, 0),
       );
-      
+
       final result = delta.format(r'$*{h>} $*{m>} $*{s>}');
       expect(result, '2 2 0'); // s shows due to cascade from h,m
     });
@@ -129,7 +129,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
         endTime: DateTime.utc(2024, 1, 1, 10, 3, 0),
       );
-      
+
       final result = delta.format(r'$*{m>min}');
       expect(result, '3min');
     });
@@ -139,7 +139,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
         endTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
       );
-      
+
       final result = delta.format(r'$*{m>min}');
       expect(result, '');
     });
@@ -151,7 +151,7 @@ void main() {
         startTime: DateTime.utc(2020, 1, 1),
         endTime: DateTime.utc(2021, 1, 1),
       );
-      
+
       final result = delta.format(r'$*{[YY]}');
       expect(result, '[01]');
     });
@@ -161,7 +161,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 1, 2, 3),
         endTime: DateTime.utc(2024, 1, 1, 9, 5, 7),
       );
-      
+
       final result = delta.format(r'${[hhh]}:${[mm]}:${[s]}');
       expect(result, '[008]:[03]:[4]');
     });
@@ -171,7 +171,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1),
         endTime: DateTime.utc(2024, 2, 1),
       );
-      
+
       final result = delta.format(r'$*{[MM]months}');
       expect(result, '[01]months');
     });
@@ -183,7 +183,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 1, 2, 3),
         endTime: DateTime.utc(2024, 1, 1, 2, 3, 4),
       );
-      
+
       final result = delta.format(r'${h}:${m}:${s}');
       expect(result, '1:1:1');
     });
@@ -193,7 +193,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 1, 2, 3),
         endTime: DateTime.utc(2024, 1, 1, 9, 5, 7),
       );
-      
+
       final result = delta.format(r'${hh}:${mm}:${ss}');
       expect(result, '08:03:04');
     });
@@ -203,7 +203,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 1, 0, 0),
         endTime: DateTime.utc(2024, 1, 1, 2, 0, 0),
       );
-      
+
       final result = delta.format(r'${hhhhh}');
       expect(result, '00001');
     });
@@ -216,7 +216,7 @@ void main() {
         endTime: DateTime.utc(2024, 1, 1, 0, 0, 0, 9),
         precision: DateTimeUnit.usec,
       );
-      
+
       final result = delta.format(r'$*{SSS}');
       expect(result, '008');
     });
@@ -227,7 +227,7 @@ void main() {
         endTime: DateTime.utc(2024, 1, 1, 0, 0, 0, 0, 999),
         precision: DateTimeUnit.usec,
       );
-      
+
       final result = delta.format(r'$*{uuu}');
       expect(result, '998');
     });
@@ -238,7 +238,7 @@ void main() {
         endTime: DateTime.utc(2024, 1, 1, 0, 0, 0, 1, 250),
         precision: DateTimeUnit.usec,
       );
-      
+
       final result = delta.format(r'${S}.${uuu}');
       expect(result, '0.750');
     });
@@ -248,16 +248,23 @@ void main() {
     test('truncate removes lower precision values', () {
       final delta = DateTimeDelta.delta(
         startTime: DateTime.utc(2024, 1, 1, 0, 0, 50),
-        endTime: DateTime.utc(2024, 1, 1, 0, 2, 10), // CORRECTED: same as non-truncate test
+        endTime: DateTime.utc(
+          2024,
+          1,
+          1,
+          0,
+          2,
+          10,
+        ), // CORRECTED: same as non-truncate test
         precision: DateTimeUnit.minute,
         truncate: true,
       );
-      
+
       // From 0:0:50 to 0:2:10 = 1 minute 20 seconds
       // With truncation, seconds should be 0
       expect(delta.minutes, 1); // Should be 1 minute
-      expect(delta.seconds, 0);  // Should be 0 (truncated)
-      
+      expect(delta.seconds, 0); // Should be 0 (truncated)
+
       final result = delta.format(r'${m}:${s}');
       expect(result, '1:0'); // 1 minute, 0 seconds
     });
@@ -265,11 +272,18 @@ void main() {
     test('non-truncate nullifies lower precision', () {
       final delta = DateTimeDelta.delta(
         startTime: DateTime.utc(2024, 1, 1, 0, 0, 50),
-        endTime: DateTime.utc(2024, 1, 1, 0, 2, 10), // CORRECTED: 2 minutes 10 seconds end time
+        endTime: DateTime.utc(
+          2024,
+          1,
+          1,
+          0,
+          2,
+          10,
+        ), // CORRECTED: 2 minutes 10 seconds end time
         precision: DateTimeUnit.minute,
         truncate: false,
       );
-      
+
       // From 0:0:50 to 0:2:10 = 1 minute 20 seconds
       // With precision=minute and truncate=false, seconds should be null
       expect(delta.seconds, isNull); // seconds should be null
@@ -284,7 +298,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 2, 12, 0, 0),
         endTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
       );
-      
+
       final result = delta.format(r'${D} ${h}');
       expect(result, startsWith('-'));
     });
@@ -294,7 +308,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
         endTime: DateTime.utc(2024, 1, 2, 12, 0, 0),
       );
-      
+
       final result = delta.format(r'${D} ${h}');
       expect(result, isNot(startsWith('-')));
     });
@@ -306,7 +320,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
         endTime: DateTime.utc(2024, 1, 1, 12, 30, 45),
       );
-      
+
       final result = delta.format(r'Duration: $*{h}h $*{m}m $*{s}s');
       expect(result, 'Duration: 2h 30m 45s');
     });
@@ -316,7 +330,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
         endTime: DateTime.utc(2024, 1, 3, 12, 30, 45),
       );
-      
+
       final result = delta.format(r'$*{D}d $*{h>}:${*m>}:$*{s>}');
       expect(result, '2d 2:30:45');
     });
@@ -327,11 +341,14 @@ void main() {
         endTime: DateTime.utc(2024, 3, 5, 6, 7, 8, 9),
         precision: DateTimeUnit.usec,
       );
-      
+
       final result = delta.format(
         r'$*{[YY]}y $*{M>}mo ${D}d $*{hh>}:${*mm>}:${*ss>}.$*{SSS}ms$*{uuu}μs',
       );
-      expect(result, matches(RegExp(r'\[04\]y.*mo.*d.*\d{2}:\d{2}:\d{2}\.\d{3}ms.*μs'))); // CORRECTED: microseconds might not always have 3 digits
+      expect(
+        result,
+        matches(RegExp(r'\[04\]y.*mo.*d.*\d{2}:\d{2}:\d{2}\.\d{3}ms.*μs')),
+      ); // CORRECTED: microseconds might not always have 3 digits
     });
   });
 
@@ -341,7 +358,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1),
         endTime: DateTime.utc(2024, 1, 2),
       );
-      
+
       final result = delta.format('');
       expect(result, '');
     });
@@ -351,7 +368,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1),
         endTime: DateTime.utc(2024, 1, 2),
       );
-      
+
       final result = delta.format('just text');
       expect(result, 'just text');
     });
@@ -361,9 +378,12 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1),
         endTime: DateTime.utc(2024, 1, 2),
       );
-      
+
       final result = delta.format(r'$*{invalid} ${D} $*{also-bad}');
-      expect(result.trim(), '1 1'); // CORRECTED: invalid segments may parse partially
+      expect(
+        result.trim(),
+        '1 1',
+      ); // CORRECTED: invalid segments may parse partially
     });
 
     test('unclosed segments treated as literals', () {
@@ -371,7 +391,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1),
         endTime: DateTime.utc(2024, 1, 2),
       );
-      
+
       final result = delta.format(r'$*{D incomplete ${D} complete');
       expect(result, contains('incomplete'));
       expect(result, contains('1'));
@@ -382,9 +402,12 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1),
         endTime: DateTime.utc(2024, 1, 2),
       );
-      
+
       final result = delta.format(r'$ not a segment ${D}');
-      expect(result, '\$ not a segment 1'); // CORRECTED: formatter doesn't escape $
+      expect(
+        result,
+        '\$ not a segment 1',
+      ); // CORRECTED: formatter doesn't escape $
     });
   });
 
@@ -394,7 +417,7 @@ void main() {
         startTime: DateTime.utc(2020, 2, 28),
         endTime: DateTime.utc(2020, 3, 1),
       );
-      
+
       expect(delta.days, 2); // Feb 28 -> 29 -> Mar 1
     });
 
@@ -403,7 +426,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 31),
         endTime: DateTime.utc(2024, 3, 1),
       );
-      
+
       // Algorithm should handle month-end correctly
       expect(delta.months! + delta.days!, greaterThan(0));
     });
@@ -413,7 +436,7 @@ void main() {
         startTime: DateTime.utc(2023, 12, 31, 23, 59, 59),
         endTime: DateTime.utc(2024, 1, 1, 0, 0, 1),
       );
-      
+
       expect(delta.years, 0);
       expect(delta.months, 0);
       expect(delta.days, 0);
@@ -428,11 +451,14 @@ void main() {
         endTime: DateTime.utc(2025, 2, 3),
         firstDateTimeUnit: DateTimeUnit.day,
       );
-      
+
       expect(delta.years, isNull);
       expect(delta.months, isNull);
       expect(delta.days, isNotNull);
-      expect(delta.days!, greaterThan(1)); // CORRECTED: may not convert to total days yet
+      expect(
+        delta.days!,
+        greaterThan(1),
+      ); // CORRECTED: may not convert to total days yet
     });
 
     test('starting at hour excludes larger units', () {
@@ -441,7 +467,7 @@ void main() {
         endTime: DateTime.utc(2024, 1, 3, 14),
         firstDateTimeUnit: DateTimeUnit.hour,
       );
-      
+
       expect(delta.years, isNull);
       expect(delta.months, isNull);
       expect(delta.days, isNull);
@@ -455,7 +481,7 @@ void main() {
         startTime: DateTime.utc(2024, 1, 1, 0, 0, 0),
         endTime: DateTime.utc(2024, 1, 1, 5, 30, 45),
       );
-      
+
       final result = delta.format(r'${hh}:${mm}:${ss}');
       expect(result, '05:30:45');
     });
@@ -465,7 +491,7 @@ void main() {
         startTime: DateTime.utc(1990, 6, 15),
         endTime: DateTime.utc(2024, 6, 15),
       );
-      
+
       final result = delta.format(r'$*{YY} years old');
       expect(result, '34 years old');
     });
@@ -476,7 +502,7 @@ void main() {
         endTime: DateTime.utc(2024, 1, 1, 0, 1, 23, 456),
         precision: DateTimeUnit.msec,
       );
-      
+
       final result = delta.format(r'${m}:${ss}.${SSS}');
       expect(result, '1:23.456');
     });

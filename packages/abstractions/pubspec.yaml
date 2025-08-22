@@ -1,5 +1,5 @@
 # pubspec.yaml
-# Flutter 3.32.8 / Dart 3.8.1
+# Flutter 3.32.8 / Dart ">3.9.0"
 # Minimal dependencies for abstractions package
 
 name: abstractions
@@ -8,7 +8,7 @@ version: 0.0.1
 resolution: workspace
 
 environment:
-  sdk: ^3.8.1
+  sdk: ">=3.9.0"
   flutter: ">=3.32.8"
 
 dependencies:
