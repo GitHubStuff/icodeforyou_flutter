@@ -3,10 +3,6 @@
 
 import 'datetime_unit.dart';
 
-typedef TimeMap = Map<String, num>;
-
-(T, T) swap<T>(T a, T b) => (b, a);
-
 /// Immutable class representing a time delta between two DateTime objects.
 class DateTimeDelta {
   final int? years;
@@ -59,10 +55,12 @@ class DateTimeDelta {
     if (hours != null && hours! > 0) parts.add('${hours}h');
     if (minutes != null && minutes! > 0) parts.add('${minutes}m');
     if (seconds != null && seconds! > 0) parts.add('${seconds}s');
-    if (milliseconds != null && milliseconds! > 0)
+    if (milliseconds != null && milliseconds! > 0) {
       parts.add('${milliseconds}ms');
-    if (microseconds != null && microseconds! > 0)
-      parts.add('${microseconds}μs');
+    }
+    if (microseconds != null && microseconds! > 0) {
+      parts.add('$microsecondsμs');
+    }
 
     if (parts.isEmpty) return '0';
 
@@ -116,8 +114,19 @@ class _DateTimeDifference {
     endTime = endTime ?? DateTime.now().toUtc();
 
     // Require UTC inputs - fail fast if not UTC
-    assert(startTime.isUtc, 'startTime must be UTC. Use startTime.toUtc()');
-    assert(endTime.isUtc, 'endTime must be UTC. Use endTime.toUtc()');
+    if (!startTime.isUtc) {
+      throw ArgumentError(
+        'startTime must be UTC. Use startTime.toUtc(). '
+        'Current timezone offset: ${startTime.timeZoneOffset}',
+      );
+    }
+
+    if (!endTime.isUtc) {
+      throw ArgumentError(
+        'endTime must be UTC. Use endTime.toUtc(). '
+        'Current timezone offset: ${endTime.timeZoneOffset}',
+      );
+    }
 
     // Validate that firstDateTimeUnit is not smaller than precision
     const unitHierarchy = [
@@ -134,17 +143,20 @@ class _DateTimeDifference {
     final firstUnitIndex = unitHierarchy.indexOf(firstDateTimeUnit);
     final precisionIndex = unitHierarchy.indexOf(precision);
 
-    assert(
-      firstUnitIndex <= precisionIndex,
-      'firstDateTimeUnit ($firstDateTimeUnit) cannot be smaller than precision ($precision). '
-      'Either increase precision or decrease firstDateTimeUnit.',
-    );
-
     if (firstUnitIndex > precisionIndex) {
       throw ArgumentError(
         'firstDateTimeUnit ($firstDateTimeUnit) cannot be smaller than precision ($precision). '
         'Either set precision to $firstDateTimeUnit or set firstDateTimeUnit to $precision or larger.',
       );
+    }
+
+    // Additional validation for enum parameters
+    if (firstUnitIndex == -1) {
+      throw ArgumentError('Invalid firstDateTimeUnit: $firstDateTimeUnit');
+    }
+
+    if (precisionIndex == -1) {
+      throw ArgumentError('Invalid precision: $precision');
     }
 
     // Determine direction

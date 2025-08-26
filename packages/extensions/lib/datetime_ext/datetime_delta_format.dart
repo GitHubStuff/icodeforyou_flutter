@@ -2,7 +2,7 @@
 
 import 'package:extensions/datetime_ext/datetime_delta.dart' show DateTimeDelta;
 
-extension DateTimeDeltaFormatX on DateTimeDelta {
+extension DateTimeDeltaFormat on DateTimeDelta {
   /// Default pattern:
   /// years (2-digit, only if >0), months (only if >0 or higher shown, in parens),
   /// days (always), then h:m:s with cascade gating and separators when printed.

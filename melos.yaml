@@ -1,6 +1,8 @@
 name: icodeforyou_flutter
 
 packages:
+  - packages/abstractions
+  - packages/analog_clock_widget
   - packages/extensions
-  - packages/**
+  - packages/widgetbook_workspace
   
