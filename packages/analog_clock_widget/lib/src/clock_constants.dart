@@ -7,8 +7,6 @@ part of 'analog_clock.dart';
 /// of the analog clock. All constants are tuned for optimal appearance
 /// across different clock sizes.
 class _ClockConstants {
-  /// Default radius when none is specified.
-  static const double defaultRadius = 50.0;
 
   /// Minimum allowed radius for readable clock display.
   static const double minimumRadius = 30.0;

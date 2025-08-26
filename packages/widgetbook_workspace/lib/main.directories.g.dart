@@ -13,6 +13,8 @@
 import 'package:widgetbook/widgetbook.dart' as _widgetbook;
 import 'package:widgetbook_workspace/packages/analog_clock_widget/analog_clock_widget.dart'
     as _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget;
+import 'package:widgetbook_workspace/packages/extensions/date_time_ext/datetime_delta_stories.dart'
+    as _widgetbook_workspace_packages_extensions_date_time_ext_datetime_delta_stories;
 
 final directories = <_widgetbook.WidgetbookNode>[
   _widgetbook.WidgetbookComponent(
@@ -29,6 +31,28 @@ final directories = <_widgetbook.WidgetbookNode>[
         builder:
             _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget
                 .buildAnalogClockDarkCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
+    name: 'datetime_ext',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'DateTimeDeltaText',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Basic Demo',
+            builder:
+                _widgetbook_workspace_packages_extensions_date_time_ext_datetime_delta_stories
+                    .buildDateTimeDeltaTextDefault,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Full Features',
+            builder:
+                _widgetbook_workspace_packages_extensions_date_time_ext_datetime_delta_stories
+                    .buildDateTimeDeltaTextFull,
+          ),
+        ],
       ),
     ],
   ),

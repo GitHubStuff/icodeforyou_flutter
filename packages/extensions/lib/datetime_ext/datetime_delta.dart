@@ -59,7 +59,7 @@ class DateTimeDelta {
       parts.add('${milliseconds}ms');
     }
     if (microseconds != null && microseconds! > 0) {
-      parts.add('${microseconds}μs');
+      parts.add('$microsecondsμs');
     }
 
     if (parts.isEmpty) return '0';

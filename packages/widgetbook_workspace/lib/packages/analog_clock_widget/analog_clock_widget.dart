@@ -1,4 +1,6 @@
 // widgetbook_analog_clock.dart
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:analog_clock_widget/analog_clock_widget.dart'
     show AnalogClock, ClockFaceStyle, ClockStyle;
 import 'package:flutter/material.dart';

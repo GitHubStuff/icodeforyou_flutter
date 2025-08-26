@@ -14,7 +14,7 @@ part 'clock_painter.dart';
 part 'clock_services.dart';
 part 'clock_state.dart';
 
-const double defaultRadius = 50.0;
+const double defaultRadius = 30.0;
 
 enum ClockFaceStyle { classic, modern, minimal }
 

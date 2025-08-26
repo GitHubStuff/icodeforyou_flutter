@@ -14,8 +14,6 @@ dependencies:
   analog_clock_widget:
     path: ../analog_clock_widget
 
-  widgetbook: ^3.16.0
-  widgetbook_annotation: ^3.7.0
 
 
 dev_dependencies:
@@ -24,6 +22,8 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
   widgetbook_generator: ^3.16.0
+  widgetbook: ^3.16.0
+  widgetbook_annotation: ^3.7.0
 
 flutter:
   uses-material-design: true

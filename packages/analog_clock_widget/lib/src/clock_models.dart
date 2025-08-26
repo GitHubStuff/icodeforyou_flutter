@@ -275,3 +275,32 @@ class _TickConfiguration {
     );
   }
 }
+
+/// Special testing helpers
+///
+@visibleForTesting
+int debugClockColorsHash({
+  required ColorScheme colorScheme,
+  required ClockStyle style,
+}) {
+  final c = _ClockColors.fromTheme(colorScheme: colorScheme, style: style);
+  return c.hashCode;
+}
+
+@visibleForTesting
+int debugClockDimensionsHash(double radius) {
+  final d = _ClockDimensions.fromRadius(radius);
+  return d.hashCode;
+}
+
+@visibleForTesting
+int debugClockConfigurationHash({
+  required double radius,
+  required ColorScheme colorScheme,
+  required ClockStyle style,
+}) {
+  final dims = _ClockDimensions.fromRadius(radius);
+  final cols = _ClockColors.fromTheme(colorScheme: colorScheme, style: style);
+  final cfg = _ClockConfiguration(dimensions: dims, colors: cols, style: style);
+  return cfg.hashCode;
+}
