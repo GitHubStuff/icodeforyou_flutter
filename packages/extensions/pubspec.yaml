@@ -6,12 +6,11 @@ resolution: workspace
 
 environment:
   sdk: ">=3.9.0"
-  flutter: ">=3.24.0"
+  flutter: ">=3.35.1"
 
 dependencies:
   flutter:
     sdk: flutter
-  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
