@@ -100,7 +100,7 @@ class DateTimeDelta {
 /// Only accessible within this library through DateTimeDelta.
 class _DateTimeDifference {
   // Private constructor to prevent external instantiation
-  _DateTimeDifference._();
+  _DateTimeDifference._(); // coverage:ignore-line
 
   /// Calculate time delta between two DateTime objects.
   /// Both startTime and endTime must be UTC.
@@ -148,15 +148,6 @@ class _DateTimeDifference {
         'firstDateTimeUnit ($firstDateTimeUnit) cannot be smaller than precision ($precision). '
         'Either set precision to $firstDateTimeUnit or set firstDateTimeUnit to $precision or larger.',
       );
-    }
-
-    // Additional validation for enum parameters
-    if (firstUnitIndex == -1) {
-      throw ArgumentError('Invalid firstDateTimeUnit: $firstDateTimeUnit');
-    }
-
-    if (precisionIndex == -1) {
-      throw ArgumentError('Invalid precision: $precision');
     }
 
     // Determine direction

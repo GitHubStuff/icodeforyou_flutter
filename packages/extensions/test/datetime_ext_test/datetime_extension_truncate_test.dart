@@ -1,296 +1,275 @@
-// datetime_extension_test.dart
-
-import 'package:extensions/datetime_ext/datetime_unit.dart';
+// packages/extensions/test/datetime_extension_truncate_test.dart
 import 'package:flutter_test/flutter_test.dart';
+import 'package:extensions/datetime_ext/datetime_unit.dart';
 
 void main() {
-  group('DateTimeExt', () {
-    group('truncate', () {
-      late DateTime testDateTime;
-      late DateTime testDateTimeUtc;
+  group('DateTimeExt.truncate', () {
+    late DateTime local;
+    late DateTime utc;
 
-      setUp(() {
-        // Create test DateTime with all components set
-        testDateTime = DateTime(2024, 8, 24, 15, 30, 45, 123, 456);
-        testDateTimeUtc = DateTime.utc(2024, 8, 24, 15, 30, 45, 123, 456);
-      });
+    setUp(() {
+      local = DateTime(2024, 8, 24, 15, 30, 45, 123, 456);
+      utc = DateTime.utc(2024, 8, 24, 15, 30, 45, 123, 456);
+    });
 
-      test('should truncate to microsecond precision (default behavior)', () {
-        // Act
-        final result = testDateTime.truncate(atDateTimeUnit: DateTimeUnit.usec);
+    // --- Defaults & core behavior ------------------------------------------------
 
-        // Assert
-        expect(result.year, 2024);
-        expect(result.month, 8);
-        expect(result.day, 24);
-        expect(result.hour, 15);
-        expect(result.minute, 30);
-        expect(result.second, 45);
-        expect(result.millisecond, 123);
-        expect(result.microsecond, 456);
-        expect(result.isUtc, false);
-      });
+    test('default (second) zeros ms/usec only', () {
+      final t = local.truncate(atDateTimeUnit: DateTimeUnit.second); // default is DateTimeUnit.second
+      expect(t.isUtc, false);
+      expect(t.year, 2024);
+      expect(t.month, 8);
+      expect(t.day, 24);
+      expect(t.hour, 15);
+      expect(t.minute, 30);
+      expect(t.second, 45);
+      expect(t.millisecond, 0);
+      expect(t.microsecond, 0);
+    });
 
-      test('should truncate to millisecond precision', () {
-        // Act
-        final result = testDateTime.truncate(atDateTimeUnit: DateTimeUnit.msec);
+    test('usec: no-op (edge: next == null)', () {
+      final t = local.truncate(atDateTimeUnit: DateTimeUnit.usec);
+      expect(t.year, 2024);
+      expect(t.month, 8);
+      expect(t.day, 24);
+      expect(t.hour, 15);
+      expect(t.minute, 30);
+      expect(t.second, 45);
+      expect(t.millisecond, 123);
+      expect(t.microsecond, 456);
+      expect(t.isUtc, false);
+    });
 
-        // Assert
-        expect(result.year, 2024);
-        expect(result.month, 8);
-        expect(result.day, 24);
-        expect(result.hour, 15);
-        expect(result.minute, 30);
-        expect(result.second, 45);
-        expect(result.millisecond, 123);
-        expect(result.microsecond, 0); // Should be truncated
-        expect(result.isUtc, false);
-      });
+    test('msec: zero microseconds only', () {
+      final t = local.truncate(atDateTimeUnit: DateTimeUnit.msec);
+      expect(t.millisecond, 123);
+      expect(t.microsecond, 0);
+      expect(t.isUtc, false);
+    });
 
-      test('should truncate to minute precision', () {
-        // Act
-        final result = testDateTime.truncate(
-          atDateTimeUnit: DateTimeUnit.minute,
-        );
+    // --- Truncation at each unit (local) ----------------------------------------
 
-        // Assert
-        expect(result.year, 2024);
-        expect(result.month, 8);
-        expect(result.day, 24);
-        expect(result.hour, 15);
-        expect(result.minute, 30);
-        expect(result.second, 0); // Should be truncated
-        expect(result.millisecond, 0); // Should be truncated
-        expect(result.microsecond, 0); // Should be truncated
-        expect(result.isUtc, false);
-      });
+    test('minute: zero below minute', () {
+      final t = local.truncate(atDateTimeUnit: DateTimeUnit.minute);
+      expect(t.year, 2024);
+      expect(t.month, 8);
+      expect(t.day, 24);
+      expect(t.hour, 15);
+      expect(t.minute, 30);
+      expect(t.second, 0);
+      expect(t.millisecond, 0);
+      expect(t.microsecond, 0);
+      expect(t.isUtc, false);
+    });
 
-      test('should truncate to hour precision', () {
-        // Act
-        final result = testDateTime.truncate(atDateTimeUnit: DateTimeUnit.hour);
+    test('hour: zero below hour', () {
+      final t = local.truncate(atDateTimeUnit: DateTimeUnit.hour);
+      expect(t.year, 2024);
+      expect(t.month, 8);
+      expect(t.day, 24);
+      expect(t.hour, 15);
+      expect(t.minute, 0);
+      expect(t.second, 0);
+      expect(t.millisecond, 0);
+      expect(t.microsecond, 0);
+      expect(t.isUtc, false);
+    });
 
-        // Assert
-        expect(result.year, 2024);
-        expect(result.month, 8);
-        expect(result.day, 24);
-        expect(result.hour, 15);
-        expect(result.minute, 0); // Should be truncated
-        expect(result.second, 0); // Should be truncated
-        expect(result.millisecond, 0); // Should be truncated
-        expect(result.microsecond, 0); // Should be truncated
-        expect(result.isUtc, false);
-      });
+    test('day: zero time', () {
+      final t = local.truncate(atDateTimeUnit: DateTimeUnit.day);
+      expect(t.year, 2024);
+      expect(t.month, 8);
+      expect(t.day, 24);
+      expect(t.hour, 0);
+      expect(t.minute, 0);
+      expect(t.second, 0);
+      expect(t.millisecond, 0);
+      expect(t.microsecond, 0);
+      expect(t.isUtc, false);
+    });
 
-      test('should truncate to day precision', () {
-        // Act
-        final result = testDateTime.truncate(atDateTimeUnit: DateTimeUnit.day);
+    test('month: set day=1 and zero time', () {
+      final t = local.truncate(atDateTimeUnit: DateTimeUnit.month);
+      expect(t.year, 2024);
+      expect(t.month, 8);
+      expect(t.day, 1);
+      expect(t.hour, 0);
+      expect(t.minute, 0);
+      expect(t.second, 0);
+      expect(t.millisecond, 0);
+      expect(t.microsecond, 0);
+      expect(t.isUtc, false);
+    });
 
-        // Assert
-        expect(result.year, 2024);
-        expect(result.month, 8);
-        expect(result.day, 24);
-        expect(result.hour, 0); // Should be truncated
-        expect(result.minute, 0); // Should be truncated
-        expect(result.second, 0); // Should be truncated
-        expect(result.millisecond, 0); // Should be truncated
-        expect(result.microsecond, 0); // Should be truncated
-        expect(result.isUtc, false);
-      });
+    test('year: set month=1, day=1 and zero time', () {
+      final t = local.truncate(atDateTimeUnit: DateTimeUnit.year);
+      expect(t.year, 2024);
+      expect(t.month, 1);
+      expect(t.day, 1);
+      expect(t.hour, 0);
+      expect(t.minute, 0);
+      expect(t.second, 0);
+      expect(t.millisecond, 0);
+      expect(t.microsecond, 0);
+      expect(t.isUtc, false);
+    });
 
-      test('should truncate to month precision', () {
-        // Act
-        final result = testDateTime.truncate(
-          atDateTimeUnit: DateTimeUnit.month,
-        );
+    // --- UTC/local preservation & constructor path ------------------------------
 
-        // Assert
-        expect(result.year, 2024);
-        expect(result.month, 8);
-        expect(result.day, 1); // Should be reset to 1
-        expect(result.hour, 0); // Should be truncated
-        expect(result.minute, 0); // Should be truncated
-        expect(result.second, 0); // Should be truncated
-        expect(result.millisecond, 0); // Should be truncated
-        expect(result.microsecond, 0); // Should be truncated
-        expect(result.isUtc, false);
-      });
+    test('UTC input stays UTC (second)', () {
+      final t = utc.truncate(atDateTimeUnit: DateTimeUnit.second);
+      expect(t.isUtc, true);
+      expect(t.year, 2024);
+      expect(t.month, 8);
+      expect(t.day, 24);
+      expect(t.hour, 15);
+      expect(t.minute, 30);
+      expect(t.second, 45);
+      expect(t.millisecond, 0);
+      expect(t.microsecond, 0);
+    });
 
-      test('should truncate to year precision', () {
-        // Act
-        final result = testDateTime.truncate(atDateTimeUnit: DateTimeUnit.year);
+    test('UTC input stays UTC (minute)', () {
+      final t = utc.truncate(atDateTimeUnit: DateTimeUnit.minute);
+      expect(t.isUtc, true);
+      expect(t.year, 2024);
+      expect(t.month, 8);
+      expect(t.day, 24);
+      expect(t.hour, 15);
+      expect(t.minute, 30);
+      expect(t.second, 0);
+      expect(t.millisecond, 0);
+      expect(t.microsecond, 0);
+    });
 
-        // Assert
-        expect(result.year, 2024);
-        expect(result.month, 1); // Should be reset to 1
-        expect(result.day, 1); // Should be reset to 1
-        expect(result.hour, 0); // Should be truncated
-        expect(result.minute, 0); // Should be truncated
-        expect(result.second, 0); // Should be truncated
-        expect(result.millisecond, 0); // Should be truncated
-        expect(result.microsecond, 0); // Should be truncated
-        expect(result.isUtc, false);
-      });
+    test('DateTime.utc constructor path (day)', () {
+      final d = DateTime.utc(2024, 6, 15, 12, 30, 45, 100, 200);
+      final t = d.truncate(atDateTimeUnit: DateTimeUnit.day);
+      expect(t.isUtc, true);
+      expect(t.year, 2024);
+      expect(t.month, 6);
+      expect(t.day, 15);
+      expect(t.hour, 0);
+      expect(t.minute, 0);
+      expect(t.second, 0);
+      expect(t.millisecond, 0);
+      expect(t.microsecond, 0);
+    });
 
-      test('should preserve UTC when truncating UTC DateTime', () {
-        // Act
-        final result = testDateTimeUtc.truncate(
-          atDateTimeUnit: DateTimeUnit.second,
-        );
+    test('DateTime.new constructor path (day)', () {
+      final d = DateTime(2024, 6, 15, 12, 30, 45, 100, 200);
+      final t = d.truncate(atDateTimeUnit: DateTimeUnit.day);
+      expect(t.isUtc, false);
+      expect(t.year, 2024);
+      expect(t.month, 6);
+      expect(t.day, 15);
+      expect(t.hour, 0);
+      expect(t.minute, 0);
+      expect(t.second, 0);
+      expect(t.millisecond, 0);
+      expect(t.microsecond, 0);
+    });
 
-        // Assert
-        expect(result.year, 2024);
-        expect(result.month, 8);
-        expect(result.day, 24);
-        expect(result.hour, 15);
-        expect(result.minute, 30);
-        expect(result.second, 45);
-        expect(result.millisecond, 0); // Should be truncated
-        expect(result.microsecond, 0); // Should be truncated
-        expect(result.isUtc, true); // Should preserve UTC
-      });
+    // --- Edges / boundaries ------------------------------------------------------
 
-      test('should preserve local time when truncating local DateTime', () {
-        // Act
-        final result = testDateTime.truncate(
-          atDateTimeUnit: DateTimeUnit.minute,
-        );
+    test('leap-day: month/year truncation behaves correctly', () {
+      final leap = DateTime(2024, 2, 29, 12, 34, 56, 789, 123);
+      final monthTrunc = leap.truncate(atDateTimeUnit: DateTimeUnit.month);
+      expect(monthTrunc.year, 2024);
+      expect(monthTrunc.month, 2);
+      expect(monthTrunc.day, 1);
+      expect(monthTrunc.hour, 0);
+      expect(monthTrunc.minute, 0);
+      expect(monthTrunc.second, 0);
+      expect(monthTrunc.millisecond, 0);
+      expect(monthTrunc.microsecond, 0);
 
-        // Assert
-        expect(result.isUtc, false); // Should preserve local time
-      });
+      final yearTrunc = leap.truncate(atDateTimeUnit: DateTimeUnit.year);
+      expect(yearTrunc.year, 2024);
+      expect(yearTrunc.month, 1);
+      expect(yearTrunc.day, 1);
+      expect(yearTrunc.hour, 0);
+      expect(yearTrunc.minute, 0);
+      expect(yearTrunc.second, 0);
+      expect(yearTrunc.millisecond, 0);
+      expect(yearTrunc.microsecond, 0);
+    });
 
-      test('should handle edge case where next is null', () {
-        // This tests the ?? {} fallback in the code
-        // We need to test a DateTimeUnit that might not have a next
-        // Act
-        final result = testDateTime.truncate(atDateTimeUnit: DateTimeUnit.usec);
+    test(
+      'February (non-29) truncation to month keeps month and sets day=1',
+      () {
+        final feb15 = DateTime(2024, 2, 15, 10, 20, 30, 400, 500);
+        final t = feb15.truncate(atDateTimeUnit: DateTimeUnit.month);
+        expect(t.year, 2024);
+        expect(t.month, 2);
+        expect(t.day, 1);
+        expect(t.hour, 0);
+        expect(t.minute, 0);
+        expect(t.second, 0);
+        expect(t.millisecond, 0);
+        expect(t.microsecond, 0);
+      },
+    );
 
-        // Assert - should not throw and should preserve all values
-        expect(result.year, 2024);
-        expect(result.month, 8);
-        expect(result.day, 24);
-        expect(result.hour, 15);
-        expect(result.minute, 30);
-        expect(result.second, 45);
-        expect(result.millisecond, 123);
-        expect(result.microsecond, 456);
-      });
+    test('year boundary: second truncation zeros ms/usec only', () {
+      final d = DateTime(2025, 1, 1, 0, 0, 0, 1, 1);
+      final t = d.truncate(atDateTimeUnit: DateTimeUnit.second);
+      expect(t.year, 2025);
+      expect(t.month, 1);
+      expect(t.day, 1);
+      expect(t.hour, 0);
+      expect(t.minute, 0);
+      expect(t.second, 0);
+      expect(t.millisecond, 0);
+      expect(t.microsecond, 0);
+    });
 
-      test('should handle different month values correctly', () {
-        // Arrange
-        final februaryDateTime = DateTime(2024, 2, 15, 10, 20, 30, 400, 500);
+    test('all-zero input remains sane when truncating to minute', () {
+      final d = DateTime(2024, 1, 1, 0, 0, 0, 0, 0);
+      final t = d.truncate(atDateTimeUnit: DateTimeUnit.minute);
+      expect(t.year, 2024);
+      expect(t.month, 1);
+      expect(t.day, 1);
+      expect(t.hour, 0);
+      expect(t.minute, 0);
+      expect(t.second, 0);
+      expect(t.millisecond, 0);
+      expect(t.microsecond, 0);
+    });
 
-        // Act
-        final result = februaryDateTime.truncate(
-          atDateTimeUnit: DateTimeUnit.month,
-        );
+    test('max-ish values: hour truncation zeros minute/second/ms/usec', () {
+      final d = DateTime(2024, 12, 31, 23, 59, 59, 999, 999);
+      final t = d.truncate(atDateTimeUnit: DateTimeUnit.hour);
+      expect(t.year, 2024);
+      expect(t.month, 12);
+      expect(t.day, 31);
+      expect(t.hour, 23);
+      expect(t.minute, 0);
+      expect(t.second, 0);
+      expect(t.millisecond, 0);
+      expect(t.microsecond, 0);
+    });
 
-        // Assert
-        expect(result.year, 2024);
-        expect(result.month, 2);
-        expect(result.day, 1); // Should be reset to 1
-        expect(result.hour, 0);
-        expect(result.minute, 0);
-        expect(result.second, 0);
-        expect(result.millisecond, 0);
-        expect(result.microsecond, 0);
-      });
+    // --- Idempotence across all units -------------------------------------------
 
-      test('should handle year boundary correctly', () {
-        // Arrange
-        final newYearDateTime = DateTime(2025, 1, 1, 0, 0, 0, 1, 1);
+    test('already-aligned values remain unchanged for every unit', () {
+      final alignedLocal = DateTime(2030, 1, 1, 0, 0, 0, 0, 0);
+      final alignedUtc = DateTime.utc(2030, 1, 1, 0, 0, 0, 0, 0);
+      final units = <DateTimeUnit>[
+        DateTimeUnit.year,
+        DateTimeUnit.month,
+        DateTimeUnit.day,
+        DateTimeUnit.hour,
+        DateTimeUnit.minute,
+        DateTimeUnit.second,
+        DateTimeUnit.msec,
+        DateTimeUnit.usec,
+      ];
 
-        // Act
-        final result = newYearDateTime.truncate(
-          atDateTimeUnit: DateTimeUnit.second,
-        );
-
-        // Assert
-        expect(result.year, 2025);
-        expect(result.month, 1);
-        expect(result.day, 1);
-        expect(result.hour, 0);
-        expect(result.minute, 0);
-        expect(result.second, 0);
-        expect(result.millisecond, 0); // Should be truncated
-        expect(result.microsecond, 0); // Should be truncated
-      });
-
-      test('should handle zero values correctly', () {
-        // Arrange
-        final zeroDateTime = DateTime(2024, 1, 1, 0, 0, 0, 0, 0);
-
-        // Act
-        final result = zeroDateTime.truncate(
-          atDateTimeUnit: DateTimeUnit.minute,
-        );
-
-        // Assert
-        expect(result.year, 2024);
-        expect(result.month, 1);
-        expect(result.day, 1);
-        expect(result.hour, 0);
-        expect(result.minute, 0);
-        expect(result.second, 0);
-        expect(result.millisecond, 0);
-        expect(result.microsecond, 0);
-      });
-
-      test('should handle maximum values correctly', () {
-        // Arrange
-        final maxDateTime = DateTime(2024, 12, 31, 23, 59, 59, 999, 999);
-
-        // Act
-        final result = maxDateTime.truncate(atDateTimeUnit: DateTimeUnit.hour);
-
-        // Assert
-        expect(result.year, 2024);
-        expect(result.month, 12);
-        expect(result.day, 31);
-        expect(result.hour, 23);
-        expect(result.minute, 0); // Should be truncated
-        expect(result.second, 0); // Should be truncated
-        expect(result.millisecond, 0); // Should be truncated
-        expect(result.microsecond, 0); // Should be truncated
-      });
-
-      test('should use DateTime.utc constructor for UTC dates', () {
-        // Arrange
-        final utcDateTime = DateTime.utc(2024, 6, 15, 12, 30, 45, 100, 200);
-
-        // Act
-        final result = utcDateTime.truncate(atDateTimeUnit: DateTimeUnit.day);
-
-        // Assert
-        expect(result.year, 2024);
-        expect(result.month, 6);
-        expect(result.day, 15);
-        expect(result.hour, 0);
-        expect(result.minute, 0);
-        expect(result.second, 0);
-        expect(result.millisecond, 0);
-        expect(result.microsecond, 0);
-        expect(result.isUtc, true);
-      });
-
-      test('should use DateTime.new constructor for local dates', () {
-        // Arrange
-        final localDateTime = DateTime(2024, 6, 15, 12, 30, 45, 100, 200);
-
-        // Act
-        final result = localDateTime.truncate(atDateTimeUnit: DateTimeUnit.day);
-
-        // Assert
-        expect(result.year, 2024);
-        expect(result.month, 6);
-        expect(result.day, 15);
-        expect(result.hour, 0);
-        expect(result.minute, 0);
-        expect(result.second, 0);
-        expect(result.millisecond, 0);
-        expect(result.microsecond, 0);
-        expect(result.isUtc, false);
-      });
+      for (final u in units) {
+        expect(alignedLocal.truncate(atDateTimeUnit: u), equals(alignedLocal));
+        expect(alignedUtc.truncate(atDateTimeUnit: u), equals(alignedUtc));
+      }
     });
   });
 }

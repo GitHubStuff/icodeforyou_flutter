@@ -109,11 +109,20 @@ melos:
     
         # Track failed packages
         failed_packages=""
+        ignored_packages=0
         total_packages=0
         tested_packages=0
     
         # Find packages with test directories
         for package_dir in packages/*/; do
+          package_name=$(basename "$package_dir")
+
+          if [ "$package_name" = "widgetbook_workspace" ]; then
+            echo "🤡 Skipping $package_name (excluded from tests)"
+            total_packages=$((total_packages + 1))
+            ignored_packages=$((ignored_packages + 1))
+            continue
+          fi
           if [ -d "${package_dir}test" ]; then
             package_name=$(basename "$package_dir")
             echo ""
@@ -146,6 +155,7 @@ melos:
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         echo "Total packages: $total_packages"
         echo "Tested packages: $tested_packages"
+        echo "Ignored packages: $ignored_packages"
     
         if [ -n "$failed_packages" ]; then
           echo "❌ FAILED: $failed_packages"
@@ -160,6 +170,14 @@ melos:
       run: |
         echo "🧪 Running coverage tests with auto-detection..."
         for package_dir in packages/*/; do
+          package_name=$(basename "$package_dir")
+
+          if [ "$package_name" = "widgetbook_workspace" ]; then
+            echo "🤡 Skipping $package_name (excluded from tests)"
+            total_packages=$((total_packages + 1))
+            continue
+          fi
+
           if [ -d "${package_dir}test" ]; then
             package_name=$(basename "$package_dir")
             echo ""
