@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:nosql/abstract/nosql_db.dart' show NoSqlDB;
+import 'package:nosql/abstract/nosql_db_abstract.dart' show NoSqlDB;
 import 'package:nosql/nosql_ce/nosql_box.dart' show NoSqlBox;
 import 'package:nosql/nosql_ce/nosql_db.dart';
 

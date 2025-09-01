@@ -13,7 +13,8 @@ dependencies:
   gap: ^3.0.1
   analog_clock_widget:
     path: ../analog_clock_widget
-  mockito: ^5.5.0
+  theme_manager:
+    path: ../theme_manager
 
 
 
@@ -21,7 +22,8 @@ dev_dependencies:
   build_runner: ^2.7.0   # dart run build_runner build --delete-conflicting-outputs
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
+  mockito: ^5.5.0
   widgetbook_generator: ^3.16.0
   widgetbook: ^3.16.0
   widgetbook_annotation: ^3.7.0

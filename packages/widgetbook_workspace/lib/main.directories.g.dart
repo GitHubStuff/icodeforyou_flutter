@@ -15,6 +15,8 @@ import 'package:widgetbook_workspace/packages/analog_clock_widget/analog_clock_w
     as _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget;
 import 'package:widgetbook_workspace/packages/extensions/date_time_ext/datetime_delta_stories.dart'
     as _widgetbook_workspace_packages_extensions_date_time_ext_datetime_delta_stories;
+import 'package:widgetbook_workspace/packages/theme_manager/widgetbook_radiobutton_and_label.dart'
+    as _widgetbook_workspace_packages_theme_manager_widgetbook_radiobutton_and_label;
 
 final directories = <_widgetbook.WidgetbookNode>[
   _widgetbook.WidgetbookComponent(
@@ -51,6 +53,52 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder:
                 _widgetbook_workspace_packages_extensions_date_time_ext_datetime_delta_stories
                     .buildDateTimeDeltaTextFull,
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
+    name: 'widgets',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'RadiobuttonAndLabel',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Basic String Options',
+            builder:
+                _widgetbook_workspace_packages_theme_manager_widgetbook_radiobutton_and_label
+                    .basicStringRadioButtons,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Disabled State',
+            builder:
+                _widgetbook_workspace_packages_theme_manager_widgetbook_radiobutton_and_label
+                    .disabledRadioButtons,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Enum Options',
+            builder:
+                _widgetbook_workspace_packages_theme_manager_widgetbook_radiobutton_and_label
+                    .enumRadioButtons,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Integer Values',
+            builder:
+                _widgetbook_workspace_packages_theme_manager_widgetbook_radiobutton_and_label
+                    .integerRadioButtons,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Layout Variations',
+            builder:
+                _widgetbook_workspace_packages_theme_manager_widgetbook_radiobutton_and_label
+                    .layoutVariations,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Rich Labels',
+            builder:
+                _widgetbook_workspace_packages_theme_manager_widgetbook_radiobutton_and_label
+                    .richLabelRadioButtons,
           ),
         ],
       ),
