@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:nosql/nosql.dart' show NoSqlDB, NoSqlBoxAbstract;
+import 'package:nosql/nosql.dart' show NoSqlDBAbstract, NoSqlBoxAbstract;
 import 'package:theme_manager/theme_manager.dart' show ThemeCubit, ThemeState;
 
-class MockNoSqlDB extends Mock implements NoSqlDB {}
+class MockNoSqlDB extends Mock implements NoSqlDBAbstract {}
 
 class MockNoSqlBoxAbstract extends Mock implements NoSqlBoxAbstract<String> {}
 

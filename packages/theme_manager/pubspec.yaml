@@ -10,9 +10,12 @@ environment:
   flutter: ">=3.35.2"
 
 dependencies:
+  extensions:
+    path: ../extensions
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  gap: ^3.0.1
   nosql:
     path: ../nosql
 

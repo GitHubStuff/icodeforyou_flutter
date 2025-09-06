@@ -11,7 +11,7 @@ class RadiobuttonAndLabel<S> extends StatelessWidget {
 
   final S value;
   final Widget label;
-  final ValueChanged<S?> onChanged; // Keep as required, non-nullable
+  final ValueChanged<S?> onChanged;
 
   @override
   Widget build(BuildContext context) {
