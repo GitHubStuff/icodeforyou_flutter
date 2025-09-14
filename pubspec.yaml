@@ -6,6 +6,7 @@ description: Collection of flutter packages
 workspace:
   - packages/abstractions
   - packages/analog_clock_widget
+  - packages/animated_checkbox_widget
   - packages/extensions
   - packages/nosql
   - packages/theme_manager

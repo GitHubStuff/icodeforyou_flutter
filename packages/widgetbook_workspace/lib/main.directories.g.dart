@@ -13,6 +13,8 @@
 import 'package:widgetbook/widgetbook.dart' as _widgetbook;
 import 'package:widgetbook_workspace/packages/analog_clock_widget/analog_clock_widget.dart'
     as _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget;
+import 'package:widgetbook_workspace/packages/animated_checkbox_widget/animated_checkbox_widget.dart'
+    as _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widget;
 import 'package:widgetbook_workspace/packages/extensions/date_time_ext/datetime_delta_stories.dart'
     as _widgetbook_workspace_packages_extensions_date_time_ext_datetime_delta_stories;
 import 'package:widgetbook_workspace/packages/theme_manager/widgetbook_radiobutton_and_label.dart'
@@ -33,6 +35,53 @@ final directories = <_widgetbook.WidgetbookNode>[
         builder:
             _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget
                 .buildAnalogClockDarkCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
+    name: 'AnimatedCheckbox',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Color Variations',
+        builder:
+            _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widget
+                .buildAnimatedCheckboxColorsCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Default',
+        builder:
+            _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widget
+                .buildAnimatedCheckboxDefaultCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Dissolve Effect',
+        builder:
+            _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widget
+                .buildAnimatedCheckboxDissolveCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Interactive Demo',
+        builder:
+            _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widget
+                .buildAnimatedCheckboxInteractiveCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Performance Test',
+        builder:
+            _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widget
+                .buildAnimatedCheckboxPerformanceCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Platform Optimized',
+        builder:
+            _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widget
+                .buildAnimatedCheckboxPlatformCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Size Variations',
+        builder:
+            _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widget
+                .buildAnimatedCheckboxSizesCase,
       ),
     ],
   ),

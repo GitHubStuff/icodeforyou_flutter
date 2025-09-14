@@ -13,6 +13,8 @@ dependencies:
   gap: ^3.0.1
   analog_clock_widget:
     path: ../analog_clock_widget
+  animated_checkbox_widget:
+    path: ../animated_checkbox_widget
   theme_manager:
     path: ../theme_manager
 
