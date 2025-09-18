@@ -20,6 +20,7 @@ class MockNoSqlDB extends NoSqlDBAbstract {
     return MockNoSqlBox<T>();
   }
 
+  @override
   Future<void> close() async {}
 
   Future<void> deleteBox(String name) async {}
@@ -41,7 +42,8 @@ class MockNoSqlBox<T> extends NoSqlBoxAbstract<T> {
     return true;
   }
 
-  
+  @override
+  FutureOr<void> close() async {}
 
   Future<void> clear() async {
     _storage.clear();

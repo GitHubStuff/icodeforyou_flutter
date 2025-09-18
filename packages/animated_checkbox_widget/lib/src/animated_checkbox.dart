@@ -7,8 +7,6 @@ import 'checkmark_path_builder.dart';
 import 'checkmark_painter.dart';
 
 /// A widget that animates a checkmark drawing or dissolving effect
-///
-/// Follows Open/Closed Principle - open for extension, closed for modification
 class AnimatedCheckbox extends StatefulWidget {
   /// Width and height of the checkbox widget (minimum 5.0)
   final double width;
@@ -25,6 +23,18 @@ class AnimatedCheckbox extends StatefulWidget {
   /// Duration of the animation
   final Duration duration;
 
+  /// Starting point of checkmark (normalized 0.0-1.0)
+  final Offset startOffset;
+
+  /// Middle point of checkmark (normalized 0.0-1.0)
+  final Offset midOffset;
+
+  /// Ending point of checkmark (normalized 0.0-1.0)
+  final Offset finishOffset;
+
+  /// Animation curve for drawing effect
+  final Curve curve;
+
   /// Callback fired when animation completes with the final draw state
   final ValueChanged<bool> onAnimationComplete;
 
@@ -34,7 +44,11 @@ class AnimatedCheckbox extends StatefulWidget {
     this.background = Colors.transparent,
     this.strokeColor = Colors.purple,
     required this.draw,
-    this.duration = const Duration(seconds: 1),
+    this.duration = const Duration(milliseconds: 850),
+    this.startOffset = const Offset(0.05, 0.52),
+    this.midOffset = const Offset(0.45, 0.95),
+    this.finishOffset = const Offset(0.95, 0.06),
+    this.curve = Curves.easeInOutQuart,
     required this.onAnimationComplete,
   }) : assert(width >= 5.0, 'Width must be at least 5.0');
 
@@ -52,7 +66,35 @@ class _AnimatedCheckboxState extends State<AnimatedCheckbox>
   @override
   void initState() {
     super.initState();
+    _validateOffsets();
     _initializeAnimation();
+  }
+
+  void _validateOffsets() {
+    assert(
+      widget.startOffset.dx >= 0.0 && widget.startOffset.dx <= 1.0,
+      'startOffset.dx must be 0.0-1.0, got: ${widget.startOffset.dx}',
+    );
+    assert(
+      widget.startOffset.dy >= 0.0 && widget.startOffset.dy <= 1.0,
+      'startOffset.dy must be 0.0-1.0, got: ${widget.startOffset.dy}',
+    );
+    assert(
+      widget.midOffset.dx >= 0.0 && widget.midOffset.dx <= 1.0,
+      'midOffset.dx must be 0.0-1.0, got: ${widget.midOffset.dx}',
+    );
+    assert(
+      widget.midOffset.dy >= 0.0 && widget.midOffset.dy <= 1.0,
+      'midOffset.dy must be 0.0-1.0, got: ${widget.midOffset.dy}',
+    );
+    assert(
+      widget.finishOffset.dx >= 0.0 && widget.finishOffset.dx <= 1.0,
+      'finishOffset.dx must be 0.0-1.0, got: ${widget.finishOffset.dx}',
+    );
+    assert(
+      widget.finishOffset.dy >= 0.0 && widget.finishOffset.dy <= 1.0,
+      'finishOffset.dy must be 0.0-1.0, got: ${widget.finishOffset.dy}',
+    );
   }
 
   @override
@@ -60,12 +102,22 @@ class _AnimatedCheckboxState extends State<AnimatedCheckbox>
     super.didUpdateWidget(oldWidget);
     if (_shouldReinitialize(oldWidget)) {
       _initializeAnimation();
+    } else if (oldWidget.duration != widget.duration) {
+      // Update controller duration without full reinitialization
+      _updateDuration();
     }
   }
 
   bool _shouldReinitialize(AnimatedCheckbox oldWidget) {
-    return oldWidget.draw != widget.draw ||
-        oldWidget.duration != widget.duration;
+    // Only reinitialize if draw state changes or curve changes
+    return oldWidget.draw != widget.draw || oldWidget.curve != widget.curve;
+  }
+
+  void _updateDuration() {
+    if (_controller != null && !_isAnimating) {
+      // Only update duration if not currently animating
+      _controller!.duration = widget.duration;
+    }
   }
 
   void _initializeAnimation() {
@@ -75,7 +127,7 @@ class _AnimatedCheckboxState extends State<AnimatedCheckbox>
     _animation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller!, curve: Curves.easeInOut));
+    ).animate(CurvedAnimation(parent: _controller!, curve: widget.curve));
 
     _controller!.addStatusListener(_handleAnimationComplete);
     _startAnimation();
@@ -94,7 +146,12 @@ class _AnimatedCheckboxState extends State<AnimatedCheckbox>
   }
 
   void _generateDissolveParticles() {
-    final pathBuilder = CheckmarkPathBuilder(widget.width);
+    final pathBuilder = CheckmarkPathBuilder(
+      width: widget.width,
+      startOffset: widget.startOffset,
+      midOffset: widget.midOffset,
+      finishOffset: widget.finishOffset,
+    );
     final path = pathBuilder.buildCheckmarkPath();
     _particles = ParticleGenerator.generateFromPath(path);
   }
@@ -129,6 +186,9 @@ class _AnimatedCheckboxState extends State<AnimatedCheckbox>
               isDraw: widget.draw,
               particles: _particles,
               width: widget.width,
+              startOffset: widget.startOffset,
+              midOffset: widget.midOffset,
+              finishOffset: widget.finishOffset,
             ),
           );
         },

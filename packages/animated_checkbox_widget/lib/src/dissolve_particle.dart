@@ -1,4 +1,4 @@
-// lib/src/dissolve_particle.dart
+// dissolve_particle.dart v0.01
 import 'dart:ui';
 
 /// Represents a single particle in the dissolve animation
@@ -29,20 +29,33 @@ class DissolveParticle {
   }
 
   /// Gets particle opacity at given animation time (1.0 to 0.0)
+  /// Ensures all particles disappear by animation end
   double getOpacityAtTime(double time) {
     if (time < _startTime) return 1.0;
 
     final elapsed = time - _startTime;
-    const fadeTime = 0.7;
+    // Scale fade time to ensure particle disappears before animation ends
+    // If animation is 1.0 total and particle starts at 0.4, it has 0.6 to fade
+    final remainingTime = 1.0 - _startTime;
+    final fadeTime = remainingTime * 0.8; // Use 80% of remaining time
+
+    if (fadeTime <= 0) return 0.0;
+
     return (1.0 - (elapsed / fadeTime)).clamp(0.0, 1.0);
   }
 
   /// Gets particle size multiplier at given animation time
+  /// Ensures all particles shrink away by animation end
   double getSizeAtTime(double time) {
     if (time < _startTime) return 1.0;
 
     final elapsed = time - _startTime;
-    const shrinkTime = 0.5;
-    return (1.0 - (elapsed / shrinkTime)).clamp(0.2, 1.0);
+    // Scale shrink time to ensure particle disappears before animation ends
+    final remainingTime = 1.0 - _startTime;
+    final shrinkTime = remainingTime * 0.6; // Use 60% of remaining time
+
+    if (shrinkTime <= 0) return 0.0;
+
+    return (1.0 - (elapsed / shrinkTime)).clamp(0.0, 1.0);
   }
 }

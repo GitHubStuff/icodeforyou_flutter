@@ -9,6 +9,8 @@ class NoSqlCEBox<T> implements NoSqlBoxAbstract<T> {
   NoSqlCEBox(this._box);
 
   final Box<T> _box;
+  @override
+  FutureOr<void> close() async => _box.close();
 
   @override
   FutureOr<T?> get(dynamic key, {T? defaultValue}) {

@@ -70,6 +70,9 @@ class NoSqlCEdb implements NoSqlDBAbstract {
   }
 
   @override
+  FutureOr<void> close() async => await Hive.close();
+
+  @override
   FutureOr<bool> deleteFromDevice() async {
     try {
       await Hive.deleteFromDisk();

@@ -1,0 +1,29 @@
+#!/bin/zsh
+
+# Clean up old nosql test directories
+# Usage: ./cleanup_nosql_tests.sh [hours]
+# Default: removes directories older than 12 hours
+
+HOURS_OLD=${1:-2}
+MINUTES_OLD=$((HOURS_OLD * 60))
+TMP_DIR="/tmp"
+PATTERN="nosql_test_*"
+
+echo "🧹 Running packages/nosql/test/nosql_cleanup script."
+echo "🏃 Cleaning up NoSQL test directories older than $HOURS_OLD hours..."
+echo
+
+# Safety check - make sure we're in /tmp
+if [[ ! -d "$TMP_DIR" ]]; then
+    echo "⛔️ Error: $TMP_DIR does not exist"
+    exit 1
+fi
+
+# Find and remove directories matching pattern older than specified hours
+find "$TMP_DIR" -maxdepth 1 -type d -name "$PATTERN" -mmin +$MINUTES_OLD -exec rm -rfv {} \;
+
+# Also clean up any leftover nosql test files
+find "$TMP_DIR" -maxdepth 1 -name "nosql_test_*" -mmin +$MINUTES_OLD -exec rm -fv {} \;
+
+echo "🏁 Cleanup completed."
+echo

@@ -1,12 +1,33 @@
 // nosql_ce_box_test.dart
+import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart' show Hive;
 import 'package:nosql/nosql.dart' show NoSqlCEdb, resetForTesting;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUpAll(() {
+  setUpAll(() async {
+    // Create the test directory structure
+    final testDir = Directory('/tmp/test_documents');
+    final nosqlDir = Directory('/tmp/test_documents/nosqldb');
+
+    if (!await testDir.exists()) {
+      await testDir.create(recursive: true);
+    }
+
+    if (!await nosqlDir.exists()) {
+      await nosqlDir.create(recursive: true);
+    }
+
+    // Initialize Hive for testing
+    try {
+      Hive.init('/tmp/test_documents');
+    } catch (e) {
+      // Hive might already be initialized, ignore the error
+    }
+
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
           const MethodChannel('plugins.flutter.io/path_provider'),
@@ -24,7 +45,7 @@ void main() {
         );
   });
 
-  tearDownAll(() {
+  tearDownAll(() async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
           const MethodChannel('plugins.flutter.io/path_provider'),
@@ -36,6 +57,23 @@ void main() {
           const MethodChannel('plugins.flutter.io/hive'),
           null,
         );
+
+    // Close all Hive boxes and clean up
+    try {
+      await Hive.close();
+    } catch (_) {
+      // Ignore cleanup errors
+    }
+
+    // Clean up test directories
+    try {
+      final testDir = Directory('/tmp/test_documents');
+      if (await testDir.exists()) {
+        await testDir.delete(recursive: true);
+      }
+    } catch (_) {
+      // Ignore cleanup errors
+    }
   });
 
   group('NoSqlCEBox', () {
