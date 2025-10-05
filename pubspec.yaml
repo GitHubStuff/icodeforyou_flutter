@@ -6,8 +6,10 @@ description: Collection of flutter packages
 workspace:
   - packages/abstractions
   - packages/analog_clock_widget
+  - packages/animated_checkbox_widget
   - packages/extensions
   - packages/nosql
+  - packages/theme_manager
   - packages/widgetbook_workspace
 
 environment:
@@ -102,7 +104,13 @@ melos:
       run: |
         echo "📦 Workspace packages:"
         find . -name "pubspec.yaml" -not -path "./pubspec.yaml" -exec dirname {} \; | sort
-  
+
+    test_nosql_cleanup:
+      description: Cleans up /tmp files created by NoSql package tests
+      run: |
+        echo "🛀 Clean /tmp files created by nosql_ce_box_test.dart and nosql_ce_db_test.dart"
+        ./packages/nosql/test/nosql_cleanup
+
     test_all:
       description: Run tests in all packages sequentially to avoid Flutter lock conflicts
       run: |

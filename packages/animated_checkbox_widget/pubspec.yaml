@@ -1,0 +1,21 @@
+name: animated_checkbox_widget
+description: "A new Flutter package project."
+version: 0.0.1
+resolution: workspace
+
+environment:
+  sdk: ^3.9.0
+  flutter: ">=3.35.5"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  platform_detector: ^0.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

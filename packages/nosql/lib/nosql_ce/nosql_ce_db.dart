@@ -1,4 +1,4 @@
-// nosql_db.dart
+// nosql_ce_db.dart
 // ignore_for_file: avoid_slow_async_io
 
 import 'dart:async' show FutureOr;
@@ -6,19 +6,16 @@ import 'dart:io' show Directory;
 
 import 'package:flutter/foundation.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart' show Hive, HiveX;
-import 'package:nosql/abstract/abstract.dart' show NoSqlDB;
+import 'package:nosql/abstract/abstract.dart' show NoSqlDBAbstract;
 // ignore: library_prefixes
 import 'package:path/path.dart' as P;
 import 'package:path_provider/path_provider.dart'
     show getApplicationDocumentsDirectory;
 
-import 'nosql_box.dart' show NoSqlBox;
-
-// ignore: constant_identifier_names
-const NoSqlDB NoSqlHive = NoSqlHiveImpl();
+import 'nosql_ce_box.dart' show NoSqlCEBox;
 
 @visibleForTesting
-void resetForTesting() => NoSqlHiveImpl._fullPath = null;
+void resetForTesting() => NoSqlCEdb._fullPath = null;
 
 abstract class PlatformChecker {
   bool get isWeb;
@@ -31,8 +28,8 @@ class DefaultPlatformChecker implements PlatformChecker {
   bool get isWeb => kIsWeb;
 }
 
-class NoSqlHiveImpl implements NoSqlDB {
-  const NoSqlHiveImpl([this.platformChecker = const DefaultPlatformChecker()]);
+class NoSqlCEdb implements NoSqlDBAbstract {
+  const NoSqlCEdb([this.platformChecker = const DefaultPlatformChecker()]);
 
   final PlatformChecker platformChecker;
 
@@ -73,6 +70,9 @@ class NoSqlHiveImpl implements NoSqlDB {
   }
 
   @override
+  FutureOr<void> close() async => await Hive.close();
+
+  @override
   FutureOr<bool> deleteFromDevice() async {
     try {
       await Hive.deleteFromDisk();
@@ -85,8 +85,8 @@ class NoSqlHiveImpl implements NoSqlDB {
   }
 
   @override
-  FutureOr<NoSqlBox<T>?> openBox<T>(String boxName) async {
+  FutureOr<NoSqlCEBox<T>?> openBox<T>(String boxName) async {
     final box = await Hive.openBox<T>(boxName);
-    return NoSqlBox<T>(box);
+    return NoSqlCEBox<T>(box);
   }
 }
