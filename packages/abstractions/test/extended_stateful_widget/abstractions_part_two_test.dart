@@ -1,7 +1,7 @@
 // abstractions_part_two_test.dart
 // Flutter 3.32.8 / Dart ">3.9.0"
 // Advanced edge cases and scenarios not covered in main tests
-import 'package:abstractions/abstractions.dart' show ObservingStatefulWidget;
+import 'package:abstractions/abstractions.dart' show ExtenedStatefulWidget;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -25,7 +25,7 @@ class ErrorThrowingWidget extends StatefulWidget {
 }
 
 class _ErrorThrowingWidgetState
-    extends ObservingStatefulWidget<ErrorThrowingWidget> {
+    extends ExtenedStatefulWidget<ErrorThrowingWidget> {
   List<String> methodCalls = [];
   List<Exception> caughtExceptions = [];
 
@@ -93,7 +93,7 @@ class InstanceTrackingWidget extends StatefulWidget {
 }
 
 class _InstanceTrackingWidgetState
-    extends ObservingStatefulWidget<InstanceTrackingWidget> {
+    extends ExtenedStatefulWidget<InstanceTrackingWidget> {
   @override
   void initState() {
     InstanceTrackingWidget.instances[widget.instanceId] = this;
@@ -140,7 +140,7 @@ class StressTestWidget extends StatefulWidget {
   State<StressTestWidget> createState() => _StressTestWidgetState();
 }
 
-class _StressTestWidgetState extends ObservingStatefulWidget<StressTestWidget> {
+class _StressTestWidgetState extends ExtenedStatefulWidget<StressTestWidget> {
   int observerCallCount = 0;
   List<DateTime> callTimestamps = [];
   Duration totalProcessingTime = Duration.zero;
@@ -192,7 +192,7 @@ class ContextTestWidget extends StatefulWidget {
 }
 
 class _ContextTestWidgetState
-    extends ObservingStatefulWidget<ContextTestWidget> {
+    extends ExtenedStatefulWidget<ContextTestWidget> {
   BuildContext? storedContext;
   List<String> contextValidityResults = [];
 
@@ -239,7 +239,7 @@ class _ContextTestWidgetState
 }
 
 void main() {
-  group('ObservingStatefulWidget Advanced Edge Cases', () {
+  group('ExtenedStatefulWidget Advanced Edge Cases', () {
     setUp(() {
       InstanceTrackingWidget.clearGlobalState();
     });

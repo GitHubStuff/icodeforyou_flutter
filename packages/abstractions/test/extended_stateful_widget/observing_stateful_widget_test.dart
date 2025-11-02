@@ -11,7 +11,7 @@ class _ProbeWidget extends StatefulWidget {
   State<_ProbeWidget> createState() => _ProbeWidgetState();
 }
 
-class _ProbeWidgetState extends ObservingStatefulWidget<_ProbeWidget> {
+class _ProbeWidgetState extends ExtenedStatefulWidget<_ProbeWidget> {
   int afterFirstLayoutCount = 0;
   int reportCalls = 0;
   double? lastReportedScale;

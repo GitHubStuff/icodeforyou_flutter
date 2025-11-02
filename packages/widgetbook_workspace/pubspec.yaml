@@ -25,9 +25,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-  mockito: ^5.5.0
-  widgetbook_generator: ^3.16.0
-  widgetbook: ^3.16.0
+  mockito: ^5.5.1
+  widgetbook_generator: ^3.18.0
+  widgetbook: ^3.18.0
   widgetbook_annotation: ^3.7.0
 
 flutter:

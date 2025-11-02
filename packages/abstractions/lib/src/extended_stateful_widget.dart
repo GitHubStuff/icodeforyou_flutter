@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 ///  didChangePlatformBrightness
 ///  didChangeTextScaleFactor
 
-abstract class ObservingStatefulWidget<T extends StatefulWidget>
+abstract class ExtenedStatefulWidget<T extends StatefulWidget>
     extends State<T>
     with WidgetsBindingObserver {
   @mustCallSuper

@@ -4,7 +4,7 @@ part of 'analog_clock.dart';
 ///
 /// Handles configuration caching, dependency injection, lifecycle management,
 /// and efficient rebuilds. Only recreates configuration when actually needed.
-class _AnalogClockState extends ObservingStatefulWidget<AnalogClock> {
+class _AnalogClockState extends ExtenedStatefulWidget<AnalogClock> {
   late _TimeService _timeService;
   late _ClockConfiguration _configuration;
   bool _isConfigurationValid = false;

@@ -1,7 +1,7 @@
 // abstractions_part_three_test.dart
 // Flutter 3.32.8 / Dart ">3.9.0"
 // Complete coverage testing - accessibility, locale, semantics, frame scheduling
-import 'package:abstractions/abstractions.dart' show ObservingStatefulWidget;
+import 'package:abstractions/abstractions.dart' show ExtenedStatefulWidget;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -17,7 +17,7 @@ class ComprehensiveObserverWidget extends StatefulWidget {
 }
 
 class _ComprehensiveObserverWidgetState
-    extends ObservingStatefulWidget<ComprehensiveObserverWidget> {
+    extends ExtenedStatefulWidget<ComprehensiveObserverWidget> {
   List<String> allObserverCalls = [];
   List<Locale> localeChanges = [];
   List<AppLifecycleState> lifecycleChanges = [];
@@ -142,7 +142,7 @@ class InheritedObserverWidget extends StatefulWidget {
 }
 
 class _InheritedObserverWidgetState
-    extends ObservingStatefulWidget<InheritedObserverWidget> {
+    extends ExtenedStatefulWidget<InheritedObserverWidget> {
   String? inheritedData;
   List<String> dataChanges = [];
 
@@ -178,7 +178,7 @@ class FrameSchedulingWidget extends StatefulWidget {
 }
 
 class _FrameSchedulingWidgetState
-    extends ObservingStatefulWidget<FrameSchedulingWidget> {
+    extends ExtenedStatefulWidget<FrameSchedulingWidget> {
   int frameCallbacks = 0;
   List<Duration> frameTimes = [];
   bool scheduledAdditionalFrame = false;
@@ -221,7 +221,7 @@ class SemanticsObserverWidget extends StatefulWidget {
 }
 
 class _SemanticsObserverWidgetState
-    extends ObservingStatefulWidget<SemanticsObserverWidget> {
+    extends ExtenedStatefulWidget<SemanticsObserverWidget> {
   bool semanticsEnabled = false;
   List<String> semanticsChanges = [];
 
@@ -251,7 +251,7 @@ class _SemanticsObserverWidgetState
 }
 
 void main() {
-  group('ObservingStatefulWidget Complete Coverage Tests', () {
+  group('ExtenedStatefulWidget Complete Coverage Tests', () {
     group('Accessibility and Locale Tests', () {
       testWidgets('handles accessibility features changes', (
         WidgetTester tester,

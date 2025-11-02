@@ -2,7 +2,7 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:abstractions/abstractions.dart' show ObservingStatefulWidget;
+import 'package:abstractions/abstractions.dart' show ExtenedStatefulWidget;
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 

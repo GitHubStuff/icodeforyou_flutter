@@ -1,6 +1,6 @@
 // observing_stateful_widget_test.dart
 // Flutter 3.32.8 / Dart ">3.9.0"
-import 'package:abstractions/abstractions.dart' show ObservingStatefulWidget;
+import 'package:abstractions/abstractions.dart' show ExtenedStatefulWidget;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -12,7 +12,7 @@ class TestWidget extends StatefulWidget {
   State<TestWidget> createState() => _TestWidgetState();
 }
 
-class _TestWidgetState extends ObservingStatefulWidget<TestWidget> {
+class _TestWidgetState extends ExtenedStatefulWidget<TestWidget> {
   List<String> methodCalls = [];
   List<AppLifecycleState> lifecycleStates = [];
   List<double?> textScaleFactors = [];
@@ -93,7 +93,7 @@ class _TestWidgetState extends ObservingStatefulWidget<TestWidget> {
 }
 
 void main() {
-  group('ObservingStatefulWidget Comprehensive Tests', () {
+  group('ExtenedStatefulWidget Comprehensive Tests', () {
     late TestWidget widget;
     late _TestWidgetState state;
 
