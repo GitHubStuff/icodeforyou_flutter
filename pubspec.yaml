@@ -9,6 +9,7 @@ workspace:
   - packages/animated_checkbox_widget
   - packages/extensions
   - packages/nosql
+  - packages/splash_screen_package
   - packages/theme_manager
   - packages/widgetbook_workspace
 
