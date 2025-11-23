@@ -1,6 +1,5 @@
 // test/src/presentation/widgets/scrolling_time_picker_effects_test.dart
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scrolling_datetime_pickers/scrolling_datetime_pickers.dart';
