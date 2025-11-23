@@ -1,6 +1,7 @@
 name: splash_screen_package
 description: "A new Flutter package project."
 version: 0.0.1
+resolution: workspace
 
 environment:
   sdk: ^3.9.2
