@@ -1,0 +1,28 @@
+name: since_when
+description: "A new Flutter package project."
+version: 0.0.1
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ">=3.9.0"
+  flutter: ">=3.35.5"
+
+dependencies:
+  dartz: ^0.10.1
+  flutter:
+    sdk: flutter
+  freezed_annotation: ^3.1.0
+  json_annotation: ^4.9.0
+  path: ^1.9.1
+  path_provider: ^2.1.5
+  sqflite: ^2.4.2
+  sqflite_common_ffi: ^2.4.0+1
+
+dev_dependencies:
+  build_runner: ^2.10.4
+  flutter_test:
+    sdk: flutter
+  freezed: ^3.2.3
+  json_serializable: ^6.11.2
+  very_good_analysis: ^10.0.0

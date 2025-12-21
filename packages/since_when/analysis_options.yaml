@@ -1,0 +1,12 @@
+# icodeforyou_flutter/packages/since_when/analysis_options.yaml
+
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  exclude:
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
+
+linter:
+  rules:
+    # Relaxed rules if needed (none for now - keeping strict)
