@@ -2,7 +2,7 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
-import 'dissolve_particle.dart';
+import '_dissolve_particle.dart';
 
 /// Generates particles for the dissolve animation
 ///

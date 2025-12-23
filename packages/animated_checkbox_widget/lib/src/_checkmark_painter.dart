@@ -1,8 +1,8 @@
 // lib/src/checkmark_painter.dart
 import 'package:flutter/material.dart';
 
-import 'dissolve_particle.dart';
-import 'checkmark_path_builder.dart';
+import '_dissolve_particle.dart';
+import '_checkmark_path_builder.dart';
 
 /// Custom painter for drawing and dissolving checkmarks with custom offsets
 ///

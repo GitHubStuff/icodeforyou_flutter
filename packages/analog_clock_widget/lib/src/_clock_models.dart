@@ -249,19 +249,19 @@ class _TickConfiguration {
 
     switch (style) {
       case ClockFaceStyle.classic:
-        shortMultiplier = 0.025;
-        longMultiplier = 0.05;
-        strokeMultiplier = 1.0;
+        shortMultiplier = _ClockConstants.classicShortTickMultiplier;
+        longMultiplier = _ClockConstants.classicLongTickMultiplier;
+        strokeMultiplier = _ClockConstants.classicStrokeMultiplier;
         break;
       case ClockFaceStyle.modern:
-        shortMultiplier = 0.04;
-        longMultiplier = 0.08;
-        strokeMultiplier = 1.5;
+        shortMultiplier = _ClockConstants.modernShortTickMultiplier;
+        longMultiplier = _ClockConstants.modernLongTickMultiplier;
+        strokeMultiplier = _ClockConstants.modernTickStrokeMultiplier;
         break;
       case ClockFaceStyle.minimal:
-        shortMultiplier = 0.015;
-        longMultiplier = 0.03;
-        strokeMultiplier = 0.8;
+        shortMultiplier = _ClockConstants.minimalShortTickMultiplier;
+        longMultiplier = _ClockConstants.minimalLongTickMultiplier;
+        strokeMultiplier = _ClockConstants.minimalTickStrokeMultiplier;
         break;
     }
 
@@ -270,7 +270,7 @@ class _TickConfiguration {
       strokeWidth: dimensions.strokeWidth * strokeMultiplier,
       shortLength: dimensions.radius * shortMultiplier,
       longLength: dimensions.radius * longMultiplier,
-      delta: 4.0 + dimensions.strokeWidth,
+      delta: _ClockConstants.tickDeltaBase + dimensions.strokeWidth,
       style: style,
     );
   }

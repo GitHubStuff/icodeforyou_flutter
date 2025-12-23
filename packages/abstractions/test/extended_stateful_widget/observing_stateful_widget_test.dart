@@ -3,7 +3,6 @@ import 'package:abstractions/abstractions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-
 class _ProbeWidget extends StatefulWidget {
   const _ProbeWidget({super.key});
 
@@ -11,7 +10,7 @@ class _ProbeWidget extends StatefulWidget {
   State<_ProbeWidget> createState() => _ProbeWidgetState();
 }
 
-class _ProbeWidgetState extends ExtenedStatefulWidget<_ProbeWidget> {
+class _ProbeWidgetState extends ExtendedStatefulWidget<_ProbeWidget> {
   int afterFirstLayoutCount = 0;
   int reportCalls = 0;
   double? lastReportedScale;

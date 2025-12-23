@@ -1,10 +1,10 @@
 // lib/src/animated_checkbox.dart
 import 'package:flutter/material.dart';
 
-import 'dissolve_particle.dart';
-import 'particle_generator.dart';
-import 'checkmark_path_builder.dart';
-import 'checkmark_painter.dart';
+import '_dissolve_particle.dart';
+import '_particle_generator.dart';
+import '_checkmark_path_builder.dart';
+import '_checkmark_painter.dart';
 
 /// A widget that animates a checkmark drawing or dissolving effect
 class AnimatedCheckbox extends StatefulWidget {

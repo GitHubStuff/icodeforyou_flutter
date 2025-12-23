@@ -1,7 +1,7 @@
 // abstractions_part_four_test.dart
 // Flutter 3.32.8 / Dart ">3.9.0"
 // Critical edge cases and failure modes that could break the widget in production
-import 'package:abstractions/abstractions.dart' show ExtenedStatefulWidget;
+import 'package:abstractions/abstractions.dart' show ExtendedStatefulWidget;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -26,7 +26,7 @@ class BadImplementationWidget extends StatefulWidget {
 }
 
 class _BadImplementationWidgetState
-    extends ExtenedStatefulWidget<BadImplementationWidget> {
+    extends ExtendedStatefulWidget<BadImplementationWidget> {
   List<String> methodCalls = [];
   bool initStateCompleted = false;
   bool disposeCompleted = false;
@@ -114,7 +114,7 @@ class MediaQueryTimingWidget extends StatefulWidget {
 }
 
 class _MediaQueryTimingWidgetState
-    extends ExtenedStatefulWidget<MediaQueryTimingWidget> {
+    extends ExtendedStatefulWidget<MediaQueryTimingWidget> {
   List<Size> capturedSizes = [];
   List<String> timingEvents = [];
   Size? sizeInDidChangeMetrics;
@@ -171,7 +171,7 @@ class DisposalRaceWidget extends StatefulWidget {
 }
 
 class _DisposalRaceWidgetState
-    extends ExtenedStatefulWidget<DisposalRaceWidget> {
+    extends ExtendedStatefulWidget<DisposalRaceWidget> {
   List<String> observerEvents = [];
   bool disposedDuringCallback = false;
   Exception? callbackException;
@@ -240,7 +240,7 @@ class PlatformDispatcherEdgeWidget extends StatefulWidget {
 }
 
 class _PlatformDispatcherEdgeWidgetState
-    extends ExtenedStatefulWidget<PlatformDispatcherEdgeWidget> {
+    extends ExtendedStatefulWidget<PlatformDispatcherEdgeWidget> {
   List<double?> receivedTextScaleFactors = [];
   List<String> platformEvents = [];
   Exception? platformException;
@@ -288,7 +288,7 @@ class ConcurrentObserverWidget extends StatefulWidget {
 }
 
 class _ConcurrentObserverWidgetState
-    extends ExtenedStatefulWidget<ConcurrentObserverWidget> {
+    extends ExtendedStatefulWidget<ConcurrentObserverWidget> {
   List<String> concurrentEvents = [];
   Map<String, int> methodCounts = {};
   bool processingConcurrentEvents = false;

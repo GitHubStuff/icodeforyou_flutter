@@ -55,7 +55,9 @@ class _ClockPainter extends CustomPainter {
     _drawHands(canvas);
   }
 
+  // ═══════════════════════════════════════════════════════════════════════════
   // TICK MARK RENDERING
+  // ═══════════════════════════════════════════════════════════════════════════
 
   /// Draws tick marks around the clock edge based on face style.
   void _drawTicks(Canvas canvas) {
@@ -78,13 +80,13 @@ class _ClockPainter extends CustomPainter {
       ..color = _tickConfig.color
       ..strokeWidth = _tickConfig.strokeWidth;
 
-    for (int i = 0; i < 60; i++) {
-      final isHourTick = i % 5 == 0;
+    for (int i = 0; i < _ClockConstants.totalTicks; i++) {
+      final isHourTick = i % _ClockConstants.ticksPerHour == 0;
       final tickLength = isHourTick
           ? _tickConfig.longLength
           : _tickConfig.shortLength;
 
-      final angle = i * pi / 30;
+      final angle = i * _ClockConstants.radiansPerTick;
       final tickStart = _calculateTickStart(angle);
       final tickEnd = _calculateTickEnd(angle, tickLength);
 
@@ -100,8 +102,8 @@ class _ClockPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     // Only draw hour ticks for modern style
-    for (int i = 0; i < 60; i += 5) {
-      final angle = i * pi / 30;
+    for (int i = 0; i < _ClockConstants.totalTicks; i += _ClockConstants.ticksPerHour) {
+      final angle = i * _ClockConstants.radiansPerTick;
       final tickStart = _calculateTickStart(angle);
       final tickEnd = _calculateTickEnd(angle, _tickConfig.longLength);
 
@@ -115,15 +117,17 @@ class _ClockPainter extends CustomPainter {
       ..color = _tickConfig.color
       ..style = PaintingStyle.fill;
 
-    // Only draw dots at 12, 3, 6, 9 for minimal style
-    for (int i = 0; i < 60; i += 15) {
-      final angle = i * pi / 30;
+    // Only draw dots at cardinal positions for minimal style
+    for (int i = 0; i < _ClockConstants.totalTicks; i += _ClockConstants.ticksPerQuarter) {
+      final angle = i * _ClockConstants.radiansPerTick;
+      final dotDistance = _radius - _tickConfig.longLength * _ClockConstants.minimalDotDistanceMultiplier;
       final dotCenter = Offset(
-        _center.dx + (_radius - _tickConfig.longLength * 2) * cos(angle),
-        _center.dy + (_radius - _tickConfig.longLength * 2) * sin(angle),
+        _center.dx + dotDistance * cos(angle),
+        _center.dy + dotDistance * sin(angle),
       );
 
-      canvas.drawCircle(dotCenter, _tickConfig.strokeWidth * 2, dotPaint);
+      final dotRadius = _tickConfig.strokeWidth * _ClockConstants.minimalDotRadiusMultiplier;
+      canvas.drawCircle(dotCenter, dotRadius, dotPaint);
     }
   }
 
@@ -143,7 +147,9 @@ class _ClockPainter extends CustomPainter {
     );
   }
 
+  // ═══════════════════════════════════════════════════════════════════════════
   // HOUR NUMBER RENDERING
+  // ═══════════════════════════════════════════════════════════════════════════
 
   /// Draws hour numbers (1-12) around the clock face.
   void _drawNumbers(Canvas canvas) {
@@ -157,7 +163,7 @@ class _ClockPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
 
-    for (int i = 0; i < 60; i += 5) {
+    for (int i = 0; i < _ClockConstants.totalTicks; i += _ClockConstants.ticksPerHour) {
       final hourNumber = _getHourNumber(i);
       final numberPosition = _calculateNumberPosition(i);
 
@@ -167,15 +173,15 @@ class _ClockPainter extends CustomPainter {
 
   /// Converts tick index to hour number (1-12).
   int _getHourNumber(int tickIndex) {
-    final hour = tickIndex ~/ 5;
-    return hour == 0 ? 12 : hour;
+    final hour = tickIndex ~/ _ClockConstants.ticksPerHour;
+    return hour == 0 ? _ClockConstants.hoursOnFace : hour;
   }
 
   /// Calculates position for an hour number.
   Offset _calculateNumberPosition(int tickIndex) {
-    final angle = (tickIndex - 15) * pi / 30; // -15 to position 12 at top
-    final numberRadius =
-        _radius - (_radius * _ClockConstants.hourOffsetMultiplier);
+    // Subtract topPositionTickOffset to rotate 12 o'clock to top
+    final angle = (tickIndex - _ClockConstants.topPositionTickOffset) * _ClockConstants.radiansPerTick;
+    final numberRadius = _radius - (_radius * _ClockConstants.hourOffsetMultiplier);
 
     return Offset(
       _center.dx + numberRadius * cos(angle),
@@ -191,8 +197,7 @@ class _ClockPainter extends CustomPainter {
     Offset position,
   ) {
     final fontWeight = configuration.style.faceStyle == ClockFaceStyle.modern
-        ? FontWeight
-              .w300 // Light weight for modern style
+        ? FontWeight.w300 // Light weight for modern style
         : FontWeight.normal;
 
     textPainter
@@ -214,11 +219,13 @@ class _ClockPainter extends CustomPainter {
     textPainter.paint(canvas, centeredPosition);
   }
 
+  // ═══════════════════════════════════════════════════════════════════════════
   // CLOCK HAND RENDERING
+  // ═══════════════════════════════════════════════════════════════════════════
 
   /// Draws all clock hands (hour, minute, second, center dot).
   void _drawHands(Canvas canvas) {
-    final baseStrokeWidth = _radius / 20;
+    final baseStrokeWidth = _radius / _ClockConstants.strokeWidthDivisor;
 
     _drawHourHand(canvas, baseStrokeWidth);
     _drawMinuteHand(canvas, baseStrokeWidth);
@@ -234,7 +241,7 @@ class _ClockPainter extends CustomPainter {
   void _drawHourHand(Canvas canvas, double baseStrokeWidth) {
     final handConfig = _HandConfiguration(
       color: configuration.colors.hour,
-      length: _radius / 2,
+      length: _radius * _ClockConstants.hourHandLengthRatio,
       strokeWidth: _getHandStrokeWidth(baseStrokeWidth, isHourHand: true),
       style: configuration.style.handStyle,
     );
@@ -247,7 +254,7 @@ class _ClockPainter extends CustomPainter {
   void _drawMinuteHand(Canvas canvas, double baseStrokeWidth) {
     final handConfig = _HandConfiguration(
       color: configuration.colors.minute,
-      length: _radius * 3 / 4,
+      length: _radius * _ClockConstants.minuteHandLengthRatio,
       strokeWidth: _getHandStrokeWidth(baseStrokeWidth, isHourHand: false),
       style: configuration.style.handStyle,
     );
@@ -260,7 +267,7 @@ class _ClockPainter extends CustomPainter {
   void _drawSecondHand(Canvas canvas, double baseStrokeWidth) {
     final handConfig = _HandConfiguration(
       color: configuration.colors.second,
-      length: _radius * 4 / 5,
+      length: _radius * _ClockConstants.secondHandLengthRatio,
       strokeWidth: _getSecondHandStrokeWidth(baseStrokeWidth),
       style: configuration.style.handStyle,
     );
@@ -274,15 +281,17 @@ class _ClockPainter extends CustomPainter {
     double baseStrokeWidth, {
     required bool isHourHand,
   }) {
-    final multiplier = isHourHand ? 0.7 : 0.5;
+    final multiplier = isHourHand
+        ? _ClockConstants.hourHandWidthMultiplier
+        : _ClockConstants.minuteHandWidthMultiplier;
 
     switch (configuration.style.handStyle) {
       case HandStyle.traditional:
         return baseStrokeWidth * multiplier;
       case HandStyle.modern:
-        return baseStrokeWidth * multiplier * 1.5; // Thicker for modern
+        return baseStrokeWidth * multiplier * _ClockConstants.modernHandThicknessFactor;
       case HandStyle.sleek:
-        return baseStrokeWidth * multiplier * 0.6; // Thinner for sleek
+        return baseStrokeWidth * multiplier * _ClockConstants.sleekHandThicknessFactor;
     }
   }
 
@@ -290,11 +299,11 @@ class _ClockPainter extends CustomPainter {
   double _getSecondHandStrokeWidth(double baseStrokeWidth) {
     switch (configuration.style.handStyle) {
       case HandStyle.traditional:
-        return baseStrokeWidth / 3;
+        return baseStrokeWidth / _ClockConstants.traditionalSecondHandDivisor;
       case HandStyle.modern:
-        return baseStrokeWidth / 2.5;
+        return baseStrokeWidth / _ClockConstants.modernSecondHandDivisor;
       case HandStyle.sleek:
-        return baseStrokeWidth / 4;
+        return baseStrokeWidth / _ClockConstants.sleekSecondHandDivisor;
     }
   }
 
@@ -324,10 +333,7 @@ class _ClockPainter extends CustomPainter {
     _HandConfiguration config,
     double angle,
   ) {
-    final handPosition = Offset(
-      _center.dx + config.length * cos(angle - pi / 2),
-      _center.dy + config.length * sin(angle - pi / 2),
-    );
+    final handPosition = _calculateHandEndPosition(config.length, angle);
 
     final paint = Paint()
       ..color = config.color
@@ -344,10 +350,7 @@ class _ClockPainter extends CustomPainter {
     double angle, {
     required bool isHourHand,
   }) {
-    final handEnd = Offset(
-      _center.dx + config.length * cos(angle - pi / 2),
-      _center.dy + config.length * sin(angle - pi / 2),
-    );
+    final handEnd = _calculateHandEndPosition(config.length, angle);
 
     final paint = Paint()
       ..color = config.color
@@ -355,9 +358,8 @@ class _ClockPainter extends CustomPainter {
 
     // Create a tapered hand shape that gets wider at the base
     final baseWidth = config.strokeWidth;
-    final tipWidth = config.strokeWidth * 0.3;
-    final perpAngle =
-        angle - pi / 2 + pi / 2; // Perpendicular to hand direction
+    final tipWidth = config.strokeWidth * _ClockConstants.modernHandTipRatio;
+    final perpAngle = angle; // Perpendicular to hand direction
 
     final path = Path();
 
@@ -391,10 +393,7 @@ class _ClockPainter extends CustomPainter {
 
   /// Draws a sleek minimal hand.
   void _drawSleekHand(Canvas canvas, _HandConfiguration config, double angle) {
-    final handPosition = Offset(
-      _center.dx + config.length * cos(angle - pi / 2),
-      _center.dy + config.length * sin(angle - pi / 2),
-    );
+    final handPosition = _calculateHandEndPosition(config.length, angle);
 
     final paint = Paint()
       ..color = config.color
@@ -410,10 +409,7 @@ class _ClockPainter extends CustomPainter {
     _HandConfiguration config,
     double angle,
   ) {
-    final handPosition = Offset(
-      _center.dx + config.length * cos(angle - pi / 2),
-      _center.dy + config.length * sin(angle - pi / 2),
-    );
+    final handPosition = _calculateHandEndPosition(config.length, angle);
 
     final paint = Paint()
       ..color = config.color
@@ -423,6 +419,16 @@ class _ClockPainter extends CustomPainter {
     canvas.drawLine(_center, handPosition, paint);
   }
 
+  /// Calculates the end position of a hand given its length and angle.
+  Offset _calculateHandEndPosition(double length, double angle) {
+    // Subtract rotation offset to convert from 3 o'clock to 12 o'clock reference
+    final adjustedAngle = angle - _ClockConstants.twelveOClockRotationOffset;
+    return Offset(
+      _center.dx + length * cos(adjustedAngle),
+      _center.dy + length * sin(adjustedAngle),
+    );
+  }
+
   /// Draws the center dot with size based on hand style.
   void _drawCenterDot(Canvas canvas, double baseStrokeWidth) {
     final centerPaint = Paint()
@@ -430,32 +436,35 @@ class _ClockPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     final dotRadius = switch (configuration.style.handStyle) {
-      HandStyle.traditional => baseStrokeWidth * 0.8,
-      HandStyle.modern => baseStrokeWidth * 1.2, // Larger for modern
-      HandStyle.sleek => baseStrokeWidth * 0.5, // Smaller for sleek
+      HandStyle.traditional => baseStrokeWidth * _ClockConstants.traditionalDotMultiplier,
+      HandStyle.modern => baseStrokeWidth * _ClockConstants.modernDotMultiplier,
+      HandStyle.sleek => baseStrokeWidth * _ClockConstants.sleekDotMultiplier,
     };
 
     canvas.drawCircle(_center, dotRadius, centerPaint);
   }
 
+  // ═══════════════════════════════════════════════════════════════════════════
   // ANGLE CALCULATIONS
+  // ═══════════════════════════════════════════════════════════════════════════
 
   /// Calculates the current angle for the hour hand.
   double _calculateHourAngle() {
-    return dateTime.hour * pi / 6 + dateTime.minute * pi / 360;
+    return dateTime.hour * _ClockConstants.radiansPerHour +
+           dateTime.minute * _ClockConstants.radiansPerMinuteForHourHand;
   }
 
   /// Calculates the current angle for the minute hand.
   double _calculateMinuteAngle() {
     final minuteSweep = _radius < _ClockConstants.minimumRadius
         ? 0.0
-        : (dateTime.second / 60 - 0.16);
-    return (dateTime.minute + minuteSweep) * pi / 30;
+        : (dateTime.second / _ClockConstants.secondsPerMinute - _ClockConstants.minuteSweepOffset);
+    return (dateTime.minute + minuteSweep) * _ClockConstants.radiansPerTick;
   }
 
   /// Calculates the current angle for the second hand.
   double _calculateSecondAngle() {
-    return dateTime.second * pi / 30;
+    return dateTime.second * _ClockConstants.radiansPerTick;
   }
 
   @override
