@@ -1,11 +1,12 @@
 // lib/src/show_editor.dart
 import 'dart:io';
 
-import 'package:edittext_popover/src/_constants.dart';
-import 'package:edittext_popover/src/_editor_overlay.dart';
-import 'package:edittext_popover/src/editor_result.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '_constants.dart';
+import '_editor_overlay.dart';
+import 'editor_result.dart';
 
 /// Shows the editor overlay and returns an [EditorResult] when closed.
 ///
@@ -13,7 +14,6 @@ import 'package:flutter/material.dart';
 /// On tablets/desktop/web: displays positioned near [targetRect] if provided.
 ///
 /// Returns [EditorCompleted] when saved, [EditorDismissed] when cancelled.
-
 Future<EditorResult> showEditor({
   required BuildContext context,
   String initialText = '',
@@ -22,8 +22,10 @@ Future<EditorResult> showEditor({
   Widget? saveWidget,
   Widget? cancelWidget,
   Rect? targetRect,
+  @visibleForTesting PlatformChecker? platformChecker,
 }) async {
-  final isFullScreen = _shouldUseFullScreen(context);
+  final checker = platformChecker ?? const PlatformChecker();
+  final isFullScreen = checker.shouldUseFullScreen(context);
 
   final effectiveTextStyle =
       textStyle ??
@@ -83,18 +85,28 @@ Future<EditorResult> showEditor({
   return result ?? EditorDismissed(text: initialText);
 }
 
-bool _shouldUseFullScreen(BuildContext context) {
-  const phoneBreakpoint = 600.0;
+/// Checks platform to determine editor display mode.
+@visibleForTesting
+class PlatformChecker {
+  const PlatformChecker();
 
-  if (kIsWeb) {
-    final size = MediaQuery.sizeOf(context);
-    return size.width < phoneBreakpoint;
+  static const double phoneBreakpoint = 600.0;
+
+  bool get isWeb => kIsWeb;
+
+  bool get isMobile => Platform.isIOS || Platform.isAndroid;
+
+  bool shouldUseFullScreen(BuildContext context) {
+    if (isWeb) {
+      final size = MediaQuery.sizeOf(context);
+      return size.width < phoneBreakpoint;
+    }
+
+    if (isMobile) {
+      final size = MediaQuery.sizeOf(context);
+      return size.shortestSide < phoneBreakpoint;
+    }
+
+    return false;
   }
-
-  if (Platform.isIOS || Platform.isAndroid) {
-    final size = MediaQuery.sizeOf(context);
-    return size.shortestSide < phoneBreakpoint;
-  }
-
-  return false;
 }
