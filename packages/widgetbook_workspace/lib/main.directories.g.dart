@@ -17,6 +17,8 @@ import 'package:widgetbook_workspace/packages/animated_checkbox_widget/animated_
     as _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widgetbook;
 import 'package:widgetbook_workspace/packages/extensions/date_time_ext/datetime_delta_stories.dart'
     as _widgetbook_workspace_packages_extensions_date_time_ext_datetime_delta_stories;
+import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/scrolling_datetime_pickers_widgetbook.dart'
+    as _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook;
 import 'package:widgetbook_workspace/packages/theme_manager/widgetbook_radiobutton_and_label.dart'
     as _widgetbook_workspace_packages_theme_manager_widgetbook_radiobutton_and_label;
 
@@ -108,6 +110,86 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder:
                 _widgetbook_workspace_packages_extensions_date_time_ext_datetime_delta_stories
                     .buildDateTimeDeltaTextFull,
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
+    name: 'presentation',
+    children: [
+      _widgetbook.WidgetbookFolder(
+        name: 'widgets',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'ScrollingDatePicker',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Custom Styling',
+                builder:
+                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
+                        .buildScrollingDatePickerCustomStylingCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder:
+                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
+                        .buildScrollingDatePickerDefaultCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Interactive Demo',
+                builder:
+                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
+                        .buildScrollingDatePickerInteractiveCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Theme Showcase',
+                builder:
+                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
+                        .buildScrollingDatePickerThemeShowcaseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Year-Month-Day Order',
+                builder:
+                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
+                        .buildScrollingDatePickerYMDCase,
+              ),
+            ],
+          ),
+          _widgetbook.WidgetbookComponent(
+            name: 'ScrollingTimePicker',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Custom Styling',
+                builder:
+                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
+                        .buildScrollingTimePickerCustomStylingCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder:
+                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
+                        .buildScrollingTimePickerDefaultCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Divider Styles',
+                builder:
+                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
+                        .buildScrollingTimePickerDividerStylesCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Interactive Demo',
+                builder:
+                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
+                        .buildScrollingTimePickerInteractiveCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'With Seconds',
+                builder:
+                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
+                        .buildScrollingTimePickerWithSecondsCase,
+              ),
+            ],
           ),
         ],
       ),

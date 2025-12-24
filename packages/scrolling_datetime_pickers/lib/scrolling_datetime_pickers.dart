@@ -2,6 +2,7 @@
 
 // Widgets
 export 'src/presentation/widgets/scrolling_time_picker.dart';
+export 'src/presentation/widgets/scrolling_date_picker.dart';
 
 // Models for configuration
 export 'src/core/models/divider_configuration.dart';

@@ -17,6 +17,8 @@ dependencies:
     path: ../animated_checkbox_widget
   extensions:
     path: ../extensions
+  scrolling_datetime_pickers:
+    path: ../scrolling_datetime_pickers
   theme_manager:
     path: ../theme_manager
 
