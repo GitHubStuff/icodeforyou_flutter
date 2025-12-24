@@ -37,7 +37,7 @@ class PositionedEditor extends StatelessWidget {
     final rect = targetRect ?? Rect.zero;
     final position = _calculatePosition(screenSize, rect);
 
-    final textFieldHeight =
+    const textFieldHeight =
         kEditorHeight -
         kStatsHeight -
         kButtonHeight -

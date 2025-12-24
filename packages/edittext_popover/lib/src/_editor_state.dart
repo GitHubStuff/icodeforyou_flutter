@@ -1,4 +1,6 @@
 // lib/src/_editor_state.dart
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/foundation.dart';
 
 /// Immutable state class for EditorScreenCubit.

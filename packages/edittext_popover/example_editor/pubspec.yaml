@@ -9,10 +9,10 @@ environment:
   flutter: ">=3.35.5"
 
 dependencies:
-  flutter:
-    sdk: flutter
   edittext_popover:
     path: ../
+  flutter:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:

@@ -1,12 +1,11 @@
 // lib/src/show_editor.dart
 import 'dart:io';
 
+import 'package:edittext_popover/src/_constants.dart';
+import 'package:edittext_popover/src/_editor_overlay.dart';
+import 'package:edittext_popover/src/editor_result.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '_constants.dart';
-import '_editor_overlay.dart';
-import 'editor_result.dart';
 
 /// Shows the editor overlay and returns an [EditorResult] when closed.
 ///
@@ -60,6 +59,7 @@ Future<EditorResult> showEditor({
   final result = await Navigator.of(context).push<EditorResult>(
     PageRouteBuilder<EditorResult>(
       opaque: false,
+      // ignore: avoid_redundant_argument_values
       barrierDismissible: false,
       pageBuilder: (context, animation, secondaryAnimation) {
         return EditorOverlay(
@@ -90,7 +90,7 @@ Future<EditorResult> showEditor({
 class PlatformChecker {
   const PlatformChecker();
 
-  static const double phoneBreakpoint = 600.0;
+  static const double phoneBreakpoint = 600;
 
   bool get isWeb => kIsWeb;
 

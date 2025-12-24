@@ -82,6 +82,7 @@ class _EditorTextFieldState extends State<EditorTextField> {
           decoration: widget.decoration,
           style: widget.style,
           readOnly: true,
+          // ignore: avoid_redundant_argument_values
           maxLines: 1,
         ),
       ),

@@ -6,34 +6,34 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('EditorScreenCubit', () {
-    test('initial state is created from initialText', () {
+    test('initial state is created from initialText', () async {
       final cubit = EditorScreenCubit(initialText: 'hello');
 
       expect(cubit.state.text, equals('hello'));
       expect(cubit.state.lineCount, equals(1));
       expect(cubit.state.characterCount, equals(5));
 
-      cubit.close();
+      await cubit.close();
     });
 
-    test('initial state with empty string', () {
+    test('initial state with empty string', () async {
       final cubit = EditorScreenCubit(initialText: '');
 
       expect(cubit.state.text, equals(''));
       expect(cubit.state.lineCount, equals(0));
       expect(cubit.state.characterCount, equals(0));
 
-      cubit.close();
+      await cubit.close();
     });
 
-    test('initial state with newlines', () {
+    test('initial state with newlines', () async {
       final cubit = EditorScreenCubit(initialText: 'a\nb\nc');
 
       expect(cubit.state.text, equals('a\nb\nc'));
       expect(cubit.state.lineCount, equals(3));
       expect(cubit.state.characterCount, equals(5));
 
-      cubit.close();
+      await cubit.close();
     });
 
     group('updateText', () {
@@ -68,9 +68,10 @@ void main() {
         'handles multiple updates',
         build: () => EditorScreenCubit(initialText: ''),
         act: (cubit) {
-          cubit.updateText('a');
-          cubit.updateText('ab');
-          cubit.updateText('abc');
+          cubit
+            ..updateText('a')
+            ..updateText('ab')
+            ..updateText('abc');
         },
         expect: () => [
           const EditorState(text: 'a', lineCount: 1, characterCount: 1),
