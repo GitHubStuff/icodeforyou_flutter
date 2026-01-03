@@ -1,4 +1,5 @@
-// scrolling_datetime_pickers_demo_widgets.dart
+// lib/packages/scrolling_datetime_pickers/scrolling_datetime_pickers_demo_widgets.dart
+
 part of 'scrolling_datetime_pickers_widgetbook.dart';
 
 class _InteractiveTimePickerDemo extends StatefulWidget {
