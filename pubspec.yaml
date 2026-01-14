@@ -13,6 +13,7 @@ workspace:
   - packages/scrolling_datetime_pickers
   - packages/since_when
   - packages/splash_screen_package
+  - packages/sqlite_viewer
   - packages/theme_manager
   - packages/widgetbook_workspace
 

@@ -19,6 +19,8 @@ import 'package:widgetbook_workspace/packages/extensions/date_time_ext/datetime_
     as _widgetbook_workspace_packages_extensions_date_time_ext_datetime_delta_stories;
 import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/scrolling_datetime_pickers_widgetbook.dart'
     as _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook;
+import 'package:widgetbook_workspace/packages/sqlite_viewer/display_query_widget.usecase.dart'
+    as _widgetbook_workspace_packages_sqlite_viewer_display_query_widget_usecase;
 import 'package:widgetbook_workspace/packages/theme_manager/widgetbook_radiobutton_and_label.dart'
     as _widgetbook_workspace_packages_theme_manager_widgetbook_radiobutton_and_label;
 
@@ -196,6 +198,35 @@ final directories = <_widgetbook.WidgetbookNode>[
   _widgetbook.WidgetbookFolder(
     name: 'widgets',
     children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'DisplayQueryWidget',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Dark Theme',
+            builder:
+                _widgetbook_workspace_packages_sqlite_viewer_display_query_widget_usecase
+                    .buildDisplayQueryWidgetDark,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_sqlite_viewer_display_query_widget_usecase
+                    .buildDisplayQueryWidgetDefault,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Empty State',
+            builder:
+                _widgetbook_workspace_packages_sqlite_viewer_display_query_widget_usecase
+                    .buildDisplayQueryWidgetEmpty,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Many Columns',
+            builder:
+                _widgetbook_workspace_packages_sqlite_viewer_display_query_widget_usecase
+                    .buildDisplayQueryWidgetManyColumns,
+          ),
+        ],
+      ),
       _widgetbook.WidgetbookComponent(
         name: 'RadiobuttonAndLabel',
         useCases: [

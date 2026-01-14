@@ -19,8 +19,12 @@ dependencies:
     path: ../extensions
   scrolling_datetime_pickers:
     path: ../scrolling_datetime_pickers
+  sqlite_viewer:
+    path: ../sqlite_viewer
   theme_manager:
     path: ../theme_manager
+  widgetbook: ^3.20.2
+  widgetbook_annotation: ^3.9.0
 
 dev_dependencies:
   build_runner: ^2.7.0   # dart run build_runner build --delete-conflicting-outputs
@@ -29,8 +33,7 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   mockito: ^5.5.1
   widgetbook_generator: ^3.20.1
-  widgetbook: ^3.20.2
-  widgetbook_annotation: ^3.9.0
+
 
 flutter:
   uses-material-design: true
