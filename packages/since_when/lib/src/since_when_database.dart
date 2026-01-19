@@ -1,6 +1,10 @@
-// icodeforyou_flutter/packages/since_when/lib/src/since_when_database.dart
+// packages/since_when/lib/src/since_when_database.dart
+
+// for doc files, best to ignore lines > 80 chars
+// ignore_for_file: lines_longer_than_80_chars
 
 import 'package:dartz/dartz.dart';
+import 'package:since_when/src/constants/database_constants.dart';
 import 'package:since_when/src/database/_database_initializer.dart';
 import 'package:since_when/src/domain/since_when_failure.dart';
 import 'package:since_when/src/domain/since_when_import_mode.dart';
@@ -8,166 +12,381 @@ import 'package:since_when/src/domain/since_when_record.dart';
 import 'package:since_when/src/domain/table_info.dart';
 import 'package:since_when/src/sql/create/_create_operations.dart';
 import 'package:sqflite/sqflite.dart';
-
-/// Reserved database name for singleton instance.
-const String _singletonDbName = 'since_when.db';
+import 'package:sqlite_viewer/sqlite_viewer.dart';
 
 /// Main entry point for SinceWhen database operations.
 ///
-/// Supports two usage patterns:
+/// Implements [SqliteViewerAbstract] for integration with sqlite_viewer package.
 ///
-/// **Singleton** (uses 'since_when.db'):
+/// **Singleton Pattern (file-based):**
+/// Only one file-based database instance is allowed per app.
 /// ```dart
-/// await SinceWhenDatabase.initializeSingleton();
-/// final db = SinceWhenDatabase.instance;
-/// await db.create(...);
+/// final result = await SinceWhenDatabase.openOrCreate();
+/// final db = result.getOrElse(() => throw Exception('Failed'));
 /// ```
 ///
-/// **Named Instance** (custom database name):
+/// **Multiple Instances (in-memory):**
+/// Unlimited in-memory instances are allowed for testing.
 /// ```dart
-/// final result = await SinceWhenDatabase.openOrCreate(dbName: 'my_data.db');
-/// result.fold(
-///   (failure) => handleError(failure),
-///   (db) async {
-///     await db.create(...);
-///     await db.close();
-///   },
-/// );
+/// final db1 = await SinceWhenDatabase.openInMemory();
+/// final db2 = await SinceWhenDatabase.openInMemory(); // OK
 /// ```
 ///
-/// Note: 'since_when.db' is reserved for singleton and cannot be used
-/// with [openOrCreate].
-class SinceWhenDatabase {
-  SinceWhenDatabase._(this._db);
+/// **Singleton Reset:**
+/// Calling [close] on the file-based instance resets the singleton,
+/// allowing a new instance with different parameters.
+/// ```dart
+/// final db1 = await SinceWhenDatabase.openOrCreate(dbName: 'first.db');
+/// await db1.close();
+/// final db2 = await SinceWhenDatabase.openOrCreate(dbName: 'second.db'); // OK
+/// ```
+class SinceWhenDatabase implements SqliteViewerAbstract {
+  SinceWhenDatabase._({
+    required Database db,
+    required String fullPath,
+    required bool isInMemory,
+  }) : _db = db,
+       _fullPath = fullPath,
+       _isInMemory = isInMemory;
 
   final Database _db;
+  final String _fullPath;
+  final bool _isInMemory;
 
-  // ---------------------------------------------------------------------------
-  // Singleton Pattern
-  // ---------------------------------------------------------------------------
+  // ===========================================================================
+  // Singleton Management
+  // ===========================================================================
 
-  static SinceWhenDatabase? _singleton;
+  static SinceWhenDatabase? _fileInstance;
+  static String? _fileInstanceDbName;
+  static String? _fileInstanceDbPath;
 
-  /// Returns the singleton instance.
+  /// Returns true if a file-based singleton instance exists.
+  static bool get hasFileInstance => _fileInstance != null;
+
+  // ===========================================================================
+  // Factory: openOrCreate (file-based singleton)
+  // ===========================================================================
+
+  /// Opens or creates a file-based database.
   ///
-  /// Throws [StateError] if [initializeSingleton] has not been called.
-  static SinceWhenDatabase get instance {
-    if (_singleton == null) {
-      throw StateError(
-        'SinceWhenDatabase not initialized. '
-        'Call SinceWhenDatabase.initializeSingleton() first.',
-      );
-    }
-    return _singleton!;
-  }
-
-  /// Initializes the singleton database instance.
+  /// Parameters:
+  /// - [dbName]: Database filename (default: 'since_when.sqlite')
+  /// - [dbPath]: Subfolder within documents directory (default: 'db')
   ///
-  /// Creates or opens 'since_when.db' in the documents directory.
-  /// Safe to call multiple times — subsequent calls are no-ops.
-  static Future<void> initializeSingleton() async {
-    if (_singleton != null) return;
-
-    final db = await DatabaseInitializer.openOrCreateDatabase(_singletonDbName);
-    _singleton = SinceWhenDatabase._(db);
-  }
-
-  /// Returns `true` if the singleton has been initialized.
-  static bool get isInitialized => _singleton != null;
-
-  // ---------------------------------------------------------------------------
-  // Named Instance Factory
-  // ---------------------------------------------------------------------------
-
-  /// Creates or opens a named database instance.
+  /// The full path will be: `{documentsDirectory}/{dbPath}/{dbName}`
   ///
-  /// The [dbName] must NOT be 'since_when.db' (reserved for singleton).
+  /// **Singleton Behavior:**
+  /// - First call creates the singleton instance
+  /// - Subsequent calls with SAME parameters return existing instance
+  /// - Subsequent calls with DIFFERENT parameters return [Left(DatabaseAlreadyInitialized)]
+  /// - After [close], a new instance can be created with different parameters
   ///
-  /// Returns [Right] with [SinceWhenDatabase] instance on success.
-  /// Returns [Left] with [ReservedDatabaseName] if dbName is reserved.
+  /// Returns [Right] with [SinceWhenDatabase] on success.
+  /// Returns [Left] with [SinceWhenFailure] on error.
   static Future<Either<SinceWhenFailure, SinceWhenDatabase>> openOrCreate({
-    required String dbName,
+    String dbName = kDefaultDatabaseName,
+    String dbPath = kDefaultDatabasePath,
   }) async {
-    if (dbName == _singletonDbName) {
-      return const Left(ReservedDatabaseName());
+    // Validate dbName
+    if (dbName.trim().isEmpty) {
+      return const Left(InvalidDatabaseName('Database name cannot be empty'));
+    }
+
+    // Check if singleton exists
+    if (_fileInstance != null) {
+      // Same params? Return existing instance error (per decision #29)
+      if (_fileInstanceDbName == dbName && _fileInstanceDbPath == dbPath) {
+        return const Left(
+          DatabaseAlreadyInitialized(
+            'Database already initialized with same parameters. '
+            'Use SinceWhenDatabase.instance or close() first.',
+          ),
+        );
+      }
+
+      // Different params? Error
+      return Left(
+        DatabaseAlreadyInitialized(
+          'Database already initialized with different parameters. '
+          'Call close() before opening with new parameters. '
+          'Current: $_fileInstanceDbPath/$_fileInstanceDbName, '
+          'Requested: $dbPath/$dbName',
+        ),
+      );
     }
 
     try {
-      final db = await DatabaseInitializer.openOrCreateDatabase(dbName);
-      return Right(SinceWhenDatabase._(db));
+      final result = await DatabaseInitializer.openOrCreateDatabase(
+        dbName: dbName,
+        dbPath: dbPath,
+      );
+
+      _fileInstance = SinceWhenDatabase._(
+        db: result.database,
+        fullPath: result.fullPath,
+        isInMemory: false,
+      );
+      _fileInstanceDbName = dbName;
+      _fileInstanceDbPath = dbPath;
+
+      return Right(_fileInstance!);
     } on Exception catch (e) {
       return Left(UnexpectedDatabaseError('Failed to open database', e));
     }
   }
 
+  // ===========================================================================
+  // Factory: openInMemory (unlimited instances)
+  // ===========================================================================
+
   /// Creates an in-memory database for testing.
   ///
+  /// Unlike file-based databases, unlimited in-memory instances are allowed.
   /// Data is lost when [close] is called.
+  ///
+  /// Returns [SinceWhenDatabase] instance (never fails).
   static Future<SinceWhenDatabase> openInMemory() async {
-    final db = await DatabaseInitializer.openInMemoryDatabase();
-    return SinceWhenDatabase._(db);
+    final result = await DatabaseInitializer.openInMemoryDatabase();
+
+    return SinceWhenDatabase._(
+      db: result.database,
+      fullPath: kInMemoryPath,
+      isInMemory: true,
+    );
   }
 
-  // ---------------------------------------------------------------------------
+  // ===========================================================================
   // Database Lifecycle
-  // ---------------------------------------------------------------------------
+  // ===========================================================================
 
   /// Closes the database connection.
   ///
-  /// For named instances, this releases resources.
-  /// For singleton, this also resets the singleton state.
+  /// For file-based instances, this resets the singleton state,
+  /// allowing a new instance with different parameters.
+  ///
+  /// For in-memory instances, data is lost.
   Future<void> close() async {
     await _db.close();
 
-    // Reset singleton if this is the singleton instance
-    if (_singleton?._db == _db) {
-      _singleton = null;
+    // Reset singleton if this is the file instance
+    if (!_isInMemory && _fileInstance == this) {
+      _fileInstance = null;
+      _fileInstanceDbName = null;
+      _fileInstanceDbPath = null;
     }
   }
 
-  /// Returns `true` if the database is open.
+  /// Returns true if the database is open.
   bool get isOpen => _db.isOpen;
 
-  // ---------------------------------------------------------------------------
-  // Database Metadata
-  // ---------------------------------------------------------------------------
+  /// Returns true if this is an in-memory database.
+  bool get isInMemory => _isInMemory;
+
+  /// Exposes the underlying database for extensions.
+  ///
+  /// Use with caution — prefer typed methods when available.
+  Database get database => _db;
+
+  // ===========================================================================
+  // SqliteViewerAbstract Implementation
+  // ===========================================================================
+
+  @override
+  Future<Either<SqliteViewerFailure, String>> getFullPath() async {
+    if (!_db.isOpen) {
+      return const Left(ViewerDatabaseNotOpen());
+    }
+    return Right(_fullPath);
+  }
+
+  @override
+  Future<Either<SqliteViewerFailure, String>> getSqliteVersion() async {
+    if (!_db.isOpen) {
+      return const Left(ViewerDatabaseNotOpen());
+    }
+
+    try {
+      final result = await _db.rawQuery('SELECT sqlite_version() AS version');
+      final version = result.first['version']! as String;
+      return Right(version);
+    } on Exception catch (e) {
+      return Left(ViewerMetadataFailed('sqlite_version', e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<SqliteViewerFailure, int>> getDatabaseSize() async {
+    if (!_db.isOpen) {
+      return const Left(ViewerDatabaseNotOpen());
+    }
+
+    try {
+      // Works for both file and in-memory databases
+      final pageCountResult = await _db.rawQuery('PRAGMA page_count');
+      final pageSizeResult = await _db.rawQuery('PRAGMA page_size');
+
+      final pageCount = pageCountResult.first['page_count']! as int;
+      final pageSize = pageSizeResult.first['page_size']! as int;
+
+      return Right(pageCount * pageSize);
+    } on Exception catch (e) {
+      return Left(ViewerMetadataFailed('database_size', e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<SqliteViewerFailure, List<String>>> getTableNames() async {
+    if (!_db.isOpen) {
+      return const Left(ViewerDatabaseNotOpen());
+    }
+
+    try {
+      final result = await _db.rawQuery(
+        'SELECT name FROM sqlite_master '
+        "WHERE type = 'table' AND name NOT LIKE 'sqlite_%' "
+        'ORDER BY name',
+      );
+
+      final tables = result.map((row) => row['name']! as String).toList();
+      return Right(tables);
+    } on Exception catch (e) {
+      return Left(ViewerMetadataFailed('table_names', e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<SqliteViewerFailure, int>> getRowCount(String tableName) async {
+    if (!_db.isOpen) {
+      return const Left(ViewerDatabaseNotOpen());
+    }
+
+    try {
+      final result = await _db.rawQuery(
+        'SELECT COUNT(*) AS count FROM "$tableName"',
+      );
+      final count = result.first['count']! as int;
+      return Right(count);
+    } on Exception catch (e) {
+      if (e.toString().contains('no such table')) {
+        return Left(ViewerTableNotFound(tableName));
+      }
+      return Left(ViewerQueryFailed('SELECT COUNT(*)', e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<SqliteViewerFailure, List<String>>> getColumnNames(
+    String tableName,
+  ) async {
+    if (!_db.isOpen) {
+      return const Left(ViewerDatabaseNotOpen());
+    }
+
+    try {
+      final result = await _db.rawQuery('PRAGMA table_info("$tableName")');
+
+      if (result.isEmpty) {
+        return Left(ViewerTableNotFound(tableName));
+      }
+
+      final columns = result.map((row) => row['name']! as String).toList();
+      return Right(columns);
+    } on Exception catch (e) {
+      return Left(ViewerPragmaFailed(tableName, 'table_info', e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<SqliteViewerFailure, List<Map<String, Object?>>>> getPragma({
+    required String tableName,
+    required PragmaKey key,
+  }) async {
+    if (!_db.isOpen) {
+      return const Left(ViewerDatabaseNotOpen());
+    }
+
+    final pragmaCommand = switch (key) {
+      PragmaKey.tableInfo => 'PRAGMA table_info("$tableName")',
+      PragmaKey.indexList => 'PRAGMA index_list("$tableName")',
+      PragmaKey.foreignKeyList => 'PRAGMA foreign_key_list("$tableName")',
+    };
+
+    try {
+      final result = await _db.rawQuery(pragmaCommand);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(ViewerPragmaFailed(tableName, key.name, e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<SqliteViewerFailure, List<Map<String, Object?>>>> executeSelect(
+    String sql,
+  ) async {
+    if (!_db.isOpen) {
+      return const Left(ViewerDatabaseNotOpen());
+    }
+
+    if (sql.trim().isEmpty) {
+      return const Left(ViewerQueryFailed('', 'Query cannot be empty'));
+    }
+
+    try {
+      final result = await _db.rawQuery(sql);
+      return Right(result);
+    } on Exception catch (e) {
+      return Left(ViewerQueryFailed(sql, e.toString()));
+    }
+  }
+  // ===========================================================================
+  // Database Metadata (SinceWhen-specific)
+  // ===========================================================================
 
   /// Returns metadata for all application tables in the database.
   ///
   /// Excludes SQLite internal tables (sqlite_*).
   ///
   /// Returns a list of [TableInfo] containing table names and row counts.
-  Future<List<TableInfo>> getTableListInfo() async {
-    final tableResults = await _db.rawQuery(
-      'SELECT name FROM sqlite_master '
-      "WHERE type = 'table' AND name NOT LIKE 'sqlite_%' "
-      'ORDER BY name',
-    );
-
-    final tableInfoList = <TableInfo>[];
-
-    for (final row in tableResults) {
-      final tableName = row['name']! as String;
-
-      final countResult = await _db.rawQuery(
-        'SELECT COUNT(*) as count FROM "$tableName"',
-      );
-      final rowCount = countResult.first['count']! as int;
-
-      tableInfoList.add(
-        TableInfo(
-          tableName: tableName,
-          rowCount: rowCount,
-        ),
-      );
+  Future<Either<SinceWhenFailure, List<TableInfo>>> getTableListInfo() async {
+    if (!_db.isOpen) {
+      return const Left(DatabaseNotInitialized());
     }
 
-    return tableInfoList;
+    try {
+      final tableResults = await _db.rawQuery(
+        'SELECT name FROM sqlite_master '
+        "WHERE type = 'table' AND name NOT LIKE 'sqlite_%' "
+        'ORDER BY name',
+      );
+
+      final tableInfoList = <TableInfo>[];
+
+      for (final row in tableResults) {
+        final tableName = row['name']! as String;
+
+        final countResult = await _db.rawQuery(
+          'SELECT COUNT(*) as count FROM "$tableName"',
+        );
+        final rowCount = countResult.first['count']! as int;
+
+        tableInfoList.add(
+          TableInfo(
+            tableName: tableName,
+            rowCount: rowCount,
+          ),
+        );
+      }
+
+      return Right(tableInfoList);
+    } on Exception catch (e) {
+      return Left(UnexpectedDatabaseError('Failed to get table info', e));
+    }
   }
 
-  // ---------------------------------------------------------------------------
+  // ===========================================================================
   // CRUD: Create
-  // ---------------------------------------------------------------------------
+  // ===========================================================================
 
   /// Creates a new record.
   ///
@@ -212,9 +431,9 @@ class SinceWhenDatabase {
     );
   }
 
-  // ---------------------------------------------------------------------------
+  // ===========================================================================
   // CRUD: Read (stubs)
-  // ---------------------------------------------------------------------------
+  // ===========================================================================
 
   /// Gets a record and its direct children by createdTimeStamp.
   ///
@@ -243,9 +462,9 @@ class SinceWhenDatabase {
     throw UnimplementedError('getByCategory not yet implemented');
   }
 
-  // ---------------------------------------------------------------------------
+  // ===========================================================================
   // CRUD: Update (stubs)
-  // ---------------------------------------------------------------------------
+  // ===========================================================================
 
   /// Updates an existing record.
   ///
@@ -265,9 +484,9 @@ class SinceWhenDatabase {
     throw UnimplementedError('markReviewed not yet implemented');
   }
 
-  // ---------------------------------------------------------------------------
+  // ===========================================================================
   // CRUD: Delete (stubs)
-  // ---------------------------------------------------------------------------
+  // ===========================================================================
 
   /// Deletes a record by its createdTimeStamp.
   ///
@@ -287,9 +506,9 @@ class SinceWhenDatabase {
     throw UnimplementedError('deleteWithDescendants not yet implemented');
   }
 
-  // ---------------------------------------------------------------------------
+  // ===========================================================================
   // Import / Export: String-based
-  // ---------------------------------------------------------------------------
+  // ===========================================================================
 
   /// Exports all records to a JSON string.
   ///
@@ -308,9 +527,9 @@ class SinceWhenDatabase {
     throw UnimplementedError('importFromString not yet implemented');
   }
 
-  // ---------------------------------------------------------------------------
+  // ===========================================================================
   // Import / Export: File-based
-  // ---------------------------------------------------------------------------
+  // ===========================================================================
 
   /// Exports all records to a JSON file.
   ///

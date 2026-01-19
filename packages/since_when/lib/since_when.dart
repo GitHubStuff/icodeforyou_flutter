@@ -5,48 +5,50 @@
 ///
 /// ## Getting Started
 ///
-/// **Singleton usage:**
+/// **Open or create database:**
 /// ```dart
 /// import 'package:since_when/since_when.dart';
 ///
-/// // Initialize once at app start
-/// await SinceWhenDatabase.initializeSingleton();
-///
-/// // Access anywhere
-/// final db = SinceWhenDatabase.instance;
+/// // Open with defaults (db/since_when.sqlite)
+/// final result = await SinceWhenDatabase.openOrCreate();
+/// final db = result.getOrElse(() => throw Exception('Failed'));
 ///
 /// // Create a record
-/// final result = await db.create(
+/// final recordResult = await db.create(
 ///   metaData: 'My first note',
 ///   dataString: 'This is the content...',
 ///   category: 'notes',
 ///   tags: ['personal', 'ideas'],
 /// );
 ///
-/// result.fold(
+/// recordResult.fold(
 ///   (failure) => print('Error: $failure'),
 ///   (record) => print('Created: ${record.createdTimeStamp}'),
 /// );
 /// ```
 ///
-/// **Named instance usage:**
+/// **Custom path:**
 /// ```dart
-/// final dbResult = await SinceWhenDatabase.openOrCreate(dbName: 'my_data.db');
-///
-/// dbResult.fold(
-///   (failure) => print('Error: $failure'),
-///   (db) async {
-///     await db.create(...);
-///     await db.close();
-///   },
+/// final result = await SinceWhenDatabase.openOrCreate(
+///   dbName: 'my_data.sqlite',
+///   dbPath: 'storage/data',
 /// );
 /// ```
+///
+/// **In-memory (testing):**
+/// ```dart
+/// final db = await SinceWhenDatabase.openInMemory();
+/// ```
 library;
+
+// Constants (public)
+export 'package:since_when/src/constants/database_constants.dart';
 
 // Domain exports (public)
 export 'package:since_when/src/domain/since_when_failure.dart';
 export 'package:since_when/src/domain/since_when_import_mode.dart';
 export 'package:since_when/src/domain/since_when_record.dart';
+export 'package:since_when/src/domain/table_info.dart';
 
 // Database API (public)
 export 'package:since_when/src/since_when_database.dart';

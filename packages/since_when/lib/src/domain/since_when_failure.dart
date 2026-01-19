@@ -137,3 +137,31 @@ class UnexpectedDatabaseError extends SinceWhenFailure {
   @override
   String toString() => 'UnexpectedDatabaseError: $message';
 }
+
+/// Invalid database name provided.
+class InvalidDatabaseName extends SinceWhenFailure {
+  /// Creates an [InvalidDatabaseName] failure.
+  const InvalidDatabaseName(this.message);
+
+  /// Description of why the name is invalid.
+  final String message;
+
+  @override
+  String toString() => 'InvalidDatabaseName: $message';
+}
+
+/// Database has already been initialized.
+///
+/// Returned when attempting to open a file-based database
+/// when one is already open. Call `SinceWhenDatabase.close()`
+/// before opening with different parameters.
+class DatabaseAlreadyInitialized extends SinceWhenFailure {
+  /// Creates a [DatabaseAlreadyInitialized] failure.
+  const DatabaseAlreadyInitialized(this.message);
+
+  /// Description of the conflict.
+  final String message;
+
+  @override
+  String toString() => 'DatabaseAlreadyInitialized: $message';
+}

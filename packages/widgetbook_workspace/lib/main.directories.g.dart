@@ -15,6 +15,8 @@ import 'package:widgetbook_workspace/packages/analog_clock_widget/analog_clock_w
     as _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget;
 import 'package:widgetbook_workspace/packages/animated_checkbox_widget/animated_checkbox_widgetbook.dart'
     as _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widgetbook;
+import 'package:widgetbook_workspace/packages/edittext_popover/edittext_popover.usecase.dart'
+    as _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase;
 import 'package:widgetbook_workspace/packages/extensions/date_time_ext/datetime_delta_stories.dart'
     as _widgetbook_workspace_packages_extensions_date_time_ext_datetime_delta_stories;
 import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/scrolling_datetime_pickers_widgetbook.dart'
@@ -92,6 +94,53 @@ final directories = <_widgetbook.WidgetbookNode>[
         builder:
             _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widgetbook
                 .buildAnimatedCheckboxPlatformCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
+    name: 'EditorTextField',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Custom Barrier Color',
+        builder:
+            _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase
+                .editorTextFieldCustomBarrier,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Custom Buttons',
+        builder:
+            _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase
+                .editorTextFieldCustomButtons,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Custom Styling',
+        builder:
+            _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase
+                .editorTextFieldCustomStyling,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Default',
+        builder:
+            _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase
+                .editorTextFieldDefault,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Interactive Playground',
+        builder:
+            _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase
+                .editorTextFieldPlayground,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Multiline Content',
+        builder:
+            _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase
+                .editorTextFieldMultiline,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Show Editor Function',
+        builder:
+            _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase
+                .showEditorDemo,
       ),
     ],
   ),

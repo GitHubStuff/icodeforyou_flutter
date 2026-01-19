@@ -1,8 +1,11 @@
-// packages/sqlite_table_viewer/lib/src/widgets/display_query_widget.dart
+// packages/sqlite_viewer/lib/src/widgets/display_query_widget.dart
 
 import 'package:flutter/material.dart';
 
 import '../models/text_handling.dart';
+
+part '_display_query_widget_layout.dart';
+part '_display_query_widget_cells.dart';
 
 /// A spreadsheet-style widget for displaying SQLite query results.
 ///
@@ -151,92 +154,6 @@ class _DisplayQueryWidgetState extends State<DisplayQueryWidget> {
     });
   }
 
-  void _calculateLayout() {
-    _displayColumns = _buildDisplayColumns();
-    _columnWidths = _computeColumnWidths();
-  }
-
-  List<String> _buildDisplayColumns() {
-    if (widget.showRowNumbers) {
-      return ['#', ...widget.columns];
-    }
-    return List.from(widget.columns);
-  }
-
-  List<double> _computeColumnWidths() {
-    final widths = <double>[];
-    final headerTextStyle = _effectiveHeaderStyle;
-    final dataTextStyle = widget.evenRowStyle;
-
-    for (var colIndex = 0; colIndex < _displayColumns.length; colIndex++) {
-      double maxWidth = _measureTextWidth(
-        _displayColumns[colIndex],
-        headerTextStyle,
-      );
-
-      for (final row in widget.rows) {
-        final cellValue = _getCellValue(row, colIndex);
-        final cellWidth = _measureTextWidth(cellValue, dataTextStyle);
-        if (cellWidth > maxWidth) {
-          maxWidth = cellWidth;
-        }
-      }
-
-      final paddedWidth =
-          maxWidth + widget.cellPadding.left + widget.cellPadding.right;
-
-      widths.add(
-        paddedWidth.clamp(widget.minColumnWidth, widget.maxColumnWidth),
-      );
-    }
-
-    return widths;
-  }
-
-  double _measureTextWidth(String text, TextStyle style) {
-    final textPainter = TextPainter(
-      text: TextSpan(text: text, style: style),
-      maxLines: 1,
-      textDirection: TextDirection.ltr,
-    )..layout();
-
-    return textPainter.width;
-  }
-
-  String _getCellValue(Map<String, Object?> row, int colIndex) {
-    if (widget.showRowNumbers && colIndex == 0) {
-      final rowIndex = widget.rows.indexOf(row);
-      return '${rowIndex + 1}';
-    }
-
-    final actualColIndex = widget.showRowNumbers ? colIndex - 1 : colIndex;
-    if (actualColIndex < 0 || actualColIndex >= widget.columns.length) {
-      return '';
-    }
-
-    final columnName = widget.columns[actualColIndex];
-    final value = row[columnName];
-
-    if (value == null) {
-      return widget.nullValueDisplay;
-    }
-
-    return value.toString();
-  }
-
-  TextStyle get _effectiveHeaderStyle {
-    return widget.headerStyle ??
-        widget.evenRowStyle.copyWith(fontWeight: FontWeight.bold);
-  }
-
-  Color get _effectiveBorderColor {
-    return widget.borderColor ?? Colors.grey.shade300;
-  }
-
-  double get _totalTableWidth {
-    return _columnWidths.fold(0.0, (sum, width) => sum + width);
-  }
-
   bool _listEquals<T>(List<T> a, List<T> b) {
     if (a.length != b.length) return false;
     for (var i = 0; i < a.length; i++) {
@@ -262,126 +179,5 @@ class _DisplayQueryWidgetState extends State<DisplayQueryWidget> {
         Expanded(child: _buildBody()),
       ],
     );
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      height: widget.headerHeight,
-      decoration: BoxDecoration(
-        color: widget.headerBackgroundColor,
-        border: Border(
-          bottom: BorderSide(color: _effectiveBorderColor, width: 2.0),
-        ),
-      ),
-      child: SingleChildScrollView(
-        controller: _horizontalHeaderController,
-        scrollDirection: Axis.horizontal,
-        physics: const ClampingScrollPhysics(),
-        child: Row(
-          children: List.generate(_displayColumns.length, (index) {
-            return _buildHeaderCell(index);
-          }),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeaderCell(int colIndex) {
-    return Container(
-      width: _columnWidths[colIndex],
-      height: widget.headerHeight,
-      padding: widget.cellPadding,
-      decoration: BoxDecoration(
-        border: Border(right: BorderSide(color: _effectiveBorderColor)),
-      ),
-      alignment: Alignment.centerLeft,
-      child: Text(
-        _displayColumns[colIndex],
-        style: _effectiveHeaderStyle,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-    );
-  }
-
-  Widget _buildBody() {
-    return SingleChildScrollView(
-      controller: _verticalController,
-      physics: const ClampingScrollPhysics(),
-      child: SingleChildScrollView(
-        controller: _horizontalBodyController,
-        scrollDirection: Axis.horizontal,
-        physics: const ClampingScrollPhysics(),
-        child: SizedBox(
-          width: _totalTableWidth,
-          child: Column(
-            children: List.generate(widget.rows.length, (rowIndex) {
-              return _buildRow(rowIndex);
-            }),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRow(int rowIndex) {
-    final isEven = rowIndex.isEven;
-    final rowStyle = isEven ? widget.evenRowStyle : widget.oddRowStyle;
-    final rowColor = isEven ? widget.evenRowColor : widget.oddRowColor;
-
-    return Container(
-      height: widget.rowHeight,
-      decoration: BoxDecoration(
-        color: rowColor,
-        border: Border(bottom: BorderSide(color: _effectiveBorderColor)),
-      ),
-      child: Row(
-        children: List.generate(_displayColumns.length, (colIndex) {
-          return _buildDataCell(rowIndex, colIndex, rowStyle);
-        }),
-      ),
-    );
-  }
-
-  Widget _buildDataCell(int rowIndex, int colIndex, TextStyle style) {
-    final row = widget.rows[rowIndex];
-    final cellValue = _getCellValue(row, colIndex);
-    final isNullValue = _isNullValue(row, colIndex);
-
-    final effectiveStyle = isNullValue
-        ? style.copyWith(fontStyle: FontStyle.italic, color: Colors.grey)
-        : style;
-
-    return Container(
-      width: _columnWidths[colIndex],
-      height: widget.rowHeight,
-      padding: widget.cellPadding,
-      decoration: BoxDecoration(
-        border: Border(right: BorderSide(color: _effectiveBorderColor)),
-      ),
-      alignment: Alignment.centerLeft,
-      child: widget.textHandling == TextHandling.trunc
-          ? Text(
-              cellValue,
-              style: effectiveStyle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            )
-          : Text(cellValue, style: effectiveStyle, softWrap: true),
-    );
-  }
-
-  bool _isNullValue(Map<String, Object?> row, int colIndex) {
-    if (widget.showRowNumbers && colIndex == 0) {
-      return false;
-    }
-
-    final actualColIndex = widget.showRowNumbers ? colIndex - 1 : colIndex;
-    if (actualColIndex < 0 || actualColIndex >= widget.columns.length) {
-      return false;
-    }
-
-    final columnName = widget.columns[actualColIndex];
-    return row[columnName] == null;
   }
 }
