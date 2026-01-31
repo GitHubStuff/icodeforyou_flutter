@@ -5,7 +5,7 @@ version: 0.1.1
 resolution: workspace
 
 environment:
-  sdk: ">=3.9.0"
+  sdk: ">=3.10.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -21,10 +21,14 @@ dependencies:
     path: ../extensions
   scrolling_datetime_pickers:
     path: ../scrolling_datetime_pickers
+  since_when:
+    path: ../since_when
   sqlite_viewer:
     path: ../sqlite_viewer
-  theme_manager:
-    path: ../theme_manager
+  step_slider_package:
+    path: ../step_slider_package
+  theme_package:
+    path: ../theme_package
   widgetbook: ^3.20.2
   widgetbook_annotation: ^3.9.0
 

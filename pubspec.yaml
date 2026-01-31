@@ -14,11 +14,12 @@ workspace:
   - packages/since_when
   - packages/splash_screen_package
   - packages/sqlite_viewer
-  - packages/theme_manager
+  - packages/step_slider_package
+  - packages/theme_package
   - packages/widgetbook_workspace
 
 environment:
-  sdk: ">=3.9.0"
+  sdk: ">=3.10.0 <4.0.0"
 
 
 dependency_overrides:

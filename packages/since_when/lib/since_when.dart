@@ -49,6 +49,7 @@ export 'package:since_when/src/domain/since_when_failure.dart';
 export 'package:since_when/src/domain/since_when_import_mode.dart';
 export 'package:since_when/src/domain/since_when_record.dart';
 export 'package:since_when/src/domain/table_info.dart';
+export 'package:since_when/src/domain/tag_match_mode.dart';
 
 // Database API (public)
 export 'package:since_when/src/since_when_database.dart';

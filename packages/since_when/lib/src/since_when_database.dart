@@ -10,7 +10,9 @@ import 'package:since_when/src/domain/since_when_failure.dart';
 import 'package:since_when/src/domain/since_when_import_mode.dart';
 import 'package:since_when/src/domain/since_when_record.dart';
 import 'package:since_when/src/domain/table_info.dart';
+import 'package:since_when/src/domain/tag_match_mode.dart';
 import 'package:since_when/src/sql/create/_create_operations.dart';
+import 'package:since_when/src/sql/read/_read_operations.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqlite_viewer/sqlite_viewer.dart';
 
@@ -446,11 +448,52 @@ class SinceWhenDatabase implements SqliteViewerAbstract {
 
   /// Gets all records matching a specific tag.
   ///
-  // TODO(steven): Implement in ReadOperations.
+  /// This is a convenience method that calls [getByTags] with a single tag.
   Future<Either<SinceWhenFailure, List<SinceWhenRecord>>> getByTag(
     String tag,
   ) async {
-    throw UnimplementedError('getByTag not yet implemented');
+    if (!_db.isOpen) {
+      return const Left(DatabaseNotInitialized());
+    }
+
+    return ReadOperations.getByTag(_db, tag);
+  }
+
+  /// Gets all records matching the specified tags based on [mode].
+  ///
+  /// Parameters:
+  /// - [tags]: List of tags to match against.
+  /// - [mode]: How to match tags (default: [TagMatchMode.any]).
+  ///
+  /// Match modes:
+  /// - [TagMatchMode.any]: Returns records with **at least one** matching tag.
+  /// - [TagMatchMode.all]: Returns records with **all** specified tags.
+  ///
+  /// Returns empty list if [tags] is empty.
+  ///
+  /// Example:
+  /// ```dart
+  /// // Get records with 'flutter' OR 'dart'
+  /// final anyResult = await db.getByTags(
+  ///   ['flutter', 'dart'],
+  ///   mode: TagMatchMode.any,
+  /// );
+  ///
+  /// // Get records with 'flutter' AND 'dart'
+  /// final allResult = await db.getByTags(
+  ///   ['flutter', 'dart'],
+  ///   mode: TagMatchMode.all,
+  /// );
+  /// ```
+  Future<Either<SinceWhenFailure, List<SinceWhenRecord>>> getByTags(
+    List<String> tags, {
+    TagMatchMode mode = TagMatchMode.any,
+  }) async {
+    if (!_db.isOpen) {
+      return const Left(DatabaseNotInitialized());
+    }
+
+    return ReadOperations.getByTags(_db, tags, mode: mode);
   }
 
   /// Gets all records in a category.

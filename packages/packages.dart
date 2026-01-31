@@ -11,4 +11,4 @@ export 'package:scrolling_datetime_pickers/scrolling_datetime_pickers.dart';
 export 'package:since_when/since_when.dart';
 export 'package:splash_screen_package/splash_screen_package.dart';
 export 'package:sqlite_viewer/sqlite_viewer.dart';
-export 'package:theme_manager/theme_manager.dart';
+export 'package:step_slider_package/step_slider_package.dart';

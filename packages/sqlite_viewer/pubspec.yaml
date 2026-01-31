@@ -5,8 +5,7 @@ resolution: workspace
 publish_to: "none"
 
 environment:
-  sdk: ">=3.10.4 <4.0.0"
-  flutter: ">=3.10.0"
+  sdk: ">=3.10.0 <4.0.0"
 
 dependencies:
   dartz: ^0.10.1
