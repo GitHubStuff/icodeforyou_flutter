@@ -1,9 +1,12 @@
 // packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_page.dart
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../abstract/sqlite_viewer_abstract.dart';
+import '../models/database_metadata.dart';
 import '../cubit/sqlite_viewer_cubit.dart';
 import '../cubit/sqlite_viewer_state.dart';
 import '../models/text_handling.dart';

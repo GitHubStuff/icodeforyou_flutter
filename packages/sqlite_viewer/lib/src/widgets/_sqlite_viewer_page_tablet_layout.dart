@@ -63,10 +63,13 @@ class _TabletLayout extends StatelessWidget {
             metadata: metadata,
             selectedTable: selectedTable,
             onTableSelected: (tableName) {
-              context.read<SqliteViewerCubit>().selectTable(tableName);
+              unawaited(
+                context.read<SqliteViewerCubit>().selectTable(tableName),
+              );
             },
-            onRefresh: () =>
-                context.read<SqliteViewerCubit>().refreshMetadata(),
+            onRefresh: () {
+              unawaited(context.read<SqliteViewerCubit>().refreshMetadata());
+            },
             isLoading: state is MetadataLoading,
           ),
         ),
@@ -81,8 +84,11 @@ class _TabletLayout extends StatelessWidget {
               Expanded(child: _buildMainContent(context, state)),
               if (showQueryInput)
                 SqliteViewerQueryInput(
-                  onExecute: (sql) =>
+                  onExecute: (sql) {
+                    unawaited(
                       context.read<SqliteViewerCubit>().executeQuery(sql),
+                    );
+                  },
                   isExecuting: state is QueryExecuting,
                   initialQuery: _getLastQuery(state),
                   maxLines: 3,
@@ -117,16 +123,22 @@ class _TabletLayout extends StatelessWidget {
           foreignKeys: foreignKeys,
           rows: rows,
           rowCount: rowCount,
-          onRefresh: () =>
+          onRefresh: () {
+            unawaited(
               context.read<SqliteViewerCubit>().selectTable(tableName),
+            );
+          },
           showRowNumbers: showRowNumbers,
           nullValueDisplay: nullValueDisplay,
           textHandling: textHandling,
         ),
       TableDetailLoadFailed(:final tableName, :final failure) => _ErrorView(
           message: 'Failed to load $tableName: ${failure.message}',
-          onRetry: () =>
+          onRetry: () {
+            unawaited(
               context.read<SqliteViewerCubit>().selectTable(tableName),
+            );
+          },
         ),
       QueryExecuting() => const _LoadingView(
           message: 'Executing query...',
@@ -142,13 +154,15 @@ class _TabletLayout extends StatelessWidget {
         ),
       QueryFailed(:final query, :final failure) => _ErrorView(
           message: 'Query failed: ${failure.message}',
-          onRetry: () => context.read<SqliteViewerCubit>().executeQuery(query),
+          onRetry: () {
+            unawaited(context.read<SqliteViewerCubit>().executeQuery(query));
+          },
         ),
       _ => const _SelectTablePrompt(),
     };
   }
 
-  dynamic _getMetadata(SqliteViewerState state) {
+  DatabaseMetadata? _getMetadata(SqliteViewerState state) {
     return switch (state) {
       MetadataLoading(:final metadata) => metadata,
       MetadataLoaded(:final metadata) => metadata,

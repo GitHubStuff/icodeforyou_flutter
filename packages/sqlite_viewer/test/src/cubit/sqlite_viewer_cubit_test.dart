@@ -60,13 +60,13 @@ void main() {
               .having((s) => s.metadata.fullPath, 'fullPath', '/path/test.db')
               .having((s) => s.metadata.sqliteVersion, 'version', '3.39.0')
               .having((s) => s.metadata.databaseSize, 'size', 1024)
-              .having(
-                  (s) => s.metadata.tables, 'tables', ['users', 'posts']),
+              .having((s) => s.metadata.tables, 'tables', ['users', 'posts']),
         ],
       );
 
       blocTest<SqliteViewerCubit, SqliteViewerState>(
-        'emits [ViewerConnecting, ViewerConnectionFailed] when getFullPath fails',
+        'emits [ViewerConnecting, ViewerConnectionFailed] when getFullPath'
+        ' fails',
         build: () {
           mockSource.getFullPathFailure = const ViewerDatabaseNotOpen();
           return SqliteViewerCubit(mockSource);
@@ -85,8 +85,10 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits [ViewerConnecting, ViewerConnectionFailed] when getSqliteVersion fails',
         build: () {
-          mockSource.getSqliteVersionFailure =
-              const ViewerMetadataFailed('version', 'error');
+          mockSource.getSqliteVersionFailure = const ViewerMetadataFailed(
+            'version',
+            'error',
+          );
           return SqliteViewerCubit(mockSource);
         },
         act: (cubit) => cubit.connect(),
@@ -97,10 +99,13 @@ void main() {
       );
 
       blocTest<SqliteViewerCubit, SqliteViewerState>(
-        'emits [ViewerConnecting, ViewerConnectionFailed] when getDatabaseSize fails',
+        'emits [ViewerConnecting, ViewerConnectionFailed] when getDatabaseSize'
+        ' fails',
         build: () {
-          mockSource.getDatabaseSizeFailure =
-              const ViewerMetadataFailed('size', 'error');
+          mockSource.getDatabaseSizeFailure = const ViewerMetadataFailed(
+            'size',
+            'error',
+          );
           return SqliteViewerCubit(mockSource);
         },
         act: (cubit) => cubit.connect(),
@@ -113,8 +118,10 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits [ViewerConnecting, ViewerConnectionFailed] when getTableNames fails',
         build: () {
-          mockSource.getTableNamesFailure =
-              const ViewerMetadataFailed('tables', 'error');
+          mockSource.getTableNamesFailure = const ViewerMetadataFailed(
+            'tables',
+            'error',
+          );
           return SqliteViewerCubit(mockSource);
         },
         act: (cubit) => cubit.connect(),
@@ -248,8 +255,7 @@ void main() {
           ),
           isA<TableDetailLoaded>()
               .having((s) => s.tableName, 'tableName', 'users')
-              .having(
-                  (s) => s.columns, 'columns', ['id', 'name', 'email'])
+              .having((s) => s.columns, 'columns', ['id', 'name', 'email'])
               .having((s) => s.rowCount, 'rowCount', 10),
         ],
       );
@@ -271,8 +277,7 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits TableDetailLoadFailed when getColumnNames fails',
         build: () {
-          mockSource.getColumnNamesFailure =
-              const ViewerTableNotFound('users');
+          mockSource.getColumnNamesFailure = const ViewerTableNotFound('users');
           return SqliteViewerCubit(mockSource);
         },
         seed: () => const MetadataLoaded(metadata: testMetadata),
@@ -289,8 +294,11 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits TableDetailLoadFailed when getPragma tableInfo fails',
         build: () {
-          mockSource.getPragmaFailure =
-              const ViewerPragmaFailed('users', 'table_info', 'error');
+          mockSource.getPragmaFailure = const ViewerPragmaFailed(
+            'users',
+            'table_info',
+            'error',
+          );
           return SqliteViewerCubit(mockSource);
         },
         seed: () => const MetadataLoaded(metadata: testMetadata),
@@ -307,8 +315,10 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits TableDetailLoadFailed when getRowCount fails',
         build: () {
-          mockSource.getRowCountFailure =
-              const ViewerQueryFailed('COUNT', 'error');
+          mockSource.getRowCountFailure = const ViewerQueryFailed(
+            'COUNT',
+            'error',
+          );
           return SqliteViewerCubit(mockSource);
         },
         seed: () => const MetadataLoaded(metadata: testMetadata),
@@ -325,8 +335,10 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits TableDetailLoadFailed when executeSelect fails',
         build: () {
-          mockSource.executeSelectFailure =
-              const ViewerQueryFailed('SELECT', 'error');
+          mockSource.executeSelectFailure = const ViewerQueryFailed(
+            'SELECT',
+            'error',
+          );
           return SqliteViewerCubit(mockSource);
         },
         seed: () => const MetadataLoaded(metadata: testMetadata),
@@ -427,8 +439,10 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits [QueryExecuting, QueryFailed] when executeSelect fails',
         build: () {
-          mockSource.executeSelectFailure =
-              const ViewerQueryFailed('SELECT', 'error');
+          mockSource.executeSelectFailure = const ViewerQueryFailed(
+            'SELECT',
+            'error',
+          );
           return SqliteViewerCubit(mockSource);
         },
         seed: () => const MetadataLoaded(metadata: testMetadata),

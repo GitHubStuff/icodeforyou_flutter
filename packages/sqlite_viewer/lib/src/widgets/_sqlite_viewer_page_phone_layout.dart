@@ -42,8 +42,11 @@ class _PhoneLayoutState extends State<_PhoneLayout> {
                   state is QueryResultLoaded)
                 IconButton(
                   icon: const Icon(Icons.refresh),
-                  onPressed: () =>
+                  onPressed: () {
+                    unawaited(
                       context.read<SqliteViewerCubit>().refreshMetadata(),
+                    );
+                  },
                   tooltip: 'Refresh',
                 ),
             ],
@@ -88,8 +91,9 @@ class _PhoneLayoutState extends State<_PhoneLayout> {
         _buildConnectedBody(context, state, metadata),
       MetadataLoaded(:final metadata) =>
         _buildConnectedBody(context, state, metadata),
-      MetadataLoadFailed(:final metadata) =>
-        _buildConnectedBody(context, state, metadata),
+      MetadataLoadFailed(:final metadata) => metadata != null
+          ? _buildConnectedBody(context, state, metadata)
+          : const _DisconnectedView(),
       TableDetailLoading(:final metadata) =>
         _buildConnectedBody(context, state, metadata),
       TableDetailLoaded(:final metadata) =>
@@ -108,7 +112,7 @@ class _PhoneLayoutState extends State<_PhoneLayout> {
   Widget _buildConnectedBody(
     BuildContext context,
     SqliteViewerState state,
-    dynamic metadata,
+    DatabaseMetadata metadata,
   ) {
     switch (_currentIndex) {
       case 0:
@@ -125,7 +129,7 @@ class _PhoneLayoutState extends State<_PhoneLayout> {
   Widget _buildTablesTab(
     BuildContext context,
     SqliteViewerState state,
-    dynamic metadata,
+    DatabaseMetadata metadata,
   ) {
     final selectedTable = switch (state) {
       TableDetailLoading(:final tableName) => tableName,
@@ -138,10 +142,12 @@ class _PhoneLayoutState extends State<_PhoneLayout> {
       metadata: metadata,
       selectedTable: selectedTable,
       onTableSelected: (tableName) {
-        context.read<SqliteViewerCubit>().selectTable(tableName);
+        unawaited(context.read<SqliteViewerCubit>().selectTable(tableName));
         setState(() => _currentIndex = 1);
       },
-      onRefresh: () => context.read<SqliteViewerCubit>().refreshMetadata(),
+      onRefresh: () {
+        unawaited(context.read<SqliteViewerCubit>().refreshMetadata());
+      },
       isLoading: state is MetadataLoading,
     );
   }
@@ -168,22 +174,30 @@ class _PhoneLayoutState extends State<_PhoneLayout> {
           foreignKeys: foreignKeys,
           rows: rows,
           rowCount: rowCount,
-          onRefresh: () =>
+          onRefresh: () {
+            unawaited(
               context.read<SqliteViewerCubit>().selectTable(tableName),
+            );
+          },
           showRowNumbers: widget.showRowNumbers,
           nullValueDisplay: widget.nullValueDisplay,
           textHandling: widget.textHandling,
         ),
       TableDetailLoadFailed(:final tableName, :final failure) => _ErrorView(
           message: 'Failed to load $tableName: ${failure.message}',
-          onRetry: () =>
+          onRetry: () {
+            unawaited(
               context.read<SqliteViewerCubit>().selectTable(tableName),
+            );
+          },
         ),
       QueryResultLoaded(:final query, :final columns, :final rows) =>
         _buildQueryResult(context, query, columns, rows),
       QueryFailed(:final query, :final failure) => _ErrorView(
           message: 'Query failed: ${failure.message}',
-          onRetry: () => context.read<SqliteViewerCubit>().executeQuery(query),
+          onRetry: () {
+            unawaited(context.read<SqliteViewerCubit>().executeQuery(query));
+          },
         ),
       _ => const _EmptyDataView(),
     };
@@ -208,7 +222,7 @@ class _PhoneLayoutState extends State<_PhoneLayout> {
   Widget _buildQueryTab(
     BuildContext context,
     SqliteViewerState state,
-    dynamic metadata,
+    DatabaseMetadata metadata,
   ) {
     final isExecuting = state is QueryExecuting;
     final lastQuery = switch (state) {
@@ -224,7 +238,7 @@ class _PhoneLayoutState extends State<_PhoneLayout> {
         ),
         SqliteViewerQueryInput(
           onExecute: (sql) {
-            context.read<SqliteViewerCubit>().executeQuery(sql);
+            unawaited(context.read<SqliteViewerCubit>().executeQuery(sql));
             setState(() => _currentIndex = 1);
           },
           isExecuting: isExecuting,
