@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../models/text_handling.dart';
-import 'display_query_widget.dart';
+import 'package:sqlite_viewer/src/models/text_handling.dart';
+import 'package:sqlite_viewer/src/widgets/display_query_widget.dart';
 
 part '_sqlite_viewer_table_detail_schema.dart';
 part '_sqlite_viewer_table_detail_items.dart';
@@ -16,7 +16,7 @@ part '_sqlite_viewer_table_detail_items.dart';
 /// - Foreign keys
 /// - Table data in a spreadsheet view
 ///
-/// Used as the main content area in [SqliteViewerPage] when a table is selected.
+/// Used as the main content area in 'SqliteViewerPage' when a table is selected.
 ///
 /// Example:
 /// ```dart
@@ -31,8 +31,8 @@ part '_sqlite_viewer_table_detail_items.dart';
 /// )
 /// ```
 class SqliteViewerTableDetail extends StatefulWidget {
+  /// [SqliteViewerTableDetail] constructor
   const SqliteViewerTableDetail({
-    super.key,
     required this.tableName,
     required this.columns,
     required this.tableInfo,
@@ -40,6 +40,7 @@ class SqliteViewerTableDetail extends StatefulWidget {
     required this.foreignKeys,
     required this.rows,
     required this.rowCount,
+    super.key,
     this.onRefresh,
     this.isLoading = false,
     this.showRowNumbers = true,
@@ -140,7 +141,7 @@ class _SqliteViewerTableDetailState extends State<SqliteViewerTableDetail>
         _buildHeader(context, theme, colorScheme),
 
         // Tab bar
-        Container(
+        ColoredBox(
           color: colorScheme.surfaceContainerHighest,
           child: TabBar(
             controller: _tabController,
@@ -271,11 +272,13 @@ class _SqliteViewerTableDetailState extends State<SqliteViewerTableDetail>
       );
     }
 
-    final effectiveEvenStyle = widget.evenRowStyle ??
+    final effectiveEvenStyle =
+        widget.evenRowStyle ??
         theme.textTheme.bodyMedium ??
         const TextStyle(fontSize: 14);
 
-    final effectiveOddStyle = widget.oddRowStyle ??
+    final effectiveOddStyle =
+        widget.oddRowStyle ??
         theme.textTheme.bodyMedium ??
         const TextStyle(fontSize: 14);
 

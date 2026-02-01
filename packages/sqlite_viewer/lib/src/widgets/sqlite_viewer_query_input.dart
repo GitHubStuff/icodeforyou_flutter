@@ -3,7 +3,7 @@
 import 'package:edittext_popover/edittext_popover.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/query_validator.dart';
+import 'package:sqlite_viewer/src/utils/query_validator.dart';
 
 /// A widget for entering and executing custom SELECT queries.
 ///
@@ -14,7 +14,7 @@ import '../utils/query_validator.dart';
 /// - Clear button
 /// - Expand button to open full editor popover
 ///
-/// Used in [SqliteViewerPage] for custom query execution.
+/// Used in 'SqliteViewerPage' for custom query execution.
 ///
 /// Example:
 /// ```dart
@@ -24,9 +24,10 @@ import '../utils/query_validator.dart';
 /// )
 /// ```
 class SqliteViewerQueryInput extends StatefulWidget {
+  /// Create [SqliteViewerQueryInput] with constructor
   const SqliteViewerQueryInput({
-    super.key,
     required this.onExecute,
+    super.key,
     this.isExecuting = false,
     this.initialQuery,
     this.hintText = 'SELECT * FROM table_name',
@@ -81,8 +82,9 @@ class _SqliteViewerQueryInputState extends State<SqliteViewerQueryInput> {
 
   @override
   void dispose() {
-    _controller.removeListener(_onTextChanged);
-    _controller.dispose();
+    _controller
+      ..removeListener(_onTextChanged)
+      ..dispose();
     _focusNode.dispose();
     super.dispose();
   }

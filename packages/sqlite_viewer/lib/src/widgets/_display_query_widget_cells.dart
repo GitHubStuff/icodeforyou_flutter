@@ -13,7 +13,7 @@ extension _CellBuilders on _DisplayQueryWidgetState {
       decoration: BoxDecoration(
         color: widget.headerBackgroundColor,
         border: Border(
-          bottom: BorderSide(color: _effectiveBorderColor, width: 2.0),
+          bottom: BorderSide(color: _effectiveBorderColor, width: 2),
         ),
       ),
       child: SingleChildScrollView(
@@ -21,9 +21,10 @@ extension _CellBuilders on _DisplayQueryWidgetState {
         scrollDirection: Axis.horizontal,
         physics: const ClampingScrollPhysics(),
         child: Row(
-          children: List.generate(_displayColumns.length, (index) {
-            return _buildHeaderCell(index);
-          }),
+          children: List.generate(
+            _displayColumns.length,
+            _buildHeaderCell,
+          ),
         ),
       ),
     );
@@ -60,9 +61,10 @@ extension _CellBuilders on _DisplayQueryWidgetState {
         child: SizedBox(
           width: _totalTableWidth,
           child: Column(
-            children: List.generate(widget.rows.length, (rowIndex) {
-              return _buildRow(rowIndex);
-            }),
+            children: List.generate(
+              widget.rows.length,
+              _buildRow,
+            ),
           ),
         ),
       ),

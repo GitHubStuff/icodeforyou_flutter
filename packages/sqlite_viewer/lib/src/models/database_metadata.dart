@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 /// Metadata about a connected SQLite database.
 ///
 /// Holds information retrieved when connecting to a database source.
-/// Used by [SqliteViewerState] to preserve metadata across state transitions.
+/// Used by 'SqliteViewerState' to preserve metadata across state transitions.
 ///
 /// Example:
 /// ```dart
@@ -20,6 +20,7 @@ import 'package:equatable/equatable.dart';
 /// print(metadata.isInMemory);    // false
 /// ```
 class DatabaseMetadata extends Equatable {
+  /// Creates a [DatabaseMetadata] with the given properties.
   const DatabaseMetadata({
     required this.fullPath,
     required this.sqliteVersion,

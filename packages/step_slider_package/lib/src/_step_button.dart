@@ -34,14 +34,14 @@ class _StepButton extends StatelessWidget {
       width: size,
       height: size,
       child: Material(
-        color: _isEnabled ? color : color.withOpacity(0.4),
+        color: _isEnabled ? color : color.withValues(alpha: 0.4),
         shape: const CircleBorder(),
         child: InkWell(
           onTap: _isEnabled ? _handleTap : null,
           customBorder: const CircleBorder(),
           child: Icon(
             icon,
-            color: _isEnabled ? iconColor : iconColor.withOpacity(0.4),
+            color: _isEnabled ? iconColor : iconColor.withValues(alpha: 0.4),
             size: size * 0.6,
           ),
         ),

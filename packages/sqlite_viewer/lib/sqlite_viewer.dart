@@ -3,10 +3,10 @@
 /// A Flutter package for viewing SQLite database contents.
 ///
 /// Provides:
-/// - [SqliteViewerAbstract] — interface for database sources
-/// - [SqliteViewerCubit] — state management
-/// - [SqliteViewerPage] — pre-built responsive page
-/// - [DisplayQueryWidget] — spreadsheet-style data grid
+/// - `SqliteViewerAbstract` — interface for database sources
+/// - `SqliteViewerCubit` — state management
+/// - `SqliteViewerPage` — pre-built responsive page
+/// - `DisplayQueryWidget` — spreadsheet-style data grid
 /// - Individual components for custom layouts
 ///
 /// Example usage:

@@ -39,20 +39,20 @@ class ThemeSelectorWidget extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
-            _ThemeRadioTile(
-              title: 'System',
-              value: ThemeMode.system,
+            RadioGroup<ThemeMode>(
               groupValue: state.themeMode,
-            ),
-            _ThemeRadioTile(
-              title: 'Dark',
-              value: ThemeMode.dark,
-              groupValue: state.themeMode,
-            ),
-            _ThemeRadioTile(
-              title: 'Light',
-              value: ThemeMode.light,
-              groupValue: state.themeMode,
+              onChanged: (ThemeMode? mode) {
+                if (mode != null) {
+                  ThemePackage.setTheme(mode);
+                }
+              },
+              child: Column(
+                children: const [
+                  _ThemeRadioTile(title: 'System', value: ThemeMode.system),
+                  _ThemeRadioTile(title: 'Dark', value: ThemeMode.dark),
+                  _ThemeRadioTile(title: 'Light', value: ThemeMode.light),
+                ],
+              ),
             ),
           ],
         );
@@ -62,27 +62,13 @@ class ThemeSelectorWidget extends StatelessWidget {
 }
 
 class _ThemeRadioTile extends StatelessWidget {
-  const _ThemeRadioTile({
-    required this.title,
-    required this.value,
-    required this.groupValue,
-  });
+  const _ThemeRadioTile({required this.title, required this.value});
 
   final String title;
   final ThemeMode value;
-  final ThemeMode groupValue;
 
   @override
   Widget build(BuildContext context) {
-    return RadioListTile<ThemeMode>(
-      title: Text(title),
-      value: value,
-      groupValue: groupValue,
-      onChanged: (ThemeMode? mode) {
-        if (mode != null) {
-          ThemePackage.setTheme(mode);
-        }
-      },
-    );
+    return RadioListTile<ThemeMode>(title: Text(title), value: value);
   }
 }

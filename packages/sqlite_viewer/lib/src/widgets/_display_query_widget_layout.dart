@@ -90,7 +90,7 @@ extension _LayoutCalculations on _DisplayQueryWidgetState {
   }
 
   double get _totalTableWidth {
-    return _columnWidths.fold(0.0, (sum, width) => sum + width);
+    return _columnWidths.fold(0, (sum, width) => sum + width);
   }
 
   bool _isNullValue(Map<String, Object?> row, int colIndex) {

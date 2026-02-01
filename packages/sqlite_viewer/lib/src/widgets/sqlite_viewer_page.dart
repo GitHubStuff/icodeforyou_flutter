@@ -4,20 +4,19 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sqlite_viewer/src/abstract/sqlite_viewer_abstract.dart';
+import 'package:sqlite_viewer/src/cubit/sqlite_viewer_cubit.dart';
+import 'package:sqlite_viewer/src/cubit/sqlite_viewer_state.dart';
+import 'package:sqlite_viewer/src/models/database_metadata.dart';
+import 'package:sqlite_viewer/src/models/text_handling.dart';
+import 'package:sqlite_viewer/src/widgets/display_query_widget.dart';
+import 'package:sqlite_viewer/src/widgets/sqlite_viewer_metadata_panel.dart';
+import 'package:sqlite_viewer/src/widgets/sqlite_viewer_query_input.dart';
+import 'package:sqlite_viewer/src/widgets/sqlite_viewer_table_detail.dart';
 
-import '../abstract/sqlite_viewer_abstract.dart';
-import '../models/database_metadata.dart';
-import '../cubit/sqlite_viewer_cubit.dart';
-import '../cubit/sqlite_viewer_state.dart';
-import '../models/text_handling.dart';
-import 'display_query_widget.dart';
-import 'sqlite_viewer_metadata_panel.dart';
-import 'sqlite_viewer_query_input.dart';
-import 'sqlite_viewer_table_detail.dart';
-
+part '_sqlite_viewer_page_helper_views.dart';
 part '_sqlite_viewer_page_phone_layout.dart';
 part '_sqlite_viewer_page_tablet_layout.dart';
-part '_sqlite_viewer_page_helper_views.dart';
 
 /// A pre-built responsive page for viewing SQLite database contents.
 ///
@@ -39,9 +38,10 @@ part '_sqlite_viewer_page_helper_views.dart';
 /// );
 /// ```
 class SqliteViewerPage extends StatelessWidget {
+  /// Create [SqliteViewerPage]
   const SqliteViewerPage({
-    super.key,
     required this.source,
+    super.key,
     this.title = 'SQLite Viewer',
     this.showQueryInput = true,
     this.sidebarWidth = 280.0,
@@ -74,7 +74,11 @@ class SqliteViewerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SqliteViewerCubit(source)..connect(),
+      create: (_) {
+        final cubit = SqliteViewerCubit(source);
+        unawaited(cubit.connect());
+        return cubit;
+      },
       child: _SqliteViewerPageContent(
         title: title,
         showQueryInput: showQueryInput,

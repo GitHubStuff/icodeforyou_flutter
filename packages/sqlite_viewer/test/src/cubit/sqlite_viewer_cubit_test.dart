@@ -1,5 +1,7 @@
 // test/src/cubit/sqlite_viewer_cubit_test.dart
 
+// ignore_for_file: avoid_redundant_argument_values, document_ignores
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqlite_viewer/sqlite_viewer.dart';
@@ -43,10 +45,10 @@ void main() {
       );
     });
 
-    test('initial state is ViewerDisconnected', () {
+    test('initial state is ViewerDisconnected', () async {
       final cubit = SqliteViewerCubit(mockSource);
       expect(cubit.state, const ViewerDisconnected());
-      cubit.close();
+      await cubit.close();
     });
 
     group('connect', () {
@@ -136,7 +138,7 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits [ViewerDisconnected]',
         build: () => SqliteViewerCubit(mockSource),
-        seed: () => MetadataLoaded(
+        seed: () => const MetadataLoaded(
           metadata: DatabaseMetadata(
             fullPath: '/path/test.db',
             sqliteVersion: '3.39.0',
@@ -231,7 +233,7 @@ void main() {
         build: () => SqliteViewerCubit(mockSource),
         seed: () => const ViewerDisconnected(),
         act: (cubit) => cubit.showMetadata(),
-        expect: () => [],
+        expect: () => <SqliteViewerState>[],
       );
     });
 
@@ -541,7 +543,7 @@ void main() {
         build: () => SqliteViewerCubit(mockSource),
         seed: () => const ViewerConnecting(),
         act: (cubit) => cubit.showMetadata(),
-        expect: () => [],
+        expect: () => <SqliteViewerState>[],
       );
 
       blocTest<SqliteViewerCubit, SqliteViewerState>(
@@ -551,7 +553,7 @@ void main() {
           failure: ViewerDatabaseNotOpen(),
         ),
         act: (cubit) => cubit.showMetadata(),
-        expect: () => [],
+        expect: () => <SqliteViewerState>[],
       );
     });
   });

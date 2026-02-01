@@ -1,11 +1,13 @@
 // packages/sqlite_viewer/lib/src/failures/sqlite_viewer_failure.dart
 
+// ignore_for_file: public_member_api_docs, document_ignores
+
 import 'package:equatable/equatable.dart';
 
 /// Base failure type for sqlite_viewer operations.
 ///
 /// Implementations should return [SqliteViewerFailure] in the `Left` side
-/// of `Either` for all [SqliteViewerAbstract] methods.
+/// of `Either` for all 'SqliteViewerAbstract' methods.
 sealed class SqliteViewerFailure extends Equatable {
   const SqliteViewerFailure();
 
@@ -18,6 +20,7 @@ sealed class SqliteViewerFailure extends Equatable {
 
 /// Database connection is not open or source not attached.
 final class ViewerDatabaseNotOpen extends SqliteViewerFailure {
+  ///
   const ViewerDatabaseNotOpen();
 
   @override
@@ -26,8 +29,10 @@ final class ViewerDatabaseNotOpen extends SqliteViewerFailure {
 
 /// Requested table does not exist in the database.
 final class ViewerTableNotFound extends SqliteViewerFailure {
+  ///
   const ViewerTableNotFound(this.tableName);
 
+  ///
   final String tableName;
 
   @override
@@ -39,9 +44,13 @@ final class ViewerTableNotFound extends SqliteViewerFailure {
 
 /// Query is not a valid SELECT or WITH statement.
 final class ViewerInvalidQuery extends SqliteViewerFailure {
+  ///
   const ViewerInvalidQuery(this.query, [this.reason]);
 
+  /// SQLite query
   final String query;
+
+  /// Explaination of failure/error
   final String? reason;
 
   @override

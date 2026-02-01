@@ -1,5 +1,7 @@
 // test/src/widgets/sqlite_viewer_table_detail_test.dart
 
+// ignore_for_file: omit_local_variable_types, document_ignores, avoid_redundant_argument_values
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqlite_viewer/sqlite_viewer.dart';

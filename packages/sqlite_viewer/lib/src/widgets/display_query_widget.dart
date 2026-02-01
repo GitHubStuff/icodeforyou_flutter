@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../models/text_handling.dart';
+import 'package:sqlite_viewer/src/models/text_handling.dart';
 
 part '_display_query_widget_layout.dart';
 part '_display_query_widget_cells.dart';
@@ -16,6 +16,32 @@ part '_display_query_widget_cells.dart';
 /// - Alternating row styles
 /// - Auto-sized column widths based on content
 class DisplayQueryWidget extends StatefulWidget {
+  /// Creates a [DisplayQueryWidget] with the given columns and rows.
+  const DisplayQueryWidget({
+    required this.columns,
+    required this.rows,
+    required this.evenRowStyle,
+    required this.oddRowStyle,
+    super.key,
+    this.headerStyle,
+    this.evenRowColor,
+    this.oddRowColor,
+    this.headerBackgroundColor,
+    this.cellPadding = const EdgeInsets.symmetric(
+      horizontal: 12,
+      vertical: 8,
+    ),
+    this.nullValueDisplay = 'NULL',
+    this.textHandling = TextHandling.trunc,
+    this.showRowNumbers = false,
+    this.emptyWidget,
+    this.minColumnWidth = 60.0,
+    this.maxColumnWidth = 300.0,
+    this.borderColor,
+    this.headerHeight = 48.0,
+    this.rowHeight = 44.0,
+  });
+
   /// Column names from table metadata.
   final List<String> columns;
 
@@ -69,31 +95,6 @@ class DisplayQueryWidget extends StatefulWidget {
 
   /// Height of each data row.
   final double rowHeight;
-
-  const DisplayQueryWidget({
-    super.key,
-    required this.columns,
-    required this.rows,
-    required this.evenRowStyle,
-    required this.oddRowStyle,
-    this.headerStyle,
-    this.evenRowColor,
-    this.oddRowColor,
-    this.headerBackgroundColor,
-    this.cellPadding = const EdgeInsets.symmetric(
-      horizontal: 12.0,
-      vertical: 8.0,
-    ),
-    this.nullValueDisplay = 'NULL',
-    this.textHandling = TextHandling.trunc,
-    this.showRowNumbers = false,
-    this.emptyWidget,
-    this.minColumnWidth = 60.0,
-    this.maxColumnWidth = 300.0,
-    this.borderColor,
-    this.headerHeight = 48.0,
-    this.rowHeight = 44.0,
-  });
 
   @override
   State<DisplayQueryWidget> createState() => _DisplayQueryWidgetState();

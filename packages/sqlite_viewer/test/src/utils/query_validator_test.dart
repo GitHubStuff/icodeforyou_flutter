@@ -194,17 +194,18 @@ void main() {
 
       group('ViewerInvalidQuery properties', () {
         test('contains original query', () {
-          final result = QueryValidator.validate('DROP TABLE users');
-          result.fold((failure) {
-            expect(failure, isA<ViewerInvalidQuery>());
-            final invalidQuery = failure as ViewerInvalidQuery;
-            expect(invalidQuery.query, 'DROP TABLE users');
-          }, (_) => fail('Should be Left'));
+          QueryValidator.validate('DROP TABLE users').fold(
+            (failure) {
+              expect(failure, isA<ViewerInvalidQuery>());
+              final invalidQuery = failure as ViewerInvalidQuery;
+              expect(invalidQuery.query, 'DROP TABLE users');
+            },
+            (_) => fail('Should be Left'),
+          );
         });
 
         test('contains reason for empty query', () {
-          final result = QueryValidator.validate('');
-          result.fold((failure) {
+          QueryValidator.validate('').fold((failure) {
             final invalidQuery = failure as ViewerInvalidQuery;
             expect(invalidQuery.reason, 'Query cannot be empty');
           }, (_) => fail('Should be Left'));

@@ -17,9 +17,14 @@ class _MockDataGenerator {
 
   static String _generateTimestamp() {
     _timestampCounter++;
-    final now = DateTime.utc(2025, 1, 19, 10, 0, 0).add(
-      Duration(seconds: _timestampCounter),
-    );
+    final now = DateTime.utc(
+      2025,
+      1,
+      19,
+      10,
+      0,
+      0,
+    ).add(Duration(seconds: _timestampCounter));
     return now.toIso8601String();
   }
 
@@ -93,13 +98,12 @@ Widget sinceWhenPlayground(BuildContext context) {
     initialValue: 'This is the content of the record...',
   );
 
-  final category = context.knobs.list<String>(
+  final category = context.knobs.object.dropdown<String>(
     label: 'Category',
     options: ['notes', 'ideas', 'tasks', 'decisions', 'questions'],
     initialOption: 'notes',
   );
-
-  final tagOptions = context.knobs.list<String>(
+  final tagOptions = context.knobs.object.dropdown<String>(
     label: 'Tags Preset',
     options: [
       'personal',
@@ -159,7 +163,8 @@ class _RecordCreationDemoState extends State<_RecordCreationDemo> {
     _records = [
       _MockDataGenerator.createRecord(
         metaData: 'First meeting notes',
-        dataString: 'Discussed project timeline and milestones.\n'
+        dataString:
+            'Discussed project timeline and milestones.\n'
             'Key decisions made:\n'
             '- Launch date: Q2 2025\n'
             '- Budget approved',
@@ -168,7 +173,8 @@ class _RecordCreationDemoState extends State<_RecordCreationDemo> {
       ),
       _MockDataGenerator.createRecord(
         metaData: 'Code review feedback',
-        dataString: 'Review of PR #423:\n'
+        dataString:
+            'Review of PR #423:\n'
             '- Clean architecture implementation looks good\n'
             '- Consider adding more unit tests\n'
             '- Documentation needs update',
@@ -258,7 +264,8 @@ class _HierarchicalRecordsDemoState extends State<_HierarchicalRecordsDemo> {
     // Create parent record
     _parentRecord = _MockDataGenerator.createRecord(
       metaData: 'Project Alpha - Main Entry',
-      dataString: 'This is the parent record for Project Alpha.\n'
+      dataString:
+          'This is the parent record for Project Alpha.\n'
           'All related decisions and notes are linked as children.',
       category: 'project',
       tags: ['project-alpha', 'parent'],
@@ -319,10 +326,7 @@ class _HierarchicalRecordsDemoState extends State<_HierarchicalRecordsDemo> {
                       ),
                     ),
                   ),
-                  _RecordCard(
-                    record: _parentRecord!,
-                    highlight: true,
-                  ),
+                  _RecordCard(record: _parentRecord!, highlight: true),
                   const Padding(
                     padding: EdgeInsets.all(8),
                     child: Text(
@@ -472,20 +476,34 @@ class _TagsDemoState extends State<_TagsDemo> {
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(width: 16),
-                Radio<TagMatchMode>(
-                  value: TagMatchMode.any,
+                RadioGroup<TagMatchMode>(
                   groupValue: _matchMode,
                   onChanged: (value) => setState(() => _matchMode = value!),
+                  child: Row(
+                    children: [
+                      Radio<TagMatchMode>(value: TagMatchMode.any),
+                      const Text('Any'),
+                      Radio<TagMatchMode>(value: TagMatchMode.all),
+                      const Text('All'),
+                    ],
+                  ),
                 ),
                 GestureDetector(
                   onTap: () => setState(() => _matchMode = TagMatchMode.any),
                   child: const Text('Any'),
                 ),
                 const SizedBox(width: 24),
-                Radio<TagMatchMode>(
-                  value: TagMatchMode.all,
+                RadioGroup<TagMatchMode>(
                   groupValue: _matchMode,
                   onChanged: (value) => setState(() => _matchMode = value!),
+                  child: Row(
+                    children: [
+                      Radio<TagMatchMode>(value: TagMatchMode.any),
+                      const Text('Any'),
+                      Radio<TagMatchMode>(value: TagMatchMode.all),
+                      const Text('All'),
+                    ],
+                  ),
                 ),
                 GestureDetector(
                   onTap: () => setState(() => _matchMode = TagMatchMode.all),
@@ -547,8 +565,8 @@ class _TagsDemoState extends State<_TagsDemo> {
               _selectedTags.isEmpty
                   ? 'Showing all ${_records.length} records'
                   : 'Found ${filteredRecords.length} of ${_records.length} records '
-                      'matching ${_matchMode == TagMatchMode.any ? "ANY" : "ALL"} '
-                      'of ${_selectedTags.length} selected tag(s)',
+                        'matching ${_matchMode == TagMatchMode.any ? "ANY" : "ALL"} '
+                        'of ${_selectedTags.length} selected tag(s)',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -905,10 +923,7 @@ class _StatusBar extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       color: Theme.of(context).colorScheme.surfaceContainerHighest,
-      child: Text(
-        status,
-        style: Theme.of(context).textTheme.bodySmall,
-      ),
+      child: Text(status, style: Theme.of(context).textTheme.bodySmall),
     );
   }
 }
@@ -929,10 +944,9 @@ class _RecordCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 4),
       color: highlight
-          ? Theme.of(context)
-              .colorScheme
-              .primaryContainer
-              .withValues(alpha: 0.3)
+          ? Theme.of(
+              context,
+            ).colorScheme.primaryContainer.withValues(alpha: 0.3)
           : null,
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -998,8 +1012,9 @@ class _RecordCard extends StatelessWidget {
                       '#$tag',
                       style: TextStyle(
                         fontSize: 10,
-                        fontWeight:
-                            isHighlighted ? FontWeight.bold : FontWeight.normal,
+                        fontWeight: isHighlighted
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                         color: isHighlighted
                             ? Theme.of(context).colorScheme.onPrimary
                             : Theme.of(context).colorScheme.onTertiaryContainer,
@@ -1039,10 +1054,7 @@ class _RecordCard extends StatelessWidget {
 }
 
 class _InfoCard extends StatelessWidget {
-  const _InfoCard({
-    required this.title,
-    required this.children,
-  });
+  const _InfoCard({required this.title, required this.children});
 
   final String title;
   final List<Widget> children;
@@ -1057,9 +1069,9 @@ class _InfoCard extends StatelessWidget {
           children: [
             Text(
               title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const Divider(),
             ...children,
@@ -1093,12 +1105,7 @@ class _InfoRow extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(fontSize: 13),
-            ),
-          ),
+          Expanded(child: Text(value, style: const TextStyle(fontSize: 13))),
         ],
       ),
     );

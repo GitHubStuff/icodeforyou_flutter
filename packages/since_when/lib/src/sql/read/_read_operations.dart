@@ -31,6 +31,7 @@ abstract final class ReadOperations {
     String tag,
   ) async {
     // Delegate to getByTags with a single tag and ANY mode
+    // ignore: avoid_redundant_argument_values
     return getByTags(db, [tag], mode: TagMatchMode.any);
   }
 
@@ -87,12 +88,12 @@ abstract final class ReadOperations {
       // Build records with their tags
       final records = <SinceWhenRecord>[];
       for (final row in rows) {
-        final createdTimeStamp = row['createdTimeStamp'] as String;
+        final createdTimeStamp = row['createdTimeStamp']! as String;
         final tagRows = await db.rawQuery(
           SqlStatements.selectTagsForRecord,
           [createdTimeStamp],
         );
-        final recordTags = tagRows.map((r) => r['tag'] as String).toList();
+        final recordTags = tagRows.map((r) => r['tag']! as String).toList();
 
         records.add(SinceWhenRecordMapper.fromRow(row, recordTags));
       }

@@ -192,7 +192,7 @@ void main() {
           ).first,
         );
 
-        expect(decrementMaterial.color, Colors.blue.withOpacity(0.4));
+        expect(decrementMaterial.color, Colors.blue.withValues(alpha: 0.4));
       });
 
       testWidgets('disabled icon has reduced opacity', (tester) async {
@@ -203,7 +203,7 @@ void main() {
         ));
 
         final decrementIcon = tester.widget<Icon>(find.byIcon(Icons.remove));
-        expect(decrementIcon.color, Colors.white.withOpacity(0.4));
+        expect(decrementIcon.color, Colors.white.withValues(alpha: 0.4));
       });
 
       testWidgets('button size is applied correctly', (tester) async {

@@ -34,7 +34,7 @@ Widget buildStepSliderDefault(BuildContext context) {
             label: 'Enable Haptic Feedback',
             initialValue: false,
           ),
-          hapticFeedbackType: context.knobs.list(
+          hapticFeedbackType: context.knobs.object.dropdown(
             label: 'Haptic Type',
             options: HapticFeedbackType.values,
             initialOption: HapticFeedbackType.light,

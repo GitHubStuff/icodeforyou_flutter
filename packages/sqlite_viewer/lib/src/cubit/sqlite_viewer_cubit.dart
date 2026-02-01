@@ -2,13 +2,12 @@
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../abstract/sqlite_viewer_abstract.dart';
-import '../failures/sqlite_viewer_failure.dart';
-import '../models/database_metadata.dart';
-import '../models/pragma_key.dart';
-import '../utils/query_validator.dart';
-import 'sqlite_viewer_state.dart';
+import 'package:sqlite_viewer/src/abstract/sqlite_viewer_abstract.dart';
+import 'package:sqlite_viewer/src/cubit/sqlite_viewer_state.dart';
+import 'package:sqlite_viewer/src/failures/sqlite_viewer_failure.dart';
+import 'package:sqlite_viewer/src/models/database_metadata.dart';
+import 'package:sqlite_viewer/src/models/pragma_key.dart';
+import 'package:sqlite_viewer/src/utils/query_validator.dart';
 
 /// Cubit for managing sqlite_viewer state.
 ///
@@ -30,6 +29,7 @@ import 'sqlite_viewer_state.dart';
 /// await cubit.executeQuery('SELECT * FROM users WHERE active = 1');
 /// ```
 class SqliteViewerCubit extends Cubit<SqliteViewerState> {
+  /// Creates a viewer cubit with the given database 'source'.
   SqliteViewerCubit(this._source) : super(const ViewerDisconnected());
 
   final SqliteViewerAbstract _source;
@@ -72,9 +72,11 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
   Future<void> refreshMetadata() async {
     final currentMetadata = _getCurrentMetadata();
     if (currentMetadata == null) {
-      emit(const ViewerConnectionFailed(
-        failure: ViewerDatabaseNotOpen(),
-      ));
+      emit(
+        const ViewerConnectionFailed(
+          failure: ViewerDatabaseNotOpen(),
+        ),
+      );
       return;
     }
 
@@ -83,10 +85,12 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
     final metadataResult = await _loadMetadata();
 
     metadataResult.fold(
-      (failure) => emit(MetadataLoadFailed(
-        failure: failure,
-        metadata: currentMetadata,
-      )),
+      (failure) => emit(
+        MetadataLoadFailed(
+          failure: failure,
+          metadata: currentMetadata,
+        ),
+      ),
       (metadata) => emit(MetadataLoaded(metadata: metadata)),
     );
   }
@@ -113,25 +117,31 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
   Future<void> selectTable(String tableName) async {
     final currentMetadata = _getCurrentMetadata();
     if (currentMetadata == null) {
-      emit(const ViewerConnectionFailed(
-        failure: ViewerDatabaseNotOpen(),
-      ));
+      emit(
+        const ViewerConnectionFailed(
+          failure: ViewerDatabaseNotOpen(),
+        ),
+      );
       return;
     }
 
-    emit(TableDetailLoading(
-      metadata: currentMetadata,
-      tableName: tableName,
-    ));
+    emit(
+      TableDetailLoading(
+        metadata: currentMetadata,
+        tableName: tableName,
+      ),
+    );
 
     // Load column names
     final columnsResult = await _source.getColumnNames(tableName);
     if (columnsResult.isLeft()) {
-      emit(TableDetailLoadFailed(
-        metadata: currentMetadata,
-        tableName: tableName,
-        failure: columnsResult.fold((f) => f, (_) => throw StateError('')),
-      ));
+      emit(
+        TableDetailLoadFailed(
+          metadata: currentMetadata,
+          tableName: tableName,
+          failure: columnsResult.fold((f) => f, (_) => throw StateError('')),
+        ),
+      );
       return;
     }
     final columns = columnsResult.fold((_) => <String>[], (c) => c);
@@ -142,11 +152,13 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
       key: PragmaKey.tableInfo,
     );
     if (tableInfoResult.isLeft()) {
-      emit(TableDetailLoadFailed(
-        metadata: currentMetadata,
-        tableName: tableName,
-        failure: tableInfoResult.fold((f) => f, (_) => throw StateError('')),
-      ));
+      emit(
+        TableDetailLoadFailed(
+          metadata: currentMetadata,
+          tableName: tableName,
+          failure: tableInfoResult.fold((f) => f, (_) => throw StateError('')),
+        ),
+      );
       return;
     }
     final tableInfo = tableInfoResult.fold(
@@ -160,11 +172,13 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
       key: PragmaKey.indexList,
     );
     if (indexListResult.isLeft()) {
-      emit(TableDetailLoadFailed(
-        metadata: currentMetadata,
-        tableName: tableName,
-        failure: indexListResult.fold((f) => f, (_) => throw StateError('')),
-      ));
+      emit(
+        TableDetailLoadFailed(
+          metadata: currentMetadata,
+          tableName: tableName,
+          failure: indexListResult.fold((f) => f, (_) => throw StateError('')),
+        ),
+      );
       return;
     }
     final indexList = indexListResult.fold(
@@ -178,11 +192,16 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
       key: PragmaKey.foreignKeyList,
     );
     if (foreignKeysResult.isLeft()) {
-      emit(TableDetailLoadFailed(
-        metadata: currentMetadata,
-        tableName: tableName,
-        failure: foreignKeysResult.fold((f) => f, (_) => throw StateError('')),
-      ));
+      emit(
+        TableDetailLoadFailed(
+          metadata: currentMetadata,
+          tableName: tableName,
+          failure: foreignKeysResult.fold(
+            (f) => f,
+            (_) => throw StateError(''),
+          ),
+        ),
+      );
       return;
     }
     final foreignKeys = foreignKeysResult.fold(
@@ -193,11 +212,13 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
     // Load row count
     final rowCountResult = await _source.getRowCount(tableName);
     if (rowCountResult.isLeft()) {
-      emit(TableDetailLoadFailed(
-        metadata: currentMetadata,
-        tableName: tableName,
-        failure: rowCountResult.fold((f) => f, (_) => throw StateError('')),
-      ));
+      emit(
+        TableDetailLoadFailed(
+          metadata: currentMetadata,
+          tableName: tableName,
+          failure: rowCountResult.fold((f) => f, (_) => throw StateError('')),
+        ),
+      );
       return;
     }
     final rowCount = rowCountResult.fold((_) => 0, (r) => r);
@@ -207,25 +228,29 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
       'SELECT * FROM "$tableName"',
     );
     if (rowsResult.isLeft()) {
-      emit(TableDetailLoadFailed(
-        metadata: currentMetadata,
-        tableName: tableName,
-        failure: rowsResult.fold((f) => f, (_) => throw StateError('')),
-      ));
+      emit(
+        TableDetailLoadFailed(
+          metadata: currentMetadata,
+          tableName: tableName,
+          failure: rowsResult.fold((f) => f, (_) => throw StateError('')),
+        ),
+      );
       return;
     }
     final rows = rowsResult.fold((_) => <Map<String, Object?>>[], (r) => r);
 
-    emit(TableDetailLoaded(
-      metadata: currentMetadata,
-      tableName: tableName,
-      columns: columns,
-      tableInfo: tableInfo,
-      indexList: indexList,
-      foreignKeys: foreignKeys,
-      rows: rows,
-      rowCount: rowCount,
-    ));
+    emit(
+      TableDetailLoaded(
+        metadata: currentMetadata,
+        tableName: tableName,
+        columns: columns,
+        tableInfo: tableInfo,
+        indexList: indexList,
+        foreignKeys: foreignKeys,
+        rows: rows,
+        rowCount: rowCount,
+      ),
+    );
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -240,47 +265,57 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
   Future<void> executeQuery(String sql) async {
     final currentMetadata = _getCurrentMetadata();
     if (currentMetadata == null) {
-      emit(const ViewerConnectionFailed(
-        failure: ViewerDatabaseNotOpen(),
-      ));
+      emit(
+        const ViewerConnectionFailed(
+          failure: ViewerDatabaseNotOpen(),
+        ),
+      );
       return;
     }
 
     // Validate query before execution
     final validationResult = QueryValidator.validate(sql);
     if (validationResult.isLeft()) {
-      emit(QueryFailed(
-        metadata: currentMetadata,
-        query: sql,
-        failure: validationResult.fold((f) => f, (_) => throw StateError('')),
-      ));
+      emit(
+        QueryFailed(
+          metadata: currentMetadata,
+          query: sql,
+          failure: validationResult.fold((f) => f, (_) => throw StateError('')),
+        ),
+      );
       return;
     }
     final validatedQuery = validationResult.fold((_) => '', (q) => q);
 
-    emit(QueryExecuting(
-      metadata: currentMetadata,
-      query: validatedQuery,
-    ));
+    emit(
+      QueryExecuting(
+        metadata: currentMetadata,
+        query: validatedQuery,
+      ),
+    );
 
     final result = await _source.executeSelect(validatedQuery);
 
     result.fold(
-      (failure) => emit(QueryFailed(
-        metadata: currentMetadata,
-        query: validatedQuery,
-        failure: failure,
-      )),
+      (failure) => emit(
+        QueryFailed(
+          metadata: currentMetadata,
+          query: validatedQuery,
+          failure: failure,
+        ),
+      ),
       (rows) {
         // Extract column names from first row, or empty list
         final columns = rows.isNotEmpty ? rows.first.keys.toList() : <String>[];
 
-        emit(QueryResultLoaded(
-          metadata: currentMetadata,
-          query: validatedQuery,
-          columns: columns,
-          rows: rows,
-        ));
+        emit(
+          QueryResultLoaded(
+            metadata: currentMetadata,
+            query: validatedQuery,
+            columns: columns,
+            rows: rows,
+          ),
+        );
       },
     );
   }
@@ -319,12 +354,14 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
     }
     final tables = tablesResult.fold((_) => <String>[], (t) => t);
 
-    return Right(DatabaseMetadata(
-      fullPath: fullPath,
-      sqliteVersion: sqliteVersion,
-      databaseSize: databaseSize,
-      tables: tables,
-    ));
+    return Right(
+      DatabaseMetadata(
+        fullPath: fullPath,
+        sqliteVersion: sqliteVersion,
+        databaseSize: databaseSize,
+        tables: tables,
+      ),
+    );
   }
 
   /// Extracts metadata from current state, if available.

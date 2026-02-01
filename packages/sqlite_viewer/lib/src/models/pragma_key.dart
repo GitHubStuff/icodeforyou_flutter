@@ -2,7 +2,7 @@
 
 /// Supported SQLite PRAGMA metadata queries.
 ///
-/// Used with [SqliteViewerAbstract.getPragma] to retrieve
+/// Used with 'SqliteViewerAbstract.getPragma' to retrieve
 /// table structure information.
 enum PragmaKey {
   /// Column metadata: name, type, nullable, default value, primary key.

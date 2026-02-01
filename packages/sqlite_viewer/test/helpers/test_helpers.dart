@@ -71,21 +71,21 @@ const emptyMetadata = DatabaseMetadata(
 );
 
 /// Standard test table info.
-const testTableInfo = [
+const List<Map<String, Object?>> testTableInfo = [
   {'cid': 0, 'name': 'id', 'type': 'INTEGER', 'notnull': 1, 'dflt_value': null, 'pk': 1},
   {'cid': 1, 'name': 'name', 'type': 'TEXT', 'notnull': 0, 'dflt_value': null, 'pk': 0},
   {'cid': 2, 'name': 'email', 'type': 'TEXT', 'notnull': 1, 'dflt_value': "'default@test.com'", 'pk': 0},
 ];
 
 /// Standard test index list.
-const testIndexList = [
+const List<Map<String, Object>> testIndexList = [
   {'seq': 0, 'name': 'idx_users_email', 'unique': 1, 'origin': 'c', 'partial': 0},
   {'seq': 1, 'name': 'sqlite_autoindex_users_1', 'unique': 1, 'origin': 'pk', 'partial': 0},
   {'seq': 2, 'name': 'idx_users_name', 'unique': 0, 'origin': 'u', 'partial': 0},
 ];
 
 /// Standard test foreign keys.
-const testForeignKeys = [
+const List<Map<String, Object>> testForeignKeys = [
   {
     'id': 0,
     'seq': 0,
@@ -98,7 +98,7 @@ const testForeignKeys = [
 ];
 
 /// Standard test rows.
-const testRows = [
+const List<Map<String, Object?>> testRows = [
   {'id': 1, 'name': 'Alice', 'email': 'alice@test.com'},
   {'id': 2, 'name': 'Bob', 'email': 'bob@test.com'},
   {'id': 3, 'name': null, 'email': 'null@test.com'},

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../models/database_metadata.dart';
+import 'package:sqlite_viewer/src/models/database_metadata.dart';
 
 part '_sqlite_viewer_metadata_panel_table_list.dart';
 
@@ -14,7 +14,7 @@ part '_sqlite_viewer_metadata_panel_table_list.dart';
 /// - Database size
 /// - List of tables with row counts
 ///
-/// Used as a sidebar in [SqliteViewerPage] on tablet/desktop,
+/// Used as a sidebar in 'SqliteViewerPage' on tablet/desktop,
 /// or as the Tables tab content on phone.
 ///
 /// Example:
@@ -27,9 +27,9 @@ part '_sqlite_viewer_metadata_panel_table_list.dart';
 /// )
 /// ```
 class SqliteViewerMetadataPanel extends StatelessWidget {
+  /// Create a [SqliteViewerMetadataPanel]
   const SqliteViewerMetadataPanel({
-    super.key,
-    required this.metadata,
+    required this.metadata, super.key,
     this.selectedTable,
     this.onTableSelected,
     this.onRefresh,
@@ -107,7 +107,7 @@ class SqliteViewerMetadataPanel extends StatelessWidget {
 
     final effectiveDividerColor = dividerColor ?? colorScheme.outlineVariant;
 
-    return Container(
+    return ColoredBox(
       color: backgroundColor ?? colorScheme.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

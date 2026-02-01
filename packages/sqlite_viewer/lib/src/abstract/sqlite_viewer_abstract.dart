@@ -2,13 +2,13 @@
 
 import 'package:dartz/dartz.dart';
 
-import '../failures/sqlite_viewer_failure.dart';
-import '../models/pragma_key.dart';
+import 'package:sqlite_viewer/src/failures/sqlite_viewer_failure.dart';
+import 'package:sqlite_viewer/src/models/pragma_key.dart';
 
 /// Abstract interface for database sources compatible with sqlite_viewer.
 ///
 /// Implement this interface to make any SQLite database viewable
-/// with [SqliteViewerPage] and [SqliteViewerCubit].
+/// with 'SqliteViewerPage' and 'SqliteViewerCubit'.
 ///
 /// All methods return [Either] with [SqliteViewerFailure] on the left
 /// for error handling, and the result on the right for success.

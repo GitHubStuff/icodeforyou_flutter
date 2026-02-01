@@ -101,13 +101,10 @@ extension _SchemaItemBuilders on _SqliteViewerTableDetailState {
     switch (origin) {
       case 'c':
         originLabel = 'CREATE INDEX';
-        break;
       case 'u':
         originLabel = 'UNIQUE';
-        break;
       case 'pk':
         originLabel = 'PRIMARY KEY';
-        break;
       default:
         originLabel = origin;
     }

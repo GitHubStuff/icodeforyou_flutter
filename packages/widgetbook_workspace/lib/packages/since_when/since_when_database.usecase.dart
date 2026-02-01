@@ -39,183 +39,356 @@ class _MockDatabaseMetadata {
   _MockDatabaseMetadata._();
 
   static _MockDbMetadata get metadata => const _MockDbMetadata(
-        fullPath: ':memory:',
-        sqliteVersion: '3.39.0',
-        databaseSize: 49152,
-        tables: [
-          _MockTableInfo(name: 'since_when', rowCount: 8),
-          _MockTableInfo(name: 'since_when_tags', rowCount: 24),
-        ],
-      );
+    fullPath: ':memory:',
+    sqliteVersion: '3.39.0',
+    databaseSize: 49152,
+    tables: [
+      _MockTableInfo(name: 'since_when', rowCount: 8),
+      _MockTableInfo(name: 'since_when_tags', rowCount: 24),
+    ],
+  );
 
   // ---------------------------------------------------------------------------
   // PRAGMA table_info(since_when)
   // ---------------------------------------------------------------------------
   static List<Map<String, Object?>> get sinceWhenTableInfo => [
-        {'cid': 0, 'name': 'id', 'type': 'INTEGER', 'notnull': 0, 'dflt_value': null, 'pk': 1},
-        {'cid': 1, 'name': 'createdTimeStamp', 'type': 'TEXT', 'notnull': 1, 'dflt_value': null, 'pk': 0},
-        {'cid': 2, 'name': 'parentTimeStamp', 'type': 'TEXT', 'notnull': 0, 'dflt_value': null, 'pk': 0},
-        {'cid': 3, 'name': 'reviewedTimeStamp', 'type': 'TEXT', 'notnull': 1, 'dflt_value': null, 'pk': 0},
-        {'cid': 4, 'name': 'editedTimeStamp', 'type': 'TEXT', 'notnull': 1, 'dflt_value': null, 'pk': 0},
-        {'cid': 5, 'name': 'metaTimeStamp', 'type': 'TEXT', 'notnull': 0, 'dflt_value': null, 'pk': 0},
-        {'cid': 6, 'name': 'metaData', 'type': 'TEXT', 'notnull': 1, 'dflt_value': null, 'pk': 0},
-        {'cid': 7, 'name': 'sequenceNumber', 'type': 'INTEGER', 'notnull': 1, 'dflt_value': '0', 'pk': 0},
-        {'cid': 8, 'name': 'dataString', 'type': 'TEXT', 'notnull': 1, 'dflt_value': null, 'pk': 0},
-        {'cid': 9, 'name': 'category', 'type': 'TEXT', 'notnull': 1, 'dflt_value': null, 'pk': 0},
-      ];
+    {
+      'cid': 0,
+      'name': 'id',
+      'type': 'INTEGER',
+      'notnull': 0,
+      'dflt_value': null,
+      'pk': 1,
+    },
+    {
+      'cid': 1,
+      'name': 'createdTimeStamp',
+      'type': 'TEXT',
+      'notnull': 1,
+      'dflt_value': null,
+      'pk': 0,
+    },
+    {
+      'cid': 2,
+      'name': 'parentTimeStamp',
+      'type': 'TEXT',
+      'notnull': 0,
+      'dflt_value': null,
+      'pk': 0,
+    },
+    {
+      'cid': 3,
+      'name': 'reviewedTimeStamp',
+      'type': 'TEXT',
+      'notnull': 1,
+      'dflt_value': null,
+      'pk': 0,
+    },
+    {
+      'cid': 4,
+      'name': 'editedTimeStamp',
+      'type': 'TEXT',
+      'notnull': 1,
+      'dflt_value': null,
+      'pk': 0,
+    },
+    {
+      'cid': 5,
+      'name': 'metaTimeStamp',
+      'type': 'TEXT',
+      'notnull': 0,
+      'dflt_value': null,
+      'pk': 0,
+    },
+    {
+      'cid': 6,
+      'name': 'metaData',
+      'type': 'TEXT',
+      'notnull': 1,
+      'dflt_value': null,
+      'pk': 0,
+    },
+    {
+      'cid': 7,
+      'name': 'sequenceNumber',
+      'type': 'INTEGER',
+      'notnull': 1,
+      'dflt_value': '0',
+      'pk': 0,
+    },
+    {
+      'cid': 8,
+      'name': 'dataString',
+      'type': 'TEXT',
+      'notnull': 1,
+      'dflt_value': null,
+      'pk': 0,
+    },
+    {
+      'cid': 9,
+      'name': 'category',
+      'type': 'TEXT',
+      'notnull': 1,
+      'dflt_value': null,
+      'pk': 0,
+    },
+  ];
 
   // ---------------------------------------------------------------------------
   // PRAGMA table_info(since_when_tags)
   // ---------------------------------------------------------------------------
   static List<Map<String, Object?>> get tagsTableInfo => [
-        {'cid': 0, 'name': 'id', 'type': 'INTEGER', 'notnull': 0, 'dflt_value': null, 'pk': 1},
-        {'cid': 1, 'name': 'created_time_stamp', 'type': 'TEXT', 'notnull': 1, 'dflt_value': null, 'pk': 0},
-        {'cid': 2, 'name': 'tag', 'type': 'TEXT', 'notnull': 1, 'dflt_value': null, 'pk': 0},
-      ];
+    {
+      'cid': 0,
+      'name': 'id',
+      'type': 'INTEGER',
+      'notnull': 0,
+      'dflt_value': null,
+      'pk': 1,
+    },
+    {
+      'cid': 1,
+      'name': 'created_time_stamp',
+      'type': 'TEXT',
+      'notnull': 1,
+      'dflt_value': null,
+      'pk': 0,
+    },
+    {
+      'cid': 2,
+      'name': 'tag',
+      'type': 'TEXT',
+      'notnull': 1,
+      'dflt_value': null,
+      'pk': 0,
+    },
+  ];
 
   // ---------------------------------------------------------------------------
   // PRAGMA index_list(since_when)
   // ---------------------------------------------------------------------------
   static List<Map<String, Object?>> get sinceWhenIndexList => [
-        {'seq': 0, 'name': 'idx_since_when_created', 'unique': 0, 'origin': 'c', 'partial': 0},
-        {'seq': 1, 'name': 'idx_since_when_parent', 'unique': 0, 'origin': 'c', 'partial': 0},
-        {'seq': 2, 'name': 'sqlite_autoindex_since_when_1', 'unique': 1, 'origin': 'u', 'partial': 0},
-      ];
+    {
+      'seq': 0,
+      'name': 'idx_since_when_created',
+      'unique': 0,
+      'origin': 'c',
+      'partial': 0,
+    },
+    {
+      'seq': 1,
+      'name': 'idx_since_when_parent',
+      'unique': 0,
+      'origin': 'c',
+      'partial': 0,
+    },
+    {
+      'seq': 2,
+      'name': 'sqlite_autoindex_since_when_1',
+      'unique': 1,
+      'origin': 'u',
+      'partial': 0,
+    },
+  ];
 
   // ---------------------------------------------------------------------------
   // PRAGMA index_list(since_when_tags)
   // ---------------------------------------------------------------------------
   static List<Map<String, Object?>> get tagsIndexList => [
-        {'seq': 0, 'name': 'idx_tags_tag', 'unique': 0, 'origin': 'c', 'partial': 0},
-        {'seq': 1, 'name': 'idx_tags_created_time_stamp', 'unique': 0, 'origin': 'c', 'partial': 0},
-      ];
+    {
+      'seq': 0,
+      'name': 'idx_tags_tag',
+      'unique': 0,
+      'origin': 'c',
+      'partial': 0,
+    },
+    {
+      'seq': 1,
+      'name': 'idx_tags_created_time_stamp',
+      'unique': 0,
+      'origin': 'c',
+      'partial': 0,
+    },
+  ];
 
   // ---------------------------------------------------------------------------
   // PRAGMA foreign_key_list(since_when_tags)
   // ---------------------------------------------------------------------------
   static List<Map<String, Object?>> get tagsForeignKeys => [
-        {
-          'id': 0,
-          'seq': 0,
-          'table': 'since_when',
-          'from': 'created_time_stamp',
-          'to': 'createdTimeStamp',
-          'on_update': 'NO ACTION',
-          'on_delete': 'CASCADE',
-          'match': 'NONE',
-        },
-      ];
+    {
+      'id': 0,
+      'seq': 0,
+      'table': 'since_when',
+      'from': 'created_time_stamp',
+      'to': 'createdTimeStamp',
+      'on_update': 'NO ACTION',
+      'on_delete': 'CASCADE',
+      'match': 'NONE',
+    },
+  ];
 
   // ---------------------------------------------------------------------------
   // Mock since_when table rows
   // ---------------------------------------------------------------------------
   static List<Map<String, Object?>> get sinceWhenRows => [
-        {
-          'id': 1,
-          'createdTimeStamp': '2025-01-19T10:00:01.000Z',
-          'parentTimeStamp': null,
-          'reviewedTimeStamp': '2025-01-19T10:00:01.000Z',
-          'editedTimeStamp': '2025-01-19T10:00:01.000Z',
-          'metaTimeStamp': null,
-          'metaData': 'Project Alpha - Main Entry',
-          'sequenceNumber': 0,
-          'dataString': 'This is the parent record for Project Alpha.',
-          'category': 'project',
-        },
-        {
-          'id': 2,
-          'createdTimeStamp': '2025-01-19T10:00:02.000Z',
-          'parentTimeStamp': '2025-01-19T10:00:01.000Z',
-          'reviewedTimeStamp': '2025-01-19T10:00:02.000Z',
-          'editedTimeStamp': '2025-01-19T10:00:02.000Z',
-          'metaTimeStamp': null,
-          'metaData': 'Decision: Tech Stack',
-          'sequenceNumber': 1,
-          'dataString': 'Decided to use Flutter for cross-platform.',
-          'category': 'decision',
-        },
-        {
-          'id': 3,
-          'createdTimeStamp': '2025-01-19T10:00:03.000Z',
-          'parentTimeStamp': '2025-01-19T10:00:01.000Z',
-          'reviewedTimeStamp': '2025-01-19T10:00:03.000Z',
-          'editedTimeStamp': '2025-01-19T10:00:03.000Z',
-          'metaTimeStamp': null,
-          'metaData': 'Decision: Architecture',
-          'sequenceNumber': 2,
-          'dataString': 'Using Clean Architecture with BLoC pattern.',
-          'category': 'decision',
-        },
-        {
-          'id': 4,
-          'createdTimeStamp': '2025-01-19T10:00:04.000Z',
-          'parentTimeStamp': null,
-          'reviewedTimeStamp': '2025-01-19T10:00:04.000Z',
-          'editedTimeStamp': '2025-01-19T10:00:04.000Z',
-          'metaTimeStamp': null,
-          'metaData': 'Meeting Notes - Sprint Planning',
-          'sequenceNumber': 0,
-          'dataString': 'Discussed Q1 priorities and resource allocation.',
-          'category': 'meetings',
-        },
-        {
-          'id': 5,
-          'createdTimeStamp': '2025-01-19T10:00:05.000Z',
-          'parentTimeStamp': null,
-          'reviewedTimeStamp': '2025-01-19T10:00:05.000Z',
-          'editedTimeStamp': '2025-01-19T10:00:05.000Z',
-          'metaTimeStamp': null,
-          'metaData': 'Code Review Checklist',
-          'sequenceNumber': 0,
-          'dataString': 'Standard checklist for PR reviews.',
-          'category': 'development',
-        },
-      ];
+    {
+      'id': 1,
+      'createdTimeStamp': '2025-01-19T10:00:01.000Z',
+      'parentTimeStamp': null,
+      'reviewedTimeStamp': '2025-01-19T10:00:01.000Z',
+      'editedTimeStamp': '2025-01-19T10:00:01.000Z',
+      'metaTimeStamp': null,
+      'metaData': 'Project Alpha - Main Entry',
+      'sequenceNumber': 0,
+      'dataString': 'This is the parent record for Project Alpha.',
+      'category': 'project',
+    },
+    {
+      'id': 2,
+      'createdTimeStamp': '2025-01-19T10:00:02.000Z',
+      'parentTimeStamp': '2025-01-19T10:00:01.000Z',
+      'reviewedTimeStamp': '2025-01-19T10:00:02.000Z',
+      'editedTimeStamp': '2025-01-19T10:00:02.000Z',
+      'metaTimeStamp': null,
+      'metaData': 'Decision: Tech Stack',
+      'sequenceNumber': 1,
+      'dataString': 'Decided to use Flutter for cross-platform.',
+      'category': 'decision',
+    },
+    {
+      'id': 3,
+      'createdTimeStamp': '2025-01-19T10:00:03.000Z',
+      'parentTimeStamp': '2025-01-19T10:00:01.000Z',
+      'reviewedTimeStamp': '2025-01-19T10:00:03.000Z',
+      'editedTimeStamp': '2025-01-19T10:00:03.000Z',
+      'metaTimeStamp': null,
+      'metaData': 'Decision: Architecture',
+      'sequenceNumber': 2,
+      'dataString': 'Using Clean Architecture with BLoC pattern.',
+      'category': 'decision',
+    },
+    {
+      'id': 4,
+      'createdTimeStamp': '2025-01-19T10:00:04.000Z',
+      'parentTimeStamp': null,
+      'reviewedTimeStamp': '2025-01-19T10:00:04.000Z',
+      'editedTimeStamp': '2025-01-19T10:00:04.000Z',
+      'metaTimeStamp': null,
+      'metaData': 'Meeting Notes - Sprint Planning',
+      'sequenceNumber': 0,
+      'dataString': 'Discussed Q1 priorities and resource allocation.',
+      'category': 'meetings',
+    },
+    {
+      'id': 5,
+      'createdTimeStamp': '2025-01-19T10:00:05.000Z',
+      'parentTimeStamp': null,
+      'reviewedTimeStamp': '2025-01-19T10:00:05.000Z',
+      'editedTimeStamp': '2025-01-19T10:00:05.000Z',
+      'metaTimeStamp': null,
+      'metaData': 'Code Review Checklist',
+      'sequenceNumber': 0,
+      'dataString': 'Standard checklist for PR reviews.',
+      'category': 'development',
+    },
+  ];
 
   // ---------------------------------------------------------------------------
   // Mock since_when_tags table rows (junction table)
   // ---------------------------------------------------------------------------
   static List<Map<String, Object?>> get tagsRows => [
-        // Record 1 tags (Project Alpha)
-        {'id': 1, 'created_time_stamp': '2025-01-19T10:00:01.000Z', 'tag': 'project-alpha'},
-        {'id': 2, 'created_time_stamp': '2025-01-19T10:00:01.000Z', 'tag': 'parent'},
-        {'id': 3, 'created_time_stamp': '2025-01-19T10:00:01.000Z', 'tag': 'flutter'},
-        // Record 2 tags (Tech Stack)
-        {'id': 4, 'created_time_stamp': '2025-01-19T10:00:02.000Z', 'tag': 'tech'},
-        {'id': 5, 'created_time_stamp': '2025-01-19T10:00:02.000Z', 'tag': 'flutter'},
-        {'id': 6, 'created_time_stamp': '2025-01-19T10:00:02.000Z', 'tag': 'mobile'},
-        // Record 3 tags (Architecture)
-        {'id': 7, 'created_time_stamp': '2025-01-19T10:00:03.000Z', 'tag': 'architecture'},
-        {'id': 8, 'created_time_stamp': '2025-01-19T10:00:03.000Z', 'tag': 'bloc'},
-        {'id': 9, 'created_time_stamp': '2025-01-19T10:00:03.000Z', 'tag': 'flutter'},
-        // Record 4 tags (Meeting)
-        {'id': 10, 'created_time_stamp': '2025-01-19T10:00:04.000Z', 'tag': 'meeting'},
-        {'id': 11, 'created_time_stamp': '2025-01-19T10:00:04.000Z', 'tag': 'sprint'},
-        {'id': 12, 'created_time_stamp': '2025-01-19T10:00:04.000Z', 'tag': 'planning'},
-        // Record 5 tags (Code Review)
-        {'id': 13, 'created_time_stamp': '2025-01-19T10:00:05.000Z', 'tag': 'code-review'},
-        {'id': 14, 'created_time_stamp': '2025-01-19T10:00:05.000Z', 'tag': 'development'},
-        {'id': 15, 'created_time_stamp': '2025-01-19T10:00:05.000Z', 'tag': 'checklist'},
-      ];
+    // Record 1 tags (Project Alpha)
+    {
+      'id': 1,
+      'created_time_stamp': '2025-01-19T10:00:01.000Z',
+      'tag': 'project-alpha',
+    },
+    {
+      'id': 2,
+      'created_time_stamp': '2025-01-19T10:00:01.000Z',
+      'tag': 'parent',
+    },
+    {
+      'id': 3,
+      'created_time_stamp': '2025-01-19T10:00:01.000Z',
+      'tag': 'flutter',
+    },
+    // Record 2 tags (Tech Stack)
+    {'id': 4, 'created_time_stamp': '2025-01-19T10:00:02.000Z', 'tag': 'tech'},
+    {
+      'id': 5,
+      'created_time_stamp': '2025-01-19T10:00:02.000Z',
+      'tag': 'flutter',
+    },
+    {
+      'id': 6,
+      'created_time_stamp': '2025-01-19T10:00:02.000Z',
+      'tag': 'mobile',
+    },
+    // Record 3 tags (Architecture)
+    {
+      'id': 7,
+      'created_time_stamp': '2025-01-19T10:00:03.000Z',
+      'tag': 'architecture',
+    },
+    {'id': 8, 'created_time_stamp': '2025-01-19T10:00:03.000Z', 'tag': 'bloc'},
+    {
+      'id': 9,
+      'created_time_stamp': '2025-01-19T10:00:03.000Z',
+      'tag': 'flutter',
+    },
+    // Record 4 tags (Meeting)
+    {
+      'id': 10,
+      'created_time_stamp': '2025-01-19T10:00:04.000Z',
+      'tag': 'meeting',
+    },
+    {
+      'id': 11,
+      'created_time_stamp': '2025-01-19T10:00:04.000Z',
+      'tag': 'sprint',
+    },
+    {
+      'id': 12,
+      'created_time_stamp': '2025-01-19T10:00:04.000Z',
+      'tag': 'planning',
+    },
+    // Record 5 tags (Code Review)
+    {
+      'id': 13,
+      'created_time_stamp': '2025-01-19T10:00:05.000Z',
+      'tag': 'code-review',
+    },
+    {
+      'id': 14,
+      'created_time_stamp': '2025-01-19T10:00:05.000Z',
+      'tag': 'development',
+    },
+    {
+      'id': 15,
+      'created_time_stamp': '2025-01-19T10:00:05.000Z',
+      'tag': 'checklist',
+    },
+  ];
 
   // ---------------------------------------------------------------------------
   // Tag usage statistics (for analytics demo)
   // ---------------------------------------------------------------------------
   static List<Map<String, Object?>> get tagUsageStats => [
-        {'tag': 'flutter', 'count': 3},
-        {'tag': 'project-alpha', 'count': 1},
-        {'tag': 'parent', 'count': 1},
-        {'tag': 'tech', 'count': 1},
-        {'tag': 'mobile', 'count': 1},
-        {'tag': 'architecture', 'count': 1},
-        {'tag': 'bloc', 'count': 1},
-        {'tag': 'meeting', 'count': 1},
-        {'tag': 'sprint', 'count': 1},
-        {'tag': 'planning', 'count': 1},
-        {'tag': 'code-review', 'count': 1},
-        {'tag': 'development', 'count': 1},
-        {'tag': 'checklist', 'count': 1},
-      ];
+    {'tag': 'flutter', 'count': 3},
+    {'tag': 'project-alpha', 'count': 1},
+    {'tag': 'parent', 'count': 1},
+    {'tag': 'tech', 'count': 1},
+    {'tag': 'mobile', 'count': 1},
+    {'tag': 'architecture', 'count': 1},
+    {'tag': 'bloc', 'count': 1},
+    {'tag': 'meeting', 'count': 1},
+    {'tag': 'sprint', 'count': 1},
+    {'tag': 'planning', 'count': 1},
+    {'tag': 'code-review', 'count': 1},
+    {'tag': 'development', 'count': 1},
+    {'tag': 'checklist', 'count': 1},
+  ];
 }
 
 // =============================================================================
@@ -263,7 +436,7 @@ Widget mainTableDetail(BuildContext context) {
     initialValue: true,
   );
 
-  final textHandling = context.knobs.list<TextHandling>(
+  final textHandling = context.knobs.object.dropdown<TextHandling>(
     label: 'Text Handling',
     options: TextHandling.values,
     initialOption: TextHandling.trunc,
@@ -371,12 +544,14 @@ class _TagsTableDemo extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
                   columns: columns
-                      .map((col) => DataColumn(
-                            label: Text(
-                              col,
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ))
+                      .map(
+                        (col) => DataColumn(
+                          label: Text(
+                            col,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      )
                       .toList(),
                   rows: rows.map((row) {
                     return DataRow(
@@ -389,8 +564,9 @@ class _TagsTableDemo extends StatelessWidget {
                               fontFamily: 'monospace',
                               fontSize: 12,
                               color: value == null ? Colors.grey : null,
-                              fontStyle:
-                                  value == null ? FontStyle.italic : null,
+                              fontStyle: value == null
+                                  ? FontStyle.italic
+                                  : null,
                             ),
                           ),
                         );
@@ -489,8 +665,14 @@ class _PragmaDataDemoState extends State<_PragmaDataDemo>
                 const SizedBox(width: 8),
                 SegmentedButton<String>(
                   segments: const [
-                    ButtonSegment(value: 'since_when', label: Text('since_when')),
-                    ButtonSegment(value: 'since_when_tags', label: Text('since_when_tags')),
+                    ButtonSegment(
+                      value: 'since_when',
+                      label: Text('since_when'),
+                    ),
+                    ButtonSegment(
+                      value: 'since_when_tags',
+                      label: Text('since_when_tags'),
+                    ),
                   ],
                   selected: {_selectedTable},
                   onSelectionChanged: (selection) {
@@ -612,15 +794,17 @@ class _PragmaDataDemoState extends State<_PragmaDataDemo>
       child: DataTable(
         columnSpacing: 24,
         columns: columns
-            .map((col) => DataColumn(
-                  label: Text(
-                    col,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'monospace',
-                    ),
+            .map(
+              (col) => DataColumn(
+                label: Text(
+                  col,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'monospace',
                   ),
-                ))
+                ),
+              ),
+            )
             .toList(),
         rows: rows.map((row) {
           return DataRow(
@@ -659,9 +843,7 @@ class _SqliteViewerDemo extends StatelessWidget {
     // This demonstrates the layout and components with mock data.
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('SqliteViewer + SinceWhen'),
-      ),
+      appBar: AppBar(title: const Text('SqliteViewer + SinceWhen')),
       body: Row(
         children: [
           // Sidebar - Metadata Panel
@@ -669,9 +851,9 @@ class _SqliteViewerDemo extends StatelessWidget {
             width: sidebarWidth,
             child: _MockMetadataPanel(
               onTableSelected: (tableName) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Selected: $tableName')),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text('Selected: $tableName')));
               },
             ),
           ),
@@ -744,7 +926,10 @@ class _MockMetadataPanelState extends State<_MockMetadataPanel> {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.refresh, color: colorScheme.onPrimaryContainer),
+                  icon: Icon(
+                    Icons.refresh,
+                    color: colorScheme.onPrimaryContainer,
+                  ),
                   onPressed: () {},
                   tooltip: 'Refresh',
                 ),
@@ -758,7 +943,10 @@ class _MockMetadataPanelState extends State<_MockMetadataPanel> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _MetadataRow('SQLite', metadata.sqliteVersion),
-                _MetadataRow('Size', '${(metadata.databaseSize / 1024).toStringAsFixed(1)} KB'),
+                _MetadataRow(
+                  'Size',
+                  '${(metadata.databaseSize / 1024).toStringAsFixed(1)} KB',
+                ),
               ],
             ),
           ),
@@ -797,7 +985,9 @@ class _MockMetadataPanelState extends State<_MockMetadataPanel> {
                   title: Text(
                     table.name,
                     style: TextStyle(
-                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.normal,
                     ),
                   ),
                   trailing: Text(
@@ -949,8 +1139,9 @@ class _TagAnalyticsDemo extends StatelessWidget {
                   Expanded(
                     child: LinearProgressIndicator(
                       value: percentage,
-                      backgroundColor:
-                          Theme.of(context).colorScheme.surfaceContainerHighest,
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.surfaceContainerHighest,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -970,10 +1161,7 @@ class _TagAnalyticsDemo extends StatelessWidget {
           _InfoCard(
             title: 'Total',
             children: [
-              _InfoRow(
-                'Unique tags',
-                '${stats.length}',
-              ),
+              _InfoRow('Unique tags', '${stats.length}'),
               _InfoRow(
                 'Total tag assignments',
                 '${stats.fold(0, (sum, s) => sum + (s['count'] as int))}',
@@ -1001,10 +1189,7 @@ class _TagAnalyticsDemo extends StatelessWidget {
 // =============================================================================
 
 class _PragmaCard extends StatelessWidget {
-  const _PragmaCard({
-    required this.title,
-    required this.child,
-  });
+  const _PragmaCard({required this.title, required this.child});
 
   final String title;
   final Widget child;
@@ -1028,10 +1213,7 @@ class _PragmaCard extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: child,
-          ),
+          Padding(padding: const EdgeInsets.all(8), child: child),
         ],
       ),
     );
@@ -1039,10 +1221,7 @@ class _PragmaCard extends StatelessWidget {
 }
 
 class _InfoCard extends StatelessWidget {
-  const _InfoCard({
-    required this.title,
-    required this.children,
-  });
+  const _InfoCard({required this.title, required this.children});
 
   final String title;
   final List<Widget> children;
@@ -1057,9 +1236,9 @@ class _InfoCard extends StatelessWidget {
           children: [
             Text(
               title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const Divider(),
             ...children,
@@ -1094,10 +1273,7 @@ class _InfoRow extends StatelessWidget {
           ),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
           ),
         ],
       ),

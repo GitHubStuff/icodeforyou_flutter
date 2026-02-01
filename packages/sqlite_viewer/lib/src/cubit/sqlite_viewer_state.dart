@@ -2,14 +2,15 @@
 
 import 'package:equatable/equatable.dart';
 
-import '../failures/sqlite_viewer_failure.dart';
-import '../models/database_metadata.dart';
+import 'package:sqlite_viewer/src/failures/sqlite_viewer_failure.dart';
+import 'package:sqlite_viewer/src/models/database_metadata.dart';
 
-/// Base state for [SqliteViewerCubit].
+/// Base state for 'SqliteViewerCubit'.
 ///
 /// Uses sealed class pattern for exhaustive pattern matching.
 /// All states extend [Equatable] for proper BlocBuilder comparison.
 sealed class SqliteViewerState extends Equatable {
+  /// Creates a [SqliteViewerState].
   const SqliteViewerState();
 }
 
@@ -19,6 +20,7 @@ sealed class SqliteViewerState extends Equatable {
 
 /// Initial state — no database source attached.
 final class ViewerDisconnected extends SqliteViewerState {
+  /// Creates a [ViewerDisconnected] state.
   const ViewerDisconnected();
 
   @override
@@ -27,6 +29,7 @@ final class ViewerDisconnected extends SqliteViewerState {
 
 /// Connecting to database source and loading initial metadata.
 final class ViewerConnecting extends SqliteViewerState {
+  /// Creates a [ViewerConnecting] state.
   const ViewerConnecting();
 
   @override
@@ -35,8 +38,10 @@ final class ViewerConnecting extends SqliteViewerState {
 
 /// Failed to connect to database or load initial metadata.
 final class ViewerConnectionFailed extends SqliteViewerState {
+  /// Creates a [ViewerConnectionFailed] state with the given [failure].
   const ViewerConnectionFailed({required this.failure});
 
+  /// The failure that occurred during connection.
   final SqliteViewerFailure failure;
 
   @override
@@ -49,6 +54,7 @@ final class ViewerConnectionFailed extends SqliteViewerState {
 
 /// Refreshing database metadata (path, version, size, tables).
 final class MetadataLoading extends SqliteViewerState {
+  /// Creates a [MetadataLoading] state with existing [metadata].
   const MetadataLoading({required this.metadata});
 
   /// Previous metadata, shown during refresh.
@@ -62,8 +68,10 @@ final class MetadataLoading extends SqliteViewerState {
 ///
 /// This is the "home" state after successful connection.
 final class MetadataLoaded extends SqliteViewerState {
+  /// Creates a [MetadataLoaded] state with the loaded [metadata].
   const MetadataLoaded({required this.metadata});
 
+  /// The loaded database metadata.
   final DatabaseMetadata metadata;
 
   @override
@@ -72,11 +80,13 @@ final class MetadataLoaded extends SqliteViewerState {
 
 /// Failed to refresh database metadata.
 final class MetadataLoadFailed extends SqliteViewerState {
+  /// Creates a [MetadataLoadFailed] state with the given [failure].
   const MetadataLoadFailed({
     required this.failure,
     this.metadata,
   });
 
+  /// The failure that occurred during metadata loading.
   final SqliteViewerFailure failure;
 
   /// Previous metadata if available, allows retry without losing context.
@@ -92,12 +102,16 @@ final class MetadataLoadFailed extends SqliteViewerState {
 
 /// Loading table detail (columns, indexes, foreign keys, rows).
 final class TableDetailLoading extends SqliteViewerState {
+  /// Creates a [TableDetailLoading] state for the given [tableName].
   const TableDetailLoading({
     required this.metadata,
     required this.tableName,
   });
 
+  /// Current database metadata.
   final DatabaseMetadata metadata;
+
+  /// Name of the table being loaded.
   final String tableName;
 
   @override
@@ -106,6 +120,7 @@ final class TableDetailLoading extends SqliteViewerState {
 
 /// Table detail loaded and ready for display.
 final class TableDetailLoaded extends SqliteViewerState {
+  /// Creates a [TableDetailLoaded] state with complete table details.
   const TableDetailLoaded({
     required this.metadata,
     required this.tableName,
@@ -117,6 +132,7 @@ final class TableDetailLoaded extends SqliteViewerState {
     required this.rowCount,
   });
 
+  /// Current database metadata.
   final DatabaseMetadata metadata;
 
   /// Name of the selected table.
@@ -142,27 +158,33 @@ final class TableDetailLoaded extends SqliteViewerState {
 
   @override
   List<Object?> get props => [
-        metadata,
-        tableName,
-        columns,
-        tableInfo,
-        indexList,
-        foreignKeys,
-        rows,
-        rowCount,
-      ];
+    metadata,
+    tableName,
+    columns,
+    tableInfo,
+    indexList,
+    foreignKeys,
+    rows,
+    rowCount,
+  ];
 }
 
 /// Failed to load table detail.
 final class TableDetailLoadFailed extends SqliteViewerState {
+  /// Creates a [TableDetailLoadFailed] state with the given [failure].
   const TableDetailLoadFailed({
     required this.metadata,
     required this.tableName,
     required this.failure,
   });
 
+  /// Current database metadata.
   final DatabaseMetadata metadata;
+
+  /// Name of the table that failed to load.
   final String tableName;
+
+  /// The failure that occurred during table loading.
   final SqliteViewerFailure failure;
 
   @override
@@ -175,12 +197,16 @@ final class TableDetailLoadFailed extends SqliteViewerState {
 
 /// Executing a custom SELECT query.
 final class QueryExecuting extends SqliteViewerState {
+  /// Creates a [QueryExecuting] state for the given [query].
   const QueryExecuting({
     required this.metadata,
     required this.query,
   });
 
+  /// Current database metadata.
   final DatabaseMetadata metadata;
+
+  /// The query being executed.
   final String query;
 
   @override
@@ -189,6 +215,7 @@ final class QueryExecuting extends SqliteViewerState {
 
 /// Custom query executed successfully.
 final class QueryResultLoaded extends SqliteViewerState {
+  /// Creates a [QueryResultLoaded] state with query results.
   const QueryResultLoaded({
     required this.metadata,
     required this.query,
@@ -196,6 +223,7 @@ final class QueryResultLoaded extends SqliteViewerState {
     required this.rows,
   });
 
+  /// Current database metadata.
   final DatabaseMetadata metadata;
 
   /// The executed query string.
@@ -216,14 +244,20 @@ final class QueryResultLoaded extends SqliteViewerState {
 
 /// Custom query failed to execute.
 final class QueryFailed extends SqliteViewerState {
+  /// Creates a [QueryFailed] state with the given [failure].
   const QueryFailed({
     required this.metadata,
     required this.query,
     required this.failure,
   });
 
+  /// Current database metadata.
   final DatabaseMetadata metadata;
+
+  /// The query that failed.
   final String query;
+
+  /// The failure that occurred during query execution.
   final SqliteViewerFailure failure;
 
   @override

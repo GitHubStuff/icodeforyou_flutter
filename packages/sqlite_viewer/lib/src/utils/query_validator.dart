@@ -2,7 +2,7 @@
 
 import 'package:dartz/dartz.dart';
 
-import '../failures/sqlite_viewer_failure.dart';
+import 'package:sqlite_viewer/src/failures/sqlite_viewer_failure.dart';
 
 /// Validates SQL queries for sqlite_viewer.
 ///

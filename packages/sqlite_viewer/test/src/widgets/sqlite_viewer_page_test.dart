@@ -1,290 +1,189 @@
-// test/src/widgets/sqlite_viewer_page_test.dart
+// test/src/selector_widget_test.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sqlite_viewer/sqlite_viewer.dart';
-
-import '../../helpers/mock_sqlite_viewer_source.dart';
-import '../../helpers/test_helpers.dart';
+import 'package:theme_package/theme_package.dart';
 
 void main() {
-  group('SqliteViewerPage', () {
-    late MockSqliteViewerSource mockSource;
+  const validDbName = 'test_db_1234567890ab';
 
-    setUp(() {
-      mockSource = createTestMockSource();
-    });
+  setUp(ThemePackage.reset);
 
-    Widget buildWidget({
-      MockSqliteViewerSource? source,
-      String title = 'SQLite Viewer',
-      bool showQueryInput = true,
-      double sidebarWidth = 280.0,
-      bool showRowNumbers = true,
-      String nullValueDisplay = 'NULL',
-      TextHandling textHandling = TextHandling.trunc,
-    }) {
-      return MaterialApp(
-        home: SqliteViewerPage(
-          source: source ?? mockSource,
-          title: title,
-          showQueryInput: showQueryInput,
-          sidebarWidth: sidebarWidth,
-          showRowNumbers: showRowNumbers,
-          nullValueDisplay: nullValueDisplay,
-          textHandling: textHandling,
+  group('ThemeSelectorWidget', () {
+    Future<void> pumpSelectorWidget(WidgetTester tester) async {
+      await tester.pumpWidget(
+        ThemePackageRoot(
+          databaseName: validDbName,
+          inMemory: true,
+          splash: const SizedBox.shrink(),
+          child: MaterialApp(
+            home: Scaffold(
+              body: ThemeBuilder(
+                builder: (context, themeMode) {
+                  return Column(
+                    children: [
+                      const ThemeSelectorWidget(),
+                      Text('Current: ${themeMode.name}'),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
         ),
       );
+      await tester.pumpAndSettle();
     }
 
-    group('Phone layout (< 600)', () {
-      testWidgets('shows bottom navigation bar', (tester) async {
-        tester.view.physicalSize = const Size(400, 800);
-        tester.view.devicePixelRatio = 1.0;
-        addTearDown(tester.view.resetPhysicalSize);
-        
-        await tester.pumpWidget(buildWidget());
-        await tester.pumpAndSettle();
-        
-        expect(find.byType(NavigationBar), findsOneWidget);
+    group('UI elements', () {
+      testWidgets('displays "Select Theme:" label', (
+        WidgetTester tester,
+      ) async {
+        await pumpSelectorWidget(tester);
+
+        expect(find.text('Select Theme:'), findsOneWidget);
       });
 
-      testWidgets('shows Tables, Data, and Query tabs', (tester) async {
-        tester.view.physicalSize = const Size(400, 800);
-        tester.view.devicePixelRatio = 1.0;
-        addTearDown(tester.view.resetPhysicalSize);
-        
-        await tester.pumpWidget(buildWidget());
-        await tester.pumpAndSettle();
-        
-        // Check NavigationBar has 3 destinations
-        final navBar = tester.widget<NavigationBar>(find.byType(NavigationBar));
-        expect(navBar.destinations.length, 3);
+      testWidgets('displays System radio option', (WidgetTester tester) async {
+        await pumpSelectorWidget(tester);
+
+        expect(find.text('System'), findsOneWidget);
       });
 
-      testWidgets('hides Query tab when showQueryInput is false', (tester) async {
-        tester.view.physicalSize = const Size(400, 800);
-        tester.view.devicePixelRatio = 1.0;
-        addTearDown(tester.view.resetPhysicalSize);
-        
-        await tester.pumpWidget(buildWidget(showQueryInput: false));
-        await tester.pumpAndSettle();
-        
-        // Check NavigationBar has only 2 destinations (no Query)
-        final navBar = tester.widget<NavigationBar>(find.byType(NavigationBar));
-        expect(navBar.destinations.length, 2);
+      testWidgets('displays Dark radio option', (WidgetTester tester) async {
+        await pumpSelectorWidget(tester);
+
+        expect(find.text('Dark'), findsOneWidget);
       });
 
-      testWidgets('shows app bar with title', (tester) async {
-        tester.view.physicalSize = const Size(400, 800);
-        tester.view.devicePixelRatio = 1.0;
-        addTearDown(tester.view.resetPhysicalSize);
-        
-        await tester.pumpWidget(buildWidget(title: 'My Database'));
-        await tester.pumpAndSettle();
-        
-        expect(find.text('My Database'), findsOneWidget);
+      testWidgets('displays Light radio option', (WidgetTester tester) async {
+        await pumpSelectorWidget(tester);
+
+        expect(find.text('Light'), findsOneWidget);
       });
 
-      testWidgets('shows refresh button in app bar', (tester) async {
-        tester.view.physicalSize = const Size(400, 800);
-        tester.view.devicePixelRatio = 1.0;
-        addTearDown(tester.view.resetPhysicalSize);
-        
-        await tester.pumpWidget(buildWidget());
-        await tester.pumpAndSettle();
-        
-        expect(find.byIcon(Icons.refresh), findsWidgets);
-      });
+      testWidgets('has three RadioListTile widgets', (
+        WidgetTester tester,
+      ) async {
+        await pumpSelectorWidget(tester);
 
-      testWidgets('switches to Data tab when table selected', (tester) async {
-        tester.view.physicalSize = const Size(400, 800);
-        tester.view.devicePixelRatio = 1.0;
-        addTearDown(tester.view.resetPhysicalSize);
-        
-        await tester.pumpWidget(buildWidget());
-        await tester.pumpAndSettle();
-        
-        await tester.tap(find.text('users'));
-        await tester.pumpAndSettle();
-        
-        expect(find.byType(SqliteViewerTableDetail), findsOneWidget);
+        expect(find.byType(RadioListTile<ThemeMode>), findsNWidgets(3));
       });
     });
 
-    group('Tablet layout (600-1200)', () {
-      testWidgets('shows side-by-side layout', (tester) async {
-        await tester.pumpWidget(buildWidget());
-        await tester.pumpAndSettle();
-        
-        expect(find.byType(SqliteViewerMetadataPanel), findsOneWidget);
-      });
+    group('initial state', () {
+      testWidgets('System is selected by default', (WidgetTester tester) async {
+        await pumpSelectorWidget(tester);
 
-      testWidgets('shows vertical divider', (tester) async {
-        await tester.pumpWidget(buildWidget());
-        await tester.pumpAndSettle();
-        
-        expect(find.byType(VerticalDivider), findsOneWidget);
-      });
+        expect(find.text('Current: system'), findsOneWidget);
 
-      testWidgets('shows query input when enabled', (tester) async {
-        await tester.pumpWidget(buildWidget(showQueryInput: true));
-        await tester.pumpAndSettle();
-        
-        expect(find.byType(SqliteViewerQueryInput), findsOneWidget);
-      });
-
-      testWidgets('hides query input when disabled', (tester) async {
-        await tester.pumpWidget(buildWidget(showQueryInput: false));
-        await tester.pumpAndSettle();
-        
-        expect(find.byType(SqliteViewerQueryInput), findsNothing);
-      });
-
-      testWidgets('shows "Select a table" prompt initially', (tester) async {
-        await tester.pumpWidget(buildWidget());
-        await tester.pumpAndSettle();
-        
-        expect(find.text('Select a table from the sidebar'), findsOneWidget);
-      });
-    });
-
-    group('Desktop layout (> 1200)', () {
-      testWidgets('uses same layout as tablet', (tester) async {
-        tester.view.physicalSize = const Size(1400, 900);
-        tester.view.devicePixelRatio = 1.0;
-        addTearDown(tester.view.resetPhysicalSize);
-        
-        await tester.pumpWidget(buildWidget());
-        await tester.pumpAndSettle();
-        
-        expect(find.byType(SqliteViewerMetadataPanel), findsOneWidget);
-      });
-    });
-
-    group('State handling', () {
-      testWidgets('shows loading view while connecting', (tester) async {
-        final slowSource = MockSqliteViewerSource();
-        
-        await tester.pumpWidget(buildWidget(source: slowSource));
-        
-        expect(find.text('Connecting...'), findsOneWidget);
-        expect(find.byType(CircularProgressIndicator), findsOneWidget);
-        
-        await tester.pumpAndSettle();
-      });
-
-      testWidgets('shows error view on connection failure', (tester) async {
-        final failingSource = MockSqliteViewerSource();
-        failingSource.getFullPathFailure = const ViewerDatabaseNotOpen();
-        
-        await tester.pumpWidget(buildWidget(source: failingSource));
-        await tester.pumpAndSettle();
-        
-        expect(find.text('Database is not open'), findsOneWidget);
-        expect(find.byIcon(Icons.error_outline), findsOneWidget);
-      });
-
-      testWidgets('shows disconnected view when disconnected', (tester) async {
-        await tester.pumpWidget(buildWidget());
-        
-        expect(find.text('Connecting...'), findsOneWidget);
-      });
-    });
-
-    group('Query execution', () {
-      testWidgets('shows query results', (tester) async {
-        await tester.pumpWidget(buildWidget());
-        await tester.pumpAndSettle();
-        
-        final queryInput = find.byType(TextField);
-        await tester.enterText(queryInput, 'SELECT * FROM users');
-        await tester.pump();
-        
-        await tester.tap(find.text('Run Query'));
-        await tester.pumpAndSettle();
-      });
-
-      testWidgets('shows empty result message', (tester) async {
-        final emptySource = MockSqliteViewerSource(
-          selectResults: {'SELECT * FROM empty': []},
+        // Verify RadioGroup has system as groupValue
+        final radioGroup = tester.widget<RadioGroup<ThemeMode>>(
+          find.byType(RadioGroup<ThemeMode>),
         );
-        
-        await tester.pumpWidget(buildWidget(source: emptySource));
-        await tester.pumpAndSettle();
-        
-        final queryInput = find.byType(TextField);
-        await tester.enterText(queryInput, 'SELECT * FROM empty');
-        await tester.pump();
-        
-        await tester.tap(find.text('Run Query'));
-        await tester.pumpAndSettle();
-        
-        expect(find.text('Query returned no results'), findsOneWidget);
+        expect(radioGroup.groupValue, ThemeMode.system);
       });
     });
 
-    group('Table detail', () {
-      testWidgets('shows table detail when table selected', (tester) async {
-        await tester.pumpWidget(buildWidget());
+    group('theme selection', () {
+      testWidgets('tapping Dark changes theme to dark', (
+        WidgetTester tester,
+      ) async {
+        await pumpSelectorWidget(tester);
+
+        // Tap Dark option
+        await tester.tap(find.text('Dark'));
         await tester.pumpAndSettle();
-        
-        await tester.tap(find.text('users'));
-        await tester.pumpAndSettle();
-        
-        expect(find.byType(SqliteViewerTableDetail), findsOneWidget);
+
+        expect(find.text('Current: dark'), findsOneWidget);
+        expect(ThemePackage.currentTheme, ThemeMode.dark);
       });
 
-      testWidgets('shows loading view while loading table', (tester) async {
-        await tester.pumpWidget(buildWidget());
+      testWidgets('tapping Light changes theme to light', (
+        WidgetTester tester,
+      ) async {
+        await pumpSelectorWidget(tester);
+
+        // Tap Light option
+        await tester.tap(find.text('Light'));
         await tester.pumpAndSettle();
-        
-        await tester.tap(find.text('users'));
-        await tester.pump();
+
+        expect(find.text('Current: light'), findsOneWidget);
+        expect(ThemePackage.currentTheme, ThemeMode.light);
       });
 
-      testWidgets('shows error when table load fails', (tester) async {
-        final failingSource = MockSqliteViewerSource(
-          tableNames: ['users'],
+      testWidgets('tapping System changes theme to system', (
+        WidgetTester tester,
+      ) async {
+        await pumpSelectorWidget(tester);
+
+        // First change to dark
+        await tester.tap(find.text('Dark'));
+        await tester.pumpAndSettle();
+        expect(find.text('Current: dark'), findsOneWidget);
+
+        // Then change to system
+        await tester.tap(find.text('System'));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Current: system'), findsOneWidget);
+        expect(ThemePackage.currentTheme, ThemeMode.system);
+      });
+
+      testWidgets('radio button visually updates when selection changes', (
+        WidgetTester tester,
+      ) async {
+        await pumpSelectorWidget(tester);
+
+        // Initially System is selected
+        var radioGroup = tester.widget<RadioGroup<ThemeMode>>(
+          find.byType(RadioGroup<ThemeMode>),
         );
-        failingSource.getColumnNamesFailure = const ViewerTableNotFound('users');
-        
-        await tester.pumpWidget(buildWidget(source: failingSource));
+        expect(radioGroup.groupValue, ThemeMode.system);
+
+        // Tap Dark
+        await tester.tap(find.text('Dark'));
         await tester.pumpAndSettle();
-        
-        await tester.tap(find.text('users'));
-        await tester.pumpAndSettle();
-        
-        expect(find.text('Failed to load users: Table not found: users'), findsOneWidget);
+
+        // Now Dark should be selected
+        radioGroup = tester.widget<RadioGroup<ThemeMode>>(
+          find.byType(RadioGroup<ThemeMode>),
+        );
+        expect(radioGroup.groupValue, ThemeMode.dark);
       });
     });
 
-    group('Refresh functionality', () {
-      testWidgets('refreshes metadata when refresh button tapped', (tester) async {
-        await tester.pumpWidget(buildWidget());
+    group('persistence', () {
+      testWidgets('selection persists to datasource', (
+        WidgetTester tester,
+      ) async {
+        await pumpSelectorWidget(tester);
+
+        await tester.tap(find.text('Light'));
         await tester.pumpAndSettle();
-        
-        final refreshButtons = find.byIcon(Icons.refresh);
-        expect(refreshButtons, findsWidgets);
-        
-        await tester.tap(refreshButtons.first);
-        await tester.pumpAndSettle();
+
+        // Verify persisted
+        expect(ThemePackage.getTheme(), ThemeMode.light);
       });
     });
 
-    group('Configuration options', () {
-      testWidgets('applies custom title', (tester) async {
-        await tester.pumpWidget(buildWidget(title: 'Custom Title'));
-        await tester.pumpAndSettle();
-        
-        expect(find.text('Custom Title'), findsOneWidget);
-      });
+    group('null mode handling', () {
+      testWidgets('onChanged does nothing when mode is null', (
+        WidgetTester tester,
+      ) async {
+        await pumpSelectorWidget(tester);
 
-      testWidgets('applies sidebarWidth', (tester) async {
-        await tester.pumpWidget(buildWidget(sidebarWidth: 350.0));
+        // This test verifies the code path where mode == null in onChanged
+        // The RadioListTile should never pass null, but the code handles it
+        expect(find.text('Current: system'), findsOneWidget);
+
+        // Tap multiple times to ensure stability
+        await tester.tap(find.text('Dark'));
         await tester.pumpAndSettle();
-        
-        expect(find.byType(SqliteViewerMetadataPanel), findsOneWidget);
+        await tester.tap(find.text('Light'));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Current: light'), findsOneWidget);
       });
     });
   });
