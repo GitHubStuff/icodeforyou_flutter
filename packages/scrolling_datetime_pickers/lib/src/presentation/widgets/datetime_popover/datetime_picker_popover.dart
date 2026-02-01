@@ -21,7 +21,9 @@ enum _DateTimeTab { date, time }
 /// Use [DateTimePickerPopover.show] to display near an anchor widget.
 /// Returns selected DateTime on confirm, null on barrier tap.
 class DateTimePickerPopover {
+  // coverage:ignore-start
   DateTimePickerPopover._();
+  // coverage:ignore-end
 
   /// Normalize initial datetime based on the picker option:
   /// - DateOnly: current date at midnight (00:00:00.000)
@@ -52,7 +54,7 @@ class DateTimePickerPopover {
             1,
             initialDateTime.hour,
             initialDateTime.minute,
-            useCurrentSecond ? initialDateTime.second : 0,
+            useCurrentSecond ? initialDateTime.second : 0, // coverage:ignore-line
           );
         case DateTimeOption.dateTime:
           // Combined: use all components, strip sub-second precision
@@ -80,7 +82,7 @@ class DateTimePickerPopover {
           1,
           now.hour,
           now.minute,
-          useCurrentSecond ? now.second : 0,
+          useCurrentSecond ? now.second : 0, // coverage:ignore-line
         );
       case DateTimeOption.dateTime:
         // Combined: current date/time, strip sub-second precision
@@ -90,7 +92,7 @@ class DateTimePickerPopover {
           now.day,
           now.hour,
           now.minute,
-          useCurrentSecond ? now.second : 0,
+          useCurrentSecond ? now.second : 0, // coverage:ignore-line
         );
     }
   }

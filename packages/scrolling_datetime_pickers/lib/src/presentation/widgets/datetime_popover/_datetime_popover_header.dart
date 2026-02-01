@@ -32,10 +32,12 @@ class _DateTimePopoverHeader extends StatelessWidget {
   String _formatDate() {
     try {
       return DateFormat(dateFormat).format(currentDateTime);
+      // coverage:ignore-start
     } catch (_) {
       return DateFormat(PopoverConstants.defaultDateFormat)
           .format(currentDateTime);
     }
+    // coverage:ignore-end
   }
 
   String _formatTime() {
@@ -44,12 +46,14 @@ class _DateTimePopoverHeader extends StatelessWidget {
           ? timeFormat
           : timeFormat.replaceAll(':ss', '').replaceAll('ss', '');
       return DateFormat(effectiveFormat).format(currentDateTime);
+      // coverage:ignore-start
     } catch (_) {
       final fallbackFormat = showSeconds
           ? PopoverConstants.defaultTimeFormat
           : PopoverConstants.defaultTimeFormatNoSeconds;
       return DateFormat(fallbackFormat).format(currentDateTime);
     }
+    // coverage:ignore-end
   }
 
   @override

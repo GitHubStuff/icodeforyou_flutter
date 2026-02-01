@@ -235,7 +235,5 @@ melos:
         dart run build_runner clean
         echo "🧹 Widgetbook generated files cleaned"
 
-
-
 flutter:
   uses-material-design: true
