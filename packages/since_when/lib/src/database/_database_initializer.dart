@@ -1,4 +1,4 @@
-// packages/since_when/lib/src/database/_database_initializer.dart
+// lib/src/database/_database_initializer.dart
 
 import 'dart:io';
 
@@ -123,12 +123,20 @@ abstract final class DatabaseInitializer {
 
   /// Creates all tables and indexes.
   static Future<void> _createTables(Database db, int version) async {
+    // Main records table
     await db.execute(SqlStatements.createTableSinceWhen);
     await db.execute(SqlStatements.createIndexCreatedTimeStamp);
     await db.execute(SqlStatements.createIndexParentTimeStamp);
+
+    // Tag glossary table
+    await db.execute(SqlStatements.createTableTagGlossary);
+    await db.execute(SqlStatements.createIndexTagName);
+    await db.execute(SqlStatements.createIndexGlossaryTimestamp);
+
+    // Junction table
     await db.execute(SqlStatements.createTableTags);
-    await db.execute(SqlStatements.createIndexTag);
-    await db.execute(SqlStatements.createIndexTagsCreatedTimeStamp);
+    await db.execute(SqlStatements.createIndexTagsRecordTimestamp);
+    await db.execute(SqlStatements.createIndexTagsGlossaryTimestamp);
   }
 
   /// Runs on every database open to enable foreign keys.

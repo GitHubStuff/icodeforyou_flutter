@@ -43,6 +43,10 @@ class ScrollingTimePicker extends StatelessWidget {
   /// Whether to show seconds column
   final bool showSeconds;
 
+  /// Whether to use current second value or default to 0
+  /// Only applies when showSeconds is true
+  final bool useCurrentSecond;
+
   /// Whether to enable haptic feedback
   final bool enableHaptics;
 
@@ -66,17 +70,19 @@ class ScrollingTimePicker extends StatelessWidget {
     DividerConfiguration? dividerConfiguration,
     FadeConfiguration? fadeConfiguration,
     this.showSeconds = false,
+    this.useCurrentSecond = false,
     this.enableHaptics = true,
     this.borderRadius = 0.0,
-  })  : dividerConfiguration =
-            dividerConfiguration ?? const DividerConfiguration(),
-        fadeConfiguration = fadeConfiguration ?? const FadeConfiguration();
+  }) : dividerConfiguration =
+           dividerConfiguration ?? const DividerConfiguration(),
+       fadeConfiguration = fadeConfiguration ?? const FadeConfiguration();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => TimePickerCubit(
         initialDateTime: initialDateTime,
+        useCurrentSecond: useCurrentSecond && showSeconds,
       ),
       child: _ScrollingTimePickerContent(
         portraitSize: portraitSize,

@@ -24,8 +24,8 @@ mixin _$SinceWhenRecord {
 /// Parent records have sequenceNumber 0.
  int get sequenceNumber;/// Primary data content (unlimited length).
  String get dataString;/// Free-form category classification.
- String get category;/// List of tags associated with this record.
- List<String> get tags;/// Reference to parent record's [createdTimeStamp], if any.
+ String get category;/// List of tag definitions associated with this record.
+ List<TagDefinition> get tags;/// Reference to parent record's [createdTimeStamp], if any.
  String? get parentTimeStamp;/// Optional metadata timestamp (ISO8601 UTC).
  String? get metaTimeStamp;
 /// Create a copy of SinceWhenRecord
@@ -60,7 +60,7 @@ abstract mixin class $SinceWhenRecordCopyWith<$Res>  {
   factory $SinceWhenRecordCopyWith(SinceWhenRecord value, $Res Function(SinceWhenRecord) _then) = _$SinceWhenRecordCopyWithImpl;
 @useResult
 $Res call({
- int id, String createdTimeStamp, String reviewedTimeStamp, String editedTimeStamp, String metaData, int sequenceNumber, String dataString, String category, List<String> tags, String? parentTimeStamp, String? metaTimeStamp
+ int id, String createdTimeStamp, String reviewedTimeStamp, String editedTimeStamp, String metaData, int sequenceNumber, String dataString, String category, List<TagDefinition> tags, String? parentTimeStamp, String? metaTimeStamp
 });
 
 
@@ -88,7 +88,7 @@ as String,sequenceNumber: null == sequenceNumber ? _self.sequenceNumber : sequen
 as int,dataString: null == dataString ? _self.dataString : dataString // ignore: cast_nullable_to_non_nullable
 as String,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as String,tags: null == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
-as List<String>,parentTimeStamp: freezed == parentTimeStamp ? _self.parentTimeStamp : parentTimeStamp // ignore: cast_nullable_to_non_nullable
+as List<TagDefinition>,parentTimeStamp: freezed == parentTimeStamp ? _self.parentTimeStamp : parentTimeStamp // ignore: cast_nullable_to_non_nullable
 as String?,metaTimeStamp: freezed == metaTimeStamp ? _self.metaTimeStamp : metaTimeStamp // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -172,7 +172,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String createdTimeStamp,  String reviewedTimeStamp,  String editedTimeStamp,  String metaData,  int sequenceNumber,  String dataString,  String category,  List<String> tags,  String? parentTimeStamp,  String? metaTimeStamp)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String createdTimeStamp,  String reviewedTimeStamp,  String editedTimeStamp,  String metaData,  int sequenceNumber,  String dataString,  String category,  List<TagDefinition> tags,  String? parentTimeStamp,  String? metaTimeStamp)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SinceWhenRecord() when $default != null:
 return $default(_that.id,_that.createdTimeStamp,_that.reviewedTimeStamp,_that.editedTimeStamp,_that.metaData,_that.sequenceNumber,_that.dataString,_that.category,_that.tags,_that.parentTimeStamp,_that.metaTimeStamp);case _:
@@ -193,7 +193,7 @@ return $default(_that.id,_that.createdTimeStamp,_that.reviewedTimeStamp,_that.ed
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String createdTimeStamp,  String reviewedTimeStamp,  String editedTimeStamp,  String metaData,  int sequenceNumber,  String dataString,  String category,  List<String> tags,  String? parentTimeStamp,  String? metaTimeStamp)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String createdTimeStamp,  String reviewedTimeStamp,  String editedTimeStamp,  String metaData,  int sequenceNumber,  String dataString,  String category,  List<TagDefinition> tags,  String? parentTimeStamp,  String? metaTimeStamp)  $default,) {final _that = this;
 switch (_that) {
 case _SinceWhenRecord():
 return $default(_that.id,_that.createdTimeStamp,_that.reviewedTimeStamp,_that.editedTimeStamp,_that.metaData,_that.sequenceNumber,_that.dataString,_that.category,_that.tags,_that.parentTimeStamp,_that.metaTimeStamp);}
@@ -210,7 +210,7 @@ return $default(_that.id,_that.createdTimeStamp,_that.reviewedTimeStamp,_that.ed
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String createdTimeStamp,  String reviewedTimeStamp,  String editedTimeStamp,  String metaData,  int sequenceNumber,  String dataString,  String category,  List<String> tags,  String? parentTimeStamp,  String? metaTimeStamp)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String createdTimeStamp,  String reviewedTimeStamp,  String editedTimeStamp,  String metaData,  int sequenceNumber,  String dataString,  String category,  List<TagDefinition> tags,  String? parentTimeStamp,  String? metaTimeStamp)?  $default,) {final _that = this;
 switch (_that) {
 case _SinceWhenRecord() when $default != null:
 return $default(_that.id,_that.createdTimeStamp,_that.reviewedTimeStamp,_that.editedTimeStamp,_that.metaData,_that.sequenceNumber,_that.dataString,_that.category,_that.tags,_that.parentTimeStamp,_that.metaTimeStamp);case _:
@@ -225,7 +225,7 @@ return $default(_that.id,_that.createdTimeStamp,_that.reviewedTimeStamp,_that.ed
 @JsonSerializable()
 
 class _SinceWhenRecord implements SinceWhenRecord {
-  const _SinceWhenRecord({required this.id, required this.createdTimeStamp, required this.reviewedTimeStamp, required this.editedTimeStamp, required this.metaData, required this.sequenceNumber, required this.dataString, required this.category, required final  List<String> tags, this.parentTimeStamp, this.metaTimeStamp}): _tags = tags;
+  const _SinceWhenRecord({required this.id, required this.createdTimeStamp, required this.reviewedTimeStamp, required this.editedTimeStamp, required this.metaData, required this.sequenceNumber, required this.dataString, required this.category, required final  List<TagDefinition> tags, this.parentTimeStamp, this.metaTimeStamp}): _tags = tags;
   factory _SinceWhenRecord.fromJson(Map<String, dynamic> json) => _$SinceWhenRecordFromJson(json);
 
 /// Auto-increment ID for internal database use.
@@ -245,10 +245,10 @@ class _SinceWhenRecord implements SinceWhenRecord {
 @override final  String dataString;
 /// Free-form category classification.
 @override final  String category;
-/// List of tags associated with this record.
- final  List<String> _tags;
-/// List of tags associated with this record.
-@override List<String> get tags {
+/// List of tag definitions associated with this record.
+ final  List<TagDefinition> _tags;
+/// List of tag definitions associated with this record.
+@override List<TagDefinition> get tags {
   if (_tags is EqualUnmodifiableListView) return _tags;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_tags);
@@ -292,7 +292,7 @@ abstract mixin class _$SinceWhenRecordCopyWith<$Res> implements $SinceWhenRecord
   factory _$SinceWhenRecordCopyWith(_SinceWhenRecord value, $Res Function(_SinceWhenRecord) _then) = __$SinceWhenRecordCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String createdTimeStamp, String reviewedTimeStamp, String editedTimeStamp, String metaData, int sequenceNumber, String dataString, String category, List<String> tags, String? parentTimeStamp, String? metaTimeStamp
+ int id, String createdTimeStamp, String reviewedTimeStamp, String editedTimeStamp, String metaData, int sequenceNumber, String dataString, String category, List<TagDefinition> tags, String? parentTimeStamp, String? metaTimeStamp
 });
 
 
@@ -320,7 +320,7 @@ as String,sequenceNumber: null == sequenceNumber ? _self.sequenceNumber : sequen
 as int,dataString: null == dataString ? _self.dataString : dataString // ignore: cast_nullable_to_non_nullable
 as String,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as String,tags: null == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
-as List<String>,parentTimeStamp: freezed == parentTimeStamp ? _self.parentTimeStamp : parentTimeStamp // ignore: cast_nullable_to_non_nullable
+as List<TagDefinition>,parentTimeStamp: freezed == parentTimeStamp ? _self.parentTimeStamp : parentTimeStamp // ignore: cast_nullable_to_non_nullable
 as String?,metaTimeStamp: freezed == metaTimeStamp ? _self.metaTimeStamp : metaTimeStamp // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

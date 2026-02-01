@@ -1,4 +1,4 @@
-// icodeforyou_flutter/packages/since_when/lib/src/utils/_timestamp_generator.dart
+// lib/src/utils/_timestamp_generator.dart
 
 import 'package:dartz/dartz.dart';
 import 'package:since_when/src/domain/since_when_failure.dart';
@@ -21,15 +21,19 @@ abstract final class TimestampGenerator {
   /// Checks the database to ensure no existing record has this timestamp.
   /// Retries with microsecond delays if collision detected.
   ///
+  /// [table] specifies which table to check for uniqueness.
+  /// Defaults to the main since_when table.
+  ///
   /// Returns [Right] with unique timestamp string on success.
   /// Returns [Left] with [TimestampCollisionRetryExhausted] if max retries hit.
   static Future<Either<SinceWhenFailure, String>> generateUniqueTimestamp(
-    Database db,
-  ) async {
+    Database db, {
+    String table = SqlStatements.tableSinceWhen,
+  }) async {
     for (var attempt = 0; attempt < _maxRetryAttempts; attempt++) {
       final timestamp = DateTime.now().toUtc().toIso8601String();
 
-      final exists = await _timestampExists(db, timestamp);
+      final exists = await _timestampExists(db, timestamp, table);
 
       if (!exists) {
         return Right(timestamp);
@@ -44,15 +48,21 @@ abstract final class TimestampGenerator {
     return const Left(TimestampCollisionRetryExhausted());
   }
 
-  /// Checks if a timestamp already exists in the database.
+  /// Checks if a timestamp already exists in the specified table.
   static Future<bool> _timestampExists(
     Database db,
     String timestamp,
+    String table,
   ) async {
-    final result = await db.rawQuery(
-      SqlStatements.existsByCreatedTimeStamp,
-      [timestamp],
-    );
+    final String sql;
+
+    if (table == SqlStatements.tableTagGlossary) {
+      sql = SqlStatements.existsGlossaryByTimestamp;
+    } else {
+      sql = SqlStatements.existsByCreatedTimeStamp;
+    }
+
+    final result = await db.rawQuery(sql, [timestamp]);
     return result.isNotEmpty;
   }
 

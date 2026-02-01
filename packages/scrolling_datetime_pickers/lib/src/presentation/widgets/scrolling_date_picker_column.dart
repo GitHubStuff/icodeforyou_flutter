@@ -10,6 +10,8 @@ class _ScrollingDatePickerColumn extends StatelessWidget {
   final String Function(int) itemBuilder;
   final ValueChanged<int> onSelectedItemChanged;
   final TextStyle? textStyle;
+  /// Whether the picker should loop. Defaults to [isInfinite] if not specified.
+  final bool? looping;
 
   const _ScrollingDatePickerColumn({
     required this.controller,
@@ -18,16 +20,20 @@ class _ScrollingDatePickerColumn extends StatelessWidget {
     required this.itemBuilder,
     required this.onSelectedItemChanged,
     this.textStyle,
+    this.looping,
   }) : assert(!isInfinite || itemCount == null,
             'Cannot specify itemCount for infinite scroll');
 
   @override
   Widget build(BuildContext context) {
+    // Use explicit looping if provided, otherwise default to isInfinite
+    final shouldLoop = looping ?? isInfinite;
+    
     return CupertinoPicker(
       scrollController: controller,
       itemExtent: DimensionConstants.itemExtent,
       onSelectedItemChanged: onSelectedItemChanged,
-      looping: isInfinite,
+      looping: shouldLoop,
       children: isInfinite
           ? List.generate(
               StyleConstants.infiniteScrollBuffer,

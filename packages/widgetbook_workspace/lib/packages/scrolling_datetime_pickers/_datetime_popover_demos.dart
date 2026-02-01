@@ -23,7 +23,7 @@ class _DateTimePopoverDemoState extends State<_DateTimePopoverDemo> {
       option: widget.option,
     );
 
-    if (result != null) {
+    if (mounted) {
       setState(() {
         _selectedDateTime = result;
       });

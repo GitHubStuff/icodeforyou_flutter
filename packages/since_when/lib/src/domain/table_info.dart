@@ -1,11 +1,10 @@
 // icodeforyou_flutter/packages/since_when/lib/src/domain/table_info.dart
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:since_when/since_when.dart';
 
 /// Information about a database table.
 ///
-/// Used by [SinceWhenDatabase.getTableListInfo] to return
+/// Used by 'SinceWhenDatabase.getTableListInfo' to return
 /// metadata about tables in the database.
 @immutable
 class TableInfo {

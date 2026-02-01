@@ -1,7 +1,7 @@
-// icodeforyou_flutter/packages/since_when/lib/src/domain/since_when_record.dart
-
+// lib/src/domain/since_when_record.dart
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:since_when/src/domain/tag_definition.dart';
 
 part 'since_when_record.freezed.dart';
 part 'since_when_record.g.dart';
@@ -10,9 +10,7 @@ part 'since_when_record.g.dart';
 ///
 /// Records are uniquely identified by [createdTimeStamp] (ISO8601 UTC).
 /// Records can have parent-child relationships via [parentTimeStamp].
-/// Multiple tags can be associated with each record.
-// Old: class SinceWhenRecord with _$SinceWhenRecord {
-// New: sealed class for Freezed 3.x mixin pattern
+/// Multiple tags can be associated with each record via [TagDefinition].
 @freezed
 sealed class SinceWhenRecord with _$SinceWhenRecord {
   /// Creates a [SinceWhenRecord].
@@ -42,8 +40,8 @@ sealed class SinceWhenRecord with _$SinceWhenRecord {
     /// Free-form category classification.
     required String category,
 
-    /// List of tags associated with this record.
-    required List<String> tags,
+    /// List of tag definitions associated with this record.
+    required List<TagDefinition> tags,
 
     /// Reference to parent record's [createdTimeStamp], if any.
     String? parentTimeStamp,

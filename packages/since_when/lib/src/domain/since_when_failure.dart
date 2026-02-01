@@ -1,4 +1,4 @@
-// icodeforyou_flutter/packages/since_when/lib/src/domain/since_when_failure.dart
+// lib/src/domain/since_when_failure.dart
 
 /// Base failure class for all SinceWhen operations.
 ///
@@ -164,4 +164,62 @@ class DatabaseAlreadyInitialized extends SinceWhenFailure {
 
   @override
   String toString() => 'DatabaseAlreadyInitialized: $message';
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TAG-RELATED FAILURES
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// Tag definition with specified createdTimeStamp was not found.
+class TagNotFound extends SinceWhenFailure {
+  /// Creates a [TagNotFound] failure.
+  const TagNotFound(this.identifier);
+
+  /// The identifier (timestamp or name) that was not found.
+  final String identifier;
+
+  @override
+  String toString() => 'TagNotFound: No tag with identifier "$identifier".';
+}
+
+/// Tag name already exists in the glossary.
+class TagNameAlreadyExists extends SinceWhenFailure {
+  /// Creates a [TagNameAlreadyExists] failure.
+  const TagNameAlreadyExists(this.tagName);
+
+  /// The tag name that already exists.
+  final String tagName;
+
+  @override
+  String toString() =>
+      'TagNameAlreadyExists: Tag "$tagName" already exists in glossary.';
+}
+
+/// Tag name is invalid (empty or whitespace-only).
+class InvalidTagName extends SinceWhenFailure {
+  /// Creates an [InvalidTagName] failure.
+  const InvalidTagName(this.message);
+
+  /// Description of why the tag name is invalid.
+  final String message;
+
+  @override
+  String toString() => 'InvalidTagName: $message';
+}
+
+/// Tag is still in use by records and cannot be deleted.
+class TagInUse extends SinceWhenFailure {
+  /// Creates a [TagInUse] failure.
+  const TagInUse(this.tagName, this.usageCount);
+
+  /// The tag name that is in use.
+  final String tagName;
+
+  /// Number of records using this tag.
+  final int usageCount;
+
+  @override
+  String toString() =>
+      'TagInUse: Tag "$tagName" is used by $usageCount record(s). '
+      'Remove tag from records first or use force delete.';
 }

@@ -16,7 +16,9 @@ _SinceWhenRecord _$SinceWhenRecordFromJson(Map<String, dynamic> json) =>
       sequenceNumber: (json['sequenceNumber'] as num).toInt(),
       dataString: json['dataString'] as String,
       category: json['category'] as String,
-      tags: (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
+      tags: (json['tags'] as List<dynamic>)
+          .map((e) => TagDefinition.fromJson(e as Map<String, dynamic>))
+          .toList(),
       parentTimeStamp: json['parentTimeStamp'] as String?,
       metaTimeStamp: json['metaTimeStamp'] as String?,
     );

@@ -23,6 +23,78 @@ enum _DateTimeTab { date, time }
 class DateTimePickerPopover {
   DateTimePickerPopover._();
 
+  /// Normalize initial datetime based on the picker option:
+  /// - DateOnly: current date at midnight (00:00:00.000)
+  /// - TimeOnly: Jan 1st of current year with current time (seconds based on flag)
+  /// - DateTime: current date/time with seconds based on flag, no milliseconds
+  static DateTime _normalizeInitialDateTime(
+    DateTime? initialDateTime,
+    DateTimeOption option,
+    bool useCurrentSecond,
+  ) {
+    final now = DateTime.now();
+
+    // If user provided a specific datetime, normalize it
+    if (initialDateTime != null) {
+      switch (option) {
+        case DateTimeOption.date:
+          // Date only: strip time, use midnight
+          return DateTime(
+            initialDateTime.year,
+            initialDateTime.month,
+            initialDateTime.day,
+          );
+        case DateTimeOption.time:
+          // Time only: use Jan 1st of current year with provided time
+          return DateTime(
+            now.year,
+            1,
+            1,
+            initialDateTime.hour,
+            initialDateTime.minute,
+            useCurrentSecond ? initialDateTime.second : 0,
+          );
+        case DateTimeOption.dateTime:
+          // Combined: use all components, strip sub-second precision
+          return DateTime(
+            initialDateTime.year,
+            initialDateTime.month,
+            initialDateTime.day,
+            initialDateTime.hour,
+            initialDateTime.minute,
+            useCurrentSecond ? initialDateTime.second : 0,
+          );
+      }
+    }
+
+    // No initial datetime provided - use defaults
+    switch (option) {
+      case DateTimeOption.date:
+        // Date only: current date at midnight
+        return DateTime(now.year, now.month, now.day);
+      case DateTimeOption.time:
+        // Time only: Jan 1st of current year with current time
+        return DateTime(
+          now.year,
+          1,
+          1,
+          now.hour,
+          now.minute,
+          useCurrentSecond ? now.second : 0,
+        );
+      case DateTimeOption.dateTime:
+        // Combined: current date/time, strip sub-second precision
+        return DateTime(
+          now.year,
+          now.month,
+          now.day,
+          now.hour,
+          now.minute,
+          useCurrentSecond ? now.second : 0,
+        );
+    }
+  }
+
   static Future<DateTime?> show({
     required BuildContext context,
     required GlobalKey anchorKey,
@@ -31,6 +103,10 @@ class DateTimePickerPopover {
     String dateFormat = PopoverConstants.defaultDateFormat,
     String timeFormat = PopoverConstants.defaultTimeFormat,
     bool showSeconds = true,
+
+    /// Whether to use current second value or default to 0
+    /// Only applies when showSeconds is true
+    bool useCurrentSecond = false,
     Color popoverBackgroundColor =
         PopoverConstants.defaultPopoverBackgroundColor,
     Color dateButtonColor = PopoverConstants.defaultDateButtonColor,
@@ -61,11 +137,18 @@ class DateTimePickerPopover {
     final anchorPosition = renderBox.localToGlobal(Offset.zero);
     final anchorSize = renderBox.size;
 
+    // Normalize initial datetime based on option type
+    final normalizedDateTime = _normalizeInitialDateTime(
+      initialDateTime,
+      option,
+      useCurrentSecond && showSeconds,
+    );
+
     return Navigator.of(context).push<DateTime?>(
       _DateTimePopoverRoute(
         anchorPosition: anchorPosition,
         anchorSize: anchorSize,
-        initialDateTime: initialDateTime ?? DateTime.now(),
+        initialDateTime: normalizedDateTime,
         option: option,
         dateFormat: dateFormat,
         timeFormat: timeFormat,

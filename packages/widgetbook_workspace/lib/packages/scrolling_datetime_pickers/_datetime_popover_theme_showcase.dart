@@ -40,7 +40,7 @@ class _DateTimePopoverThemeShowcaseState
       dividerConfiguration: const DividerConfiguration(color: Colors.black12),
     );
 
-    if (result != null) {
+    if (mounted) {
       setState(() {
         _lightSelectedDateTime = result;
       });
@@ -74,7 +74,7 @@ class _DateTimePopoverThemeShowcaseState
       ),
     );
 
-    if (result != null) {
+    if (mounted) {
       setState(() {
         _darkSelectedDateTime = result;
       });

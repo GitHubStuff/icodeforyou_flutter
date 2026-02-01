@@ -12,21 +12,50 @@ part 'time_picker_state.dart';
 class TimePickerCubit extends Cubit<TimePickerState> {
   Timer? _debounceTimer;
 
-  TimePickerCubit({
-    DateTime? initialDateTime,
-  }) : super(
-          TimePickerState(
-            dateTime: initialDateTime ?? DateTime.now(),
-            isScrolling: false,
-          ),
-        );
+  TimePickerCubit({DateTime? initialDateTime, bool useCurrentSecond = false})
+    : super(
+        TimePickerState(
+          dateTime: _normalizeDateTime(initialDateTime, useCurrentSecond),
+          isScrolling: false,
+        ),
+      );
+
+  /// Normalize datetime for time-only picker:
+  /// - If no datetime provided: Jan 1st of current year with current time
+  /// - Seconds: 0 unless useCurrentSecond is true
+  /// - Milliseconds/microseconds: always 0
+  static DateTime _normalizeDateTime(
+    DateTime? dateTime,
+    bool useCurrentSecond,
+  ) {
+    final now = DateTime.now();
+
+    if (dateTime != null) {
+      // User provided datetime - use Jan 1st current year with provided time
+      return DateTime(
+        now.year,
+        1,
+        1,
+        dateTime.hour,
+        dateTime.minute,
+        useCurrentSecond ? dateTime.second : 0,
+      );
+    }
+
+    // No datetime provided - Jan 1st current year with current time
+    return DateTime(
+      now.year,
+      1,
+      1,
+      now.hour,
+      now.minute,
+      useCurrentSecond ? now.second : 0,
+    );
+  }
 
   /// Update the time with a new DateTime value
   void updateDateTime(DateTime newDateTime) {
-    emit(state.copyWith(
-      dateTime: newDateTime,
-      isScrolling: true,
-    ));
+    emit(state.copyWith(dateTime: newDateTime, isScrolling: true));
     _startDebounceTimer();
   }
 
@@ -36,8 +65,8 @@ class TimePickerCubit extends Cubit<TimePickerState> {
     final hour24 = isAm
         ? (hour == StyleConstants.hoursMax ? 0 : hour)
         : (hour == StyleConstants.hoursMax
-            ? StyleConstants.hoursMax
-            : hour + StyleConstants.hoursMax);
+              ? StyleConstants.hoursMax
+              : hour + StyleConstants.hoursMax);
 
     final newDateTime = DateTime(
       currentDateTime.year,
@@ -48,10 +77,7 @@ class TimePickerCubit extends Cubit<TimePickerState> {
       currentDateTime.second,
     );
 
-    emit(state.copyWith(
-      dateTime: newDateTime,
-      isScrolling: true,
-    ));
+    emit(state.copyWith(dateTime: newDateTime, isScrolling: true));
     _startDebounceTimer();
   }
 
@@ -67,10 +93,7 @@ class TimePickerCubit extends Cubit<TimePickerState> {
       currentDateTime.second,
     );
 
-    emit(state.copyWith(
-      dateTime: newDateTime,
-      isScrolling: true,
-    ));
+    emit(state.copyWith(dateTime: newDateTime, isScrolling: true));
     _startDebounceTimer();
   }
 
@@ -86,10 +109,7 @@ class TimePickerCubit extends Cubit<TimePickerState> {
       second,
     );
 
-    emit(state.copyWith(
-      dateTime: newDateTime,
-      isScrolling: true,
-    ));
+    emit(state.copyWith(dateTime: newDateTime, isScrolling: true));
     _startDebounceTimer();
   }
 
@@ -102,12 +122,9 @@ class TimePickerCubit extends Cubit<TimePickerState> {
   /// Start or restart the debounce timer
   void _startDebounceTimer() {
     _debounceTimer?.cancel();
-    _debounceTimer = Timer(
-      TimingConstants.callbackDebounce,
-      () {
-        emit(state.copyWith(isScrolling: false));
-      },
-    );
+    _debounceTimer = Timer(TimingConstants.callbackDebounce, () {
+      emit(state.copyWith(isScrolling: false));
+    });
   }
 
   /// Clean up resources

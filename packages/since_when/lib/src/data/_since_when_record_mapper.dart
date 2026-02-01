@@ -1,7 +1,7 @@
-// icodeforyou_flutter/packages/since_when/lib/src/data/_since_when_record_mapper.dart
+// lib/src/data/_since_when_record_mapper.dart
 
 import 'package:since_when/src/domain/since_when_record.dart';
-import 'package:since_when/src/sql/_sql_statements.dart';
+import 'package:since_when/src/domain/tag_definition.dart';
 
 /// Maps between database rows and [SinceWhenRecord] entities.
 ///
@@ -10,10 +10,10 @@ abstract final class SinceWhenRecordMapper {
   /// Converts a database row to a [SinceWhenRecord].
   ///
   /// [row] is the map from the since_when table.
-  /// [tags] is the list of tags from the junction table.
+  /// [tags] is the list of tag definitions from the glossary table.
   static SinceWhenRecord fromRow(
     Map<String, dynamic> row,
-    List<String> tags,
+    List<TagDefinition> tags,
   ) {
     return SinceWhenRecord(
       id: row['id'] as int,
@@ -32,7 +32,7 @@ abstract final class SinceWhenRecordMapper {
 
   /// Converts a [SinceWhenRecord] to a list of values for SQL insertion.
   ///
-  /// Returns values in the order expected by [SqlStatements.insertRecord]:
+  /// Returns values in the order expected by SqlStatements.insertRecord:
   /// createdTimeStamp, parentTimeStamp, reviewedTimeStamp, editedTimeStamp,
   /// metaTimeStamp, metaData, sequenceNumber, dataString, category
   ///

@@ -37,11 +37,25 @@ class _ScrollingDatePickerContentState
   late FixedExtentScrollController _yearController;
   late FixedExtentScrollController _monthController;
   late FixedExtentScrollController _dayController;
+  
+  // Track current days in month for position calculations
+  late int _currentDaysInMonth;
 
   @override
   void initState() {
     super.initState();
     _initializeControllers();
+  }
+
+  /// Calculate days in a given month/year (duplicated from cubit for local use)
+  static int _getDaysInMonth(int year, int month) {
+    if (month == 2) {
+      final isLeap =
+          (year % 400 == 0) || (year % 100 != 0 && year % 4 == 0);
+      return isLeap ? 29 : 28;
+    }
+    const daysPerMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    return daysPerMonth[month - 1];
   }
 
   void _initializeControllers() {
@@ -54,15 +68,17 @@ class _ScrollingDatePickerContentState
     );
 
     // Month: 1-12, infinite scroll
+    // Offset must be divisible by 12 to preserve month mapping
+    final monthOffset =
+        (StyleConstants.infiniteScrollBuffer ~/ 2 ~/ 12) * 12;
     _monthController = FixedExtentScrollController(
-      initialItem:
-          (state.month - 1) + (StyleConstants.infiniteScrollBuffer ~/ 2) * 12,
+      initialItem: (state.month - 1) + monthOffset,
     );
 
-    // Day: 1-31 max, infinite scroll
+    // Day: finite with looping, simple 0-indexed position
+    _currentDaysInMonth = _getDaysInMonth(state.year, state.month);
     _dayController = FixedExtentScrollController(
-      initialItem:
-          (state.day - 1) + (StyleConstants.infiniteScrollBuffer ~/ 2) * 31,
+      initialItem: state.day - 1,
     );
   }
 
@@ -95,6 +111,33 @@ class _ScrollingDatePickerContentState
     }
   }
 
+  /// Clamp day controller position to valid range BEFORE cubit update.
+  /// This ensures the controller is at a valid position when the picker rebuilds.
+  void _clampDayControllerBeforeUpdate(int newMaxDays) {
+    if (!_dayController.hasClients) return;
+
+    final currentPosition = _dayController.selectedItem;
+    
+    // Calculate the actual day (1-based) currently shown
+    // With looping, we need modulo of current item count
+    // Handle negative positions too
+    int currentDayIndex = currentPosition % _currentDaysInMonth;
+    if (currentDayIndex < 0) currentDayIndex += _currentDaysInMonth;
+    final currentDay = currentDayIndex + 1; // 1-based day
+    
+    // Clamp day if it exceeds new month's days
+    final targetDay = currentDay > newMaxDays ? newMaxDays : currentDay;
+    
+    // Set position to the target day (0-indexed)
+    final targetPosition = targetDay - 1;
+    
+    // Jump to the correct position
+    _dayController.jumpToItem(targetPosition);
+    
+    // Update our tracked days count
+    _currentDaysInMonth = newMaxDays;
+  }
+
   Widget _buildYearColumn() {
     return _ScrollingDatePickerColumn(
       controller: _yearController,
@@ -103,7 +146,14 @@ class _ScrollingDatePickerContentState
       itemBuilder: (index) => (1900 + index).toString(),
       onSelectedItemChanged: (index) {
         _handleHapticFeedback();
-        context.read<DatePickerCubit>().updateYear(1900 + index);
+        final cubit = context.read<DatePickerCubit>();
+        final newYear = 1900 + index;
+
+        // Calculate new max days BEFORE updating cubit
+        final newMaxDays = _getDaysInMonth(newYear, cubit.state.month);
+        _clampDayControllerBeforeUpdate(newMaxDays);
+
+        cubit.updateYear(newYear);
       },
       textStyle: widget.dateStyle,
     );
@@ -121,7 +171,13 @@ class _ScrollingDatePickerContentState
       onSelectedItemChanged: (index) {
         _handleHapticFeedback();
         final monthIndex = (index % 12) + 1;
-        context.read<DatePickerCubit>().updateMonth(monthIndex);
+        final cubit = context.read<DatePickerCubit>();
+
+        // Calculate new max days BEFORE updating cubit
+        final newMaxDays = _getDaysInMonth(cubit.state.year, monthIndex);
+        _clampDayControllerBeforeUpdate(newMaxDays);
+
+        cubit.updateMonth(monthIndex);
       },
       textStyle: widget.dateStyle,
     );
@@ -129,27 +185,28 @@ class _ScrollingDatePickerContentState
 
   Widget _buildDayColumn() {
     return BlocBuilder<DatePickerCubit, DatePickerState>(
+      // Only rebuild when month or year changes (which affects day count)
+      buildWhen: (previous, current) =>
+          previous.month != current.month || previous.year != current.year,
       builder: (context, state) {
-        // Rebuild when days in month changes
         final currentMaxDays =
             context.read<DatePickerCubit>().daysInCurrentMonth;
 
+        // Finite item count but with looping enabled
+        // This gives us exactly the right days (1-28 for Feb, 1-31 for Jan)
+        // but still allows scrolling from last day back to first
         return _ScrollingDatePickerColumn(
           controller: _dayController,
-          isInfinite: true,
-          itemBuilder: (index) {
-            final dayIndex = (index % 31) + 1;
-            if (dayIndex > currentMaxDays) {
-              return '';
-            }
-            return dayIndex.toString();
-          },
+          isInfinite: false,
+          itemCount: currentMaxDays,
+          looping: true, // Enable looping so 31→1 works
+          itemBuilder: (index) => (index + 1).toString(),
           onSelectedItemChanged: (index) {
             _handleHapticFeedback();
-            final dayIndex = (index % 31) + 1;
-            if (dayIndex <= currentMaxDays) {
-              context.read<DatePickerCubit>().updateDay(dayIndex);
-            }
+            // With looping, index can exceed itemCount, so use modulo
+            final dayIndex = index % currentMaxDays;
+            // dayIndex is 0-based, day is 1-based
+            context.read<DatePickerCubit>().updateDay(dayIndex + 1);
           },
           textStyle: widget.dateStyle,
         );

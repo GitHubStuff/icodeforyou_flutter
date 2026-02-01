@@ -1,4 +1,4 @@
-// icodeforyou_flutter/packages/since_when/lib/since_when.dart
+// lib/since_when.dart
 
 /// A SQLite-based timestamped record storage package with hierarchical
 /// relationships and tagging.
@@ -13,12 +13,20 @@
 /// final result = await SinceWhenDatabase.openOrCreate();
 /// final db = result.getOrElse(() => throw Exception('Failed'));
 ///
-/// // Create a record
+/// // Create a tag first
+/// final tagResult = await db.createTag(
+///   tagName: 'flutter',
+///   tagDescription: 'Flutter related content',
+///   color: 0xFF2196F3,
+/// );
+/// final tag = tagResult.getOrElse(() => throw Exception('Failed'));
+///
+/// // Create a record with the tag
 /// final recordResult = await db.create(
 ///   metaData: 'My first note',
 ///   dataString: 'This is the content...',
 ///   category: 'notes',
-///   tags: ['personal', 'ideas'],
+///   tagTimestamps: [tag.createdTimeStamp],
 /// );
 ///
 /// recordResult.fold(
@@ -49,6 +57,7 @@ export 'package:since_when/src/domain/since_when_failure.dart';
 export 'package:since_when/src/domain/since_when_import_mode.dart';
 export 'package:since_when/src/domain/since_when_record.dart';
 export 'package:since_when/src/domain/table_info.dart';
+export 'package:since_when/src/domain/tag_definition.dart';
 export 'package:since_when/src/domain/tag_match_mode.dart';
 
 // Database API (public)
