@@ -12,44 +12,32 @@ part 'time_picker_state.dart';
 class TimePickerCubit extends Cubit<TimePickerState> {
   Timer? _debounceTimer;
 
-  TimePickerCubit({DateTime? initialDateTime, bool useCurrentSecond = false})
+  TimePickerCubit({DateTime? initialDateTime})
     : super(
         TimePickerState(
-          dateTime: _normalizeDateTime(initialDateTime, useCurrentSecond),
+          dateTime: _normalizeDateTime(initialDateTime),
           isScrolling: false,
         ),
       );
 
-  /// Normalize datetime for time-only picker:
-  /// - If no datetime provided: Jan 1st of current year with current time
-  /// - Seconds: 0 unless useCurrentSecond is true
-  /// - Milliseconds/microseconds: always 0
-  static DateTime _normalizeDateTime(
-    DateTime? dateTime,
-    bool useCurrentSecond,
-  ) {
-    final now = DateTime.now();
-
+  /// Normalize datetime for time picker:
+  /// - If datetime provided: preserve it exactly (caller is responsible for normalization)
+  /// - If no datetime provided: Jan 1st of current year with current time, seconds = 0
+  static DateTime _normalizeDateTime(DateTime? dateTime) {
     if (dateTime != null) {
-      // User provided datetime - use Jan 1st current year with provided time
-      return DateTime(
-        now.year,
-        1,
-        1,
-        dateTime.hour,
-        dateTime.minute,
-        useCurrentSecond ? dateTime.second : 0,
-      );
+      // Preserve provided datetime exactly
+      return dateTime;
     }
 
-    // No datetime provided - Jan 1st current year with current time
+    // No datetime provided - default to Jan 1st current year with current time
+    final now = DateTime.now();
     return DateTime(
       now.year,
       1,
       1,
       now.hour,
       now.minute,
-      useCurrentSecond ? now.second : 0,
+      0, // Default seconds to 0
     );
   }
 

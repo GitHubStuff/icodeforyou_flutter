@@ -16,17 +16,24 @@ void main() {
       cubit.close();
     });
 
-    test('initial state uses current time', () {
-      final now = DateTime.now();
-      final state = cubit.state;
+    test(
+      'initial state defaults to Jan 1st of current year with current time',
+      () {
+        final now = DateTime.now();
+        final state = cubit.state;
 
-      expect(state.isScrolling, false);
-      expect(state.dateTime.year, now.year);
-      expect(state.dateTime.month, now.month);
-      expect(state.dateTime.day, now.day);
-    });
+        expect(state.isScrolling, false);
+        expect(state.dateTime.year, now.year);
+        expect(state.dateTime.month, 1); // Jan 1st default for time-only picker
+        expect(state.dateTime.day, 1);
+        // Hour and minute should be current time
+        expect(state.dateTime.hour, now.hour);
+        expect(state.dateTime.minute, now.minute);
+        expect(state.dateTime.second, 0); // Seconds default to 0
+      },
+    );
 
-    test('initial state uses provided time', () {
+    test('initial state preserves provided datetime exactly', () {
       final customTime = DateTime(2024, 1, 15, 14, 30, 45);
       final customCubit = TimePickerCubit(initialDateTime: customTime);
 
@@ -38,9 +45,8 @@ void main() {
 
     blocTest<TimePickerCubit, TimePickerState>(
       'updateDateTime emits new state with scrolling true then false',
-      build: () => TimePickerCubit(
-        initialDateTime: DateTime(2024, 1, 1, 12, 0, 0),
-      ),
+      build: () =>
+          TimePickerCubit(initialDateTime: DateTime(2024, 1, 1, 12, 0, 0)),
       act: (cubit) => cubit.updateDateTime(DateTime(2024, 1, 1, 13, 30, 0)),
       expect: () => [
         TimePickerState(
@@ -57,9 +63,8 @@ void main() {
 
     blocTest<TimePickerCubit, TimePickerState>(
       'updateHour handles 12 AM correctly',
-      build: () => TimePickerCubit(
-        initialDateTime: DateTime(2024, 1, 1, 13, 30, 0),
-      ),
+      build: () =>
+          TimePickerCubit(initialDateTime: DateTime(2024, 1, 1, 13, 30, 0)),
       act: (cubit) => cubit.updateHour(12, true), // 12 AM
       expect: () => [
         TimePickerState(
@@ -76,9 +81,8 @@ void main() {
 
     blocTest<TimePickerCubit, TimePickerState>(
       'updateHour handles 12 PM correctly',
-      build: () => TimePickerCubit(
-        initialDateTime: DateTime(2024, 1, 1, 1, 30, 0),
-      ),
+      build: () =>
+          TimePickerCubit(initialDateTime: DateTime(2024, 1, 1, 1, 30, 0)),
       act: (cubit) => cubit.updateHour(12, false), // 12 PM
       expect: () => [
         TimePickerState(
@@ -95,9 +99,8 @@ void main() {
 
     blocTest<TimePickerCubit, TimePickerState>(
       'updateHour handles AM hours correctly',
-      build: () => TimePickerCubit(
-        initialDateTime: DateTime(2024, 1, 1, 0, 0, 0),
-      ),
+      build: () =>
+          TimePickerCubit(initialDateTime: DateTime(2024, 1, 1, 0, 0, 0)),
       act: (cubit) => cubit.updateHour(5, true), // 5 AM
       expect: () => [
         TimePickerState(
@@ -114,9 +117,8 @@ void main() {
 
     blocTest<TimePickerCubit, TimePickerState>(
       'updateHour handles PM hours correctly',
-      build: () => TimePickerCubit(
-        initialDateTime: DateTime(2024, 1, 1, 0, 0, 0),
-      ),
+      build: () =>
+          TimePickerCubit(initialDateTime: DateTime(2024, 1, 1, 0, 0, 0)),
       act: (cubit) => cubit.updateHour(5, false), // 5 PM
       expect: () => [
         TimePickerState(
@@ -133,9 +135,8 @@ void main() {
 
     blocTest<TimePickerCubit, TimePickerState>(
       'updateMinute updates minute only',
-      build: () => TimePickerCubit(
-        initialDateTime: DateTime(2024, 1, 1, 14, 0, 30),
-      ),
+      build: () =>
+          TimePickerCubit(initialDateTime: DateTime(2024, 1, 1, 14, 0, 30)),
       act: (cubit) => cubit.updateMinute(45),
       expect: () => [
         TimePickerState(
@@ -152,9 +153,8 @@ void main() {
 
     blocTest<TimePickerCubit, TimePickerState>(
       'updateSecond updates second only',
-      build: () => TimePickerCubit(
-        initialDateTime: DateTime(2024, 1, 1, 14, 30, 0),
-      ),
+      build: () =>
+          TimePickerCubit(initialDateTime: DateTime(2024, 1, 1, 14, 30, 0)),
       act: (cubit) => cubit.updateSecond(15),
       expect: () => [
         TimePickerState(
@@ -190,9 +190,8 @@ void main() {
 
     blocTest<TimePickerCubit, TimePickerState>(
       'multiple rapid updates debounce correctly',
-      build: () => TimePickerCubit(
-        initialDateTime: DateTime(2024, 1, 1, 12, 0, 0),
-      ),
+      build: () =>
+          TimePickerCubit(initialDateTime: DateTime(2024, 1, 1, 12, 0, 0)),
       act: (cubit) async {
         cubit.updateMinute(10);
         await Future.delayed(const Duration(milliseconds: 50));
@@ -226,10 +225,7 @@ void main() {
       await cubit.close();
 
       // Timer should be cancelled, no further emissions
-      await expectLater(
-        cubit.stream,
-        emitsInOrder([]),
-      );
+      await expectLater(cubit.stream, emitsInOrder([]));
     });
   });
 }

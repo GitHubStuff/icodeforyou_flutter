@@ -43,10 +43,6 @@ class ScrollingTimePicker extends StatelessWidget {
   /// Whether to show seconds column
   final bool showSeconds;
 
-  /// Whether to use current second value or default to 0
-  /// Only applies when showSeconds is true
-  final bool useCurrentSecond;
-
   /// Whether to enable haptic feedback
   final bool enableHaptics;
 
@@ -70,20 +66,37 @@ class ScrollingTimePicker extends StatelessWidget {
     DividerConfiguration? dividerConfiguration,
     FadeConfiguration? fadeConfiguration,
     this.showSeconds = false,
-    this.useCurrentSecond = false,
     this.enableHaptics = true,
     this.borderRadius = 0.0,
   }) : dividerConfiguration =
            dividerConfiguration ?? const DividerConfiguration(),
        fadeConfiguration = fadeConfiguration ?? const FadeConfiguration();
 
+  /// Normalize datetime for standalone time picker:
+  /// - If provided: use Jan 1st of current year with provided time
+  /// - If not provided: use Jan 1st of current year with current time
+  /// - Seconds: 0 (time-only picker defaults to 0 seconds)
+  DateTime? _normalizeForTimePicker() {
+    final now = DateTime.now();
+    if (initialDateTime != null) {
+      return DateTime(
+        now.year,
+        1,
+        1,
+        initialDateTime!.hour,
+        initialDateTime!.minute,
+        0, // Time-only picker defaults seconds to 0
+      );
+    }
+    // Return null to let cubit use its default (Jan 1st current year, current time)
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => TimePickerCubit(
-        initialDateTime: initialDateTime,
-        useCurrentSecond: useCurrentSecond && showSeconds,
-      ),
+      create: (_) =>
+          TimePickerCubit(initialDateTime: _normalizeForTimePicker()),
       child: _ScrollingTimePickerContent(
         portraitSize: portraitSize,
         landscapeSize: landscapeSize,
