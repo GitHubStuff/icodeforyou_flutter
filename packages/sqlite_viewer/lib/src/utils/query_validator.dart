@@ -62,16 +62,6 @@ abstract final class QueryValidator {
       );
     }
 
-    // Check for explicitly disallowed keywords at start
-    if (_isDisallowedStart(normalized)) {
-      return Left(
-        ViewerInvalidQuery(
-          trimmed,
-          'EXPLAIN and PRAGMA statements are not allowed',
-        ),
-      );
-    }
-
     return Right(trimmed);
   }
 
@@ -79,12 +69,6 @@ abstract final class QueryValidator {
   static bool _isValidStart(String normalizedSql) {
     return normalizedSql.startsWith('SELECT') ||
         normalizedSql.startsWith('WITH');
-  }
-
-  /// Returns true if query starts with disallowed keywords.
-  static bool _isDisallowedStart(String normalizedSql) {
-    return normalizedSql.startsWith('EXPLAIN') ||
-        normalizedSql.startsWith('PRAGMA');
   }
 
   /// Quick check if a query is valid without returning Either.

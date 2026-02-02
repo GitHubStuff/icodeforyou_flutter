@@ -151,63 +151,66 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
       tableName: tableName,
       key: PragmaKey.tableInfo,
     );
-    if (tableInfoResult.isLeft()) {
+    if (tableInfoResult
+        case Left<SqliteViewerFailure, List<Map<String, Object?>>>(
+          :final value
+        )) {
       emit(
         TableDetailLoadFailed(
           metadata: currentMetadata,
           tableName: tableName,
-          failure: tableInfoResult.fold((f) => f, (_) => throw StateError('')),
+          failure: value,
         ),
       );
       return;
     }
-    final tableInfo = tableInfoResult.fold(
-      (_) => <Map<String, Object?>>[],
-      (t) => t,
-    );
+    final tableInfo =
+        (tableInfoResult as Right<SqliteViewerFailure, List<Map<String, Object?>>>)
+            .value;
 
     // Load PRAGMA index_list
     final indexListResult = await _source.getPragma(
       tableName: tableName,
       key: PragmaKey.indexList,
     );
-    if (indexListResult.isLeft()) {
+    if (indexListResult
+        case Left<SqliteViewerFailure, List<Map<String, Object?>>>(
+          :final value
+        )) {
       emit(
         TableDetailLoadFailed(
           metadata: currentMetadata,
           tableName: tableName,
-          failure: indexListResult.fold((f) => f, (_) => throw StateError('')),
+          failure: value,
         ),
       );
       return;
     }
-    final indexList = indexListResult.fold(
-      (_) => <Map<String, Object?>>[],
-      (i) => i,
-    );
+    final indexList =
+        (indexListResult as Right<SqliteViewerFailure, List<Map<String, Object?>>>)
+            .value;
 
     // Load PRAGMA foreign_key_list
     final foreignKeysResult = await _source.getPragma(
       tableName: tableName,
       key: PragmaKey.foreignKeyList,
     );
-    if (foreignKeysResult.isLeft()) {
+    if (foreignKeysResult
+        case Left<SqliteViewerFailure, List<Map<String, Object?>>>(
+          :final value
+        )) {
       emit(
         TableDetailLoadFailed(
           metadata: currentMetadata,
           tableName: tableName,
-          failure: foreignKeysResult.fold(
-            (f) => f,
-            (_) => throw StateError(''),
-          ),
+          failure: value,
         ),
       );
       return;
     }
-    final foreignKeys = foreignKeysResult.fold(
-      (_) => <Map<String, Object?>>[],
-      (f) => f,
-    );
+    final foreignKeys =
+        (foreignKeysResult as Right<SqliteViewerFailure, List<Map<String, Object?>>>)
+            .value;
 
     // Load row count
     final rowCountResult = await _source.getRowCount(tableName);

@@ -142,3 +142,51 @@ class _SqliteViewerPageContent extends StatelessWidget {
     );
   }
 }
+
+// =============================================================================
+// Testing Helpers
+// =============================================================================
+
+/// Builds a disconnected view widget for testing.
+@visibleForTesting
+Widget buildDisconnectedViewForTesting() => const _DisconnectedView();
+
+/// Builds a loading view widget for testing.
+@visibleForTesting
+Widget buildLoadingViewForTesting({required String message}) =>
+    _LoadingView(message: message);
+
+/// Builds an error view widget for testing.
+@visibleForTesting
+Widget buildErrorViewForTesting({
+  required String message,
+  VoidCallback? onRetry,
+}) =>
+    _ErrorView(message: message, onRetry: onRetry);
+
+/// Builds an empty data view widget for testing.
+@visibleForTesting
+Widget buildEmptyDataViewForTesting() => const _EmptyDataView();
+
+/// Builds a select table prompt widget for testing.
+@visibleForTesting
+Widget buildSelectTablePromptForTesting() => const _SelectTablePrompt();
+
+/// Builds a query result view widget for testing.
+@visibleForTesting
+Widget buildQueryResultViewForTesting({
+  required String query,
+  required List<String> columns,
+  required List<Map<String, Object?>> rows,
+  bool showRowNumbers = true,
+  String nullValueDisplay = 'NULL',
+  TextHandling textHandling = TextHandling.trunc,
+}) =>
+    _QueryResultView(
+      query: query,
+      columns: columns,
+      rows: rows,
+      showRowNumbers: showRowNumbers,
+      nullValueDisplay: nullValueDisplay,
+      textHandling: textHandling,
+    );
