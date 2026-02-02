@@ -23,6 +23,7 @@ void main() {
       );
 
       expect(find.text('Select Date'), findsOneWidget);
+      expect(find.byType(DateTimePickerField), findsOneWidget);
     });
 
     testWidgets('should show popover on tap', (tester) async {
@@ -40,8 +41,8 @@ void main() {
         ),
       );
 
-      // Tap the field
-      await tester.tap(find.text('Tap Me'));
+      // Tap the DateTimePickerField by type - there's only one
+      await tester.tap(find.byType(DateTimePickerField));
       await tester.pumpAndSettle();
 
       // Popover should be shown
@@ -59,7 +60,7 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Disabled'));
+      await tester.tap(find.byType(DateTimePickerField));
       await tester.pumpAndSettle();
 
       // Popover should NOT be shown
@@ -80,11 +81,11 @@ void main() {
       );
 
       // Open popover
-      await tester.tap(find.text('Select'));
+      await tester.tap(find.byType(DateTimePickerField));
       await tester.pumpAndSettle();
 
-      // Confirm selection
-      await tester.tap(find.text('Set'));
+      // Confirm selection - use warnIfMissed: false since tap works but hits overlay
+      await tester.tap(find.text('Set'), warnIfMissed: false);
       await tester.pumpAndSettle();
 
       expect(selectedDateTime, isNotNull);
@@ -112,10 +113,10 @@ void main() {
       );
 
       // Open popover
-      await tester.tap(find.text('Select'));
+      await tester.tap(find.byType(DateTimePickerField));
       await tester.pumpAndSettle();
 
-      // Tap outside to dismiss
+      // Tap outside to dismiss (on the barrier)
       await tester.tapAt(const Offset(10, 10));
       await tester.pumpAndSettle();
 
@@ -137,7 +138,7 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Select'));
+      await tester.tap(find.byType(DateTimePickerField));
       await tester.pumpAndSettle();
 
       // Should show custom confirm text
@@ -158,7 +159,7 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Select Date'));
+      await tester.tap(find.byType(DateTimePickerField));
       await tester.pumpAndSettle();
 
       expect(find.byType(ScrollingDatePicker), findsOneWidget);
@@ -176,7 +177,7 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Select Time'));
+      await tester.tap(find.byType(DateTimePickerField));
       await tester.pumpAndSettle();
 
       expect(find.byType(ScrollingTimePicker), findsOneWidget);
@@ -193,7 +194,7 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Select DateTime'));
+      await tester.tap(find.byType(DateTimePickerField));
       await tester.pumpAndSettle();
 
       expect(find.text('DATE'), findsOneWidget);
@@ -213,7 +214,7 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Select'));
+      await tester.tap(find.byType(DateTimePickerField));
       await tester.pumpAndSettle();
 
       // Verify popover is shown with custom styling
@@ -231,7 +232,7 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Select'));
+      await tester.tap(find.byType(DateTimePickerField));
       await tester.pumpAndSettle();
 
       expect(find.byKey(const Key('custom_icon')), findsOneWidget);
@@ -249,7 +250,7 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Select'));
+      await tester.tap(find.byType(DateTimePickerField));
       await tester.pumpAndSettle();
 
       expect(find.byType(ScrollingDatePicker), findsOneWidget);
@@ -267,7 +268,7 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Select'));
+      await tester.tap(find.byType(DateTimePickerField));
       await tester.pumpAndSettle();
 
       expect(find.byType(ScrollingTimePicker), findsOneWidget);
@@ -285,7 +286,7 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Select'));
+      await tester.tap(find.byType(DateTimePickerField));
       await tester.pumpAndSettle();
 
       expect(find.text('Set'), findsOneWidget);
@@ -305,7 +306,7 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Select'));
+      await tester.tap(find.byType(DateTimePickerField));
       await tester.pumpAndSettle();
 
       expect(find.text('Set'), findsOneWidget);
@@ -322,7 +323,7 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Select'));
+      await tester.tap(find.byType(DateTimePickerField));
       await tester.pumpAndSettle();
 
       expect(find.text('Set'), findsOneWidget);
@@ -355,7 +356,7 @@ void main() {
       expect(find.byIcon(Icons.calendar_today), findsOneWidget);
       expect(find.text('Pick a date'), findsOneWidget);
 
-      await tester.tap(find.text('Pick a date'));
+      await tester.tap(find.byType(DateTimePickerField));
       await tester.pumpAndSettle();
 
       expect(find.text('Set'), findsOneWidget);
@@ -377,13 +378,36 @@ void main() {
         ),
       );
 
-      await tester.tap(find.text('Tap Me'));
+      await tester.tap(find.byType(DateTimePickerField));
       await tester.pumpAndSettle();
 
       // Child's onTap should not be called due to AbsorbPointer
       expect(childTapped, isFalse);
       // Popover should be shown instead
       expect(find.text('Set'), findsOneWidget);
+    });
+
+    testWidgets('should not absorb pointer events when disabled', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        buildTestApp(
+          child: DateTimePickerField(
+            onDateTimeSelected: (_) {},
+            enabled: false,
+            child: const Text('Tap Me'),
+          ),
+        ),
+      );
+
+      // When disabled, absorbing is false, so child can receive events
+      // But DateTimePickerField's GestureDetector still fires first
+      // and _showPopover returns early due to !widget.enabled
+      await tester.tap(find.byType(DateTimePickerField));
+      await tester.pumpAndSettle();
+
+      // Popover should NOT be shown (disabled)
+      expect(find.text('Set'), findsNothing);
     });
   });
 }

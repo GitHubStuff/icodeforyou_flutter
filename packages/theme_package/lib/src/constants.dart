@@ -5,14 +5,6 @@ abstract final class _ThemeConstants {
   /// Hive box key for storing the theme mode value.
   static const String themeKey = 'theme_mode';
 
-  /// Default dark theme using Material 3.
-  // ignore: unused_element
-  static ThemeData get darkTheme => ThemeData.dark(useMaterial3: true);
-
-  /// Default light theme using Material 3.
-  // ignore: unused_element
-  static ThemeData get lightTheme => ThemeData.light(useMaterial3: true);
-
   /// Converts [ThemeMode] to a persistable string value.
   static String themeModeToString(ThemeMode mode) {
     return switch (mode) {

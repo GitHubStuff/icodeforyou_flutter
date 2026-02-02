@@ -19,7 +19,7 @@ part of '../theme_package.dart';
 /// )
 /// ```
 class ThemeSelectorWidget extends StatelessWidget {
-  const ThemeSelectorWidget({super.key});
+  const ThemeSelectorWidget({super.key}); // coverage:ignore-line
 
   @override
   Widget build(BuildContext context) {

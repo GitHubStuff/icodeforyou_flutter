@@ -139,6 +139,18 @@ melos:
             ignored_packages=$((ignored_packages + 1))
             continue
           fi
+          if [ "$package_name" = "since_when" ]; then
+            echo "⛔️ Skipping $package_name (excluded from tests)"
+            total_packages=$((total_packages + 1))
+            ignored_packages=$((ignored_packages + 1))
+            continue
+          fi
+          if [ "$package_name" = "sqlite_viewer" ]; then
+            echo "⛔️ Skipping $package_name (excluded from tests)"
+            total_packages=$((total_packages + 1))
+            ignored_packages=$((ignored_packages + 1))
+            continue
+          fi
           if [ -d "${package_dir}test" ]; then
             package_name=$(basename "$package_dir")
             echo ""

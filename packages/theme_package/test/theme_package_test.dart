@@ -112,6 +112,73 @@ void main() {
 
         expect(result, const Right(unit));
       });
+
+      test('returns Right when testDatasourceInitializer succeeds', () async {
+        ThemePackage.testDatasourceInitializer = () async {
+          return const Right(unit);
+        };
+
+        final result = await ThemePackage.initialize(
+          databaseName: validDbName,
+          inMemory: true,
+        );
+
+        expect(result, const Right(unit));
+        expect(ThemePackage.isInitialized, isTrue);
+      });
+
+      test('returns Left when datasource initialization fails', () async {
+        ThemePackage.testDatasourceInitializer = () async {
+          return const Left(
+            ThemeError.initializationFailed('Test error: datasource failed'),
+          );
+        };
+
+        final result = await ThemePackage.initialize(
+          databaseName: validDbName,
+          inMemory: true,
+        );
+
+        expect(result.isLeft(), isTrue);
+        result.fold(
+          (error) => expect(error.toString(), contains('Test error')),
+          (_) => fail('Expected Left'),
+        );
+      });
+
+      test('returns Left when exception is thrown during initialization',
+          () async {
+        ThemePackage.testDatasourceInitializer = () async {
+          throw Exception('Unexpected failure');
+        };
+
+        final result = await ThemePackage.initialize(
+          databaseName: validDbName,
+          inMemory: true,
+        );
+
+        expect(result.isLeft(), isTrue);
+        result.fold(
+          (error) => expect(error.toString(), contains('Unexpected failure')),
+          (_) => fail('Expected Left'),
+        );
+      });
+
+      test('returns Left when Hive initialization fails with invalid path',
+          () async {
+        // Use a path that cannot be written to
+        final result = await ThemePackage.initialize(
+          databaseName: validDbName,
+          customPath: '/nonexistent/readonly/path',
+          inMemory: false,
+        );
+
+        expect(result.isLeft(), isTrue);
+        result.fold(
+          (error) => expect(error, isA<ThemeError>()),
+          (_) => fail('Expected Left from Hive failure'),
+        );
+      });
     });
 
     group('currentTheme', () {
@@ -219,6 +286,23 @@ void main() {
         expect(result, const Right(unit));
         expect(ThemePackage.currentTheme, ThemeMode.system);
         expect(ThemePackage.getTheme(), ThemeMode.system);
+      });
+
+      test('returns Left when persistence fails', () async {
+        await ThemePackage.initialize(
+          databaseName: validDbName,
+          inMemory: true,
+        );
+
+        ThemePackage.forceSetThemeFailure = true;
+
+        final result = await ThemePackage.setTheme(ThemeMode.dark);
+
+        expect(result.isLeft(), isTrue);
+        result.fold(
+          (error) => expect(error.toString(), contains('Forced test failure')),
+          (_) => fail('Expected Left'),
+        );
       });
     });
 

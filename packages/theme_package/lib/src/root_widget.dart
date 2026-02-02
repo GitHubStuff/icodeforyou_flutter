@@ -97,7 +97,8 @@ class _ThemePackageRootState extends State<ThemePackageRoot> {
   bool _initialized = false;
   bool _minDurationElapsed = false;
 
-  bool get _showApp => _initialized && _minDurationElapsed;
+  bool get _showApp =>
+      _initialized && _minDurationElapsed && ThemePackage.isInitialized;
 
   @override
   void initState() {

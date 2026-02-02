@@ -48,7 +48,9 @@ void main() {
         isExecuting: true,
         initialQuery: 'SELECT 1',
       ));
-      await tester.pumpAndSettle();
+      // Use pump() instead of pumpAndSettle() because CircularProgressIndicator
+      // is an infinite animation that never settles
+      await tester.pump();
 
       expect(find.text('Running...'), findsOneWidget);
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -175,7 +177,8 @@ void main() {
         isExecuting: true,
         initialQuery: 'SELECT 1',
       ));
-      await tester.pumpAndSettle();
+      // Use pump() - CircularProgressIndicator never settles
+      await tester.pump();
 
       final iconButton = tester.widget<IconButton>(
         find.widgetWithIcon(IconButton, Icons.open_in_full),
@@ -225,7 +228,8 @@ void main() {
         isExecuting: true,
         initialQuery: 'SELECT 1',
       ));
-      await tester.pumpAndSettle();
+      // Use pump() - CircularProgressIndicator never settles
+      await tester.pump();
 
       final textField = tester.widget<TextField>(find.byType(TextField));
       expect(textField.enabled, isFalse);
@@ -235,7 +239,13 @@ void main() {
       await tester.pumpWidget(buildWidget());
       await tester.pumpAndSettle();
 
-      final button = tester.widget<FilledButton>(find.byType(FilledButton));
+      // Find the FilledButton by searching for the text inside it
+      final button = tester.widget<FilledButton>(
+        find.ancestor(
+          of: find.text('Run Query'),
+          matching: find.byType(FilledButton),
+        ),
+      );
       expect(button.onPressed, isNull);
     });
 
@@ -243,7 +253,13 @@ void main() {
       await tester.pumpWidget(buildWidget(initialQuery: 'DROP TABLE users'));
       await tester.pumpAndSettle();
 
-      final button = tester.widget<FilledButton>(find.byType(FilledButton));
+      // Find the FilledButton by searching for the text inside it
+      final button = tester.widget<FilledButton>(
+        find.ancestor(
+          of: find.text('Run Query'),
+          matching: find.byType(FilledButton),
+        ),
+      );
       expect(button.onPressed, isNull);
     });
 
@@ -252,12 +268,27 @@ void main() {
         isExecuting: true,
         initialQuery: 'SELECT 1',
       ));
-      await tester.pumpAndSettle();
+      // Use pump() - CircularProgressIndicator never settles
+      await tester.pump();
 
       final clearButton = tester.widget<TextButton>(
         find.widgetWithText(TextButton, 'Clear'),
       );
       expect(clearButton.onPressed, isNull);
+    });
+
+    testWidgets('Run button enabled for valid query', (tester) async {
+      await tester.pumpWidget(buildWidget(initialQuery: 'SELECT 1'));
+      await tester.pumpAndSettle();
+
+      // Find the FilledButton by searching for the text inside it
+      final button = tester.widget<FilledButton>(
+        find.ancestor(
+          of: find.text('Run Query'),
+          matching: find.byType(FilledButton),
+        ),
+      );
+      expect(button.onPressed, isNotNull);
     });
   });
 }

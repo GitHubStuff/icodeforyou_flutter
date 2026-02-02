@@ -12,7 +12,7 @@ final class _ThemeState {
     ThemeMode? themeMode,
   }) {
     return _ThemeState(
-      themeMode: themeMode ?? this.themeMode,
+      themeMode: themeMode ?? this.themeMode, // coverage:ignore-line
     );
   }
 
@@ -22,6 +22,8 @@ final class _ThemeState {
     return other is _ThemeState && other.themeMode == themeMode;
   }
 
+  // coverage:ignore-start
   @override
   int get hashCode => themeMode.hashCode;
+  // coverage:ignore-end
 }

@@ -57,6 +57,14 @@ abstract final class ThemePackage {
   static _ThemeLocalDatasource? _datasource;
   static bool _initialized = false;
 
+  /// Allows injection of a custom datasource factory for testing.
+  @visibleForTesting
+  static Future<Either<ThemeError, Unit>> Function()? testDatasourceInitializer;
+
+  /// Forces setTheme to fail for testing error paths.
+  @visibleForTesting
+  static bool forceSetThemeFailure = false;
+
   /// Returns true if the package has been initialized.
   static bool get isInitialized => _initialized;
 
@@ -97,6 +105,18 @@ abstract final class ThemePackage {
     _validateDatabaseName(databaseName);
 
     try {
+      // Allow test injection of datasource initializer
+      if (testDatasourceInitializer != null) {
+        final result = await testDatasourceInitializer!();
+        return result.fold(
+          (error) => Left(error),
+          (_) {
+            _initialized = true;
+            return const Right(unit);
+          },
+        );
+      }
+
       _datasource = _ThemeLocalDatasource(
         databaseName: databaseName,
         subDirectory: subDirectory,
@@ -145,6 +165,8 @@ abstract final class ThemePackage {
     _cubit = null;
     _datasource = null;
     _initialized = false;
+    testDatasourceInitializer = null;
+    forceSetThemeFailure = false;
   }
 
   static void _assertInitialized() {

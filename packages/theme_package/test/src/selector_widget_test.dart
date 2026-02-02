@@ -38,6 +38,24 @@ void main() {
     }
 
     group('UI elements', () {
+      testWidgets('can be constructed with a key', (WidgetTester tester) async {
+        await tester.pumpWidget(
+          ThemePackageRoot(
+            databaseName: validDbName,
+            inMemory: true,
+            splash: const SizedBox.shrink(),
+            child: const MaterialApp(
+              home: Scaffold(
+                body: ThemeSelectorWidget(key: Key('selector')),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('selector')), findsOneWidget);
+      });
+
       testWidgets('displays "Select Theme:" label', (
         WidgetTester tester,
       ) async {

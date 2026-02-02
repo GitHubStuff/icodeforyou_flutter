@@ -10,7 +10,4 @@ class _SliderCubit extends Cubit<double> {
 
   /// Updates the slider value.
   void update(double value) => emit(value);
-
-  /// Resets the slider to a specific value.
-  void reset(double value) => emit(value);
 }

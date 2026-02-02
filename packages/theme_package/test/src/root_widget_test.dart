@@ -1,5 +1,6 @@
 // test/src/root_widget_test.dart
 
+import 'package:dartz/dartz.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:theme_package/theme_package.dart';
@@ -210,15 +211,16 @@ void main() {
     });
 
     group('error handling', () {
-      testWidgets('calls onInitializationError callback on error',
+      testWidgets('calls onInitializationError callback on initialization failure',
           (WidgetTester tester) async {
         ThemeError? capturedError;
 
-        // Pre-initialize to avoid the actual error, then test callback mechanism
-        await ThemePackage.initialize(
-          databaseName: validDbName,
-          inMemory: true,
-        );
+        // Force initialization to fail
+        ThemePackage.testDatasourceInitializer = () async {
+          return const Left(
+            ThemeError.initializationFailed('Simulated failure'),
+          );
+        };
 
         await tester.pumpWidget(
           ThemePackageRoot(
@@ -236,8 +238,12 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        // Since already initialized, no error should occur
-        expect(capturedError, isNull);
+        expect(capturedError, isNotNull);
+        expect(capturedError.toString(), contains('Simulated failure'));
+
+        // Should still show splash since initialization failed
+        expect(find.text('Splash'), findsOneWidget);
+        expect(find.text('App'), findsNothing);
       });
     });
 
