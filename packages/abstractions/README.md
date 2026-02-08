@@ -1,39 +1,142 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Abstractions
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+A Flutter package providing abstract base classes that simplify common widget patterns and reduce boilerplate code.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- **ExtendedStatefulWidget** — An abstract `State` class that automatically handles `WidgetsBindingObserver` lifecycle and provides convenient callbacks for common app events.
 
-## Getting started
+## Installation
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Add this package to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  abstractions:
+    path: packages/abstractions  # adjust path as needed
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+### ExtendedStatefulWidget
+
+Extend `ExtendedStatefulWidget` instead of `State` to gain automatic observer management and lifecycle callbacks without the boilerplate.
 
 ```dart
-const like = 'sample';
+import 'package:abstractions/abstractions.dart';
+import 'package:flutter/material.dart';
+
+class MyWidget extends StatefulWidget {
+  const MyWidget({super.key});
+
+  @override
+  State<MyWidget> createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends ExtendedStatefulWidget<MyWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+
+  @override
+  void afterFirstLayout(BuildContext context) {
+    // Called once after the first frame is rendered.
+    // Safe to access context, perform navigation, show dialogs, etc.
+    debugPrint('First layout complete!');
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // React to app lifecycle changes (resumed, paused, inactive, etc.)
+    if (state == AppLifecycleState.resumed) {
+      debugPrint('App resumed');
+    }
+  }
+
+  @override
+  void didChangeMetrics() {
+    super.didChangeMetrics(); // Must call super
+    // Device metrics changed (orientation, screen size, etc.)
+    // MediaQuery is guaranteed to be updated when this fires.
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    // Platform brightness changed (light/dark mode toggle)
+    final brightness = View.of(context).platformDispatcher.platformBrightness;
+    debugPrint('Brightness: $brightness');
+  }
+
+  @override
+  void reportTextScaleFactor(double? textScaleFactor) {
+    // Called on init and whenever text scale factor changes.
+    debugPrint('Text scale factor: $textScaleFactor');
+  }
+}
 ```
 
-## Additional information
+## API Reference
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+### ExtendedStatefulWidget\<T extends StatefulWidget\>
+
+An abstract class that extends `State<T>` and mixes in `WidgetsBindingObserver`.
+
+#### Lifecycle
+
+| Method | Description |
+|--------|-------------|
+| `initState()` | Automatically registers the observer and schedules `afterFirstLayout`. Always call `super.initState()`. |
+| `dispose()` | Automatically removes the observer. Always call `super.dispose()`. |
+
+#### Callbacks
+
+| Callback | When Called |
+|----------|-------------|
+| `afterFirstLayout(BuildContext context)` | Once, after the first frame renders. Safe for context-dependent operations. |
+| `didChangeAppLifecycleState(AppLifecycleState state)` | When the app lifecycle state changes. |
+| `didChangeMetrics()` | When device metrics change. Uses post-frame callback to ensure `MediaQuery` is updated. |
+| `didChangePlatformBrightness()` | When the platform brightness (light/dark mode) changes. |
+| `didChangeTextScaleFactor()` | When the system text scale factor changes. |
+| `reportTextScaleFactor(double? textScaleFactor)` | Called on init and when text scale changes. Override to react to text scaling. |
+
+## Why Use This?
+
+Without `ExtendedStatefulWidget`, you'd write:
+
+```dart
+class _MyWidgetState extends State<MyWidget> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // after first layout logic
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // handle state
+  }
+
+  // ... more overrides
+}
+```
+
+With `ExtendedStatefulWidget`, observer registration, cleanup, and common callbacks are handled for you—just override what you need.
+
+## Requirements
+
+- Flutter SDK
+- Dart SDK >=3.10.0 <4.0.0
+
+## License
+
+See LICENSE file for details.

@@ -1,5 +1,4 @@
 // packages/sqlite_viewer/lib/src/widgets/_display_query_widget_layout.dart
-
 part of 'display_query_widget.dart';
 
 // =============================================================================
@@ -66,6 +65,7 @@ extension _LayoutCalculations on _DisplayQueryWidgetState {
     }
 
     final actualColIndex = widget.showRowNumbers ? colIndex - 1 : colIndex;
+
     if (actualColIndex < 0 || actualColIndex >= widget.columns.length) {
       return '';
     }
@@ -90,7 +90,7 @@ extension _LayoutCalculations on _DisplayQueryWidgetState {
   }
 
   double get _totalTableWidth {
-    return _columnWidths.fold(0, (sum, width) => sum + width);
+    return _columnWidths.fold(0, (double sum, double width) => sum + width);
   }
 
   bool _isNullValue(Map<String, Object?> row, int colIndex) {
@@ -99,6 +99,7 @@ extension _LayoutCalculations on _DisplayQueryWidgetState {
     }
 
     final actualColIndex = widget.showRowNumbers ? colIndex - 1 : colIndex;
+
     if (actualColIndex < 0 || actualColIndex >= widget.columns.length) {
       return false;
     }

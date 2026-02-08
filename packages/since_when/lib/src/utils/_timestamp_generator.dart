@@ -1,6 +1,6 @@
 // lib/src/utils/_timestamp_generator.dart
 
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:since_when/src/domain/since_when_failure.dart';
 import 'package:since_when/src/sql/_sql_statements.dart';
 import 'package:sqflite/sqflite.dart';

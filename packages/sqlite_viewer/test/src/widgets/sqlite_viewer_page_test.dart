@@ -1,9 +1,9 @@
 // packages/sqlite_viewer/test/src/widgets/sqlite_viewer_page_test.dart
 // ignore_for_file: prefer_const_constructors
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sqlite_viewer/src/abstract/sqlite_viewer_abstract.dart';
 import 'package:sqlite_viewer/src/failures/sqlite_viewer_failure.dart';
@@ -28,46 +28,64 @@ void main() {
   });
 
   void setupSuccessfulMetadata() {
-    when(() => mockSource.getFullPath())
-        .thenAnswer((_) async => Right(testMetadata.fullPath));
-    when(() => mockSource.getSqliteVersion())
-        .thenAnswer((_) async => Right(testMetadata.sqliteVersion));
-    when(() => mockSource.getDatabaseSize())
-        .thenAnswer((_) async => Right(testMetadata.databaseSize));
-    when(() => mockSource.getTableNames())
-        .thenAnswer((_) async => Right(testMetadata.tables));
+    when(
+      () => mockSource.getFullPath(),
+    ).thenAnswer((_) async => Right(testMetadata.fullPath));
+    when(
+      () => mockSource.getSqliteVersion(),
+    ).thenAnswer((_) async => Right(testMetadata.sqliteVersion));
+    when(
+      () => mockSource.getDatabaseSize(),
+    ).thenAnswer((_) async => Right(testMetadata.databaseSize));
+    when(
+      () => mockSource.getTableNames(),
+    ).thenAnswer((_) async => Right(testMetadata.tables));
   }
 
   void setupFailedConnection() {
-    when(() => mockSource.getFullPath())
-        .thenAnswer((_) async => Left(ViewerDatabaseNotOpen()));
+    when(
+      () => mockSource.getFullPath(),
+    ).thenAnswer((_) async => Left(ViewerDatabaseNotOpen()));
   }
 
   void setupSuccessfulTableDetail(String tableName) {
-    when(() => mockSource.getColumnNames(tableName))
-        .thenAnswer((_) async => Right(['id', 'name']));
-    when(() => mockSource.getPragma(
-          tableName: tableName,
-          key: PragmaKey.tableInfo,
-        )).thenAnswer((_) async => Right([
-          {'cid': 0, 'name': 'id', 'type': 'INTEGER', 'notnull': 1, 'pk': 1},
-          {'cid': 1, 'name': 'name', 'type': 'TEXT', 'notnull': 0, 'pk': 0},
-        ]));
-    when(() => mockSource.getPragma(
-          tableName: tableName,
-          key: PragmaKey.indexList,
-        )).thenAnswer((_) async => Right(<Map<String, Object?>>[]));
-    when(() => mockSource.getPragma(
-          tableName: tableName,
-          key: PragmaKey.foreignKeyList,
-        )).thenAnswer((_) async => Right(<Map<String, Object?>>[]));
-    when(() => mockSource.getRowCount(tableName))
-        .thenAnswer((_) async => Right(2));
-    when(() => mockSource.executeSelect('SELECT * FROM "$tableName"'))
-        .thenAnswer((_) async => Right([
-              {'id': 1, 'name': 'Alice'},
-              {'id': 2, 'name': 'Bob'},
-            ]));
+    when(
+      () => mockSource.getColumnNames(tableName),
+    ).thenAnswer((_) async => Right(['id', 'name']));
+    when(
+      () => mockSource.getPragma(
+        tableName: tableName,
+        key: PragmaKey.tableInfo,
+      ),
+    ).thenAnswer(
+      (_) async => Right([
+        {'cid': 0, 'name': 'id', 'type': 'INTEGER', 'notnull': 1, 'pk': 1},
+        {'cid': 1, 'name': 'name', 'type': 'TEXT', 'notnull': 0, 'pk': 0},
+      ]),
+    );
+    when(
+      () => mockSource.getPragma(
+        tableName: tableName,
+        key: PragmaKey.indexList,
+      ),
+    ).thenAnswer((_) async => Right(<Map<String, Object?>>[]));
+    when(
+      () => mockSource.getPragma(
+        tableName: tableName,
+        key: PragmaKey.foreignKeyList,
+      ),
+    ).thenAnswer((_) async => Right(<Map<String, Object?>>[]));
+    when(
+      () => mockSource.getRowCount(tableName),
+    ).thenAnswer((_) async => Right(2));
+    when(
+      () => mockSource.executeSelect('SELECT * FROM "$tableName"'),
+    ).thenAnswer(
+      (_) async => Right([
+        {'id': 1, 'name': 'Alice'},
+        {'id': 2, 'name': 'Bob'},
+      ]),
+    );
   }
 
   Widget buildPage({
@@ -213,8 +231,9 @@ void main() {
         expect(find.text('Query returned no results'), findsOneWidget);
       });
 
-      testWidgets('renders query header and row count with data',
-          (tester) async {
+      testWidgets('renders query header and row count with data', (
+        tester,
+      ) async {
         await tester.pumpWidget(
           wrapWidget(
             SizedBox(
@@ -277,8 +296,9 @@ void main() {
         expect(find.text('Query'), findsOneWidget);
       });
 
-      testWidgets('hides Query tab when showQueryInput is false',
-          (tester) async {
+      testWidgets('hides Query tab when showQueryInput is false', (
+        tester,
+      ) async {
         setupSuccessfulMetadata();
 
         await tester.pumpWidget(buildPhonePage(showQueryInput: false));
@@ -326,8 +346,9 @@ void main() {
         expect(find.text('posts'), findsOneWidget);
       });
 
-      testWidgets('selecting table navigates to Data tab and loads',
-          (tester) async {
+      testWidgets('selecting table navigates to Data tab and loads', (
+        tester,
+      ) async {
         setupSuccessfulMetadata();
         setupSuccessfulTableDetail('users');
 
@@ -356,7 +377,9 @@ void main() {
         expect(find.text('Loading users...'), findsOneWidget);
       });
 
-      testWidgets('shows selected table when TableDetailLoaded', (tester) async {
+      testWidgets('shows selected table when TableDetailLoaded', (
+        tester,
+      ) async {
         setupSuccessfulMetadata();
         setupSuccessfulTableDetail('users');
 
@@ -373,11 +396,13 @@ void main() {
         expect(find.text('users'), findsWidgets);
       });
 
-      testWidgets('shows selected table when TableDetailLoadFailed',
-          (tester) async {
+      testWidgets('shows selected table when TableDetailLoadFailed', (
+        tester,
+      ) async {
         setupSuccessfulMetadata();
-        when(() => mockSource.getColumnNames('users'))
-            .thenAnswer((_) async => Left(ViewerTableNotFound('users')));
+        when(
+          () => mockSource.getColumnNames('users'),
+        ).thenAnswer((_) async => Left(ViewerTableNotFound('users')));
 
         await tester.pumpWidget(buildPhonePage());
         await tester.pumpAndSettle();
@@ -392,8 +417,9 @@ void main() {
         expect(find.text('users'), findsWidgets);
       });
 
-      testWidgets('metadata panel refresh triggers refreshMetadata',
-          (tester) async {
+      testWidgets('metadata panel refresh triggers refreshMetadata', (
+        tester,
+      ) async {
         setupSuccessfulMetadata();
 
         await tester.pumpWidget(buildPhonePage());
@@ -406,8 +432,9 @@ void main() {
         verify(() => mockSource.getFullPath()).called(greaterThan(1));
       });
 
-      testWidgets('shows loading indicator in MetadataLoading state',
-          (tester) async {
+      testWidgets('shows loading indicator in MetadataLoading state', (
+        tester,
+      ) async {
         setupSuccessfulMetadata();
 
         await tester.pumpWidget(buildPhonePage());
@@ -467,11 +494,13 @@ void main() {
         expect(find.text('users'), findsWidgets);
       });
 
-      testWidgets('shows error when TableDetailLoadFailed with retry',
-          (tester) async {
+      testWidgets('shows error when TableDetailLoadFailed with retry', (
+        tester,
+      ) async {
         setupSuccessfulMetadata();
-        when(() => mockSource.getColumnNames('users'))
-            .thenAnswer((_) async => Left(ViewerTableNotFound('users')));
+        when(
+          () => mockSource.getColumnNames('users'),
+        ).thenAnswer((_) async => Left(ViewerTableNotFound('users')));
 
         await tester.pumpWidget(buildPhonePage());
         await tester.pumpAndSettle();
@@ -484,11 +513,13 @@ void main() {
         expect(find.text('Retry'), findsOneWidget);
       });
 
-      testWidgets('retry on TableDetailLoadFailed reloads table',
-          (tester) async {
+      testWidgets('retry on TableDetailLoadFailed reloads table', (
+        tester,
+      ) async {
         setupSuccessfulMetadata();
-        when(() => mockSource.getColumnNames('users'))
-            .thenAnswer((_) async => Left(ViewerTableNotFound('users')));
+        when(
+          () => mockSource.getColumnNames('users'),
+        ).thenAnswer((_) async => Left(ViewerTableNotFound('users')));
 
         await tester.pumpWidget(buildPhonePage());
         await tester.pumpAndSettle();
@@ -502,13 +533,15 @@ void main() {
         verify(() => mockSource.getColumnNames('users')).called(2);
       });
 
-      testWidgets('shows QueryResultView when QueryResultLoaded',
-          (tester) async {
+      testWidgets('shows QueryResultView when QueryResultLoaded', (
+        tester,
+      ) async {
         setupSuccessfulMetadata();
-        when(() => mockSource.executeSelect('SELECT 1'))
-            .thenAnswer((_) async => Right([
-                  {'1': 1}
-                ]));
+        when(() => mockSource.executeSelect('SELECT 1')).thenAnswer(
+          (_) async => Right([
+            {'1': 1},
+          ]),
+        );
 
         await tester.pumpWidget(buildPhonePage());
         await tester.pumpAndSettle();
@@ -527,8 +560,9 @@ void main() {
 
       testWidgets('shows error when QueryFailed with retry', (tester) async {
         setupSuccessfulMetadata();
-        when(() => mockSource.executeSelect('SELECT bad'))
-            .thenAnswer((_) async => Left(ViewerQueryFailed('q', 'error')));
+        when(
+          () => mockSource.executeSelect('SELECT bad'),
+        ).thenAnswer((_) async => Left(ViewerQueryFailed('q', 'error')));
 
         await tester.pumpWidget(buildPhonePage());
         await tester.pumpAndSettle();
@@ -548,8 +582,9 @@ void main() {
 
       testWidgets('retry on QueryFailed re-executes query', (tester) async {
         setupSuccessfulMetadata();
-        when(() => mockSource.executeSelect('SELECT bad'))
-            .thenAnswer((_) async => Left(ViewerQueryFailed('q', 'error')));
+        when(
+          () => mockSource.executeSelect('SELECT bad'),
+        ).thenAnswer((_) async => Left(ViewerQueryFailed('q', 'error')));
 
         await tester.pumpWidget(buildPhonePage());
         await tester.pumpAndSettle();
@@ -608,10 +643,11 @@ void main() {
 
       testWidgets('shows results after query execution', (tester) async {
         setupSuccessfulMetadata();
-        when(() => mockSource.executeSelect('SELECT 1'))
-            .thenAnswer((_) async => Right([
-                  {'1': 1}
-                ]));
+        when(() => mockSource.executeSelect('SELECT 1')).thenAnswer(
+          (_) async => Right([
+            {'1': 1},
+          ]),
+        );
 
         await tester.pumpWidget(buildPhonePage());
         await tester.pumpAndSettle();
@@ -629,8 +665,9 @@ void main() {
 
       testWidgets('shows last query from QueryFailed', (tester) async {
         setupSuccessfulMetadata();
-        when(() => mockSource.executeSelect('SELECT bad'))
-            .thenAnswer((_) async => Left(ViewerQueryFailed('q', 'error')));
+        when(
+          () => mockSource.executeSelect('SELECT bad'),
+        ).thenAnswer((_) async => Left(ViewerQueryFailed('q', 'error')));
 
         await tester.pumpWidget(buildPhonePage());
         await tester.pumpAndSettle();
@@ -672,10 +709,11 @@ void main() {
 
       testWidgets('shows refresh when QueryResultLoaded', (tester) async {
         setupSuccessfulMetadata();
-        when(() => mockSource.executeSelect('SELECT 1'))
-            .thenAnswer((_) async => Right([
-                  {'1': 1}
-                ]));
+        when(() => mockSource.executeSelect('SELECT 1')).thenAnswer(
+          (_) async => Right([
+            {'1': 1},
+          ]),
+        );
 
         await tester.pumpWidget(buildPhonePage());
         await tester.pumpAndSettle();
@@ -742,10 +780,11 @@ void main() {
 
     testWidgets('executing query shows results', (tester) async {
       setupSuccessfulMetadata();
-      when(() => mockSource.executeSelect('SELECT 1'))
-          .thenAnswer((_) async => Right([
-                {'1': 1}
-              ]));
+      when(() => mockSource.executeSelect('SELECT 1')).thenAnswer(
+        (_) async => Right([
+          {'1': 1},
+        ]),
+      );
 
       await tester.pumpWidget(buildTabletPage());
       await tester.pumpAndSettle();

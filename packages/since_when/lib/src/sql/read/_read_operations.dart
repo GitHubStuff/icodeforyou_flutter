@@ -1,6 +1,6 @@
 // lib/src/sql/read/_read_operations.dart
 
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:since_when/src/data/_since_when_record_mapper.dart';
 import 'package:since_when/src/data/_tag_definition_mapper.dart';
 import 'package:since_when/src/domain/since_when_failure.dart';
@@ -19,7 +19,7 @@ abstract final class ReadOperations {
   /// Returns the record and all its direct children (shallow query),
   /// ordered by sequenceNumber.
   static Future<Either<SinceWhenFailure, List<SinceWhenRecord>>>
-      getByCreatedTimeStamp(
+  getByCreatedTimeStamp(
     Database db,
     String createdTimeStamp,
   ) async {
@@ -29,7 +29,7 @@ abstract final class ReadOperations {
 
   /// Gets all records matching a specific tag by glossary timestamp.
   static Future<Either<SinceWhenFailure, List<SinceWhenRecord>>>
-      getByTagTimestamp(
+  getByTagTimestamp(
     Database db,
     String glossaryTimestamp,
   ) async {
@@ -92,7 +92,7 @@ abstract final class ReadOperations {
   /// [tagTimestamps] should be glossary createdTimeStamp values.
   /// Returns empty list if [tagTimestamps] is empty.
   static Future<Either<SinceWhenFailure, List<SinceWhenRecord>>>
-      getByTagTimestamps(
+  getByTagTimestamps(
     Database db,
     List<String> tagTimestamps, {
     TagMatchMode mode = TagMatchMode.any,
@@ -108,7 +108,8 @@ abstract final class ReadOperations {
       if (mode == TagMatchMode.any) {
         // ANY: Records with at least one of the specified tags
         final placeholders = List.filled(tagTimestamps.length, '?').join(', ');
-        sql = '''
+        sql =
+            '''
           SELECT DISTINCT sw.*
           FROM ${SqlStatements.tableSinceWhen} sw
           INNER JOIN ${SqlStatements.tableTags} t 
@@ -120,7 +121,8 @@ abstract final class ReadOperations {
       } else {
         // ALL: Records with all specified tags
         final placeholders = List.filled(tagTimestamps.length, '?').join(', ');
-        sql = '''
+        sql =
+            '''
           SELECT sw.*
           FROM ${SqlStatements.tableSinceWhen} sw
           WHERE (
@@ -176,7 +178,8 @@ abstract final class ReadOperations {
       if (mode == TagMatchMode.any) {
         // ANY: Records with at least one of the specified tags
         final placeholders = List.filled(tagNames.length, '?').join(', ');
-        sql = '''
+        sql =
+            '''
           SELECT DISTINCT sw.*
           FROM ${SqlStatements.tableSinceWhen} sw
           INNER JOIN ${SqlStatements.tableTags} t 
@@ -190,7 +193,8 @@ abstract final class ReadOperations {
       } else {
         // ALL: Records with all specified tags
         final placeholders = List.filled(tagNames.length, '?').join(', ');
-        sql = '''
+        sql =
+            '''
           SELECT sw.*
           FROM ${SqlStatements.tableSinceWhen} sw
           WHERE (
@@ -257,7 +261,7 @@ abstract final class ReadOperations {
 
   /// Gets a tag definition by its createdTimeStamp.
   static Future<Either<SinceWhenFailure, TagDefinition>>
-      getTagDefinitionByTimestamp(
+  getTagDefinitionByTimestamp(
     Database db,
     String createdTimeStamp,
   ) async {
@@ -304,7 +308,7 @@ abstract final class ReadOperations {
 
   /// Gets all tag definitions from the glossary.
   static Future<Either<SinceWhenFailure, List<TagDefinition>>>
-      getAllTagDefinitions(
+  getAllTagDefinitions(
     Database db,
   ) async {
     try {

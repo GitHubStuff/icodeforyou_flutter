@@ -1,6 +1,6 @@
 // packages/sqlite_viewer/lib/src/abstract/sqlite_viewer_abstract.dart
 
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 
 import 'package:sqlite_viewer/src/failures/sqlite_viewer_failure.dart';
 import 'package:sqlite_viewer/src/models/pragma_key.dart';
@@ -108,7 +108,7 @@ abstract class SqliteViewerAbstract {
   /// Example:
   /// ```dart
   /// final result = await source.executeSelect('SELECT * FROM users LIMIT 10');
-  /// result.fold(
+  /// result.match(
   ///   (failure) => print('Error: ${failure.message}'),
   ///   (rows) => print('Got ${rows.length} rows'),
   /// );

@@ -1,6 +1,6 @@
 // test/src/root_widget_test.dart
 
-import 'package:dartz/dartz.dart' hide State;
+import 'package:fpdart/fpdart.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:theme_package/theme_package.dart';
@@ -14,18 +14,15 @@ void main() {
 
   group('ThemePackageRoot', () {
     group('initialization', () {
-      testWidgets('initializes and shows child after splash',
-          (WidgetTester tester) async {
+      testWidgets('initializes and shows child after splash', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           ThemePackageRoot(
             databaseName: validDbName,
             inMemory: true,
             splash: const Text('Splash'),
-            child: const MaterialApp(
-              home: Scaffold(
-                body: Text('App Content'),
-              ),
-            ),
+            child: const MaterialApp(home: Scaffold(body: Text('App Content'))),
           ),
         );
 
@@ -41,66 +38,65 @@ void main() {
         expect(find.text('App Content'), findsOneWidget);
       });
 
-      testWidgets('uses pre-initialized ThemePackage when already initialized',
-          (WidgetTester tester) async {
-        // Pre-initialize
-        await ThemePackage.initialize(
-          databaseName: validDbName,
-          inMemory: true,
-        );
-        await ThemePackage.setTheme(ThemeMode.dark);
+      testWidgets(
+        'uses pre-initialized ThemePackage when already initialized',
+        (WidgetTester tester) async {
+          // Pre-initialize
+          await ThemePackage.initialize(
+            databaseName: validDbName,
+            inMemory: true,
+          );
+          await ThemePackage.setTheme(ThemeMode.dark);
 
-        await tester.pumpWidget(
-          ThemePackageRoot(
-            splash: const Text('Splash'),
-            child: ThemeBuilder(
-              builder: (context, themeMode) {
-                return MaterialApp(
-                  home: Scaffold(
-                    body: Text('Theme: ${themeMode.name}'),
-                  ),
-                );
-              },
+          await tester.pumpWidget(
+            ThemePackageRoot(
+              splash: const Text('Splash'),
+              child: ThemeBuilder(
+                builder: (context, themeMode) {
+                  return MaterialApp(
+                    home: Scaffold(body: Text('Theme: ${themeMode.name}')),
+                  );
+                },
+              ),
             ),
-          ),
-        );
+          );
 
-        await tester.pumpAndSettle();
+          await tester.pumpAndSettle();
 
-        // Should use the pre-set dark theme
-        expect(find.text('Theme: dark'), findsOneWidget);
-      });
+          // Should use the pre-set dark theme
+          expect(find.text('Theme: dark'), findsOneWidget);
+        },
+      );
 
-      testWidgets('throws StateError when databaseName is null and not pre-initialized',
-          (WidgetTester tester) async {
-        // Build widget - error is caught by Flutter's error handling
-        await tester.pumpWidget(
-          ThemePackageRoot(
-            // databaseName is null
-            splash: const Text('Splash'),
-            child: const MaterialApp(
-              home: Scaffold(body: Text('App')),
+      testWidgets(
+        'throws StateError when databaseName is null and not pre-initialized',
+        (WidgetTester tester) async {
+          // Build widget - error is caught by Flutter's error handling
+          await tester.pumpWidget(
+            ThemePackageRoot(
+              // databaseName is null
+              splash: const Text('Splash'),
+              child: const MaterialApp(home: Scaffold(body: Text('App'))),
             ),
-          ),
-        );
+          );
 
-        // Retrieve the error that was caught during widget building
-        final error = tester.takeException();
-        expect(error, isA<StateError>());
-      });
+          // Retrieve the error that was caught during widget building
+          final error = tester.takeException();
+          expect(error, isA<StateError>());
+        },
+      );
     });
 
     group('splash screen', () {
-      testWidgets('displays splash with black background',
-          (WidgetTester tester) async {
+      testWidgets('displays splash with black background', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           ThemePackageRoot(
             databaseName: validDbName,
             inMemory: true,
             splash: const Text('Loading...'),
-            child: const MaterialApp(
-              home: Scaffold(body: Text('App')),
-            ),
+            child: const MaterialApp(home: Scaffold(body: Text('App'))),
           ),
         );
 
@@ -118,9 +114,7 @@ void main() {
             inMemory: true,
             splashMinDuration: const Duration(seconds: 2),
             splash: const Text('Splash'),
-            child: const MaterialApp(
-              home: Scaffold(body: Text('App')),
-            ),
+            child: const MaterialApp(home: Scaffold(body: Text('App'))),
           ),
         );
 
@@ -137,16 +131,15 @@ void main() {
         expect(find.text('App'), findsOneWidget);
       });
 
-      testWidgets('shows app immediately when no splashMinDuration',
-          (WidgetTester tester) async {
+      testWidgets('shows app immediately when no splashMinDuration', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           ThemePackageRoot(
             databaseName: validDbName,
             inMemory: true,
             splash: const Text('Splash'),
-            child: const MaterialApp(
-              home: Scaffold(body: Text('App')),
-            ),
+            child: const MaterialApp(home: Scaffold(body: Text('App'))),
           ),
         );
 
@@ -158,16 +151,15 @@ void main() {
     });
 
     group('transition', () {
-      testWidgets('uses default transition duration of 750ms',
-          (WidgetTester tester) async {
+      testWidgets('uses default transition duration of 750ms', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           ThemePackageRoot(
             databaseName: validDbName,
             inMemory: true,
             splash: const Text('Splash'),
-            child: const MaterialApp(
-              home: Scaffold(body: Text('App')),
-            ),
+            child: const MaterialApp(home: Scaffold(body: Text('App'))),
           ),
         );
 
@@ -178,23 +170,19 @@ void main() {
         final animatedSwitcher = tester.widget<AnimatedSwitcher>(
           find.byType(AnimatedSwitcher),
         );
-        expect(
-          animatedSwitcher.duration,
-          const Duration(milliseconds: 750),
-        );
+        expect(animatedSwitcher.duration, const Duration(milliseconds: 750));
       });
 
-      testWidgets('respects custom transitionDuration',
-          (WidgetTester tester) async {
+      testWidgets('respects custom transitionDuration', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           ThemePackageRoot(
             databaseName: validDbName,
             inMemory: true,
             transitionDuration: const Duration(milliseconds: 500),
             splash: const Text('Splash'),
-            child: const MaterialApp(
-              home: Scaffold(body: Text('App')),
-            ),
+            child: const MaterialApp(home: Scaffold(body: Text('App'))),
           ),
         );
 
@@ -203,53 +191,51 @@ void main() {
         final animatedSwitcher = tester.widget<AnimatedSwitcher>(
           find.byType(AnimatedSwitcher),
         );
-        expect(
-          animatedSwitcher.duration,
-          const Duration(milliseconds: 500),
-        );
+        expect(animatedSwitcher.duration, const Duration(milliseconds: 500));
       });
     });
 
     group('error handling', () {
-      testWidgets('calls onInitializationError callback on initialization failure',
-          (WidgetTester tester) async {
-        ThemeError? capturedError;
+      testWidgets(
+        'calls onInitializationError callback on initialization failure',
+        (WidgetTester tester) async {
+          ThemeError? capturedError;
 
-        // Force initialization to fail
-        ThemePackage.testDatasourceInitializer = () async {
-          return const Left(
-            ThemeError.initializationFailed('Simulated failure'),
-          );
-        };
+          // Force initialization to fail
+          ThemePackage.testDatasourceInitializer = () async {
+            return const Left(
+              ThemeError.initializationFailed('Simulated failure'),
+            );
+          };
 
-        await tester.pumpWidget(
-          ThemePackageRoot(
-            databaseName: validDbName,
-            inMemory: true,
-            onInitializationError: (error) {
-              capturedError = error;
-            },
-            splash: const Text('Splash'),
-            child: const MaterialApp(
-              home: Scaffold(body: Text('App')),
+          await tester.pumpWidget(
+            ThemePackageRoot(
+              databaseName: validDbName,
+              inMemory: true,
+              onInitializationError: (error) {
+                capturedError = error;
+              },
+              splash: const Text('Splash'),
+              child: const MaterialApp(home: Scaffold(body: Text('App'))),
             ),
-          ),
-        );
+          );
 
-        await tester.pumpAndSettle();
+          await tester.pumpAndSettle();
 
-        expect(capturedError, isNotNull);
-        expect(capturedError.toString(), contains('Simulated failure'));
+          expect(capturedError, isNotNull);
+          expect(capturedError.toString(), contains('Simulated failure'));
 
-        // Should still show splash since initialization failed
-        expect(find.text('Splash'), findsOneWidget);
-        expect(find.text('App'), findsNothing);
-      });
+          // Should still show splash since initialization failed
+          expect(find.text('Splash'), findsOneWidget);
+          expect(find.text('App'), findsNothing);
+        },
+      );
     });
 
     group('BlocProvider', () {
-      testWidgets('provides ThemeCubit to child widgets',
-          (WidgetTester tester) async {
+      testWidgets('provides ThemeCubit to child widgets', (
+        WidgetTester tester,
+      ) async {
         await tester.pumpWidget(
           ThemePackageRoot(
             databaseName: validDbName,
@@ -276,9 +262,7 @@ class _TestChildWidget extends StatelessWidget {
     return ThemeBuilder(
       builder: (context, themeMode) {
         return MaterialApp(
-          home: Scaffold(
-            body: Text('ThemeMode: ${themeMode.name}'),
-          ),
+          home: Scaffold(body: Text('ThemeMode: ${themeMode.name}')),
         );
       },
     );

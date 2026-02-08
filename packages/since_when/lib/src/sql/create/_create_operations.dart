@@ -1,6 +1,6 @@
 // lib/src/sql/create/_create_operations.dart
 
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:since_when/src/data/_since_when_record_mapper.dart';
 import 'package:since_when/src/data/_tag_definition_mapper.dart';
 import 'package:since_when/src/domain/since_when_failure.dart';
@@ -42,7 +42,7 @@ abstract final class CreateOperations {
         db,
       );
 
-      return timestampResult.fold(
+      return timestampResult.match(
         Left.new,
         (createdTimeStamp) async {
           // Validate parent and calculate sequence number
@@ -135,7 +135,7 @@ abstract final class CreateOperations {
         table: SqlStatements.tableTagGlossary,
       );
 
-      return timestampResult.fold(
+      return timestampResult.match(
         Left.new,
         (createdTimeStamp) async {
           final insertValues = TagDefinitionMapper.toInsertValues(

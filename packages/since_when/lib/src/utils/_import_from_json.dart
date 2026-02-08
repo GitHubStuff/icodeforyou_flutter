@@ -1,6 +1,6 @@
 // icodeforyou_flutter/packages/since_when/lib/src/utils/_import_from_json.dart
 
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:since_when/src/domain/since_when_failure.dart';
 import 'package:since_when/src/domain/since_when_import_mode.dart';
 import 'package:sqflite/sqflite.dart';

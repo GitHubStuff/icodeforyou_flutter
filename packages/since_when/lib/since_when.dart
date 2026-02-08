@@ -29,7 +29,7 @@
 ///   tagTimestamps: [tag.createdTimeStamp],
 /// );
 ///
-/// recordResult.fold(
+/// recordResult.match(
 ///   (failure) => print('Error: $failure'),
 ///   (record) => print('Created: ${record.createdTimeStamp}'),
 /// );

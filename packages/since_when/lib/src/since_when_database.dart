@@ -1,6 +1,6 @@
 // lib/src/since_when_database.dart
 
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:since_when/src/constants/database_constants.dart';
 import 'package:since_when/src/database/_database_initializer.dart';
 import 'package:since_when/src/domain/since_when_failure.dart';

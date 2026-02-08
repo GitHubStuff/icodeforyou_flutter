@@ -1,9 +1,9 @@
 // packages/sqlite_viewer/test/src/widgets/phone_layout_test.dart
 // ignore_for_file: prefer_const_constructors
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sqlite_viewer/src/abstract/sqlite_viewer_abstract.dart';
 import 'package:sqlite_viewer/src/failures/sqlite_viewer_failure.dart';
@@ -21,34 +21,48 @@ void main() {
   });
 
   void setupConnected() {
-    when(() => mockSource.getFullPath())
-        .thenAnswer((_) async => const Right('/test.db'));
-    when(() => mockSource.getSqliteVersion())
-        .thenAnswer((_) async => const Right('3.39.0'));
-    when(() => mockSource.getDatabaseSize())
-        .thenAnswer((_) async => const Right(4096));
-    when(() => mockSource.getTableNames())
-        .thenAnswer((_) async => const Right(['users']));
+    when(
+      () => mockSource.getFullPath(),
+    ).thenAnswer((_) async => const Right('/test.db'));
+    when(
+      () => mockSource.getSqliteVersion(),
+    ).thenAnswer((_) async => const Right('3.39.0'));
+    when(
+      () => mockSource.getDatabaseSize(),
+    ).thenAnswer((_) async => const Right(4096));
+    when(
+      () => mockSource.getTableNames(),
+    ).thenAnswer((_) async => const Right(['users']));
   }
 
   void setupTableDetail() {
-    when(() => mockSource.getColumnNames('users'))
-        .thenAnswer((_) async => const Right(['id', 'name']));
-    when(() => mockSource.getPragma(tableName: 'users', key: PragmaKey.tableInfo))
-        .thenAnswer((_) async => Right([
-              {'cid': 0, 'name': 'id', 'type': 'INTEGER', 'notnull': 1, 'pk': 1},
-            ]));
-    when(() => mockSource.getPragma(tableName: 'users', key: PragmaKey.indexList))
-        .thenAnswer((_) async => const Right(<Map<String, Object?>>[]));
-    when(() => mockSource.getPragma(
-            tableName: 'users', key: PragmaKey.foreignKeyList))
-        .thenAnswer((_) async => const Right(<Map<String, Object?>>[]));
-    when(() => mockSource.getRowCount('users'))
-        .thenAnswer((_) async => const Right(1));
-    when(() => mockSource.executeSelect('SELECT * FROM "users"'))
-        .thenAnswer((_) async => Right([
-              {'id': 1, 'name': 'Test'}
-            ]));
+    when(
+      () => mockSource.getColumnNames('users'),
+    ).thenAnswer((_) async => const Right(['id', 'name']));
+    when(
+      () => mockSource.getPragma(tableName: 'users', key: PragmaKey.tableInfo),
+    ).thenAnswer(
+      (_) async => Right([
+        {'cid': 0, 'name': 'id', 'type': 'INTEGER', 'notnull': 1, 'pk': 1},
+      ]),
+    );
+    when(
+      () => mockSource.getPragma(tableName: 'users', key: PragmaKey.indexList),
+    ).thenAnswer((_) async => const Right(<Map<String, Object?>>[]));
+    when(
+      () => mockSource.getPragma(
+        tableName: 'users',
+        key: PragmaKey.foreignKeyList,
+      ),
+    ).thenAnswer((_) async => const Right(<Map<String, Object?>>[]));
+    when(
+      () => mockSource.getRowCount('users'),
+    ).thenAnswer((_) async => const Right(1));
+    when(() => mockSource.executeSelect('SELECT * FROM "users"')).thenAnswer(
+      (_) async => Right([
+        {'id': 1, 'name': 'Test'},
+      ]),
+    );
   }
 
   // Use 500x800 to avoid overflow but still trigger phone layout (< 600)
@@ -140,8 +154,9 @@ void main() {
     });
 
     testWidgets('shows connection error', (tester) async {
-      when(() => mockSource.getFullPath())
-          .thenAnswer((_) async => Left(ViewerDatabaseNotOpen()));
+      when(
+        () => mockSource.getFullPath(),
+      ).thenAnswer((_) async => Left(ViewerDatabaseNotOpen()));
 
       await tester.pumpWidget(buildConstrained());
       await tester.pumpAndSettle();
@@ -151,8 +166,9 @@ void main() {
 
     testWidgets('table load error shows retry', (tester) async {
       setupConnected();
-      when(() => mockSource.getColumnNames('users'))
-          .thenAnswer((_) async => Left(ViewerTableNotFound('users')));
+      when(
+        () => mockSource.getColumnNames('users'),
+      ).thenAnswer((_) async => Left(ViewerTableNotFound('users')));
 
       await tester.pumpWidget(buildConstrained());
       await tester.pumpAndSettle();
@@ -166,8 +182,9 @@ void main() {
 
     testWidgets('retry on table failure reloads', (tester) async {
       setupConnected();
-      when(() => mockSource.getColumnNames('users'))
-          .thenAnswer((_) async => Left(ViewerTableNotFound('users')));
+      when(
+        () => mockSource.getColumnNames('users'),
+      ).thenAnswer((_) async => Left(ViewerTableNotFound('users')));
 
       await tester.pumpWidget(buildConstrained());
       await tester.pumpAndSettle();
@@ -183,10 +200,11 @@ void main() {
 
     testWidgets('query execution shows results', (tester) async {
       setupConnected();
-      when(() => mockSource.executeSelect('SELECT 1'))
-          .thenAnswer((_) async => Right([
-                {'1': 1}
-              ]));
+      when(() => mockSource.executeSelect('SELECT 1')).thenAnswer(
+        (_) async => Right([
+          {'1': 1},
+        ]),
+      );
 
       await tester.pumpWidget(buildConstrained());
       await tester.pumpAndSettle();
@@ -205,8 +223,9 @@ void main() {
 
     testWidgets('query failure shows retry', (tester) async {
       setupConnected();
-      when(() => mockSource.executeSelect('SELECT bad'))
-          .thenAnswer((_) async => Left(ViewerQueryFailed('q', 'error')));
+      when(
+        () => mockSource.executeSelect('SELECT bad'),
+      ).thenAnswer((_) async => Left(ViewerQueryFailed('q', 'error')));
 
       await tester.pumpWidget(buildConstrained());
       await tester.pumpAndSettle();
@@ -226,8 +245,9 @@ void main() {
 
     testWidgets('retry on query failure re-executes', (tester) async {
       setupConnected();
-      when(() => mockSource.executeSelect('SELECT bad'))
-          .thenAnswer((_) async => Left(ViewerQueryFailed('q', 'error')));
+      when(
+        () => mockSource.executeSelect('SELECT bad'),
+      ).thenAnswer((_) async => Left(ViewerQueryFailed('q', 'error')));
 
       await tester.pumpWidget(buildConstrained());
       await tester.pumpAndSettle();
@@ -303,16 +323,18 @@ void main() {
       }
     });
 
-    testWidgets('MetadataLoadFailed with cached data shows tables',
-        (tester) async {
+    testWidgets('MetadataLoadFailed with cached data shows tables', (
+      tester,
+    ) async {
       setupConnected();
 
       await tester.pumpWidget(buildConstrained());
       await tester.pumpAndSettle();
 
       // Make refresh fail
-      when(() => mockSource.getTableNames())
-          .thenAnswer((_) async => Left(ViewerMetadataFailed('op', 'err')));
+      when(
+        () => mockSource.getTableNames(),
+      ).thenAnswer((_) async => Left(ViewerMetadataFailed('op', 'err')));
 
       // Trigger refresh
       final appBarRefresh = find.descendant(
@@ -353,13 +375,15 @@ void main() {
       expect(find.byIcon(Icons.play_arrow), findsOneWidget);
     });
 
-    testWidgets('QueryResultLoaded shows in Data tab after query',
-        (tester) async {
+    testWidgets('QueryResultLoaded shows in Data tab after query', (
+      tester,
+    ) async {
       setupConnected();
-      when(() => mockSource.executeSelect('SELECT 1'))
-          .thenAnswer((_) async => Right([
-                {'1': 1}
-              ]));
+      when(() => mockSource.executeSelect('SELECT 1')).thenAnswer(
+        (_) async => Right([
+          {'1': 1},
+        ]),
+      );
 
       await tester.pumpWidget(buildConstrained());
       await tester.pumpAndSettle();
@@ -416,10 +440,11 @@ void main() {
 
     testWidgets('refresh button visible in QueryResultLoaded', (tester) async {
       setupConnected();
-      when(() => mockSource.executeSelect('SELECT 1'))
-          .thenAnswer((_) async => Right([
-                {'1': 1}
-              ]));
+      when(() => mockSource.executeSelect('SELECT 1')).thenAnswer(
+        (_) async => Right([
+          {'1': 1},
+        ]),
+      );
 
       await tester.pumpWidget(buildConstrained());
       await tester.pumpAndSettle();
@@ -495,8 +520,9 @@ void main() {
 
     testWidgets('QueryFailed shows error and retry', (tester) async {
       setupConnected();
-      when(() => mockSource.executeSelect('SELECT bad'))
-          .thenAnswer((_) async => Left(ViewerQueryFailed('q', 'syntax error')));
+      when(
+        () => mockSource.executeSelect('SELECT bad'),
+      ).thenAnswer((_) async => Left(ViewerQueryFailed('q', 'syntax error')));
 
       await tester.pumpWidget(buildTablet());
       await tester.pumpAndSettle();
@@ -513,8 +539,9 @@ void main() {
 
     testWidgets('QueryFailed retry re-executes query', (tester) async {
       setupConnected();
-      when(() => mockSource.executeSelect('SELECT bad'))
-          .thenAnswer((_) async => Left(ViewerQueryFailed('q', 'syntax error')));
+      when(
+        () => mockSource.executeSelect('SELECT bad'),
+      ).thenAnswer((_) async => Left(ViewerQueryFailed('q', 'syntax error')));
 
       await tester.pumpWidget(buildTablet());
       await tester.pumpAndSettle();

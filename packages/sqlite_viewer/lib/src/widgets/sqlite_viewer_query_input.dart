@@ -99,7 +99,7 @@ class _SqliteViewerQueryInputState extends State<SqliteViewerQueryInput> {
         _validationError = null;
       } else {
         final result = QueryValidator.validate(text);
-        _validationError = result.fold(
+        _validationError = result.match(
           (failure) => failure.message,
           (_) => null,
         );
@@ -117,7 +117,7 @@ class _SqliteViewerQueryInputState extends State<SqliteViewerQueryInput> {
     if (result.isLeft()) {
       setState(() {
         _hasInteracted = true;
-        _validationError = result.fold((f) => f.message, (_) => null);
+        _validationError = result.match((f) => f.message, (_) => null);
       });
       return;
     }

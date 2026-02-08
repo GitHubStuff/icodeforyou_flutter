@@ -125,7 +125,7 @@ class _ThemePackageRootState extends State<ThemePackageRoot> {
         inMemory: widget.inMemory,
       );
 
-      result.fold(
+      result.match(
         (error) => widget.onInitializationError?.call(error),
         (_) {},
       );

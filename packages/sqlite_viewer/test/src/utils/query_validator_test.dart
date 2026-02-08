@@ -11,13 +11,13 @@ void main() {
         test('accepts SELECT query', () {
           final result = QueryValidator.validate('SELECT * FROM users');
           expect(result.isRight(), isTrue);
-          expect(result.getOrElse(() => ''), 'SELECT * FROM users');
+          expect(result.getOrElse((_) => ''), 'SELECT * FROM users');
         });
 
         test('accepts SELECT query with lowercase', () {
           final result = QueryValidator.validate('select * from users');
           expect(result.isRight(), isTrue);
-          expect(result.getOrElse(() => ''), 'select * from users');
+          expect(result.getOrElse((_) => ''), 'select * from users');
         });
 
         test('accepts SELECT query with mixed case', () {
@@ -42,7 +42,7 @@ void main() {
         test('trims whitespace from valid query', () {
           final result = QueryValidator.validate('  SELECT * FROM users  ');
           expect(result.isRight(), isTrue);
-          expect(result.getOrElse(() => ''), 'SELECT * FROM users');
+          expect(result.getOrElse((_) => ''), 'SELECT * FROM users');
         });
 
         test('accepts complex SELECT query', () {
@@ -62,7 +62,7 @@ void main() {
         test('rejects empty string', () {
           final result = QueryValidator.validate('');
           expect(result.isLeft(), isTrue);
-          result.fold((failure) {
+          result.match((failure) {
             expect(failure, isA<ViewerInvalidQuery>());
             expect(failure.message, 'Query cannot be empty');
           }, (_) => fail('Should be Left'));
@@ -71,7 +71,7 @@ void main() {
         test('rejects whitespace-only string', () {
           final result = QueryValidator.validate('   ');
           expect(result.isLeft(), isTrue);
-          result.fold((failure) {
+          result.match((failure) {
             expect(failure, isA<ViewerInvalidQuery>());
             expect(failure.message, 'Query cannot be empty');
           }, (_) => fail('Should be Left'));
@@ -87,7 +87,7 @@ void main() {
         test('rejects query with semicolon', () {
           final result = QueryValidator.validate('SELECT *; DROP TABLE users');
           expect(result.isLeft(), isTrue);
-          result.fold((failure) {
+          result.match((failure) {
             expect(failure, isA<ViewerInvalidQuery>());
             expect(
               failure.message,
@@ -115,7 +115,7 @@ void main() {
             'INSERT INTO users VALUES (1, "test")',
           );
           expect(result.isLeft(), isTrue);
-          result.fold((failure) {
+          result.match((failure) {
             expect(failure, isA<ViewerInvalidQuery>());
             expect(
               failure.message,
@@ -160,7 +160,7 @@ void main() {
         test('rejects EXPLAIN query', () {
           final result = QueryValidator.validate('EXPLAIN SELECT * FROM users');
           expect(result.isLeft(), isTrue);
-          result.fold((failure) {
+          result.match((failure) {
             expect(failure, isA<ViewerInvalidQuery>());
             expect(
               failure.message,
@@ -177,7 +177,7 @@ void main() {
         test('rejects PRAGMA query', () {
           final result = QueryValidator.validate('PRAGMA table_info(users)');
           expect(result.isLeft(), isTrue);
-          result.fold((failure) {
+          result.match((failure) {
             expect(failure, isA<ViewerInvalidQuery>());
             expect(
               failure.message,
@@ -194,7 +194,7 @@ void main() {
 
       group('ViewerInvalidQuery properties', () {
         test('contains original query', () {
-          QueryValidator.validate('DROP TABLE users').fold(
+          QueryValidator.validate('DROP TABLE users').match(
             (failure) {
               expect(failure, isA<ViewerInvalidQuery>());
               final invalidQuery = failure as ViewerInvalidQuery;
@@ -205,7 +205,7 @@ void main() {
         });
 
         test('contains reason for empty query', () {
-          QueryValidator.validate('').fold((failure) {
+          QueryValidator.validate('').match((failure) {
             final invalidQuery = failure as ViewerInvalidQuery;
             expect(invalidQuery.reason, 'Query cannot be empty');
           }, (_) => fail('Should be Left'));

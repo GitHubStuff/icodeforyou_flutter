@@ -16,7 +16,7 @@ final class _ThemeCubit extends Cubit<_ThemeState> {
   Future<Either<ThemeError, Unit>> setTheme(ThemeMode mode) async {
     final result = await _datasource.setThemeMode(mode);
 
-    return result.fold(
+    return result.match(
       (error) => Left(error),
       (_) {
         emit(state.copyWith(themeMode: mode));

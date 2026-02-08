@@ -1164,7 +1164,7 @@ class _TagAnalyticsDemo extends StatelessWidget {
               _InfoRow('Unique tags', '${stats.length}'),
               _InfoRow(
                 'Total tag assignments',
-                '${stats.fold(0, (sum, s) => sum + (s['count'] as int))}',
+                '${stats.fold(0, (int sum, s) => sum + (s['count'] as int))}',
               ),
               _InfoRow(
                 'Records',
@@ -1172,7 +1172,7 @@ class _TagAnalyticsDemo extends StatelessWidget {
               ),
               _InfoRow(
                 'Avg tags per record',
-                (stats.fold(0, (sum, s) => sum + (s['count'] as int)) /
+                (stats.fold(0, (int sum, s) => sum + (s['count'] as int)) /
                         _MockDatabaseMetadata.sinceWhenRows.length)
                     .toStringAsFixed(1),
               ),

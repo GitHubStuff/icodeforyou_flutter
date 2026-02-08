@@ -1,7 +1,7 @@
 // lib/theme_package.dart
 library;
 
-import 'package:dartz/dartz.dart' hide State;
+import 'package:fpdart/fpdart.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -108,13 +108,10 @@ abstract final class ThemePackage {
       // Allow test injection of datasource initializer
       if (testDatasourceInitializer != null) {
         final result = await testDatasourceInitializer!();
-        return result.fold(
-          (error) => Left(error),
-          (_) {
-            _initialized = true;
-            return const Right(unit);
-          },
-        );
+        return result.match((error) => Left(error), (_) {
+          _initialized = true;
+          return const Right(unit);
+        });
       }
 
       _datasource = _ThemeLocalDatasource(
@@ -126,18 +123,12 @@ abstract final class ThemePackage {
 
       final initResult = await _datasource!.initialize();
 
-      return initResult.fold(
-        (error) => Left(error),
-        (_) {
-          final savedMode = _datasource!.getThemeMode();
-          _cubit = _ThemeCubit(
-            datasource: _datasource!,
-            initialMode: savedMode,
-          );
-          _initialized = true;
-          return const Right(unit);
-        },
-      );
+      return initResult.match((error) => Left(error), (_) {
+        final savedMode = _datasource!.getThemeMode();
+        _cubit = _ThemeCubit(datasource: _datasource!, initialMode: savedMode);
+        _initialized = true;
+        return const Right(unit);
+      });
     } catch (e) {
       return Left(ThemeError.initializationFailed(e.toString()));
     }

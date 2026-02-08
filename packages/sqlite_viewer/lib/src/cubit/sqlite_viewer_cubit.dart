@@ -1,7 +1,7 @@
 // packages/sqlite_viewer/lib/src/cubit/sqlite_viewer_cubit.dart
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:sqlite_viewer/src/abstract/sqlite_viewer_abstract.dart';
 import 'package:sqlite_viewer/src/cubit/sqlite_viewer_state.dart';
 import 'package:sqlite_viewer/src/failures/sqlite_viewer_failure.dart';
@@ -47,7 +47,7 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
 
     final metadataResult = await _loadMetadata();
 
-    metadataResult.fold(
+    metadataResult.match(
       (failure) => emit(ViewerConnectionFailed(failure: failure)),
       (metadata) => emit(MetadataLoaded(metadata: metadata)),
     );
@@ -84,7 +84,7 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
 
     final metadataResult = await _loadMetadata();
 
-    metadataResult.fold(
+    metadataResult.match(
       (failure) => emit(
         MetadataLoadFailed(
           failure: failure,
@@ -139,12 +139,12 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
         TableDetailLoadFailed(
           metadata: currentMetadata,
           tableName: tableName,
-          failure: columnsResult.fold((f) => f, (_) => throw StateError('')),
+          failure: columnsResult.match((f) => f, (_) => throw StateError('')),
         ),
       );
       return;
     }
-    final columns = columnsResult.fold((_) => <String>[], (c) => c);
+    final columns = columnsResult.match((_) => <String>[], (c) => c);
 
     // Load PRAGMA table_info
     final tableInfoResult = await _source.getPragma(
@@ -153,7 +153,7 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
     );
     if (tableInfoResult
         case Left<SqliteViewerFailure, List<Map<String, Object?>>>(
-          :final value
+          :final value,
         )) {
       emit(
         TableDetailLoadFailed(
@@ -165,7 +165,8 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
       return;
     }
     final tableInfo =
-        (tableInfoResult as Right<SqliteViewerFailure, List<Map<String, Object?>>>)
+        (tableInfoResult
+                as Right<SqliteViewerFailure, List<Map<String, Object?>>>)
             .value;
 
     // Load PRAGMA index_list
@@ -175,7 +176,7 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
     );
     if (indexListResult
         case Left<SqliteViewerFailure, List<Map<String, Object?>>>(
-          :final value
+          :final value,
         )) {
       emit(
         TableDetailLoadFailed(
@@ -187,7 +188,8 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
       return;
     }
     final indexList =
-        (indexListResult as Right<SqliteViewerFailure, List<Map<String, Object?>>>)
+        (indexListResult
+                as Right<SqliteViewerFailure, List<Map<String, Object?>>>)
             .value;
 
     // Load PRAGMA foreign_key_list
@@ -197,7 +199,7 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
     );
     if (foreignKeysResult
         case Left<SqliteViewerFailure, List<Map<String, Object?>>>(
-          :final value
+          :final value,
         )) {
       emit(
         TableDetailLoadFailed(
@@ -209,7 +211,8 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
       return;
     }
     final foreignKeys =
-        (foreignKeysResult as Right<SqliteViewerFailure, List<Map<String, Object?>>>)
+        (foreignKeysResult
+                as Right<SqliteViewerFailure, List<Map<String, Object?>>>)
             .value;
 
     // Load row count
@@ -219,12 +222,12 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
         TableDetailLoadFailed(
           metadata: currentMetadata,
           tableName: tableName,
-          failure: rowCountResult.fold((f) => f, (_) => throw StateError('')),
+          failure: rowCountResult.match((f) => f, (_) => throw StateError('')),
         ),
       );
       return;
     }
-    final rowCount = rowCountResult.fold((_) => 0, (r) => r);
+    final rowCount = rowCountResult.match((_) => 0, (r) => r);
 
     // Load table data (SELECT * FROM table)
     final rowsResult = await _source.executeSelect(
@@ -235,12 +238,12 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
         TableDetailLoadFailed(
           metadata: currentMetadata,
           tableName: tableName,
-          failure: rowsResult.fold((f) => f, (_) => throw StateError('')),
+          failure: rowsResult.match((f) => f, (_) => throw StateError('')),
         ),
       );
       return;
     }
-    final rows = rowsResult.fold((_) => <Map<String, Object?>>[], (r) => r);
+    final rows = rowsResult.match((_) => <Map<String, Object?>>[], (r) => r);
 
     emit(
       TableDetailLoaded(
@@ -283,12 +286,12 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
         QueryFailed(
           metadata: currentMetadata,
           query: sql,
-          failure: validationResult.fold((f) => f, (_) => throw StateError('')),
+          failure: validationResult.match((f) => f, (_) => throw StateError('')),
         ),
       );
       return;
     }
-    final validatedQuery = validationResult.fold((_) => '', (q) => q);
+    final validatedQuery = validationResult.match((_) => '', (q) => q);
 
     emit(
       QueryExecuting(
@@ -299,7 +302,7 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
 
     final result = await _source.executeSelect(validatedQuery);
 
-    result.fold(
+    result.match(
       (failure) => emit(
         QueryFailed(
           metadata: currentMetadata,
@@ -332,30 +335,30 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
     // Load full path
     final pathResult = await _source.getFullPath();
     if (pathResult.isLeft()) {
-      return Left(pathResult.fold((f) => f, (_) => throw StateError('')));
+      return Left(pathResult.match((f) => f, (_) => throw StateError('')));
     }
-    final fullPath = pathResult.fold((_) => '', (p) => p);
+    final fullPath = pathResult.match((_) => '', (p) => p);
 
     // Load SQLite version
     final versionResult = await _source.getSqliteVersion();
     if (versionResult.isLeft()) {
-      return Left(versionResult.fold((f) => f, (_) => throw StateError('')));
+      return Left(versionResult.match((f) => f, (_) => throw StateError('')));
     }
-    final sqliteVersion = versionResult.fold((_) => '', (v) => v);
+    final sqliteVersion = versionResult.match((_) => '', (v) => v);
 
     // Load database size
     final sizeResult = await _source.getDatabaseSize();
     if (sizeResult.isLeft()) {
-      return Left(sizeResult.fold((f) => f, (_) => throw StateError('')));
+      return Left(sizeResult.match((f) => f, (_) => throw StateError('')));
     }
-    final databaseSize = sizeResult.fold((_) => 0, (s) => s);
+    final databaseSize = sizeResult.match((_) => 0, (s) => s);
 
     // Load table names
     final tablesResult = await _source.getTableNames();
     if (tablesResult.isLeft()) {
-      return Left(tablesResult.fold((f) => f, (_) => throw StateError('')));
+      return Left(tablesResult.match((f) => f, (_) => throw StateError('')));
     }
-    final tables = tablesResult.fold((_) => <String>[], (t) => t);
+    final tables = tablesResult.match((_) => <String>[], (t) => t);
 
     return Right(
       DatabaseMetadata(

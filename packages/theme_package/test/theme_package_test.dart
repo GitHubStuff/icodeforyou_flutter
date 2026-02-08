@@ -1,6 +1,6 @@
 // test/theme_package_test.dart
 
-import 'package:dartz/dartz.dart' hide State;
+import 'package:fpdart/fpdart.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:theme_package/theme_package.dart';
@@ -52,66 +52,72 @@ void main() {
         expect(result, const Right(unit));
       });
 
-      test('throws ArgumentError for databaseName less than 20 characters',
-          () async {
-        expect(
-          () => ThemePackage.initialize(
-            databaseName: 'short',
-            inMemory: true,
-          ),
-          throwsA(
-            isA<ArgumentError>().having(
-              (e) => e.message,
-              'message',
-              contains('must be exactly 20 characters'),
+      test(
+        'throws ArgumentError for databaseName less than 20 characters',
+        () async {
+          expect(
+            () =>
+                ThemePackage.initialize(databaseName: 'short', inMemory: true),
+            throwsA(
+              isA<ArgumentError>().having(
+                (e) => e.message,
+                'message',
+                contains('must be exactly 20 characters'),
+              ),
             ),
-          ),
-        );
-      });
+          );
+        },
+      );
 
-      test('throws ArgumentError for databaseName more than 20 characters',
-          () async {
-        expect(
-          () => ThemePackage.initialize(
-            databaseName: 'this_is_way_too_long_for_database_name',
-            inMemory: true,
-          ),
-          throwsA(
-            isA<ArgumentError>().having(
-              (e) => e.message,
-              'message',
-              contains('must be exactly 20 characters'),
+      test(
+        'throws ArgumentError for databaseName more than 20 characters',
+        () async {
+          expect(
+            () => ThemePackage.initialize(
+              databaseName: 'this_is_way_too_long_for_database_name',
+              inMemory: true,
             ),
-          ),
-        );
-      });
-
-      test('throws ArgumentError for databaseName with invalid characters',
-          () async {
-        expect(
-          () => ThemePackage.initialize(
-            databaseName: 'invalid@name!here#xx',
-            inMemory: true,
-          ),
-          throwsA(
-            isA<ArgumentError>().having(
-              (e) => e.message,
-              'message',
-              contains('invalid characters'),
+            throwsA(
+              isA<ArgumentError>().having(
+                (e) => e.message,
+                'message',
+                contains('must be exactly 20 characters'),
+              ),
             ),
-          ),
-        );
-      });
+          );
+        },
+      );
 
-      test('accepts databaseName with valid characters (letters, numbers, underscore, hyphen)',
-          () async {
-        final result = await ThemePackage.initialize(
-          databaseName: 'valid_db-name_123456',
-          inMemory: true,
-        );
+      test(
+        'throws ArgumentError for databaseName with invalid characters',
+        () async {
+          expect(
+            () => ThemePackage.initialize(
+              databaseName: 'invalid@name!here#xx',
+              inMemory: true,
+            ),
+            throwsA(
+              isA<ArgumentError>().having(
+                (e) => e.message,
+                'message',
+                contains('invalid characters'),
+              ),
+            ),
+          );
+        },
+      );
 
-        expect(result, const Right(unit));
-      });
+      test(
+        'accepts databaseName with valid characters (letters, numbers, underscore, hyphen)',
+        () async {
+          final result = await ThemePackage.initialize(
+            databaseName: 'valid_db-name_123456',
+            inMemory: true,
+          );
+
+          expect(result, const Right(unit));
+        },
+      );
 
       test('returns Right when testDatasourceInitializer succeeds', () async {
         ThemePackage.testDatasourceInitializer = () async {
@@ -140,45 +146,49 @@ void main() {
         );
 
         expect(result.isLeft(), isTrue);
-        result.fold(
+        result.match(
           (error) => expect(error.toString(), contains('Test error')),
           (_) => fail('Expected Left'),
         );
       });
 
-      test('returns Left when exception is thrown during initialization',
-          () async {
-        ThemePackage.testDatasourceInitializer = () async {
-          throw Exception('Unexpected failure');
-        };
+      test(
+        'returns Left when exception is thrown during initialization',
+        () async {
+          ThemePackage.testDatasourceInitializer = () async {
+            throw Exception('Unexpected failure');
+          };
 
-        final result = await ThemePackage.initialize(
-          databaseName: validDbName,
-          inMemory: true,
-        );
+          final result = await ThemePackage.initialize(
+            databaseName: validDbName,
+            inMemory: true,
+          );
 
-        expect(result.isLeft(), isTrue);
-        result.fold(
-          (error) => expect(error.toString(), contains('Unexpected failure')),
-          (_) => fail('Expected Left'),
-        );
-      });
+          expect(result.isLeft(), isTrue);
+          result.match(
+            (error) => expect(error.toString(), contains('Unexpected failure')),
+            (_) => fail('Expected Left'),
+          );
+        },
+      );
 
-      test('returns Left when Hive initialization fails with invalid path',
-          () async {
-        // Use a path that cannot be written to
-        final result = await ThemePackage.initialize(
-          databaseName: validDbName,
-          customPath: '/nonexistent/readonly/path',
-          inMemory: false,
-        );
+      test(
+        'returns Left when Hive initialization fails with invalid path',
+        () async {
+          // Use a path that cannot be written to
+          final result = await ThemePackage.initialize(
+            databaseName: validDbName,
+            customPath: '/nonexistent/readonly/path',
+            inMemory: false,
+          );
 
-        expect(result.isLeft(), isTrue);
-        result.fold(
-          (error) => expect(error, isA<ThemeError>()),
-          (_) => fail('Expected Left from Hive failure'),
-        );
-      });
+          expect(result.isLeft(), isTrue);
+          result.match(
+            (error) => expect(error, isA<ThemeError>()),
+            (_) => fail('Expected Left from Hive failure'),
+          );
+        },
+      );
     });
 
     group('currentTheme', () {
@@ -195,15 +205,17 @@ void main() {
         );
       });
 
-      test('returns ThemeMode.system by default after initialization',
-          () async {
-        await ThemePackage.initialize(
-          databaseName: validDbName,
-          inMemory: true,
-        );
+      test(
+        'returns ThemeMode.system by default after initialization',
+        () async {
+          await ThemePackage.initialize(
+            databaseName: validDbName,
+            inMemory: true,
+          );
 
-        expect(ThemePackage.currentTheme, ThemeMode.system);
-      });
+          expect(ThemePackage.currentTheme, ThemeMode.system);
+        },
+      );
     });
 
     group('getTheme', () {
@@ -220,15 +232,17 @@ void main() {
         );
       });
 
-      test('returns ThemeMode.system by default after initialization',
-          () async {
-        await ThemePackage.initialize(
-          databaseName: validDbName,
-          inMemory: true,
-        );
+      test(
+        'returns ThemeMode.system by default after initialization',
+        () async {
+          await ThemePackage.initialize(
+            databaseName: validDbName,
+            inMemory: true,
+          );
 
-        expect(ThemePackage.getTheme(), ThemeMode.system);
-      });
+          expect(ThemePackage.getTheme(), ThemeMode.system);
+        },
+      );
     });
 
     group('setTheme', () {
@@ -299,7 +313,7 @@ void main() {
         final result = await ThemePackage.setTheme(ThemeMode.dark);
 
         expect(result.isLeft(), isTrue);
-        result.fold(
+        result.match(
           (error) => expect(error.toString(), contains('Forced test failure')),
           (_) => fail('Expected Left'),
         );

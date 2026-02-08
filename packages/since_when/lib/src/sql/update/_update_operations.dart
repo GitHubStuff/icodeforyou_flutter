@@ -1,6 +1,6 @@
 // lib/src/sql/update/_update_operations.dart
 
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:since_when/src/data/_tag_definition_mapper.dart';
 import 'package:since_when/src/domain/since_when_failure.dart';
 import 'package:since_when/src/domain/since_when_record.dart';

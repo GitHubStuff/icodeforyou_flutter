@@ -1,6 +1,6 @@
 // test/helpers/mock_sqlite_viewer_source.dart
 
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:sqlite_viewer/sqlite_viewer.dart';
 
 /// Mock implementation of [SqliteViewerAbstract] for testing.

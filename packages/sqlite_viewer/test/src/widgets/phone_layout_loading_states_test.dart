@@ -4,9 +4,9 @@
 
 import 'dart:async';
 
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sqlite_viewer/src/abstract/sqlite_viewer_abstract.dart';
 import 'package:sqlite_viewer/src/failures/sqlite_viewer_failure.dart';

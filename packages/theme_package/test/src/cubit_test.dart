@@ -1,6 +1,6 @@
 // test/src/cubit_test.dart
 
-import 'package:dartz/dartz.dart' hide State;
+import 'package:fpdart/fpdart.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:theme_package/theme_package.dart';

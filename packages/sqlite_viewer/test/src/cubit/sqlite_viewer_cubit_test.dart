@@ -4,8 +4,8 @@
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
-import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sqlite_viewer/src/abstract/sqlite_viewer_abstract.dart';
 import 'package:sqlite_viewer/src/cubit/sqlite_viewer_cubit.dart';
@@ -42,19 +42,24 @@ void main() {
   ];
 
   void setupSuccessfulMetadata() {
-    when(() => mockSource.getFullPath())
-        .thenAnswer((_) async => Right(testMetadata.fullPath));
-    when(() => mockSource.getSqliteVersion())
-        .thenAnswer((_) async => Right(testMetadata.sqliteVersion));
-    when(() => mockSource.getDatabaseSize())
-        .thenAnswer((_) async => Right(testMetadata.databaseSize));
-    when(() => mockSource.getTableNames())
-        .thenAnswer((_) async => Right(testMetadata.tables));
+    when(
+      () => mockSource.getFullPath(),
+    ).thenAnswer((_) async => Right(testMetadata.fullPath));
+    when(
+      () => mockSource.getSqliteVersion(),
+    ).thenAnswer((_) async => Right(testMetadata.sqliteVersion));
+    when(
+      () => mockSource.getDatabaseSize(),
+    ).thenAnswer((_) async => Right(testMetadata.databaseSize));
+    when(
+      () => mockSource.getTableNames(),
+    ).thenAnswer((_) async => Right(testMetadata.tables));
   }
 
   void setupSuccessfulTableDetail() {
-    when(() => mockSource.getColumnNames(tableName))
-        .thenAnswer((_) async => Right(testColumns));
+    when(
+      () => mockSource.getColumnNames(tableName),
+    ).thenAnswer((_) async => Right(testColumns));
     when(
       () => mockSource.getPragma(
         tableName: tableName,
@@ -73,10 +78,12 @@ void main() {
         key: PragmaKey.foreignKeyList,
       ),
     ).thenAnswer((_) async => Right(testForeignKeys));
-    when(() => mockSource.getRowCount(tableName))
-        .thenAnswer((_) async => Right(1));
-    when(() => mockSource.executeSelect('SELECT * FROM "$tableName"'))
-        .thenAnswer((_) async => Right(testRows));
+    when(
+      () => mockSource.getRowCount(tableName),
+    ).thenAnswer((_) async => Right(1));
+    when(
+      () => mockSource.executeSelect('SELECT * FROM "$tableName"'),
+    ).thenAnswer((_) async => Right(testRows));
   }
 
   setUp(() {
@@ -108,8 +115,9 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits [ViewerConnecting, ViewerConnectionFailed] when getFullPath fails',
         setUp: () {
-          when(() => mockSource.getFullPath())
-              .thenAnswer((_) async => Left(ViewerDatabaseNotOpen()));
+          when(
+            () => mockSource.getFullPath(),
+          ).thenAnswer((_) async => Left(ViewerDatabaseNotOpen()));
         },
         build: () => cubit,
         act: (cubit) => cubit.connect(),
@@ -122,8 +130,9 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits [ViewerConnecting, ViewerConnectionFailed] when getSqliteVersion fails',
         setUp: () {
-          when(() => mockSource.getFullPath())
-              .thenAnswer((_) async => Right('/test/path'));
+          when(
+            () => mockSource.getFullPath(),
+          ).thenAnswer((_) async => Right('/test/path'));
           when(() => mockSource.getSqliteVersion()).thenAnswer(
             (_) async => Left(ViewerMetadataFailed('version', 'error')),
           );
@@ -141,10 +150,12 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits [ViewerConnecting, ViewerConnectionFailed] when getDatabaseSize fails',
         setUp: () {
-          when(() => mockSource.getFullPath())
-              .thenAnswer((_) async => Right('/test/path'));
-          when(() => mockSource.getSqliteVersion())
-              .thenAnswer((_) async => Right('3.39.0'));
+          when(
+            () => mockSource.getFullPath(),
+          ).thenAnswer((_) async => Right('/test/path'));
+          when(
+            () => mockSource.getSqliteVersion(),
+          ).thenAnswer((_) async => Right('3.39.0'));
           when(() => mockSource.getDatabaseSize()).thenAnswer(
             (_) async => Left(ViewerMetadataFailed('size', 'error')),
           );
@@ -162,12 +173,15 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits [ViewerConnecting, ViewerConnectionFailed] when getTableNames fails',
         setUp: () {
-          when(() => mockSource.getFullPath())
-              .thenAnswer((_) async => Right('/test/path'));
-          when(() => mockSource.getSqliteVersion())
-              .thenAnswer((_) async => Right('3.39.0'));
-          when(() => mockSource.getDatabaseSize())
-              .thenAnswer((_) async => Right(4096));
+          when(
+            () => mockSource.getFullPath(),
+          ).thenAnswer((_) async => Right('/test/path'));
+          when(
+            () => mockSource.getSqliteVersion(),
+          ).thenAnswer((_) async => Right('3.39.0'));
+          when(
+            () => mockSource.getDatabaseSize(),
+          ).thenAnswer((_) async => Right(4096));
           when(() => mockSource.getTableNames()).thenAnswer(
             (_) async => Left(ViewerMetadataFailed('tables', 'error')),
           );
@@ -219,8 +233,9 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits [MetadataLoading, MetadataLoadFailed] on failure',
         setUp: () {
-          when(() => mockSource.getFullPath())
-              .thenAnswer((_) async => Left(ViewerDatabaseNotOpen()));
+          when(
+            () => mockSource.getFullPath(),
+          ).thenAnswer((_) async => Left(ViewerDatabaseNotOpen()));
         },
         build: () => cubit,
         seed: () => MetadataLoaded(metadata: testMetadata),
@@ -393,8 +408,9 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits TableDetailLoadFailed when getPragma tableInfo fails',
         setUp: () {
-          when(() => mockSource.getColumnNames(tableName))
-              .thenAnswer((_) async => Right(testColumns));
+          when(
+            () => mockSource.getColumnNames(tableName),
+          ).thenAnswer((_) async => Right(testColumns));
           when(
             () => mockSource.getPragma(
               tableName: tableName,
@@ -422,8 +438,9 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits TableDetailLoadFailed when getPragma indexList fails',
         setUp: () {
-          when(() => mockSource.getColumnNames(tableName))
-              .thenAnswer((_) async => Right(testColumns));
+          when(
+            () => mockSource.getColumnNames(tableName),
+          ).thenAnswer((_) async => Right(testColumns));
           when(
             () => mockSource.getPragma(
               tableName: tableName,
@@ -457,8 +474,9 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits TableDetailLoadFailed when getPragma foreignKeyList fails',
         setUp: () {
-          when(() => mockSource.getColumnNames(tableName))
-              .thenAnswer((_) async => Right(testColumns));
+          when(
+            () => mockSource.getColumnNames(tableName),
+          ).thenAnswer((_) async => Right(testColumns));
           when(
             () => mockSource.getPragma(
               tableName: tableName,
@@ -498,8 +516,9 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits TableDetailLoadFailed when getRowCount fails',
         setUp: () {
-          when(() => mockSource.getColumnNames(tableName))
-              .thenAnswer((_) async => Right(testColumns));
+          when(
+            () => mockSource.getColumnNames(tableName),
+          ).thenAnswer((_) async => Right(testColumns));
           when(
             () => mockSource.getPragma(
               tableName: tableName,
@@ -538,8 +557,9 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits TableDetailLoadFailed when executeSelect fails',
         setUp: () {
-          when(() => mockSource.getColumnNames(tableName))
-              .thenAnswer((_) async => Right(testColumns));
+          when(
+            () => mockSource.getColumnNames(tableName),
+          ).thenAnswer((_) async => Right(testColumns));
           when(
             () => mockSource.getPragma(
               tableName: tableName,
@@ -558,10 +578,12 @@ void main() {
               key: PragmaKey.foreignKeyList,
             ),
           ).thenAnswer((_) async => Right(testForeignKeys));
-          when(() => mockSource.getRowCount(tableName))
-              .thenAnswer((_) async => Right(1));
-          when(() => mockSource.executeSelect('SELECT * FROM "$tableName"'))
-              .thenAnswer(
+          when(
+            () => mockSource.getRowCount(tableName),
+          ).thenAnswer((_) async => Right(1));
+          when(
+            () => mockSource.executeSelect('SELECT * FROM "$tableName"'),
+          ).thenAnswer(
             (_) async => Left(ViewerQueryFailed('SELECT', 'error')),
           );
         },
@@ -606,8 +628,9 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits [QueryExecuting, QueryResultLoaded] on success',
         setUp: () {
-          when(() => mockSource.executeSelect('SELECT * FROM users'))
-              .thenAnswer((_) async => Right(testRows));
+          when(
+            () => mockSource.executeSelect('SELECT * FROM users'),
+          ).thenAnswer((_) async => Right(testRows));
         },
         build: () => cubit,
         seed: () => MetadataLoaded(metadata: testMetadata),
@@ -629,8 +652,9 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits QueryResultLoaded with empty columns for empty results',
         setUp: () {
-          when(() => mockSource.executeSelect('SELECT * FROM empty_table'))
-              .thenAnswer((_) async => Right(<Map<String, Object?>>[]));
+          when(
+            () => mockSource.executeSelect('SELECT * FROM empty_table'),
+          ).thenAnswer((_) async => Right(<Map<String, Object?>>[]));
         },
         build: () => cubit,
         seed: () => MetadataLoaded(metadata: testMetadata),
@@ -652,8 +676,9 @@ void main() {
       blocTest<SqliteViewerCubit, SqliteViewerState>(
         'emits [QueryExecuting, QueryFailed] on execution failure',
         setUp: () {
-          when(() => mockSource.executeSelect('SELECT * FROM users'))
-              .thenAnswer(
+          when(
+            () => mockSource.executeSelect('SELECT * FROM users'),
+          ).thenAnswer(
             (_) async => Left(
               ViewerQueryFailed('SELECT * FROM users', 'no such table'),
             ),
@@ -679,10 +704,11 @@ void main() {
         'handles WITH queries correctly',
         setUp: () {
           const withQuery = 'WITH cte AS (SELECT 1) SELECT * FROM cte';
-          when(() => mockSource.executeSelect(withQuery))
-              .thenAnswer((_) async => Right([
-                    {'1': 1}
-                  ]));
+          when(() => mockSource.executeSelect(withQuery)).thenAnswer(
+            (_) async => Right([
+              {'1': 1},
+            ]),
+          );
         },
         build: () => cubit,
         seed: () => MetadataLoaded(metadata: testMetadata),
@@ -699,7 +725,7 @@ void main() {
             query: 'WITH cte AS (SELECT 1) SELECT * FROM cte',
             columns: const ['1'],
             rows: const [
-              {'1': 1}
+              {'1': 1},
             ],
           ),
         ],

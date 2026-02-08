@@ -1,6 +1,6 @@
 // packages/sqlite_viewer/lib/src/utils/query_validator.dart
 
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 
 import 'package:sqlite_viewer/src/failures/sqlite_viewer_failure.dart';
 
