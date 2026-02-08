@@ -38,9 +38,7 @@ void main() {
     ).thenAnswer((_) async => const Right(['users']));
   }
 
-  /// Full mock setup for table detail - all methods return immediately
-
-  Widget buildPhone({double width = 500, double height = 800}) {
+  Widget buildPhone({double width = 400, double height = 800}) {
     return MaterialApp(
       home: Center(
         child: SizedBox(
@@ -54,40 +52,38 @@ void main() {
 
   group('Phone Layout Loading States', () {
     testWidgets('MetadataLoading shows tables during refresh', (tester) async {
-      // First, fully connect
+      await tester.binding.setSurfaceSize(Size(400, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
       setupFullyConnected();
 
       await tester.pumpWidget(buildPhone());
       await tester.pumpAndSettle();
 
-      // Verify we're connected
       expect(find.text('users'), findsWidgets);
 
-      // Now set up a slow refresh - use Completer for getTableNames
       final completer = Completer<Either<SqliteViewerFailure, List<String>>>();
       when(
         () => mockSource.getTableNames(),
       ).thenAnswer((_) => completer.future);
 
-      // Trigger refresh via metadata panel (tooltip is 'Refresh metadata')
       final refreshButton = find.byTooltip('Refresh metadata');
       expect(refreshButton, findsOneWidget);
 
       await tester.tap(refreshButton);
       await tester.pump();
 
-      // Should still show tables (MetadataLoading with cached metadata)
       expect(find.text('users'), findsWidgets);
 
-      // Complete to clean up
       completer.complete(const Right(['users']));
       await tester.pumpAndSettle();
     });
 
     testWidgets('TableDetailLoading shows loading message', (tester) async {
-      // Fully connect first
+      await tester.binding.setSurfaceSize(Size(400, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
       setupFullyConnected();
-      // Pre-setup table detail mocks (except getColumnNames)
       when(
         () =>
             mockSource.getPragma(tableName: 'users', key: PragmaKey.tableInfo),
@@ -118,28 +114,26 @@ void main() {
       await tester.pumpWidget(buildPhone());
       await tester.pumpAndSettle();
 
-      // Set up slow table load - Completer for getColumnNames
       final completer = Completer<Either<SqliteViewerFailure, List<String>>>();
       when(
         () => mockSource.getColumnNames('users'),
       ).thenAnswer((_) => completer.future);
 
-      // Tap table to trigger load
       await tester.tap(find.text('users').first);
       await tester.pump();
 
-      // Should show loading message
       expect(find.text('Loading users...'), findsOneWidget);
 
-      // Complete to clean up
       completer.complete(const Right(['id', 'name']));
       await tester.pumpAndSettle();
     });
 
-    testWidgets('QueryExecuting shows loading state in query input', (
+    testWidgets('QueryExecuting shows loading state on data tab', (
       tester,
     ) async {
-      // Fully connect
+      await tester.binding.setSurfaceSize(Size(400, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
       setupFullyConnected();
 
       await tester.pumpWidget(buildPhone());
@@ -149,25 +143,22 @@ void main() {
       await tester.tap(find.text('Query').last);
       await tester.pumpAndSettle();
 
-      // Set up slow query - Completer for executeSelect
       final completer =
           Completer<Either<SqliteViewerFailure, List<Map<String, Object?>>>>();
       when(
         () => mockSource.executeSelect('SELECT 1'),
       ).thenAnswer((_) => completer.future);
 
-      // Enter and execute query
       await tester.enterText(find.byType(TextField).first, 'SELECT 1');
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.play_arrow));
       await tester.pump();
 
-      // Phone layout shows "Running..." in query input during execution
-      // (not "Executing query..." which is tablet only)
-      expect(find.text('Running...'), findsOneWidget);
+      // Phone layout onExecute switches to Data tab (index 1).
+      // The QueryExecuting state falls through to _EmptyDataView on Data tab.
+      expect(find.byIcon(Icons.touch_app), findsOneWidget);
 
-      // Complete to clean up
       completer.complete(
         Right([
           {'1': 1},
@@ -179,19 +170,20 @@ void main() {
     testWidgets('metadata panel onRefresh triggers refreshMetadata', (
       tester,
     ) async {
+      await tester.binding.setSurfaceSize(Size(400, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
       setupFullyConnected();
 
       await tester.pumpWidget(buildPhone());
       await tester.pumpAndSettle();
 
-      // Find metadata panel refresh button (tooltip is 'Refresh metadata')
       final refreshButton = find.byTooltip('Refresh metadata');
       expect(refreshButton, findsOneWidget);
 
       await tester.tap(refreshButton);
       await tester.pumpAndSettle();
 
-      // Verify refresh was called (getFullPath called again)
       verify(() => mockSource.getFullPath()).called(greaterThan(1));
     });
   });

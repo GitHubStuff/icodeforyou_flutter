@@ -27,6 +27,17 @@ void main() {
     );
   }
 
+  /// Helper to find the Run/Running button (FilledButton.icon creates a
+  /// private _FilledButtonWithIcon that isn't matched by
+  /// find.byType(FilledButton)). We locate it via its label text and the
+  /// common ancestor type [ButtonStyleButton].
+  Finder findRunButton(String label) {
+    return find.ancestor(
+      of: find.text(label),
+      matching: find.byWidgetPredicate((w) => w is ButtonStyleButton),
+    );
+  }
+
   group('SqliteViewerQueryInput Basic', () {
     testWidgets('renders with default state', (tester) async {
       await tester.pumpWidget(buildWidget());
@@ -239,12 +250,8 @@ void main() {
       await tester.pumpWidget(buildWidget());
       await tester.pumpAndSettle();
 
-      // Find the FilledButton by searching for the text inside it
-      final button = tester.widget<FilledButton>(
-        find.ancestor(
-          of: find.text('Run Query'),
-          matching: find.byType(FilledButton),
-        ),
+      final button = tester.widget<ButtonStyleButton>(
+        findRunButton('Run Query'),
       );
       expect(button.onPressed, isNull);
     });
@@ -253,12 +260,8 @@ void main() {
       await tester.pumpWidget(buildWidget(initialQuery: 'DROP TABLE users'));
       await tester.pumpAndSettle();
 
-      // Find the FilledButton by searching for the text inside it
-      final button = tester.widget<FilledButton>(
-        find.ancestor(
-          of: find.text('Run Query'),
-          matching: find.byType(FilledButton),
-        ),
+      final button = tester.widget<ButtonStyleButton>(
+        findRunButton('Run Query'),
       );
       expect(button.onPressed, isNull);
     });
@@ -271,8 +274,11 @@ void main() {
       // Use pump() - CircularProgressIndicator never settles
       await tester.pump();
 
-      final clearButton = tester.widget<TextButton>(
-        find.widgetWithText(TextButton, 'Clear'),
+      final clearButton = tester.widget<ButtonStyleButton>(
+        find.ancestor(
+          of: find.text('Clear'),
+          matching: find.byWidgetPredicate((w) => w is ButtonStyleButton),
+        ),
       );
       expect(clearButton.onPressed, isNull);
     });
@@ -281,12 +287,8 @@ void main() {
       await tester.pumpWidget(buildWidget(initialQuery: 'SELECT 1'));
       await tester.pumpAndSettle();
 
-      // Find the FilledButton by searching for the text inside it
-      final button = tester.widget<FilledButton>(
-        find.ancestor(
-          of: find.text('Run Query'),
-          matching: find.byType(FilledButton),
-        ),
+      final button = tester.widget<ButtonStyleButton>(
+        findRunButton('Run Query'),
       );
       expect(button.onPressed, isNotNull);
     });

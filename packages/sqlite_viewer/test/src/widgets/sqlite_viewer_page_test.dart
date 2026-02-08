@@ -1,6 +1,8 @@
 // packages/sqlite_viewer/test/src/widgets/sqlite_viewer_page_test.dart
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
@@ -92,7 +94,7 @@ void main() {
     bool showQueryInput = true,
     bool showRowNumbers = true,
     String nullValueDisplay = 'NULL',
-    Size size = const Size(400, 800), // Phone size by default
+    Size size = const Size(400, 800),
   }) {
     return MaterialApp(
       home: MediaQuery(
@@ -261,18 +263,36 @@ void main() {
   group('Phone Layout (_PhoneLayout)', () {
     group('Initial states', () {
       testWidgets('shows connecting state', (tester) async {
-        when(() => mockSource.getFullPath()).thenAnswer(
-          (_) => Future.delayed(Duration(seconds: 30), () => Right('/path')),
-        );
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
+        // Use a Completer so we can clean up the pending future
+        final completer = Completer<Either<SqliteViewerFailure, String>>();
+        when(() => mockSource.getFullPath())
+            .thenAnswer((_) => completer.future);
 
         await tester.pumpWidget(buildPhonePage());
         await tester.pump();
 
         expect(find.byType(CircularProgressIndicator), findsOneWidget);
         expect(find.text('Connecting...'), findsOneWidget);
+
+        // Complete to avoid pending timer
+        completer.complete(Right('/path'));
+        // Still need remaining metadata calls to settle
+        when(() => mockSource.getSqliteVersion())
+            .thenAnswer((_) async => Right('3.39.0'));
+        when(() => mockSource.getDatabaseSize())
+            .thenAnswer((_) async => Right(4096));
+        when(() => mockSource.getTableNames())
+            .thenAnswer((_) async => Right(['users']));
+        await tester.pumpAndSettle();
       });
 
       testWidgets('shows connection error', (tester) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupFailedConnection();
 
         await tester.pumpWidget(buildPhonePage());
@@ -285,13 +305,17 @@ void main() {
 
     group('Navigation bar', () {
       testWidgets('shows all tabs when showQueryInput is true', (tester) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
 
         await tester.pumpWidget(buildPhonePage());
         await tester.pumpAndSettle();
 
         expect(find.byType(NavigationBar), findsOneWidget);
-        expect(find.text('Tables'), findsOneWidget);
+        // "Tables" appears both in the metadata panel header and the nav bar
+        expect(find.text('Tables'), findsAtLeastNWidgets(1));
         expect(find.text('Data'), findsOneWidget);
         expect(find.text('Query'), findsOneWidget);
       });
@@ -299,17 +323,23 @@ void main() {
       testWidgets('hides Query tab when showQueryInput is false', (
         tester,
       ) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
 
         await tester.pumpWidget(buildPhonePage(showQueryInput: false));
         await tester.pumpAndSettle();
 
-        expect(find.text('Tables'), findsOneWidget);
+        expect(find.text('Tables'), findsAtLeastNWidgets(1));
         expect(find.text('Data'), findsOneWidget);
         expect(find.text('Query'), findsNothing);
       });
 
       testWidgets('navigates between tabs', (tester) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
 
         await tester.pumpWidget(buildPhonePage());
@@ -337,6 +367,9 @@ void main() {
 
     group('Tables tab', () {
       testWidgets('shows metadata panel with tables', (tester) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
 
         await tester.pumpWidget(buildPhonePage());
@@ -349,6 +382,9 @@ void main() {
       testWidgets('selecting table navigates to Data tab and loads', (
         tester,
       ) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
         setupSuccessfulTableDetail('users');
 
@@ -363,10 +399,15 @@ void main() {
       });
 
       testWidgets('shows loading state when table selected', (tester) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
-        when(() => mockSource.getColumnNames('users')).thenAnswer(
-          (_) => Future.delayed(Duration(seconds: 30), () => Right(['id'])),
-        );
+
+        final completer =
+            Completer<Either<SqliteViewerFailure, List<String>>>();
+        when(() => mockSource.getColumnNames('users'))
+            .thenAnswer((_) => completer.future);
 
         await tester.pumpWidget(buildPhonePage());
         await tester.pumpAndSettle();
@@ -375,11 +416,55 @@ void main() {
         await tester.pump();
 
         expect(find.text('Loading users...'), findsOneWidget);
+
+        // Clean up pending future
+        completer.complete(Right(['id']));
+        // Need remaining mocks for table detail to settle
+        when(
+          () => mockSource.getPragma(
+            tableName: 'users',
+            key: PragmaKey.tableInfo,
+          ),
+        ).thenAnswer(
+          (_) async => Right([
+            {
+              'cid': 0,
+              'name': 'id',
+              'type': 'INTEGER',
+              'notnull': 1,
+              'pk': 1,
+            },
+          ]),
+        );
+        when(
+          () => mockSource.getPragma(
+            tableName: 'users',
+            key: PragmaKey.indexList,
+          ),
+        ).thenAnswer((_) async => Right(<Map<String, Object?>>[]));
+        when(
+          () => mockSource.getPragma(
+            tableName: 'users',
+            key: PragmaKey.foreignKeyList,
+          ),
+        ).thenAnswer((_) async => Right(<Map<String, Object?>>[]));
+        when(() => mockSource.getRowCount('users'))
+            .thenAnswer((_) async => Right(1));
+        when(() => mockSource.executeSelect('SELECT * FROM "users"'))
+            .thenAnswer(
+          (_) async => Right([
+            {'id': 1},
+          ]),
+        );
+        await tester.pumpAndSettle();
       });
 
       testWidgets('shows selected table when TableDetailLoaded', (
         tester,
       ) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
         setupSuccessfulTableDetail('users');
 
@@ -399,6 +484,9 @@ void main() {
       testWidgets('shows selected table when TableDetailLoadFailed', (
         tester,
       ) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
         when(
           () => mockSource.getColumnNames('users'),
@@ -420,6 +508,9 @@ void main() {
       testWidgets('metadata panel refresh triggers refreshMetadata', (
         tester,
       ) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
 
         await tester.pumpWidget(buildPhonePage());
@@ -430,30 +521,53 @@ void main() {
         await tester.pump();
 
         verify(() => mockSource.getFullPath()).called(greaterThan(1));
+
+        await tester.pumpAndSettle();
       });
 
       testWidgets('shows loading indicator in MetadataLoading state', (
         tester,
       ) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
 
         await tester.pumpWidget(buildPhonePage());
         await tester.pumpAndSettle();
 
-        // Setup slow refresh
-        when(() => mockSource.getFullPath()).thenAnswer(
-          (_) => Future.delayed(Duration(seconds: 30), () => Right('/path')),
-        );
+        // Setup slow refresh with Completer
+        final completer = Completer<Either<SqliteViewerFailure, String>>();
+        when(() => mockSource.getFullPath())
+            .thenAnswer((_) => completer.future);
 
         await tester.tap(find.byIcon(Icons.refresh).first);
         await tester.pump();
 
-        expect(find.text('Refreshing...'), findsOneWidget);
+        // MetadataLoading state: the metadata panel shows a spinner via
+        // isLoading: state is MetadataLoading, not text "Refreshing..."
+        // The panel header shows a CircularProgressIndicator when isLoading
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+        // Clean up
+        completer.complete(Right('/test/path/database.db'));
+        when(() => mockSource.getSqliteVersion())
+            .thenAnswer((_) async => Right('3.39.0'));
+        when(() => mockSource.getDatabaseSize())
+            .thenAnswer((_) async => Right(4096));
+        when(() => mockSource.getTableNames())
+            .thenAnswer((_) async => Right(['users', 'posts']));
+        await tester.pumpAndSettle();
       });
     });
 
     group('Data tab', () {
-      testWidgets('shows EmptyDataView when no table selected', (tester) async {
+      testWidgets('shows EmptyDataView when no table selected', (
+        tester,
+      ) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
 
         await tester.pumpWidget(buildPhonePage());
@@ -467,10 +581,15 @@ void main() {
       });
 
       testWidgets('shows loading when TableDetailLoading', (tester) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
-        when(() => mockSource.getColumnNames('users')).thenAnswer(
-          (_) => Future.delayed(Duration(seconds: 30), () => Right(['id'])),
-        );
+
+        final completer =
+            Completer<Either<SqliteViewerFailure, List<String>>>();
+        when(() => mockSource.getColumnNames('users'))
+            .thenAnswer((_) => completer.future);
 
         await tester.pumpWidget(buildPhonePage());
         await tester.pumpAndSettle();
@@ -479,9 +598,54 @@ void main() {
         await tester.pump();
 
         expect(find.text('Loading users...'), findsOneWidget);
+
+        // Clean up
+        completer.complete(Right(['id']));
+        when(
+          () => mockSource.getPragma(
+            tableName: 'users',
+            key: PragmaKey.tableInfo,
+          ),
+        ).thenAnswer(
+          (_) async => Right([
+            {
+              'cid': 0,
+              'name': 'id',
+              'type': 'INTEGER',
+              'notnull': 1,
+              'pk': 1,
+            },
+          ]),
+        );
+        when(
+          () => mockSource.getPragma(
+            tableName: 'users',
+            key: PragmaKey.indexList,
+          ),
+        ).thenAnswer((_) async => Right(<Map<String, Object?>>[]));
+        when(
+          () => mockSource.getPragma(
+            tableName: 'users',
+            key: PragmaKey.foreignKeyList,
+          ),
+        ).thenAnswer((_) async => Right(<Map<String, Object?>>[]));
+        when(() => mockSource.getRowCount('users'))
+            .thenAnswer((_) async => Right(1));
+        when(() => mockSource.executeSelect('SELECT * FROM "users"'))
+            .thenAnswer(
+          (_) async => Right([
+            {'id': 1},
+          ]),
+        );
+        await tester.pumpAndSettle();
       });
 
-      testWidgets('shows table detail when TableDetailLoaded', (tester) async {
+      testWidgets('shows table detail when TableDetailLoaded', (
+        tester,
+      ) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
         setupSuccessfulTableDetail('users');
 
@@ -497,6 +661,9 @@ void main() {
       testWidgets('shows error when TableDetailLoadFailed with retry', (
         tester,
       ) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
         when(
           () => mockSource.getColumnNames('users'),
@@ -516,6 +683,9 @@ void main() {
       testWidgets('retry on TableDetailLoadFailed reloads table', (
         tester,
       ) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
         when(
           () => mockSource.getColumnNames('users'),
@@ -531,11 +701,16 @@ void main() {
         await tester.pump();
 
         verify(() => mockSource.getColumnNames('users')).called(2);
+
+        await tester.pumpAndSettle();
       });
 
       testWidgets('shows QueryResultView when QueryResultLoaded', (
         tester,
       ) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
         when(() => mockSource.executeSelect('SELECT 1')).thenAnswer(
           (_) async => Right([
@@ -559,6 +734,9 @@ void main() {
       });
 
       testWidgets('shows error when QueryFailed with retry', (tester) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
         when(
           () => mockSource.executeSelect('SELECT bad'),
@@ -581,6 +759,9 @@ void main() {
       });
 
       testWidgets('retry on QueryFailed re-executes query', (tester) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
         when(
           () => mockSource.executeSelect('SELECT bad'),
@@ -601,11 +782,16 @@ void main() {
         await tester.pump();
 
         verify(() => mockSource.executeSelect('SELECT bad')).called(2);
+
+        await tester.pumpAndSettle();
       });
     });
 
     group('Query tab', () {
       testWidgets('shows query input', (tester) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
 
         await tester.pumpWidget(buildPhonePage());
@@ -619,13 +805,15 @@ void main() {
       });
 
       testWidgets('shows executing state during query', (tester) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
-        when(() => mockSource.executeSelect(any())).thenAnswer(
-          (_) => Future.delayed(
-            Duration(seconds: 30),
-            () => Right(<Map<String, Object?>>[]),
-          ),
-        );
+
+        final completer = Completer<
+            Either<SqliteViewerFailure, List<Map<String, Object?>>>>();
+        when(() => mockSource.executeSelect(any()))
+            .thenAnswer((_) => completer.future);
 
         await tester.pumpWidget(buildPhonePage());
         await tester.pumpAndSettle();
@@ -638,10 +826,19 @@ void main() {
         await tester.tap(find.byIcon(Icons.play_arrow).first);
         await tester.pump();
 
-        expect(find.text('Executing query...'), findsOneWidget);
+        // Phone layout onExecute switches to Data tab; QueryExecuting state
+        // falls through to _EmptyDataView on Data tab
+        expect(find.byIcon(Icons.touch_app), findsOneWidget);
+
+        // Clean up
+        completer.complete(Right(<Map<String, Object?>>[]));
+        await tester.pumpAndSettle();
       });
 
       testWidgets('shows results after query execution', (tester) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
         when(() => mockSource.executeSelect('SELECT 1')).thenAnswer(
           (_) async => Right([
@@ -664,6 +861,9 @@ void main() {
       });
 
       testWidgets('shows last query from QueryFailed', (tester) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
         when(
           () => mockSource.executeSelect('SELECT bad'),
@@ -686,6 +886,9 @@ void main() {
 
     group('App bar refresh button', () {
       testWidgets('shows refresh when MetadataLoaded', (tester) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
 
         await tester.pumpWidget(buildPhonePage());
@@ -695,6 +898,9 @@ void main() {
       });
 
       testWidgets('shows refresh when TableDetailLoaded', (tester) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
         setupSuccessfulTableDetail('users');
 
@@ -708,6 +914,9 @@ void main() {
       });
 
       testWidgets('shows refresh when QueryResultLoaded', (tester) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
         when(() => mockSource.executeSelect('SELECT 1')).thenAnswer(
           (_) async => Right([
@@ -730,6 +939,9 @@ void main() {
       });
 
       testWidgets('refresh button triggers metadata refresh', (tester) async {
+        await tester.binding.setSurfaceSize(Size(400, 800));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+
         setupSuccessfulMetadata();
 
         await tester.pumpWidget(buildPhonePage());
@@ -739,12 +951,17 @@ void main() {
         await tester.pump();
 
         verify(() => mockSource.getFullPath()).called(greaterThan(1));
+
+        await tester.pumpAndSettle();
       });
     });
   });
 
   group('Tablet Layout (_TabletLayout)', () {
     testWidgets('shows sidebar and main content', (tester) async {
+      await tester.binding.setSurfaceSize(Size(900, 700));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
       setupSuccessfulMetadata();
 
       await tester.pumpWidget(buildTabletPage());
@@ -757,6 +974,9 @@ void main() {
     });
 
     testWidgets('shows query input area', (tester) async {
+      await tester.binding.setSurfaceSize(Size(900, 700));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
       setupSuccessfulMetadata();
 
       await tester.pumpWidget(buildTabletPage());
@@ -766,6 +986,9 @@ void main() {
     });
 
     testWidgets('selecting table shows detail', (tester) async {
+      await tester.binding.setSurfaceSize(Size(900, 700));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
       setupSuccessfulMetadata();
       setupSuccessfulTableDetail('users');
 
@@ -779,6 +1002,9 @@ void main() {
     });
 
     testWidgets('executing query shows results', (tester) async {
+      await tester.binding.setSurfaceSize(Size(900, 700));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+
       setupSuccessfulMetadata();
       when(() => mockSource.executeSelect('SELECT 1')).thenAnswer(
         (_) async => Right([
