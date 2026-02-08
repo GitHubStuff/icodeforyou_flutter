@@ -19,6 +19,8 @@ import 'package:widgetbook_workspace/packages/edittext_popover/edittext_popover.
     as _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase;
 import 'package:widgetbook_workspace/packages/extensions/date_time_ext/datetime_delta_stories.dart'
     as _widgetbook_workspace_packages_extensions_date_time_ext_datetime_delta_stories;
+import 'package:widgetbook_workspace/packages/random_color_generator/random_color_generator.usecases.dart'
+    as _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecases;
 import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/scrolling_datetime_pickers_widgetbook.dart'
     as _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook;
 import 'package:widgetbook_workspace/packages/since_when/since_when.usecase.dart'
@@ -338,6 +340,60 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder:
                 _widgetbook_workspace_packages_since_when_since_when_usecase
                     .tagMatchModeDemo,
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
+    name: 'packages',
+    children: [
+      _widgetbook.WidgetbookFolder(
+        name: 'random_color_generator',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: '_ContrastShowcase',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Contrasting Text Color',
+                builder:
+                    _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecases
+                        .buildContrastUseCase,
+              ),
+            ],
+          ),
+          _widgetbook.WidgetbookComponent(
+            name: '_FromHexShowcase',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Manual Hex Input',
+                builder:
+                    _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecases
+                        .buildFromHexUseCase,
+              ),
+            ],
+          ),
+          _widgetbook.WidgetbookComponent(
+            name: '_GenerateShowcase',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Random Color Grid',
+                builder:
+                    _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecases
+                        .buildGenerateUseCase,
+              ),
+            ],
+          ),
+          _widgetbook.WidgetbookComponent(
+            name: '_HexRoundtripShowcase',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Hex Roundtrip',
+                builder:
+                    _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecases
+                        .buildHexRoundtripUseCase,
+              ),
+            ],
           ),
         ],
       ),

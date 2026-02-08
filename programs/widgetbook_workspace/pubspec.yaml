@@ -21,6 +21,8 @@ dependencies:
     path: ../../packages/extensions
   scrolling_datetime_pickers:
     path: ../../packages/scrolling_datetime_pickers
+  random_color_generator:
+    path: ../../packages/random_color_generator
   since_when:
     path: ../../packages/since_when
   sqlite_viewer:
