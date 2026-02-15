@@ -1,7 +1,7 @@
 // lib/src/utils/_timestamp_generator.dart
 
 import 'package:fpdart/fpdart.dart';
-import 'package:since_when/src/domain/since_when_failure.dart';
+import 'package:since_when/src/domain/data_store_failure.dart';
 import 'package:since_when/src/sql/_sql_statements.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -25,8 +25,8 @@ abstract final class TimestampGenerator {
   /// Defaults to the main since_when table.
   ///
   /// Returns [Right] with unique timestamp string on success.
-  /// Returns [Left] with [TimestampCollisionRetryExhausted] if max retries hit.
-  static Future<Either<SinceWhenFailure, String>> generateUniqueTimestamp(
+  /// Returns [Left] with [IdentifierCollision] if max retries hit.
+  static Future<Either<DataStoreFailure, String>> generateUniqueTimestamp(
     Database db, {
     String table = SqlStatements.tableSinceWhen,
   }) async {
@@ -45,7 +45,11 @@ abstract final class TimestampGenerator {
       );
     }
 
-    return const Left(TimestampCollisionRetryExhausted());
+    return const Left(
+      IdentifierCollision(
+        'Failed to generate unique timestamp after maximum retries.',
+      ),
+    );
   }
 
   /// Checks if a timestamp already exists in the specified table.

@@ -1,7 +1,7 @@
 // icodeforyou_flutter/packages/since_when/lib/src/utils/_export_to_string.dart
 
 import 'package:fpdart/fpdart.dart';
-import 'package:since_when/src/domain/since_when_failure.dart';
+import 'package:since_when/src/domain/data_store_failure.dart';
 import 'package:sqflite/sqflite.dart';
 
 /// Handles exporting database records to JSON string.
@@ -22,8 +22,8 @@ abstract final class ExportToString {
   /// ```
   ///
   /// Returns [Right] with JSON string on success.
-  /// Returns [Left] with [SinceWhenFailure] on error.
-  static Future<Either<SinceWhenFailure, String>> exportToString(
+  /// Returns [Left] with [DataStoreFailure] on error.
+  static Future<Either<DataStoreFailure, String>> exportToString(
     Database db,
   ) async {
     // TODO(steven): Implement

@@ -1,7 +1,7 @@
 // icodeforyou_flutter/packages/since_when/lib/src/utils/_export_to_json.dart
 
 import 'package:fpdart/fpdart.dart';
-import 'package:since_when/src/domain/since_when_failure.dart';
+import 'package:since_when/src/domain/data_store_failure.dart';
 import 'package:sqflite/sqflite.dart';
 
 /// Handles exporting database records to a JSON file.
@@ -16,7 +16,7 @@ abstract final class ExportToJson {
   ///
   /// Returns [Right] with the full path of the exported file on success.
   /// Returns [Left] with [ExportFailed] on error.
-  static Future<Either<SinceWhenFailure, String>> exportToFile(
+  static Future<Either<DataStoreFailure, String>> exportToFile(
     Database db, {
     required String path,
   }) async {
@@ -30,7 +30,7 @@ abstract final class ExportToJson {
   ///
   /// Returns [Right] with the full path of the exported file on success.
   /// Returns [Left] with [ExportFailed] on error.
-  static Future<Either<SinceWhenFailure, String>> exportToDocuments(
+  static Future<Either<DataStoreFailure, String>> exportToDocuments(
     Database db, {
     required String filename,
   }) async {

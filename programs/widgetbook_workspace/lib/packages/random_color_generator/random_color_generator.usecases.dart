@@ -186,11 +186,11 @@ class _HexRoundtripShowcaseState extends State<_HexRoundtripShowcase> {
           ),
           const SizedBox(height: 24),
           Text(
-            _original.value == _restored.value
+            _original.toARGB32() == _restored.toARGB32()
                 ? 'Roundtrip match ✓'
                 : 'Mismatch ✗',
             style: textStyle?.copyWith(
-              color: _original.value == _restored.value
+              color: _original.toARGB32() == _restored.toARGB32()
                   ? Colors.green
                   : Colors.red,
               fontWeight: FontWeight.bold,

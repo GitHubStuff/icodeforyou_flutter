@@ -1,7 +1,7 @@
 // lib/src/sql/delete/_delete_operations.dart
 
 import 'package:fpdart/fpdart.dart';
-import 'package:since_when/src/domain/since_when_failure.dart';
+import 'package:since_when/src/domain/data_store_failure.dart';
 import 'package:since_when/src/sql/_sql_statements.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -17,7 +17,7 @@ abstract final class DeleteOperations {
   ///
   /// Returns [Right] with `true` if deleted, `false` if not found.
   // TODO(steven): Implement
-  static Future<Either<SinceWhenFailure, bool>> deleteByCreatedTimeStamp(
+  static Future<Either<DataStoreFailure, bool>> deleteByCreatedTimeStamp(
     Database db,
     String createdTimeStamp,
   ) async {
@@ -28,7 +28,7 @@ abstract final class DeleteOperations {
   ///
   /// Use with caution — this is a cascading delete through the hierarchy.
   // TODO(steven): Implement
-  static Future<Either<SinceWhenFailure, int>> deleteWithDescendants(
+  static Future<Either<DataStoreFailure, int>> deleteWithDescendants(
     Database db,
     String createdTimeStamp,
   ) async {
@@ -40,7 +40,7 @@ abstract final class DeleteOperations {
   /// Tag links are automatically deleted via ON DELETE CASCADE.
   /// Returns the number of records deleted.
   // 
-  static Future<Either<SinceWhenFailure, int>> deleteAllRecords(
+  static Future<Either<DataStoreFailure, int>> deleteAllRecords(
     Database db,
   ) async {
     throw UnimplementedError('deleteAllRecords not yet implemented');
@@ -56,7 +56,7 @@ abstract final class DeleteOperations {
   /// If [force] is true, deletes the tag and all its record links.
   ///
   /// Returns [Right] with `true` if deleted, [Left] with [TagNotFound] if not.
-  static Future<Either<SinceWhenFailure, bool>> deleteTagDefinition(
+  static Future<Either<DataStoreFailure, bool>> deleteTagDefinition(
     Database db,
     String createdTimeStamp, {
     bool force = false,
@@ -98,7 +98,7 @@ abstract final class DeleteOperations {
       return Right(deletedCount > 0);
     } on Exception catch (e) {
       return Left(
-        UnexpectedDatabaseError('Failed to delete tag definition', e),
+        UnexpectedStoreError('Failed to delete tag definition', e),
       );
     }
   }
@@ -106,7 +106,7 @@ abstract final class DeleteOperations {
   /// Removes a tag from a specific record.
   ///
   /// Returns [Right] with `true` if removed, `false` if link didn't exist.
-  static Future<Either<SinceWhenFailure, bool>> removeTagFromRecord(
+  static Future<Either<DataStoreFailure, bool>> removeTagFromRecord(
     Database db,
     String recordTimestamp,
     String glossaryTimestamp,
@@ -120,7 +120,7 @@ abstract final class DeleteOperations {
       return Right(deletedCount > 0);
     } on Exception catch (e) {
       return Left(
-        UnexpectedDatabaseError('Failed to remove tag from record', e),
+        UnexpectedStoreError('Failed to remove tag from record', e),
       );
     }
   }
@@ -128,7 +128,7 @@ abstract final class DeleteOperations {
   /// Removes all tags from a specific record.
   ///
   /// Returns [Right] with count of tags removed.
-  static Future<Either<SinceWhenFailure, int>> removeAllTagsFromRecord(
+  static Future<Either<DataStoreFailure, int>> removeAllTagsFromRecord(
     Database db,
     String recordTimestamp,
   ) async {
@@ -141,7 +141,7 @@ abstract final class DeleteOperations {
       return Right(deletedCount);
     } on Exception catch (e) {
       return Left(
-        UnexpectedDatabaseError('Failed to remove tags from record', e),
+        UnexpectedStoreError('Failed to remove tags from record', e),
       );
     }
   }
@@ -150,7 +150,7 @@ abstract final class DeleteOperations {
   ///
   /// Also removes all tag links via CASCADE.
   /// Returns the number of tag definitions deleted.
-  static Future<Either<SinceWhenFailure, int>> deleteAllTagDefinitions(
+  static Future<Either<DataStoreFailure, int>> deleteAllTagDefinitions(
     Database db,
   ) async {
     try {
@@ -161,7 +161,7 @@ abstract final class DeleteOperations {
       return Right(deletedCount);
     } on Exception catch (e) {
       return Left(
-        UnexpectedDatabaseError('Failed to delete all tag definitions', e),
+        UnexpectedStoreError('Failed to delete all tag definitions', e),
       );
     }
   }

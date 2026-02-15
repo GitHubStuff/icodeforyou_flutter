@@ -2,7 +2,7 @@
 
 import 'package:fpdart/fpdart.dart';
 import 'package:since_when/src/data/_tag_definition_mapper.dart';
-import 'package:since_when/src/domain/since_when_failure.dart';
+import 'package:since_when/src/domain/data_store_failure.dart';
 import 'package:since_when/src/domain/since_when_record.dart';
 import 'package:since_when/src/domain/tag_definition.dart';
 import 'package:since_when/src/sql/_sql_statements.dart';
@@ -19,7 +19,7 @@ abstract final class UpdateOperations {
   ///
   /// Note: `createdTimeStamp` cannot be modified.
   // TODO(steven): Implement
-  static Future<Either<SinceWhenFailure, SinceWhenRecord>> updateRecord(
+  static Future<Either<DataStoreFailure, SinceWhenRecord>> updateRecord(
     Database db,
     SinceWhenRecord record,
   ) async {
@@ -30,7 +30,7 @@ abstract final class UpdateOperations {
   ///
   /// Updates 'reviewedTimeStamp' to current UTC time.
   // TODO(steven): Implement
-  static Future<Either<SinceWhenFailure, SinceWhenRecord>> markReviewed(
+  static Future<Either<DataStoreFailure, SinceWhenRecord>> markReviewed(
     Database db,
     String createdTimeStamp,
   ) async {
@@ -41,7 +41,7 @@ abstract final class UpdateOperations {
   ///
   /// Used for reordering sibling records.
   // TODO(steven): Implement
-  static Future<Either<SinceWhenFailure, SinceWhenRecord>> updateSequence(
+  static Future<Either<DataStoreFailure, SinceWhenRecord>> updateSequence(
     Database db,
     String createdTimeStamp,
     int newSequenceNumber,
@@ -53,7 +53,7 @@ abstract final class UpdateOperations {
   ///
   /// Replaces all existing tag links with the new list of glossary timestamps.
   // TODO(steven): Implement
-  static Future<Either<SinceWhenFailure, SinceWhenRecord>> updateRecordTags(
+  static Future<Either<DataStoreFailure, SinceWhenRecord>> updateRecordTags(
     Database db,
     String recordTimestamp,
     List<String> tagTimestamps,
@@ -70,7 +70,7 @@ abstract final class UpdateOperations {
   /// [createdTimeStamp] identifies the tag to update.
   /// Returns [Left] with [TagNotFound] if tag doesn't exist.
   /// Returns [Left] with [TagNameAlreadyExists] if new name conflicts.
-  static Future<Either<SinceWhenFailure, TagDefinition>> updateTagDefinition(
+  static Future<Either<DataStoreFailure, TagDefinition>> updateTagDefinition(
     Database db, {
     required String createdTimeStamp,
     required String tagName,
@@ -130,7 +130,7 @@ abstract final class UpdateOperations {
       return Right(updatedTag);
     } on Exception catch (e) {
       return Left(
-        UnexpectedDatabaseError('Failed to update tag definition', e),
+        UnexpectedStoreError('Failed to update tag definition', e),
       );
     }
   }

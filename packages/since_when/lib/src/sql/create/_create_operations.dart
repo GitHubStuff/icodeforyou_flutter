@@ -3,7 +3,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:since_when/src/data/_since_when_record_mapper.dart';
 import 'package:since_when/src/data/_tag_definition_mapper.dart';
-import 'package:since_when/src/domain/since_when_failure.dart';
+import 'package:since_when/src/domain/data_store_failure.dart';
 import 'package:since_when/src/domain/since_when_record.dart';
 import 'package:since_when/src/domain/tag_definition.dart';
 import 'package:since_when/src/sql/_sql_statements.dart';
@@ -27,8 +27,8 @@ abstract final class CreateOperations {
   /// Invalid timestamps are silently ignored.
   ///
   /// Returns [Right] with created [SinceWhenRecord] on success.
-  /// Returns [Left] with appropriate [SinceWhenFailure] on error.
-  static Future<Either<SinceWhenFailure, SinceWhenRecord>> createRecord(
+  /// Returns [Left] with appropriate [DataStoreFailure] on error.
+  static Future<Either<DataStoreFailure, SinceWhenRecord>> createRecord(
     Database db, {
     required String metaData,
     required String dataString,
@@ -98,7 +98,7 @@ abstract final class CreateOperations {
         },
       );
     } on Object catch (e) {
-      return Left(UnexpectedDatabaseError('Failed to create record', e));
+      return Left(UnexpectedStoreError('Failed to create record', e));
     }
   }
 
@@ -107,7 +107,7 @@ abstract final class CreateOperations {
   /// Returns [Right] with created [TagDefinition] on success.
   /// Returns [Left] with [TagNameAlreadyExists] if name is taken.
   /// Returns [Left] with [InvalidTagName] if name is empty.
-  static Future<Either<SinceWhenFailure, TagDefinition>> createTagDefinition(
+  static Future<Either<DataStoreFailure, TagDefinition>> createTagDefinition(
     Database db, {
     required String tagName,
     required String tagDescription,
@@ -163,7 +163,7 @@ abstract final class CreateOperations {
       );
     } on Object catch (e) {
       return Left(
-        UnexpectedDatabaseError('Failed to create tag definition', e),
+        UnexpectedStoreError('Failed to create tag definition', e),
       );
     }
   }

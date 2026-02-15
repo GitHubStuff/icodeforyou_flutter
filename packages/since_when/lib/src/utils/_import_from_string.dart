@@ -1,7 +1,7 @@
 // icodeforyou_flutter/packages/since_when/lib/src/utils/_import_from_string.dart
 
 import 'package:fpdart/fpdart.dart';
-import 'package:since_when/src/domain/since_when_failure.dart';
+import 'package:since_when/src/domain/data_store_failure.dart';
 import 'package:since_when/src/domain/since_when_import_mode.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -19,8 +19,8 @@ abstract final class ImportFromString {
   /// - [SinceWhenImportMode.refresh]: Compare editedTimeStamp, keep newest
   ///
   /// Returns [Right] with count of imported records on success.
-  /// Returns [Left] with [SinceWhenFailure] on error.
-  static Future<Either<SinceWhenFailure, int>> importFromString(
+  /// Returns [Left] with [DataStoreFailure] on error.
+  static Future<Either<DataStoreFailure, int>> importFromString(
     Database db,
     String jsonString, {
     SinceWhenImportMode mode = SinceWhenImportMode.merge,

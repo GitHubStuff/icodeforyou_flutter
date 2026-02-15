@@ -74,9 +74,9 @@ class DateTimeDeltaText extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (leading != null) leading!,
+        ?leading,
         textWidget,
-        if (trailing != null) trailing!,
+        ?trailing,
       ],
     );
   }

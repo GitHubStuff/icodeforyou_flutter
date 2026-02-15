@@ -1,7 +1,7 @@
 // icodeforyou_flutter/packages/since_when/lib/src/utils/_import_from_json.dart
 
 import 'package:fpdart/fpdart.dart';
-import 'package:since_when/src/domain/since_when_failure.dart';
+import 'package:since_when/src/domain/data_store_failure.dart';
 import 'package:since_when/src/domain/since_when_import_mode.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -23,7 +23,7 @@ abstract final class ImportFromJson {
   ///
   /// Returns [Right] with count of imported records on success.
   /// Returns [Left] with [FileNotFound] or [ImportFailed] on error.
-  static Future<Either<SinceWhenFailure, int>> importFromFile(
+  static Future<Either<DataStoreFailure, int>> importFromFile(
     Database db, {
     required String path,
     SinceWhenImportMode mode = SinceWhenImportMode.merge,
@@ -38,7 +38,7 @@ abstract final class ImportFromJson {
   ///
   /// Returns [Right] with count of imported records on success.
   /// Returns [Left] with [FileNotFound] or [ImportFailed] on error.
-  static Future<Either<SinceWhenFailure, int>> importFromDocuments(
+  static Future<Either<DataStoreFailure, int>> importFromDocuments(
     Database db, {
     required String filename,
     SinceWhenImportMode mode = SinceWhenImportMode.merge,

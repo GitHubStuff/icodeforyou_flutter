@@ -33,7 +33,9 @@ class TableInfoDemo extends StatelessWidget {
           const SizedBox(height: 16),
           InfoCard(
             title: 'Tables (${tables.length})',
-            children: tables.map((t) => InfoRow(t.tableName, '${t.rowCount} rows')).toList(),
+            children: tables
+                .map((t) => InfoRow(t.tableName, '${t.rowCount} rows'))
+                .toList(),
           ),
         ],
       ),
@@ -93,7 +95,10 @@ class _PlaygroundDemoState extends State<PlaygroundDemo> {
             children: [
               InfoRow('MetaData', widget.metaData),
               InfoRow('Category', widget.category),
-              InfoRow('Tags', _tagNames.isEmpty ? '(none)' : _tagNames.join(', ')),
+              InfoRow(
+                'Tags',
+                _tagNames.isEmpty ? '(none)' : _tagNames.join(', '),
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -115,45 +120,94 @@ class _PlaygroundDemoState extends State<PlaygroundDemo> {
 }
 
 /// Failure types demo widget.
+///
+/// Displays both failure hierarchies:
+/// - [SinceWhenFailure] — SQLite-specific (sealed)
+/// - [DataStoreFailure] — backend-agnostic (extensible)
 class FailureTypesDemo extends StatelessWidget {
   const FailureTypesDemo({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final failures = <SinceWhenFailure>[
+    final sqliteFailures = <SinceWhenFailure>[
       const DatabaseNotInitialized(),
-      const RecordNotFound('2025-01-19T10:30:00.000Z'),
-      const ParentNotFound('2025-01-19T09:00:00.000Z'),
       const TimestampCollisionRetryExhausted(),
       const ReservedDatabaseName(),
-      const FileNotFound('/path/to/missing/file.json'),
       const InvalidJsonFormat('Unexpected token at position 42'),
-      const ExportFailed('Permission denied'),
-      const ImportFailed('File corrupted'),
       const UnexpectedDatabaseError('Connection lost'),
       const InvalidDatabaseName('Invalid characters'),
       const DatabaseAlreadyInitialized('Instance exists'),
+    ];
+
+    final storeFailures = <DataStoreFailure>[
+      const StoreNotReady(),
+      const RecordNotFound('2025-01-19T10:30:00.000Z'),
+      const ParentNotFound('2025-01-19T09:00:00.000Z'),
+      const IdentifierCollision(),
       const TagNotFound('non-existent-tag'),
       const TagNameAlreadyExists('flutter'),
       const InvalidTagName('Tag name cannot be empty'),
       const TagInUse('flutter', 5),
+      const FileNotFound('/path/to/missing/file.json'),
+      const ExportFailed('Permission denied'),
+      const ImportFailed('File corrupted'),
+      const UnexpectedStoreError('Unexpected error'),
     ];
+
     return Scaffold(
       appBar: AppBar(title: const Text('Failure Types')),
-      body: ListView.builder(
+      body: ListView(
         padding: const EdgeInsets.all(8),
-        itemCount: failures.length,
-        itemBuilder: (_, i) {
-          final f = failures[i];
-          return Card(
-            margin: const EdgeInsets.symmetric(vertical: 4),
-            child: ListTile(
-              leading: const Icon(Icons.error_outline, color: Colors.red),
-              title: Text(f.runtimeType.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
-              subtitle: Text(f.toString(), style: const TextStyle(fontSize: 12)),
-            ),
-          );
-        },
+        children: [
+          _buildSectionHeader(
+            context,
+            'SinceWhenFailure (SQLite-specific)',
+            Colors.orange,
+          ),
+          ...sqliteFailures.map(
+            (f) => _buildFailureCard(f, Colors.orange),
+          ),
+          const SizedBox(height: 16),
+          _buildSectionHeader(
+            context,
+            'DataStoreFailure (backend-agnostic)',
+            Colors.red,
+          ),
+          ...storeFailures.map(
+            (f) => _buildFailureCard(f, Colors.red),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(
+    BuildContext context,
+    String title,
+    Color color,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(color: color),
+      ),
+    );
+  }
+
+  Widget _buildFailureCard(Object failure, Color color) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      child: ListTile(
+        leading: Icon(Icons.error_outline, color: color),
+        title: Text(
+          failure.runtimeType.toString(),
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+          failure.toString(),
+          style: const TextStyle(fontSize: 12),
+        ),
       ),
     );
   }
@@ -175,10 +229,14 @@ class TagMatchModeDemo extends StatelessWidget {
             children: [
               const Padding(
                 padding: EdgeInsets.only(bottom: 8),
-                child: Text('Returns records that have at least one of the specified tags.'),
+                child: Text(
+                  'Returns records that have at least one of the '
+                  'specified tags.',
+                ),
               ),
               CodeBlock(
-                "db.getByTagNames(['flutter', 'dart'], mode: TagMatchMode.any)\n"
+                "db.getByTagNames(['flutter', 'dart'], "
+                'mode: TagMatchMode.any)\n'
                 '// Returns records with flutter OR dart (or both)',
               ),
             ],
@@ -189,10 +247,13 @@ class TagMatchModeDemo extends StatelessWidget {
             children: [
               const Padding(
                 padding: EdgeInsets.only(bottom: 8),
-                child: Text('Returns records that have all of the specified tags.'),
+                child: Text(
+                  'Returns records that have all of the specified tags.',
+                ),
               ),
               CodeBlock(
-                "db.getByTagNames(['flutter', 'dart'], mode: TagMatchMode.all)\n"
+                "db.getByTagNames(['flutter', 'dart'], "
+                'mode: TagMatchMode.all)\n'
                 '// Returns records with BOTH flutter AND dart',
               ),
             ],
