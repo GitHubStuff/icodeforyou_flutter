@@ -12,3 +12,4 @@ export 'package:since_when/since_when.dart';
 export 'package:splash_screen_package/splash_screen_package.dart';
 export 'package:sqlite_viewer/sqlite_viewer.dart';
 export 'package:step_slider_package/step_slider_package.dart';
+export 'package:tag_chip/tag_chip.dart';

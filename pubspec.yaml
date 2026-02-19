@@ -15,6 +15,7 @@ workspace:
   - packages/splash_screen_package
   - packages/sqlite_viewer
   - packages/step_slider_package
+  - packages/tag_chip
   - packages/theme_package
   #
   - programs/widgetbook_workspace
