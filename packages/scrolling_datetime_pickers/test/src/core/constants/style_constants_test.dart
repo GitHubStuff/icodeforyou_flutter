@@ -34,7 +34,7 @@ void main() {
 
       test('should use bold font weight', () {
         expect(StyleConstants.defaultFontWeight, FontWeight.bold);
-        expect(StyleConstants.defaultFontWeight.index, FontWeight.w700.index);
+        expect(StyleConstants.defaultFontWeight.value, FontWeight.w700.value);
       });
     });
 

@@ -1,0 +1,19 @@
+# example/pubspec.yaml
+name: adaptive_modal_example
+description: Example app demonstrating the adaptive_modal package.
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.10.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  adaptive_modal:
+    path: ../
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

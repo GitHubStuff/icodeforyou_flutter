@@ -11,6 +11,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:widgetbook/widgetbook.dart' as _widgetbook;
+import 'package:widgetbook_workspace/packages/adaptive_modal/adaptive_modal.usecase.dart'
+    as _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase;
 import 'package:widgetbook_workspace/packages/analog_clock_widget/analog_clock_widget.dart'
     as _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget;
 import 'package:widgetbook_workspace/packages/animated_checkbox_widget/animated_checkbox_widgetbook.dart'
@@ -348,6 +350,40 @@ final directories = <_widgetbook.WidgetbookNode>[
   _widgetbook.WidgetbookFolder(
     name: 'packages',
     children: [
+      _widgetbook.WidgetbookFolder(
+        name: 'adaptive_modal',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'AdaptiveModal',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Custom Close Icon',
+                builder:
+                    _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase
+                        .adaptiveModalCustomIcon,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder:
+                    _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase
+                        .adaptiveModalDefault,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'No Barrier',
+                builder:
+                    _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase
+                        .adaptiveModalNoBarrier,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Return Value',
+                builder:
+                    _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase
+                        .adaptiveModalReturnValue,
+              ),
+            ],
+          ),
+        ],
+      ),
       _widgetbook.WidgetbookFolder(
         name: 'random_color_generator',
         children: [

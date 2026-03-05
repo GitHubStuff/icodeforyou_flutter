@@ -1,3 +1,4 @@
+export 'adaptive_modal/adaptive_modal.usecase.dart';
 export 'analog_clock_widget/analog_clock_widget.dart';
 export 'edittext_popover/edittext_popover.usecase.dart';
 export 'extensions/extensions.dart';

@@ -5,6 +5,7 @@ description: Collection of flutter packages
 
 workspace:
   - packages/abstractions
+  - packages/adaptive_modal
   - packages/analog_clock_widget
   - packages/animated_checkbox_widget
   - packages/edittext_popover
