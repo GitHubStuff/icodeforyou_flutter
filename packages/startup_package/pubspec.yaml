@@ -1,0 +1,22 @@
+name: startup_package
+description: "For splash and landing page"
+version: 1.0.0+1
+resolution: workspace
+publish_to: "none"
+
+environment:
+  sdk: ">=3.10.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_bloc: 9.1.1
+
+dev_dependencies:
+  bloc_test: ^10.0.0
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

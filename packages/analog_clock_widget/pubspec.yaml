@@ -1,5 +1,4 @@
 # pubspec.yaml analog_clock_widget
-# Flutter 3.32.8 / Dart ">3.9.0"
 # Minimal dependencies for abstractions packagename: analog_clock_widget
 
 name: analog_clock_widget

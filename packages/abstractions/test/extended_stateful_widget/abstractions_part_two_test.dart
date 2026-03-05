@@ -1,5 +1,5 @@
 // abstractions_part_two_test.dart
-// Flutter 3.32.8 / Dart ">3.9.0"
+// Flutter 3.32.8 / Dart ">3.10.0"
 // Advanced edge cases and scenarios not covered in main tests
 import 'package:abstractions/abstractions.dart' show ExtendedStatefulWidget;
 import 'package:flutter/material.dart';

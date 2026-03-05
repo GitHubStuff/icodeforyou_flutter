@@ -1,5 +1,5 @@
 // abstractions_part_four_test.dart
-// Flutter 3.32.8 / Dart ">3.9.0"
+// Flutter 3.32.8 / Dart ">3.10.0"
 // Critical edge cases and failure modes that could break the widget in production
 import 'package:abstractions/abstractions.dart' show ExtendedStatefulWidget;
 import 'package:flutter/material.dart';

@@ -11,7 +11,6 @@ workspace:
   - packages/edittext_popover
   - packages/extensions
   - packages/nosql
-  - packages/random_color_generator
   - packages/scrolling_datetime_pickers
   - packages/since_when
   - packages/sqlite_viewer
@@ -19,6 +18,7 @@ workspace:
   - packages/step_slider_package
   - packages/tag_chip
   - packages/theme_package
+  #
   - programs/widgetbook_workspace
 
 environment:
@@ -33,6 +33,7 @@ dev_dependencies:
 
 melos:
   scripts:
+    # Existing scripts...
     analyze:
       run: dart analyze .
 
@@ -40,11 +41,13 @@ melos:
       description: Analyze all packages
       exec: dart analyze .
 
+    # Build all packages that have build_runner
     build:
       description: Run build_runner in packages that need it
       exec: dart run build_runner build --delete-conflicting-outputs
       packageFilters:
         dependsOn: "build_runner"
+
 
     coverage_clean:
       description: Clean all coverage data from workspace
@@ -53,40 +56,48 @@ melos:
         find . -name "coverage" -type d -not -path "./coverage" -exec rm -rf {} +
         echo "🧹 Coverage data cleaned from entire workspace"
 
+    # Merge all the coverage tests
     coverage_merge:
       description: Merge coverage reports from all workspace packages
       run: |
         mkdir -p coverage
         rm -f coverage/lcov.info
-
+        
+        # Find all coverage files in the entire workspace dynamically
         coverage_files=$(find . -path "./coverage" -prune -o -name "lcov.info" -path "*/coverage/lcov.info" -print)
-
+        
         if [ -n "$coverage_files" ]; then
           echo "Found coverage files:"
           echo "$coverage_files"
-
+          
+          # Process each coverage file
           for lcov_file in $coverage_files; do
+            # Extract the package path: ./packages/extensions/coverage/lcov.info -> packages/extensions
             package_path=$(echo "$lcov_file" | sed 's|^\./||' | sed 's|/coverage/lcov\.info$||')
             package_dir=$(dirname "$package_path")
             package_name=$(basename "$package_path")
-
+            
             echo "Processing coverage for $package_dir/$package_name..."
-
+            
+            # Create a temporary file with corrected paths
             temp_file="coverage/temp_${package_dir//\//_}_${package_name}.info"
             sed "s|SF:lib/|SF:${package_path}/lib/|g" "$lcov_file" > "$temp_file"
-
+            
+            # Add to the main coverage file
             if [ -f coverage/lcov.info ]; then
               lcov --add-tracefile coverage/lcov.info --add-tracefile "$temp_file" -o coverage/lcov.info
             else
               cp "$temp_file" coverage/lcov.info
             fi
-
+            
+            # Clean up temp file
             rm "$temp_file"
           done
-
+          
+          # Generate HTML report
           genhtml coverage/lcov.info -o coverage/html --ignore-errors source
           echo "✅ Merged coverage report: coverage/html/index.html"
-
+          
           if [ -f coverage/html/index.html ]; then
             open coverage/html/index.html
           else
@@ -96,6 +107,7 @@ melos:
         else
           echo "❌ No coverage files found. Run 'melos run test_coverage' first."
         fi
+
 
     list_packages:
       description: List all packages in workspace
@@ -109,140 +121,71 @@ melos:
         echo "🛀 Clean /tmp files created by nosql_ce_box_test.dart and nosql_ce_db_test.dart"
         ./packages/nosql/test/nosql_cleanup
 
-    test_package:
-      description: |
-        Run tests and coverage for a single package.
-        Usage: PKG=package_name melos test_package
-        Example: PKG=since_when melos test_package
-      run: |
-        (
-          if [ -z "$PKG" ]; then
-            echo "❌ PKG is not set. Usage: PKG=package_name melos test_package"
-            exit 1
-          fi
-
-          package_dir="packages/$PKG"
-
-          if [ ! -d "$package_dir" ]; then
-            echo "❌ Package '$PKG' not found at $package_dir"
-            exit 1
-          fi
-
-          if [ ! -d "${package_dir}/test" ]; then
-            echo "❌ No test directory found in $package_dir"
-            exit 1
-          fi
-
-          echo ""
-          echo "📦 Testing $PKG..."
-          cd "$package_dir"
-
-          if grep -q "flutter:" pubspec.yaml; then
-            echo "🦋 Flutter package — running flutter test"
-            flutter test
-            echo ""
-            echo "📊 Generating coverage for $PKG..."
-            flutter test --coverage
-          else
-            echo "🎯 Dart package — running dart test"
-            dart test
-            echo ""
-            echo "📊 Generating coverage for $PKG..."
-            dart test --coverage=coverage
-          fi
-
-          cd - > /dev/null
-
-          if [ "$PKG" = "nosql" ]; then
-            echo ""
-            echo "🛀 Running nosql cleanup..."
-            ./packages/nosql/test/nosql_cleanup
-          fi
-
-          echo ""
-          echo "✅ Done: $PKG"
-        )
-
     test_all:
-      description: |
-        Run tests in all packages sequentially to avoid Flutter lock conflicts.
-        Usage: melos test_all
-        Fail-fast: STRICT=true melos test_all
+      description: Run tests in all packages sequentially to avoid Flutter lock conflicts
       run: |
-        (
-          echo "🧪 Running tests sequentially to avoid Flutter lock conflicts..."
-          if [ "${STRICT}" = "true" ]; then
-            echo "⚠️  STRICT mode — stopping on first failure"
+        echo "🧪 Running tests sequentially to avoid Flutter lock conflicts..."
+    
+        # Track failed packages
+        failed_packages=""
+        ignored_packages=0
+        total_packages=0
+        tested_packages=0
+    
+        # Find packages with test directories
+        for package_dir in packages/*/; do
+          package_name=$(basename "$package_dir")
+
+          if [ "$package_name" = "widgetbook_workspace" ]; then
+            echo "🤡 Skipping $package_name (excluded from tests)"
+            total_packages=$((total_packages + 1))
+            ignored_packages=$((ignored_packages + 1))
+            continue
           fi
-
-          failed_packages=""
-          ignored_packages=0
-          total_packages=0
-          tested_packages=0
-
-          for package_dir in packages/*/; do
+          if [ -d "${package_dir}test" ]; then
             package_name=$(basename "$package_dir")
-
-            if [ "$package_name" = "widgetbook_workspace" ]; then
-              echo "🤡 Skipping $package_name (excluded from tests)"
-              total_packages=$((total_packages + 1))
-              ignored_packages=$((ignored_packages + 1))
-              continue
-            fi
-
-            if [ -d "${package_dir}test" ]; then
-              echo ""
-              echo "📦 Testing $package_name..."
-              cd "$package_dir"
-              total_packages=$((total_packages + 1))
-              tested_packages=$((tested_packages + 1))
-
-              if ! flutter test; then
-                echo "❌  Tests failed in $package_name"
-                cd - > /dev/null
-                if [ "${STRICT}" = "true" ]; then
-                  echo ""
-                  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-                  echo "🛑 STRICT mode — stopping at $package_name"
-                  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-                  exit 1
-                fi
-                if [ -z "$failed_packages" ]; then
-                  failed_packages="$package_name"
-                else
-                  failed_packages="$failed_packages, $package_name"
-                fi
+            echo ""
+            echo "📦 Testing $package_name..."
+            cd "$package_dir"
+            total_packages=$((total_packages + 1))
+            tested_packages=$((tested_packages + 1))
+        
+            if ! flutter test; then
+              echo "❌  Tests failed in $package_name"
+              if [ -z "$failed_packages" ]; then
+                failed_packages="$package_name"
               else
-                cd - > /dev/null
+                failed_packages="$failed_packages, $package_name"
               fi
-            else
-              echo "⏭️  Skipping $package_name (no test directory)"
-              total_packages=$((total_packages + 1))
             fi
-          done
-
-          echo ""
-          echo "✅ Test run completed!"
-          echo ""
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "📊 SUMMARY"
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "Total packages:   $total_packages"
-          echo "Tested packages:  $tested_packages"
-          echo "Ignored packages: $ignored_packages"
-
-          if [ -n "$failed_packages" ]; then
-            echo "❌ FAILED: $failed_packages"
-            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-            exit 1
+            cd - > /dev/null
           else
-            echo "✅ All tests passed!"
-            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            package_name=$(basename "$package_dir")
+            echo "⏭️  Skipping $package_name (no test directory)"
+            total_packages=$((total_packages + 1))
           fi
-        )
-
+        done
+    
+        echo ""
+        echo "✅ Test run completed!"
+        echo ""
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "📊 SUMMARY"
+        echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        echo "Total packages: $total_packages"
+        echo "Tested packages: $tested_packages"
+        echo "Ignored packages: $ignored_packages"
+    
+        if [ -n "$failed_packages" ]; then
+          echo "❌ FAILED: $failed_packages"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          exit 1
+        else
+          echo "✅ All tests passed!"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+        fi
     test_coverage:
-      description: Run tests with coverage in all packages (auto-detects Flutter vs Dart)
+      description: Run tests with coverage in all packges (auto-detects Flutter vs Dart)
       run: |
         echo "🧪 Running coverage tests with auto-detection..."
         for package_dir in packages/*/; do
@@ -250,10 +193,12 @@ melos:
 
           if [ "$package_name" = "widgetbook_workspace" ]; then
             echo "🤡 Skipping $package_name (excluded from tests)"
+            total_packages=$((total_packages + 1))
             continue
           fi
 
           if [ -d "${package_dir}test" ]; then
+            package_name=$(basename "$package_dir")
             echo ""
             echo "📦 Testing $package_name..."
             cd "$package_dir"
@@ -269,20 +214,23 @@ melos:
           fi
         done
         echo "✅ Coverage generation completed for all packages!"
-
+        
+    # Run widgetbook
     widgetbook:
       description: Run widgetbook for development
       run: |
         cd packages/widgetbook_workspace
         flutter run -d chrome
-
+    
+    # Build runner specifically for widgetbook
     widgetbook_build:
       description: Build widgetbook components
       run: |
         cd packages/widgetbook_workspace
         dart run build_runner build --delete-conflicting-outputs
         echo "✅ Widgetbook build completed"
-
+    
+    # Clean widgetbook generated files
     widgetbook_clean:
       description: Clean widgetbook generated files
       run: |

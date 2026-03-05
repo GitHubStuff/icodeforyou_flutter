@@ -31,6 +31,8 @@ import 'package:widgetbook_workspace/packages/since_when/since_when_database.use
     as _widgetbook_workspace_packages_since_when_since_when_database_usecase;
 import 'package:widgetbook_workspace/packages/sqlite_viewer/sqlite_viewer.usecase.dart'
     as _widgetbook_workspace_packages_sqlite_viewer_sqlite_viewer_usecase;
+import 'package:widgetbook_workspace/packages/startup_package/startup_package.usecase.dart'
+    as _widgetbook_workspace_packages_startup_package_startup_package_usecase;
 import 'package:widgetbook_workspace/packages/step_slider_package/step_slider_package.usecase.dart'
     as _widgetbook_workspace_packages_step_slider_package_step_slider_package_usecase;
 import 'package:widgetbook_workspace/packages/theme_package/theme_package.usecase.dart'
@@ -428,6 +430,34 @@ final directories = <_widgetbook.WidgetbookNode>[
                 builder:
                     _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecases
                         .buildHexRoundtripUseCase,
+              ),
+            ],
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookFolder(
+        name: 'startup_package',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: '_DemoSplashScreen',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Splash — task failure',
+                builder:
+                    _widgetbook_workspace_packages_startup_package_startup_package_usecase
+                        .buildSplashErrorUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Splash — tasks finish after animation',
+                builder:
+                    _widgetbook_workspace_packages_startup_package_startup_package_usecase
+                        .buildSplashWithLoadingUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Splash — tasks finish before animation',
+                builder:
+                    _widgetbook_workspace_packages_startup_package_startup_package_usecase
+                        .buildSplashTasksFirstUseCase,
               ),
             ],
           ),

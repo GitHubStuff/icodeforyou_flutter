@@ -21,6 +21,7 @@ dependencies:
     path: ../../packages/edittext_popover
   extensions:
     path: ../../packages/extensions
+  flutter_bloc: ^9.1.1
   scrolling_datetime_pickers:
     path: ../../packages/scrolling_datetime_pickers
   random_color_generator:
@@ -29,6 +30,8 @@ dependencies:
     path: ../../packages/since_when
   sqlite_viewer:
     path: ../../packages/sqlite_viewer
+  startup_package:
+    path: ../../packages/startup_package
   step_slider_package:
     path: ../../packages/step_slider_package
   theme_package:

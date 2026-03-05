@@ -1,5 +1,5 @@
 // abstractions_part_three_test.dart
-// Flutter 3.32.8 / Dart ">3.9.0"
+// Flutter 3.32.8 / Dart ">3.10.0"
 // Complete coverage testing - accessibility, locale, semantics, frame scheduling
 import 'package:abstractions/abstractions.dart' show ExtendedStatefulWidget;
 import 'package:flutter/material.dart';
