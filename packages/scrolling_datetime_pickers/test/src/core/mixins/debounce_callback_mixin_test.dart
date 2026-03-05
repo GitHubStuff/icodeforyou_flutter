@@ -30,8 +30,8 @@ void main() {
       expect(testDebounce.isDebouncing, true);
 
       // Wait for default duration
-      await Future.delayed(TimingConstants.callbackDebounce);
-      await Future.delayed(const Duration(milliseconds: 50)); // Buffer
+      await Future<void>.delayed(TimingConstants.callbackDebounce);
+      await Future<void>.delayed(const Duration(milliseconds: 50)); // Buffer
 
       expect(callbackExecuted, true);
       expect(testDebounce.isDebouncing, false);
@@ -52,11 +52,11 @@ void main() {
       expect(testDebounce.isDebouncing, true);
 
       // Wait less than custom duration
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future<void>.delayed(const Duration(milliseconds: 50));
       expect(callbackExecuted, false);
 
       // Wait for full custom duration
-      await Future.delayed(const Duration(milliseconds: 60));
+      await Future<void>.delayed(const Duration(milliseconds: 60));
 
       expect(callbackExecuted, true);
       expect(testDebounce.isDebouncing, false);
@@ -71,7 +71,7 @@ void main() {
       });
 
       // Wait a bit but not full duration
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
 
       // Second call should cancel first
       testDebounce.debounceCallback(() {
@@ -79,8 +79,8 @@ void main() {
       });
 
       // Wait for debounce to complete
-      await Future.delayed(TimingConstants.callbackDebounce);
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future<void>.delayed(TimingConstants.callbackDebounce);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
 
       // Only second callback should execute
       expect(callCount, 10);
@@ -96,13 +96,13 @@ void main() {
       expect(testDebounce.isDebouncing, true);
 
       // Cancel before it executes
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
       testDebounce.cancelDebounce();
 
       expect(testDebounce.isDebouncing, false);
 
       // Wait to ensure callback doesn't execute
-      await Future.delayed(TimingConstants.callbackDebounce);
+      await Future<void>.delayed(TimingConstants.callbackDebounce);
 
       expect(callbackExecuted, false);
     });
@@ -139,8 +139,8 @@ void main() {
     test('isDebouncing should return false after timer completes', () async {
       testDebounce.debounceCallback(() {});
 
-      await Future.delayed(TimingConstants.callbackDebounce);
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future<void>.delayed(TimingConstants.callbackDebounce);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
 
       expect(testDebounce.isDebouncing, false);
     });
@@ -155,13 +155,13 @@ void main() {
       expect(testDebounce.isDebouncing, true);
 
       // Dispose before callback executes
-      await Future.delayed(const Duration(milliseconds: 100));
+      await Future<void>.delayed(const Duration(milliseconds: 100));
       testDebounce.disposeDebounce();
 
       expect(testDebounce.isDebouncing, false);
 
       // Wait to ensure callback doesn't execute
-      await Future.delayed(TimingConstants.callbackDebounce);
+      await Future<void>.delayed(TimingConstants.callbackDebounce);
 
       expect(callbackExecuted, false);
     });
@@ -179,12 +179,12 @@ void main() {
         testDebounce.debounceCallback(() {
           results.add(i);
         });
-        await Future.delayed(const Duration(milliseconds: 50));
+        await Future<void>.delayed(const Duration(milliseconds: 50));
       }
 
       // Wait for debounce to complete
-      await Future.delayed(TimingConstants.callbackDebounce);
-      await Future.delayed(const Duration(milliseconds: 50));
+      await Future<void>.delayed(TimingConstants.callbackDebounce);
+      await Future<void>.delayed(const Duration(milliseconds: 50));
 
       // Only the last callback should have executed
       expect(results, [4]);

@@ -1,13 +1,13 @@
 // datetime_extension_test.dart
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'dart:math' as math;
 import 'package:extensions/extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('DateTimeExt unique()', () {
-    setUp(() {
-      DateTimeExt.reset();
-    });
+    setUp(DateTimeExt.reset);
 
     test(
       'should return unique DateTime instances on consecutive calls',
@@ -217,9 +217,7 @@ void main() {
   });
 
   group('DateTimeExt maxDrift tracking', () {
-    setUp(() {
-      DateTimeExt.reset();
-    });
+    setUp(DateTimeExt.reset);
 
     test('should initialize maxDrift to 0', () {
       expect(DateTimeExt.maxDrift, equals(0));
@@ -253,9 +251,7 @@ void main() {
   });
 
   group('DateTimeExt edge cases', () {
-    setUp(() {
-      DateTimeExt.reset();
-    });
+    setUp(DateTimeExt.reset);
 
     test('should handle single call correctly', () async {
       final dt = await DateTimeExt.unique();
@@ -267,7 +263,7 @@ void main() {
       final first = await DateTimeExt.unique();
 
       // Wait a bit to let system time advance naturally
-      await Future.delayed(Duration(milliseconds: 10));
+      await Future<void>.delayed(const Duration(milliseconds: 10));
 
       final second = await DateTimeExt.unique();
 
@@ -350,9 +346,7 @@ void main() {
   });
 
   group('DateTimeExt drift threshold configuration', () {
-    setUp(() {
-      DateTimeExt.reset();
-    });
+    setUp(DateTimeExt.reset);
 
     test('should respect custom drift threshold', () async {
       DateTimeExt.driftThreshold = 10;

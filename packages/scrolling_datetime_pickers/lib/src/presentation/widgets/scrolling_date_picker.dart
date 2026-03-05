@@ -1,5 +1,7 @@
 // lib/src/presentation/widgets/scrolling_date_picker.dart
 
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +17,30 @@ part 'scrolling_date_picker_column.dart';
 
 /// Apple-style scrolling date picker widget
 class ScrollingDatePicker extends StatelessWidget {
+  /// Constructor
+  const ScrollingDatePicker({
+    required this.onDateChanged,
+    super.key,
+    this.portraitSize = const Size(
+      DimensionConstants.defaultPortraitWidth,
+      DimensionConstants.defaultPortraitHeight,
+    ),
+    this.landscapeSize = const Size(
+      DimensionConstants.defaultLandscapeWidth,
+      DimensionConstants.defaultLandscapeHeight,
+    ),
+    this.initialDate,
+    this.backgroundColor = StyleConstants.defaultBackgroundColor,
+    this.dateStyle,
+    DividerConfiguration? dividerConfiguration,
+    FadeConfiguration? fadeConfiguration,
+    this.dayAscending = true,
+    this.enableHaptics = true,
+    this.borderRadius = 0.0,
+  }) : dividerConfiguration =
+           dividerConfiguration ?? const DividerConfiguration(),
+       fadeConfiguration = fadeConfiguration ?? const FadeConfiguration();
+
   /// Size for portrait orientation
   final Size portraitSize;
 
@@ -25,7 +51,7 @@ class ScrollingDatePicker extends StatelessWidget {
   final DateTime? initialDate;
 
   /// Callback when date changes
-  final Function(DateTime) onDateChanged;
+  final void Function(DateTime) onDateChanged;
 
   /// Background color of the picker
   final Color backgroundColor;
@@ -47,29 +73,6 @@ class ScrollingDatePicker extends StatelessWidget {
 
   /// Border radius for the picker container
   final double borderRadius;
-
-  const ScrollingDatePicker({
-    super.key,
-    this.portraitSize = const Size(
-      DimensionConstants.defaultPortraitWidth,
-      DimensionConstants.defaultPortraitHeight,
-    ),
-    this.landscapeSize = const Size(
-      DimensionConstants.defaultLandscapeWidth,
-      DimensionConstants.defaultLandscapeHeight,
-    ),
-    this.initialDate,
-    required this.onDateChanged,
-    this.backgroundColor = StyleConstants.defaultBackgroundColor,
-    this.dateStyle,
-    DividerConfiguration? dividerConfiguration,
-    FadeConfiguration? fadeConfiguration,
-    this.dayAscending = true,
-    this.enableHaptics = true,
-    this.borderRadius = 0.0,
-  })  : dividerConfiguration =
-            dividerConfiguration ?? const DividerConfiguration(),
-        fadeConfiguration = fadeConfiguration ?? const FadeConfiguration();
 
   @override
   Widget build(BuildContext context) {

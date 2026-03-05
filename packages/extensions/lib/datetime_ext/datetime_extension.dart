@@ -21,7 +21,7 @@ extension DateTimeExt on DateTime {
       if (drift > driftThreshold) {
         // Use configurable threshold
         while (DateTime.now().microsecondsSinceEpoch < currentMicros) {
-          await Future.delayed(Duration(milliseconds: 1));
+          await Future<void>.delayed(const Duration(milliseconds: 1));
         }
         currentMicros = DateTime.now().microsecondsSinceEpoch;
       }

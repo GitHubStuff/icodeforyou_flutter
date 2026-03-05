@@ -3,9 +3,21 @@
 part of 'scrolling_time_picker.dart';
 
 class _ScrollingTimePickerContent extends StatefulWidget {
+  const _ScrollingTimePickerContent({
+    required this.portraitSize,
+    required this.landscapeSize,
+    required this.onDateTimeChanged,
+    required this.backgroundColor,
+    required this.dividerConfiguration,
+    required this.fadeConfiguration,
+    required this.showSeconds,
+    required this.enableHaptics,
+    required this.borderRadius,
+    this.timeStyle,
+  });
   final Size portraitSize;
   final Size landscapeSize;
-  final Function(DateTime) onDateTimeChanged;
+  final void Function(DateTime) onDateTimeChanged;
   final Color backgroundColor;
   final TextStyle? timeStyle;
   final DividerConfiguration dividerConfiguration;
@@ -13,19 +25,6 @@ class _ScrollingTimePickerContent extends StatefulWidget {
   final bool showSeconds;
   final bool enableHaptics;
   final double borderRadius;
-
-  const _ScrollingTimePickerContent({
-    required this.portraitSize,
-    required this.landscapeSize,
-    required this.onDateTimeChanged,
-    required this.backgroundColor,
-    this.timeStyle,
-    required this.dividerConfiguration,
-    required this.fadeConfiguration,
-    required this.showSeconds,
-    required this.enableHaptics,
-    required this.borderRadius,
-  });
 
   @override
   State<_ScrollingTimePickerContent> createState() =>
@@ -84,9 +83,7 @@ class _ScrollingTimePickerContentState
   }
 
   void _handleHapticFeedback() {
-    if (widget.enableHaptics) {
-      HapticFeedback.selectionClick();
-    }
+    if (widget.enableHaptics) unawaited(HapticFeedback.selectionClick());
   }
 
   @override
@@ -222,14 +219,15 @@ class _ScrollingTimePickerContentState
                           blurRadius: widget.dividerConfiguration.blurRadius,
                           spreadRadius:
                               widget.dividerConfiguration.spreadRadius,
-                          blurStyle: widget.dividerConfiguration.blurStyle ??
+                          blurStyle:
+                              widget.dividerConfiguration.blurStyle ??
                               BlurStyle.normal,
                         ),
                       ]
                     : null,
               ),
             ),
-            SizedBox(height: DimensionConstants.itemExtent),
+            const SizedBox(height: DimensionConstants.itemExtent),
             Container(
               height: widget.dividerConfiguration.thickness,
               margin: EdgeInsets.only(
@@ -245,7 +243,8 @@ class _ScrollingTimePickerContentState
                           blurRadius: widget.dividerConfiguration.blurRadius,
                           spreadRadius:
                               widget.dividerConfiguration.spreadRadius,
-                          blurStyle: widget.dividerConfiguration.blurStyle ??
+                          blurStyle:
+                              widget.dividerConfiguration.blurStyle ??
                               BlurStyle.normal,
                         ),
                       ]

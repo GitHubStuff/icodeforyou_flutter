@@ -83,7 +83,7 @@ D - Dependency Inversion Principle
 ## Files
 
 - Every file should have "// {file.path.to}/file.name.dart" at the very top
-- The file should obey flutter_lints: ^6.0.0 rules
+- The file should obey very_good_analysis: ^10.2.0 rules
 
 
 ## Code generation

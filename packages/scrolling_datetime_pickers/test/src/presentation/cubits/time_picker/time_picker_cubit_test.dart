@@ -194,9 +194,9 @@ void main() {
           TimePickerCubit(initialDateTime: DateTime(2024, 1, 1, 12, 0, 0)),
       act: (cubit) async {
         cubit.updateMinute(10);
-        await Future.delayed(const Duration(milliseconds: 50));
+        await Future<void>.delayed(const Duration(milliseconds: 50));
         cubit.updateMinute(20);
-        await Future.delayed(const Duration(milliseconds: 50));
+        await Future<void>.delayed(const Duration(milliseconds: 50));
         cubit.updateMinute(30);
       },
       expect: () => [

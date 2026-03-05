@@ -33,7 +33,7 @@ void main() {
 
         final result = await ThemePackage.setTheme(ThemeMode.dark);
 
-        expect(result, const Right(unit));
+        expect(result, const Right<dynamic, Unit>(unit));
         expect(ThemePackage.currentTheme, ThemeMode.dark);
       });
 
@@ -45,7 +45,7 @@ void main() {
 
         final result = await ThemePackage.setTheme(ThemeMode.light);
 
-        expect(result, const Right(unit));
+        expect(result, const Right<dynamic, Unit>(unit));
         expect(ThemePackage.currentTheme, ThemeMode.light);
       });
 
@@ -62,7 +62,7 @@ void main() {
         // Then change to system
         final result = await ThemePackage.setTheme(ThemeMode.system);
 
-        expect(result, const Right(unit));
+        expect(result, const Right<dynamic, Unit>(unit));
         expect(ThemePackage.currentTheme, ThemeMode.system);
       });
 

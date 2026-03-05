@@ -485,7 +485,7 @@ class _DissolveDemoState extends State<_DissolveDemo> {
 
     // Auto-restart after dissolve completes
     if (!isDrawn) {
-      Future.delayed(const Duration(seconds: 1), () {
+      Future<void>.delayed(const Duration(seconds: 1), () {
         if (mounted) {
           setState(() {
             _status = 'Ready to dissolve';

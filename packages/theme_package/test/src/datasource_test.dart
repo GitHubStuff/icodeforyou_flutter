@@ -20,7 +20,7 @@ void main() {
           inMemory: true,
         );
 
-        expect(result, const Right(unit));
+        expect(result, const Right<dynamic, Unit>(unit));
       });
 
       test('getThemeMode returns system by default', () async {
@@ -68,7 +68,7 @@ void main() {
           inMemory: true, // Using inMemory to avoid actual file system
         );
 
-        expect(result, const Right(unit));
+        expect(result, const Right<dynamic, Unit>(unit));
       });
 
       test('accepts subDirectory parameter', () async {

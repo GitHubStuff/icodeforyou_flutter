@@ -10,24 +10,7 @@ import 'package:since_when/src/sql/_sql_statements.dart';
 import 'package:since_when/src/utils/_timestamp_generator.dart';
 import 'package:sqflite/sqflite.dart';
 
-/// Handles CRUD Create operations for SinceWhen records.
-///
-/// This class is internal and should not be exported publicly.
 abstract final class CreateOperations {
-  /// Creates a new record in the database.
-  ///
-  /// If [parentTimeStamp] is provided:
-  /// - Validates the parent exists (sets to null if not found)
-  /// - Calculates sequenceNumber as max(siblings) + 1
-  ///
-  /// If [parentTimeStamp] is null:
-  /// - sequenceNumber defaults to 0
-  ///
-  /// [tagTimestamps] should be a list of glossary createdTimeStamp values.
-  /// Invalid timestamps are silently ignored.
-  ///
-  /// Returns [Right] with created [SinceWhenRecord] on success.
-  /// Returns [Left] with appropriate [DataStoreFailure] on error.
   static Future<Either<DataStoreFailure, SinceWhenRecord>> createRecord(
     Database db, {
     required String metaData,
@@ -37,7 +20,6 @@ abstract final class CreateOperations {
     String? parentTimeStamp,
   }) async {
     try {
-      // Generate unique timestamp
       final timestampResult = await TimestampGenerator.generateUniqueTimestamp(
         db,
       );
@@ -45,17 +27,14 @@ abstract final class CreateOperations {
       return timestampResult.match(
         Left.new,
         (createdTimeStamp) async {
-          // Validate parent and calculate sequence number
           final validatedParent = await _validateParent(db, parentTimeStamp);
           final sequenceNumber = await _calculateSequenceNumber(
             db,
             validatedParent,
           );
 
-          // All timestamps start the same on creation
           final nowUtc = createdTimeStamp;
 
-          // Insert the record
           final insertValues = SinceWhenRecordMapper.toInsertValuesFromParams(
             createdTimeStamp: createdTimeStamp,
             parentTimeStamp: validatedParent,
@@ -73,14 +52,12 @@ abstract final class CreateOperations {
             insertValues,
           );
 
-          // Insert tag links and collect valid tags
           final validTags = await _insertTagLinks(
             db,
             createdTimeStamp,
             tagTimestamps,
           );
 
-          // Build and return the record
           final record = SinceWhenRecord(
             id: recordId,
             createdTimeStamp: createdTimeStamp,
@@ -102,25 +79,17 @@ abstract final class CreateOperations {
     }
   }
 
-  /// Creates a new tag definition in the glossary.
-  ///
-  /// Returns [Right] with created [TagDefinition] on success.
-  /// Returns [Left] with [TagNameAlreadyExists] if name is taken.
-  /// Returns [Left] with [InvalidTagName] if name is empty.
   static Future<Either<DataStoreFailure, TagDefinition>> createTagDefinition(
     Database db, {
     required String tagName,
-    required String tagDescription,
     required int color,
   }) async {
     try {
-      // Validate tag name
       final trimmedName = tagName.trim();
       if (trimmedName.isEmpty) {
         return const Left(InvalidTagName('Tag name cannot be empty'));
       }
 
-      // Check if tag name already exists
       final existsResult = await db.rawQuery(
         SqlStatements.existsTagName,
         [trimmedName],
@@ -129,7 +98,6 @@ abstract final class CreateOperations {
         return Left(TagNameAlreadyExists(trimmedName));
       }
 
-      // Generate unique timestamp for glossary entry
       final timestampResult = await TimestampGenerator.generateUniqueTimestamp(
         db,
         table: SqlStatements.tableTagGlossary,
@@ -141,7 +109,6 @@ abstract final class CreateOperations {
           final insertValues = TagDefinitionMapper.toInsertValues(
             createdTimeStamp: createdTimeStamp,
             tagName: trimmedName,
-            tagDescription: tagDescription,
             color: color,
           );
 
@@ -154,7 +121,6 @@ abstract final class CreateOperations {
             id: tagId,
             createdTimeStamp: createdTimeStamp,
             tagName: trimmedName,
-            tagDescription: tagDescription,
             color: color,
           );
 
@@ -162,22 +128,15 @@ abstract final class CreateOperations {
         },
       );
     } on Object catch (e) {
-      return Left(
-        UnexpectedStoreError('Failed to create tag definition', e),
-      );
+      return Left(UnexpectedStoreError('Failed to create tag definition', e));
     }
   }
 
-  /// Validates that the parent record exists.
-  ///
-  /// Returns the parentTimeStamp if valid, null otherwise.
   static Future<String?> _validateParent(
     Database db,
     String? parentTimeStamp,
   ) async {
-    if (parentTimeStamp == null) {
-      return null;
-    }
+    if (parentTimeStamp == null) return null;
 
     final result = await db.rawQuery(
       SqlStatements.existsByCreatedTimeStamp,
@@ -187,35 +146,23 @@ abstract final class CreateOperations {
     return result.isNotEmpty ? parentTimeStamp : null;
   }
 
-  /// Calculates the sequence number for a new child record.
-  ///
-  /// Returns max(sequenceNumber) + 1 for siblings, or 1 if no siblings.
-  /// Returns 0 if no parent (root record).
   static Future<int> _calculateSequenceNumber(
     Database db,
     String? parentTimeStamp,
   ) async {
-    if (parentTimeStamp == null) {
-      return 0;
-    }
+    if (parentTimeStamp == null) return 0;
 
     final result = await db.rawQuery(
       SqlStatements.maxSequenceNumberForParent,
       [parentTimeStamp],
     );
 
-    if (result.isEmpty || result.first['maxSeq'] == null) {
-      return 1;
-    }
+    if (result.isEmpty || result.first['maxSeq'] == null) return 1;
 
     final maxSeq = result.first['maxSeq']! as int;
     return maxSeq + 1;
   }
 
-  /// Inserts tag links into the junction table.
-  ///
-  /// Returns the list of valid [TagDefinition]s that were linked.
-  /// Invalid timestamps are silently ignored.
   static Future<List<TagDefinition>> _insertTagLinks(
     Database db,
     String recordTimestamp,
@@ -224,19 +171,16 @@ abstract final class CreateOperations {
     final validTags = <TagDefinition>[];
 
     for (final glossaryTimestamp in tagTimestamps) {
-      // Verify the glossary entry exists
       final tagRows = await db.rawQuery(
         SqlStatements.selectTagDefinitionByTimestamp,
         [glossaryTimestamp],
       );
 
       if (tagRows.isNotEmpty) {
-        // Insert the link
         await db.rawInsert(
           SqlStatements.insertRecordTag,
           [recordTimestamp, glossaryTimestamp],
         );
-
         validTags.add(TagDefinitionMapper.fromRow(tagRows.first));
       }
     }

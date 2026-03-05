@@ -1,5 +1,7 @@
 // lib/src/presentation/widgets/scrolling_time_picker.dart
 
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,38 +18,6 @@ part 'scrolling_time_picker_content.dart';
 
 /// Apple-style scrolling time picker widget
 class ScrollingTimePicker extends StatelessWidget {
-  /// Size for portrait orientation
-  final Size portraitSize;
-
-  /// Size for landscape orientation
-  final Size landscapeSize;
-
-  /// Initial date time value
-  final DateTime? initialDateTime;
-
-  /// Callback when time changes
-  final Function(DateTime) onDateTimeChanged;
-
-  /// Background color of the picker
-  final Color backgroundColor;
-
-  /// Text style for picker items
-  final TextStyle? timeStyle;
-
-  /// Configuration for dividers
-  final DividerConfiguration dividerConfiguration;
-
-  /// Configuration for fade effects
-  final FadeConfiguration fadeConfiguration;
-
-  /// Whether to show seconds column
-  final bool showSeconds;
-
-  /// Whether to enable haptic feedback
-  final bool enableHaptics;
-
-  /// Border radius for the picker container
-  final double borderRadius;
 
   const ScrollingTimePicker({
     super.key,
@@ -71,6 +41,38 @@ class ScrollingTimePicker extends StatelessWidget {
   }) : dividerConfiguration =
            dividerConfiguration ?? const DividerConfiguration(),
        fadeConfiguration = fadeConfiguration ?? const FadeConfiguration();
+  /// Size for portrait orientation
+  final Size portraitSize;
+
+  /// Size for landscape orientation
+  final Size landscapeSize;
+
+  /// Initial date time value
+  final DateTime? initialDateTime;
+
+  /// Callback when time changes
+  final void Function(DateTime) onDateTimeChanged;
+
+  /// Background color of the picker
+  final Color backgroundColor;
+
+  /// Text style for picker items
+  final TextStyle? timeStyle;
+
+  /// Configuration for dividers
+  final DividerConfiguration dividerConfiguration;
+
+  /// Configuration for fade effects
+  final FadeConfiguration fadeConfiguration;
+
+  /// Whether to show seconds column
+  final bool showSeconds;
+
+  /// Whether to enable haptic feedback
+  final bool enableHaptics;
+
+  /// Border radius for the picker container
+  final double borderRadius;
 
   /// Normalize datetime for standalone time picker:
   /// - If provided: use Jan 1st of current year with provided time

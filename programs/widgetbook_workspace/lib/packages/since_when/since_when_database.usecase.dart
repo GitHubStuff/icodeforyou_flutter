@@ -582,8 +582,8 @@ class _TagsTableDemo extends StatelessWidget {
     );
   }
 
-  void _showTableInfoDialog(BuildContext context) {
-    showDialog(
+  Future<void> _showTableInfoDialog(BuildContext context) async {
+    await showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('PRAGMA table_info(since_when_tags)'),

@@ -15,7 +15,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 )
 Widget buildSplashWithLoadingUseCase(BuildContext context) {
   return _StartupUseCaseWrapper(
-    tasks: [() => Future.delayed(const Duration(seconds: 3))],
+    tasks: [() => Future<void>.delayed(const Duration(seconds: 3))],
     child: const _DemoSplashScreen(),
   );
 }

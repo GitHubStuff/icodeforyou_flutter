@@ -221,7 +221,7 @@ void main() {
     group('getTheme', () {
       test('throws StateError when not initialized', () {
         expect(
-          () => ThemePackage.getTheme(),
+          ThemePackage.getTheme,
           throwsA(
             isA<StateError>().having(
               (e) => e.message,

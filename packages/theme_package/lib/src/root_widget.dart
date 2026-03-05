@@ -146,7 +146,7 @@ class _ThemePackageRootState extends State<ThemePackageRoot> {
       return;
     }
 
-    Future.delayed(minDuration, () {
+    Future<void>.delayed(minDuration, () {
       if (mounted) {
         setState(() {
           _minDurationElapsed = true;

@@ -3,9 +3,21 @@
 part of 'scrolling_date_picker.dart';
 
 class _ScrollingDatePickerContent extends StatefulWidget {
+  const _ScrollingDatePickerContent({
+    required this.portraitSize,
+    required this.landscapeSize,
+    required this.onDateChanged,
+    required this.backgroundColor,
+    required this.dividerConfiguration,
+    required this.fadeConfiguration,
+    required this.dayAscending,
+    required this.enableHaptics,
+    required this.borderRadius,
+    this.dateStyle,
+  });
   final Size portraitSize;
   final Size landscapeSize;
-  final Function(DateTime) onDateChanged;
+  final void Function(DateTime) onDateChanged;
   final Color backgroundColor;
   final TextStyle? dateStyle;
   final DividerConfiguration dividerConfiguration;
@@ -13,19 +25,6 @@ class _ScrollingDatePickerContent extends StatefulWidget {
   final bool dayAscending;
   final bool enableHaptics;
   final double borderRadius;
-
-  const _ScrollingDatePickerContent({
-    required this.portraitSize,
-    required this.landscapeSize,
-    required this.onDateChanged,
-    required this.backgroundColor,
-    this.dateStyle,
-    required this.dividerConfiguration,
-    required this.fadeConfiguration,
-    required this.dayAscending,
-    required this.enableHaptics,
-    required this.borderRadius,
-  });
 
   @override
   State<_ScrollingDatePickerContent> createState() =>
@@ -37,7 +36,7 @@ class _ScrollingDatePickerContentState
   late FixedExtentScrollController _yearController;
   late FixedExtentScrollController _monthController;
   late FixedExtentScrollController _dayController;
-  
+
   // Track current days in month for position calculations
   late int _currentDaysInMonth;
 
@@ -50,8 +49,7 @@ class _ScrollingDatePickerContentState
   /// Calculate days in a given month/year (duplicated from cubit for local use)
   static int _getDaysInMonth(int year, int month) {
     if (month == 2) {
-      final isLeap =
-          (year % 400 == 0) || (year % 100 != 0 && year % 4 == 0);
+      final isLeap = (year % 400 == 0) || (year % 100 != 0 && year % 4 == 0);
       return isLeap ? 29 : 28;
     }
     const daysPerMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -69,8 +67,7 @@ class _ScrollingDatePickerContentState
 
     // Month: 1-12, infinite scroll
     // Offset must be divisible by 12 to preserve month mapping
-    final monthOffset =
-        (StyleConstants.infiniteScrollBuffer ~/ 2 ~/ 12) * 12;
+    const monthOffset = (StyleConstants.infiniteScrollBuffer ~/ 2 ~/ 12) * 12;
     _monthController = FixedExtentScrollController(
       initialItem: (state.month - 1) + monthOffset,
     );
@@ -106,34 +103,33 @@ class _ScrollingDatePickerContentState
   }
 
   void _handleHapticFeedback() {
-    if (widget.enableHaptics) {
-      HapticFeedback.selectionClick();
-    }
+    if (widget.enableHaptics) unawaited(HapticFeedback.selectionClick());
   }
 
   /// Clamp day controller position to valid range BEFORE cubit update.
-  /// This ensures the controller is at a valid position when the picker rebuilds.
+  /// This ensures the controller is at a valid position when the picker
+  /// rebuilds.
   void _clampDayControllerBeforeUpdate(int newMaxDays) {
     if (!_dayController.hasClients) return;
 
     final currentPosition = _dayController.selectedItem;
-    
+
     // Calculate the actual day (1-based) currently shown
     // With looping, we need modulo of current item count
     // Handle negative positions too
     int currentDayIndex = currentPosition % _currentDaysInMonth;
     if (currentDayIndex < 0) currentDayIndex += _currentDaysInMonth;
     final currentDay = currentDayIndex + 1; // 1-based day
-    
+
     // Clamp day if it exceeds new month's days
     final targetDay = currentDay > newMaxDays ? newMaxDays : currentDay;
-    
+
     // Set position to the target day (0-indexed)
     final targetPosition = targetDay - 1;
-    
+
     // Jump to the correct position
     _dayController.jumpToItem(targetPosition);
-    
+
     // Update our tracked days count
     _currentDaysInMonth = newMaxDays;
   }
@@ -189,8 +185,9 @@ class _ScrollingDatePickerContentState
       buildWhen: (previous, current) =>
           previous.month != current.month || previous.year != current.year,
       builder: (context, state) {
-        final currentMaxDays =
-            context.read<DatePickerCubit>().daysInCurrentMonth;
+        final currentMaxDays = context
+            .read<DatePickerCubit>()
+            .daysInCurrentMonth;
 
         // Finite item count but with looping enabled
         // This gives us exactly the right days (1-28 for Feb, 1-31 for Jan)
@@ -239,8 +236,9 @@ class _ScrollingDatePickerContentState
         child: Stack(
           children: [
             Row(
-              children:
-                  columns.map((column) => Expanded(child: column)).toList(),
+              children: columns
+                  .map((column) => Expanded(child: column))
+                  .toList(),
             ),
             _buildDividers(size),
           ],
@@ -270,7 +268,8 @@ class _ScrollingDatePickerContentState
                           blurRadius: widget.dividerConfiguration.blurRadius,
                           spreadRadius:
                               widget.dividerConfiguration.spreadRadius,
-                          blurStyle: widget.dividerConfiguration.blurStyle ??
+                          blurStyle:
+                              widget.dividerConfiguration.blurStyle ??
                               BlurStyle.normal,
                         ),
                       ]
@@ -293,7 +292,8 @@ class _ScrollingDatePickerContentState
                           blurRadius: widget.dividerConfiguration.blurRadius,
                           spreadRadius:
                               widget.dividerConfiguration.spreadRadius,
-                          blurStyle: widget.dividerConfiguration.blurStyle ??
+                          blurStyle:
+                              widget.dividerConfiguration.blurStyle ??
                               BlurStyle.normal,
                         ),
                       ]

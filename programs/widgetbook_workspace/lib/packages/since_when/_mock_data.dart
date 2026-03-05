@@ -12,8 +12,14 @@ class MockDataGenerator {
 
   static String _generateTimestamp() {
     _timestampCounter++;
-    final now = DateTime.utc(2025, 1, 19, 10, 0, 0)
-        .add(Duration(seconds: _timestampCounter));
+    final now = DateTime.utc(
+      2025,
+      1,
+      19,
+      10,
+      0,
+      0,
+    ).add(Duration(seconds: _timestampCounter));
     return now.toIso8601String();
   }
 
@@ -24,7 +30,6 @@ class MockDataGenerator {
         id: _idCounter++,
         createdTimeStamp: timestamp,
         tagName: tagName,
-        tagDescription: 'Mock tag: $tagName',
         color: _colorForTag(tagName),
       );
     });
@@ -32,8 +37,14 @@ class MockDataGenerator {
 
   static int _colorForTag(String tagName) {
     const colors = [
-      0xFF2196F3, 0xFF4CAF50, 0xFFF44336, 0xFF9C27B0,
-      0xFFFF9800, 0xFF00BCD4, 0xFFE91E63, 0xFF795548,
+      0xFF2196F3,
+      0xFF4CAF50,
+      0xFFF44336,
+      0xFF9C27B0,
+      0xFFFF9800,
+      0xFF00BCD4,
+      0xFFE91E63,
+      0xFF795548,
     ];
     return colors[tagName.hashCode.abs() % colors.length];
   }

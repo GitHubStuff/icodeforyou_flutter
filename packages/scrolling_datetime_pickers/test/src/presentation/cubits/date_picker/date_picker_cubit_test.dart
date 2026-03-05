@@ -130,7 +130,9 @@ void main() {
       final notLeap1900 = DatePickerCubit(initialDate: DateTime(1900, 2, 1));
       notLeap1900.updateDay(29);
       expect(
-          notLeap1900.state.date.day, 28); // 1900 not leap (divisible by 100)
+        notLeap1900.state.date.day,
+        28,
+      ); // 1900 not leap (divisible by 100)
       notLeap1900.close();
 
       final leap2004 = DatePickerCubit(initialDate: DateTime(2004, 2, 1));
@@ -177,7 +179,7 @@ void main() {
       expect(cubit.state.isScrolling, true);
 
       // Wait for debounce
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future<void>.delayed(const Duration(milliseconds: 500));
       expect(cubit.state.isScrolling, false);
     });
   });

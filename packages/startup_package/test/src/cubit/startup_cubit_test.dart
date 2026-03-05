@@ -25,12 +25,12 @@ void main() {
         'emits [StartupRunningTasks, StartupShowLoading, StartupComplete] '
         'when animation completes before tasks',
         build: () => StartupCubit([
-          () => Future.delayed(const Duration(milliseconds: 50)),
+          () => Future<void>.delayed(const Duration(milliseconds: 50)),
         ]),
         act: (cubit) async {
           cubit.runTasks();
           cubit.signalAnimationComplete();
-          await Future.delayed(const Duration(milliseconds: 100));
+          await Future<void>.delayed(const Duration(milliseconds: 100));
         },
         expect: () => [
           const StartupRunningTasks(),
@@ -56,7 +56,7 @@ void main() {
         'fails fast on first error with eagerError',
         build: () => StartupCubit([
           () async => throw Exception('first failure'),
-          () => Future.delayed(const Duration(seconds: 10)),
+          () => Future<void>.delayed(const Duration(seconds: 10)),
         ]),
         act: (cubit) => cubit.runTasks(),
         expect: () => [
@@ -103,7 +103,7 @@ void main() {
       blocTest<StartupCubit, StartupState>(
         'emits StartupShowLoading when tasks are not yet complete',
         build: () => StartupCubit([
-          () => Future.delayed(const Duration(seconds: 10)),
+          () => Future<void>.delayed(const Duration(seconds: 10)),
         ]),
         act: (cubit) {
           cubit.runTasks();
