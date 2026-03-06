@@ -1,4 +1,8 @@
 // test/src/_controller_test.dart
+// ignore_for_file: simplify_variable_pattern, comment_references
+
+import 'dart:async';
+
 import 'package:adaptive_modal/adaptive_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,12 +16,11 @@ AdaptiveModalController<void> makeController({
   Widget child = const Text('modal content'),
   AdaptiveModalConfig config = const AdaptiveModalConfig(),
   GlobalKey? anchorKey,
-}) =>
-    AdaptiveModalController<void>(
-      anchorKey: anchorKey ?? GlobalKey(),
-      child: child,
-      config: config,
-    );
+}) => AdaptiveModalController<void>(
+  anchorKey: anchorKey ?? GlobalKey(),
+  child: child,
+  config: config,
+);
 
 /// Host widget that owns a controller, attaches it in [didChangeDependencies],
 /// and renders the anchor [ElevatedButton] with the given [anchorKey].
@@ -63,8 +66,13 @@ class _TestHostState extends State<_TestHost> {
 
 /// Pumps a [_TestHost] inside [MaterialApp]. Returns the controller and a
 /// helper that calls [show] with the correct context.
-Future<({AdaptiveModalController<void> controller, Future<void> Function() show})>
-    pumpHost(
+Future<
+  ({
+    AdaptiveModalController<void> controller,
+    Future<void> Function() show,
+  })
+>
+pumpHost(
   WidgetTester tester, {
   Widget content = const Text('modal content'),
   AdaptiveModalConfig config = const AdaptiveModalConfig(),
@@ -85,7 +93,7 @@ Future<({AdaptiveModalController<void> controller, Future<void> Function() show}
   // Capture context from within the overlay scope for show() calls.
   Future<void> show() async {
     final ctx = tester.element(find.byKey(anchorKey));
-    controller.show(ctx);
+    unawaited(controller.show(ctx));
     await tester.pump();
   }
 
@@ -110,7 +118,7 @@ void main() {
 
   group('AdaptiveModalController.attach', () {
     testWidgets('attaches without throwing', (tester) async {
-      expect(() async => await pumpHost(tester), returnsNormally);
+      expect(() async => pumpHost(tester), returnsNormally);
     });
 
     testWidgets('second attach call is a no-op (no throw)', (tester) async {
@@ -145,7 +153,7 @@ void main() {
     testWidgets('calling show twice does not throw', (tester) async {
       final (controller: _, :show) = await pumpHost(tester);
       await show();
-      expect(() => show(), returnsNormally);
+      expect(show, returnsNormally);
     });
   });
 
@@ -179,7 +187,7 @@ void main() {
 
     testWidgets('hide when not visible does not throw', (tester) async {
       final (:controller, show: _) = await pumpHost(tester);
-      expect(() => controller.hide(), returnsNormally);
+      expect(controller.hide, returnsNormally);
     });
   });
 
@@ -213,7 +221,9 @@ void main() {
   // -------------------------------------------------------------------------
 
   group('AdaptiveModalController.resolve', () {
-    testWidgets('resolve completes future with value and hides modal', (tester) async {
+    testWidgets('resolve completes future with value and hides modal', (
+      tester,
+    ) async {
       final anchorKey = GlobalKey();
       late AdaptiveModalController<String> controller;
 
@@ -222,32 +232,36 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: StatefulBuilder(builder: (ctx, setState) {
-            hostCtx = ctx;
-            return Scaffold(
-              body: Builder(builder: (innerCtx) {
-                controller = AdaptiveModalController<String>(
-                  anchorKey: anchorKey,
-                  child: ElevatedButton(
-                    key: const Key('resolve_btn'),
-                    onPressed: () => controller.resolve('the answer'),
-                    child: const Text('Resolve'),
-                  ),
-                );
-                controller.attach(innerCtx);
-                return ElevatedButton(
-                  key: anchorKey,
-                  onPressed: () {},
-                  child: const Text('Anchor'),
-                );
-              }),
-            );
-          }),
+          home: StatefulBuilder(
+            builder: (ctx, setState) {
+              hostCtx = ctx;
+              return Scaffold(
+                body: Builder(
+                  builder: (innerCtx) {
+                    controller = AdaptiveModalController<String>(
+                      anchorKey: anchorKey,
+                      child: ElevatedButton(
+                        key: const Key('resolve_btn'),
+                        onPressed: () => controller.resolve('the answer'),
+                        child: const Text('Resolve'),
+                      ),
+                    )
+                    ..attach(innerCtx);
+                    return ElevatedButton(
+                      key: anchorKey,
+                      onPressed: () {},
+                      child: const Text('Anchor'),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
         ),
       );
 
       String? result;
-      controller.show(hostCtx).then((v) => result = v);
+      unawaited(controller.show(hostCtx).then((v) => result = v));
       await tester.pumpAndSettle();
 
       await tester.tap(find.byKey(const Key('resolve_btn')));
@@ -289,10 +303,13 @@ void main() {
   // -------------------------------------------------------------------------
 
   group('AdaptiveModalController barrier dismiss', () {
-    testWidgets('tapping barrier hides modal when barrierDismissible true', (tester) async {
+    testWidgets('tapping barrier hides modal when barrierDismissible true', (
+      tester,
+    ) async {
       final (:controller, show: showModal) = await pumpHost(
         tester,
         content: const Text('behind barrier'),
+        // ignore: avoid_redundant_argument_values document_ignores
         config: const AdaptiveModalConfig(barrierDismissible: true),
       );
       await showModal();
@@ -311,7 +328,9 @@ void main() {
   // -------------------------------------------------------------------------
 
   group('AdaptiveModalConfig integration', () {
-    testWidgets('non-default config shows modal without throwing', (tester) async {
+    testWidgets('non-default config shows modal without throwing', (
+      tester,
+    ) async {
       final (:controller, show: showModal) = await pumpHost(
         tester,
         config: const AdaptiveModalConfig(

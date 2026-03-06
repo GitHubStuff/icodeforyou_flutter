@@ -5,9 +5,9 @@ import 'package:since_when/since_when.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
-import '_info_demos.dart';
-import '_record_demos.dart';
-import '_tag_demos.dart';
+import 'package:widgetbook_workspace/packages/since_when/_info_demos.dart';
+import 'package:widgetbook_workspace/packages/since_when/_record_demos.dart';
+import 'package:widgetbook_workspace/packages/since_when/_tag_demos.dart';
 
 /// Demonstrates creating and displaying SinceWhenRecord entries.
 @widgetbook.UseCase(name: 'Record Creation Demo', type: SinceWhenRecord)

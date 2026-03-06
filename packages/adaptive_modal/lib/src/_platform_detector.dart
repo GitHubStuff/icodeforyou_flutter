@@ -9,6 +9,8 @@
 // here.  This class is stateless and every method is static.
 // ---------------------------------------------------------------------------
 
+// ignore_for_file: document_ignores, comment_references
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -51,8 +53,6 @@ enum FormFactor {
 /// phone/tablet boundary and is consistent with [AdaptiveLayout] from the
 /// flutter_adaptive_scaffold package.
 class PlatformDetector {
-  PlatformDetector._();
-
   /// The logical pixel width below which a device is considered a phone.
   static const double _phoneBreakpoint = 600.0;
 
@@ -66,7 +66,9 @@ class PlatformDetector {
     if (_isDesktopPlatform) return FormFactor.large;
 
     final shortestSide = MediaQuery.sizeOf(context).shortestSide;
-    return shortestSide < _phoneBreakpoint ? FormFactor.phone : FormFactor.large;
+    return shortestSide < _phoneBreakpoint
+        ? FormFactor.phone
+        : FormFactor.large;
   }
 
   /// Returns true when running on macOS, Windows, or Linux.
@@ -99,6 +101,7 @@ class PlatformDetector {
 /// The [onChange] callback receives the new [FormFactor] whenever it differs
 /// from the previously observed value.
 class BreakpointObserver {
+  /// Constructor
   BreakpointObserver({required this.onChange});
 
   /// Called whenever the resolved [FormFactor] changes.
@@ -132,11 +135,9 @@ class BreakpointObserver {
 /// Used by [_PositionResolver] when clamping the modal position to ensure
 /// the modal never overlaps system UI (notch, home indicator, status bar).
 class SafeAreaInsets {
-  SafeAreaInsets._();
 
   /// Returns the [EdgeInsets] representing the safe area for [context].
-  static EdgeInsets of(BuildContext context) =>
-      MediaQuery.paddingOf(context);
+  static EdgeInsets of(BuildContext context) => MediaQuery.paddingOf(context);
 
   /// Returns the top safe area inset (status bar / notch height).
   static double top(BuildContext context) => of(context).top;
@@ -154,7 +155,6 @@ class SafeAreaInsets {
 /// A thin wrapper that keeps [MediaQuery] access in one place so that
 /// [_PositionResolver] and [_OverlayManager] never call [MediaQuery] directly.
 class ScreenSize {
-  ScreenSize._();
 
   /// Returns the full logical screen [Size] for [context].
   static Size of(BuildContext context) => MediaQuery.sizeOf(context);
@@ -195,10 +195,9 @@ enum WindowSizeClass {
 
 /// Resolves the [WindowSizeClass] for a given [BuildContext].
 class WindowSizeClassResolver {
-  WindowSizeClassResolver._();
-
-  static const double _mediumBreakpoint = 600.0;
-  static const double _expandedBreakpoint = 840.0;
+ 
+  static const double _mediumBreakpoint = 600;
+  static const double _expandedBreakpoint = 840;
 
   /// Returns the [WindowSizeClass] for the current window width.
   static WindowSizeClass resolve(BuildContext context) {

@@ -1,5 +1,6 @@
 // packages/sqlite_viewer/lib/src/cubit/sqlite_viewer_cubit.dart
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:sqlite_viewer/src/abstract/sqlite_viewer_abstract.dart';
@@ -31,6 +32,11 @@ import 'package:sqlite_viewer/src/utils/query_validator.dart';
 class SqliteViewerCubit extends Cubit<SqliteViewerState> {
   /// Creates a viewer cubit with the given database 'source'.
   SqliteViewerCubit(this._source) : super(const ViewerDisconnected());
+
+  /// Creates a cubit pre-seeded with [initialState] for testing.
+  @visibleForTesting
+  SqliteViewerCubit.seeded(this._source, SqliteViewerState initialState)
+      : super(initialState);
 
   final SqliteViewerAbstract _source;
 
@@ -279,19 +285,19 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
       return;
     }
 
-    // Validate query before execution
+    // Validate query before execution — getLeft() avoids unreachable throw arm.
     final validationResult = QueryValidator.validate(sql);
     if (validationResult.isLeft()) {
       emit(
         QueryFailed(
           metadata: currentMetadata,
           query: sql,
-          failure: validationResult.match((f) => f, (_) => throw StateError('')),
+          failure: validationResult.getLeft().toNullable()!,
         ),
       );
       return;
     }
-    final validatedQuery = validationResult.match((_) => '', (q) => q);
+    final validatedQuery = validationResult.getRight().toNullable()!;
 
     emit(
       QueryExecuting(
@@ -311,8 +317,8 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
         ),
       ),
       (rows) {
-        // Extract column names from first row, or empty list
-        final columns = rows.isNotEmpty ? rows.first.keys.toList() : <String>[];
+        final columns =
+            rows.isNotEmpty ? rows.first.keys.toList() : <String>[];
 
         emit(
           QueryResultLoaded(
@@ -330,30 +336,25 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
   // Private Helpers
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /// Loads database metadata from the source.
   Future<Either<SqliteViewerFailure, DatabaseMetadata>> _loadMetadata() async {
-    // Load full path
     final pathResult = await _source.getFullPath();
     if (pathResult.isLeft()) {
       return Left(pathResult.match((f) => f, (_) => throw StateError('')));
     }
     final fullPath = pathResult.match((_) => '', (p) => p);
 
-    // Load SQLite version
     final versionResult = await _source.getSqliteVersion();
     if (versionResult.isLeft()) {
       return Left(versionResult.match((f) => f, (_) => throw StateError('')));
     }
     final sqliteVersion = versionResult.match((_) => '', (v) => v);
 
-    // Load database size
     final sizeResult = await _source.getDatabaseSize();
     if (sizeResult.isLeft()) {
       return Left(sizeResult.match((f) => f, (_) => throw StateError('')));
     }
     final databaseSize = sizeResult.match((_) => 0, (s) => s);
 
-    // Load table names
     final tablesResult = await _source.getTableNames();
     if (tablesResult.isLeft()) {
       return Left(tablesResult.match((f) => f, (_) => throw StateError('')));
@@ -370,7 +371,6 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
     );
   }
 
-  /// Extracts metadata from current state, if available.
   DatabaseMetadata? _getCurrentMetadata() {
     final currentState = state;
     return switch (currentState) {

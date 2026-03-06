@@ -1,5 +1,7 @@
 // lib/src/cubit/_startup_state.dart
 
+// ignore_for_file: document_ignores, public_member_api_docs
+
 part of 'startup_cubit.dart';
 
 sealed class StartupState {

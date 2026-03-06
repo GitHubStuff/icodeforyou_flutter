@@ -1,11 +1,12 @@
 // lib/src/navigation/_startup_router.dart
 
+// ignore_for_file: document_ignores, public_member_api_docs
+
 import 'package:flutter/material.dart';
 
 const Duration _duration = Duration(milliseconds: 3500);
 
 class StartupRouter {
-  const StartupRouter._();
 
   static Route<void> _fadeRoute(Widget page) {
     return PageRouteBuilder(

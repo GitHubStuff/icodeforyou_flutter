@@ -38,7 +38,7 @@ part '_sqlite_viewer_page_tablet_layout.dart';
 /// );
 /// ```
 class SqliteViewerPage extends StatelessWidget {
-  /// Create [SqliteViewerPage]
+  /// Creates [SqliteViewerPage].
   const SqliteViewerPage({
     required this.source,
     super.key,
@@ -48,7 +48,24 @@ class SqliteViewerPage extends StatelessWidget {
     this.showRowNumbers = true,
     this.nullValueDisplay = 'NULL',
     this.textHandling = TextHandling.trunc,
-  });
+  }) : _cubit = null;
+
+  /// Creates [SqliteViewerPage] with a pre-seeded [cubit] for testing.
+  ///
+  /// The provided cubit is used directly via [BlocProvider.value] — no
+  /// internal cubit is created and [connect] is not called.
+  @visibleForTesting
+  const SqliteViewerPage.withCubit({
+    required this.source,
+    required SqliteViewerCubit cubit,
+    super.key,
+    this.title = 'SQLite Viewer',
+    this.showQueryInput = true,
+    this.sidebarWidth = 280.0,
+    this.showRowNumbers = true,
+    this.nullValueDisplay = 'NULL',
+    this.textHandling = TextHandling.trunc,
+  }) : _cubit = cubit;
 
   /// Database source implementing [SqliteViewerAbstract].
   final SqliteViewerAbstract source;
@@ -71,22 +88,31 @@ class SqliteViewerPage extends StatelessWidget {
   /// How to handle text overflow in cells.
   final TextHandling textHandling;
 
+  final SqliteViewerCubit? _cubit;
+
   @override
   Widget build(BuildContext context) {
+    final content = _SqliteViewerPageContent(
+      title: title,
+      showQueryInput: showQueryInput,
+      sidebarWidth: sidebarWidth,
+      showRowNumbers: showRowNumbers,
+      nullValueDisplay: nullValueDisplay,
+      textHandling: textHandling,
+    );
+
+    final seeded = _cubit;
+    if (seeded != null) {
+      return BlocProvider.value(value: seeded, child: content);
+    }
+
     return BlocProvider(
       create: (_) {
         final cubit = SqliteViewerCubit(source);
         unawaited(cubit.connect());
         return cubit;
       },
-      child: _SqliteViewerPageContent(
-        title: title,
-        showQueryInput: showQueryInput,
-        sidebarWidth: sidebarWidth,
-        showRowNumbers: showRowNumbers,
-        nullValueDisplay: nullValueDisplay,
-        textHandling: textHandling,
-      ),
+      child: content,
     );
   }
 }

@@ -47,7 +47,7 @@ abstract final class TimestampGenerator {
 
     return const Left(
       IdentifierCollision(
-        'Failed to generate unique timestamp after maximum retries.',
+        'Failed to generate unique timestamp after $_maxRetryAttempts retries.',
       ),
     );
   }

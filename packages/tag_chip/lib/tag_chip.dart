@@ -1,3 +1,5 @@
+// ignore_for_file: document_ignores, public_member_api_docs
+
 import 'package:flutter/material.dart';
 
 enum TagChipState { disabled, enabled, none }
@@ -6,9 +8,9 @@ typedef CallbackState = void Function(TagChipState state)?;
 
 class TagChip extends StatelessWidget {
   const TagChip({
-    super.key,
     required this.backgroundColor,
     required this.text,
+    super.key,
     this.state = TagChipState.none,
     this.onPressed,
     this.minimumWidth = 32,

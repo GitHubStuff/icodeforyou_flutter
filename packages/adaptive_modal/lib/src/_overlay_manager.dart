@@ -28,9 +28,11 @@ import '_position_resolver.dart';
 
 /// Manages the [OverlayEntry] lifecycle for the modal and its barrier.
 ///
+// ignore: comment_references
 /// Created once by [AdaptiveModalController] and held for the lifetime of
 /// the controller.  [dispose] must be called when the controller is disposed.
 class OverlayManager<T> {
+  /// Constructor
   OverlayManager({
     required this.config,
     required this.anchorKey,
@@ -112,7 +114,7 @@ class OverlayManager<T> {
     if (placement == null) {
       _completer!.complete(null);
       _completer = null;
-      return Future.value(null);
+      return Future.value();
     }
 
     _placement = placement;

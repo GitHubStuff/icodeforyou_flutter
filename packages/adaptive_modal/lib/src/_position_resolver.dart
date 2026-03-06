@@ -10,10 +10,9 @@
 // No Flutter widget state is held here. All methods are static.
 // ---------------------------------------------------------------------------
 
+import 'package:adaptive_modal/src/_platform_detector.dart';
+import 'package:adaptive_modal/src/types.dart';
 import 'package:flutter/widgets.dart';
-
-import 'types.dart';
-import '_platform_detector.dart';
 
 // ---------------------------------------------------------------------------
 // ModalPlacement
@@ -21,6 +20,7 @@ import '_platform_detector.dart';
 
 /// The resolved screen-space position for the modal and which side it landed on.
 class ModalPlacement {
+  /// Constructor
   const ModalPlacement({
     required this.left,
     required this.top,
@@ -43,16 +43,15 @@ class ModalPlacement {
 
 /// Resolves the on-screen [ModalPlacement] for the modal.
 ///
+// ignore: comment_references
 /// On phone the placement is always full-screen — [left] and [top] are zero.
 ///
 /// On large surfaces the resolver attempts to place the modal below the anchor.
 /// If it does not fit below, it flips above.  After flipping, the result is
 /// clamped to keep the modal within safe screen bounds.
 class PositionResolver {
-  PositionResolver._();
-
   /// Vertical gap between the anchor edge and the modal edge in logical pixels.
-  static const double _anchorGap = 8.0;
+  static const double _anchorGap = 8;
 
   /// Resolves the [ModalPlacement] for the given [anchorKey] and constraints.
   ///
@@ -138,7 +137,10 @@ class PositionResolver {
     // available space (common in widgetbook viewports) we clamp to safeTop/0
     // rather than crashing with an invalid range.
     final topMin = safeTop;
-    final topMax = (screen.height - safeBottom - modalHeight).clamp(safeTop, double.infinity);
+    final topMax = (screen.height - safeBottom - modalHeight).clamp(
+      safeTop,
+      double.infinity,
+    );
     final leftMax = (screen.width - modalWidth).clamp(0.0, double.infinity);
 
     final clampedTop = top.clamp(topMin, topMax);

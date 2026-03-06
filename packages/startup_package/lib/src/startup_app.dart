@@ -1,12 +1,16 @@
 // lib/src/startup_app.dart
 
+// ignore_for_file: document_ignores, public_member_api_docs
+
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'cubit/startup_cubit.dart';
-import 'navigation/_startup_router.dart';
-import 'startup_config.dart';
+import 'package:startup_package/src/cubit/startup_cubit.dart';
+import 'package:startup_package/src/navigation/_startup_router.dart';
+import 'package:startup_package/src/startup_config.dart';
 
 class StartupApp extends StatelessWidget {
   const StartupApp({required this.config, super.key});
@@ -21,7 +25,8 @@ class StartupApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         home: _StartupShell(config: config),
         builder: (context, child) {
-          SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+          // ignore: lines_longer_than_80_chars
+          unawaited(SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky));
           return child!;
         },
       ),
@@ -59,13 +64,13 @@ class _StartupShell extends StatelessWidget {
   }
 
   void _handleError(BuildContext context, Object exception) {
-    showDialog<void>(
+    unawaited(showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (_) => AlertDialog(
         title: const Text('Startup Failed'),
         content: Text(exception.toString()),
       ),
-    );
+    ));
   }
 }

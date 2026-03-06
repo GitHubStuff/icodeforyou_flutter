@@ -51,12 +51,13 @@ class SinceWhenDatabase
     required Database db,
     required String fullPath,
     required bool isInMemory,
-  })  : _db = db,
-        _fullPath = fullPath,
-        _isInMemory = isInMemory;
+  }) : _db = db,
+       _fullPath = fullPath,
+       _isInMemory = isInMemory;
 
   @override
   final Database _db;
+  @override
   final String _fullPath;
   final bool _isInMemory;
 

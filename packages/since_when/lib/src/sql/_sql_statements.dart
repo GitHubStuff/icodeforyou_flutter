@@ -1,5 +1,7 @@
 // lib/src/sql/_sql_statements.dart
 
+// ignore_for_file: document_ignores, public_member_api_docs
+
 abstract final class SqlStatements {
   static const String tableSinceWhen = 'since_when';
   static const String tableTagGlossary = 'since_when_tag_glossary';
