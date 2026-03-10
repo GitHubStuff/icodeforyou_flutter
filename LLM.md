@@ -13,9 +13,9 @@ Melos is used for crating an app and package mono-repo (not monolitic)
 Flutter should use Flutter >= 3.10.x
 
 Should use packages:
-- get_it 9.2.1
-- flutter_bloc (prefer cubits) 9.1.1
-- flutter_lints ^6.0.0
+- get_it: 9.2.1
+- flutter_bloc (prefer cubits): 9.1.1
+- very_good_analysis: ^10.2.0
 
 
 ## Coding principles

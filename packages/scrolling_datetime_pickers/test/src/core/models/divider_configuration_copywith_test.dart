@@ -12,12 +12,12 @@ void main() {
       final modified = original.copyWith(
         color: Colors.red,
         transparency: 0.5,
-        thickness: 3.0,
-        indent: 5.0,
-        endIndent: 10.0,
+        thickness: 3,
+        indent: 5,
+        endIndent: 10,
         blurStyle: BlurStyle.normal,
-        blurRadius: 2.0,
-        spreadRadius: 1.0,
+        blurRadius: 2,
+        spreadRadius: 1,
       );
 
       expect(modified.color, Colors.red);
@@ -35,11 +35,11 @@ void main() {
         color: Colors.green,
         transparency: 0.7,
         thickness: 2.5,
-        indent: 5.0,
-        endIndent: 10.0,
+        indent: 5,
+        endIndent: 10,
         blurStyle: BlurStyle.outer,
-        blurRadius: 3.0,
-        spreadRadius: 2.0,
+        blurRadius: 3,
+        spreadRadius: 2,
       );
 
       final copy = original.copyWith();
@@ -71,19 +71,19 @@ void main() {
       final thicknessOnly = original.copyWith(thickness: 2.5);
       expect(thicknessOnly.thickness, 2.5);
 
-      final indentOnly = original.copyWith(indent: 10.0);
+      final indentOnly = original.copyWith(indent: 10);
       expect(indentOnly.indent, 10.0);
 
-      final endIndentOnly = original.copyWith(endIndent: 15.0);
+      final endIndentOnly = original.copyWith(endIndent: 15);
       expect(endIndentOnly.endIndent, 15.0);
 
       final blurStyleOnly = original.copyWith(blurStyle: BlurStyle.solid);
       expect(blurStyleOnly.blurStyle, BlurStyle.solid);
 
-      final blurRadiusOnly = original.copyWith(blurRadius: 5.0);
+      final blurRadiusOnly = original.copyWith(blurRadius: 5);
       expect(blurRadiusOnly.blurRadius, 5.0);
 
-      final spreadRadiusOnly = original.copyWith(spreadRadius: 3.0);
+      final spreadRadiusOnly = original.copyWith(spreadRadius: 3);
       expect(spreadRadiusOnly.spreadRadius, 3.0);
     });
   });
@@ -99,23 +99,23 @@ void main() {
       const config1 = DividerConfiguration(
         color: Colors.blue,
         transparency: 0.5,
-        thickness: 2.0,
-        indent: 5.0,
-        endIndent: 10.0,
+        thickness: 2,
+        indent: 5,
+        endIndent: 10,
         blurStyle: BlurStyle.normal,
-        blurRadius: 3.0,
-        spreadRadius: 1.0,
+        blurRadius: 3,
+        spreadRadius: 1,
       );
 
       const config2 = DividerConfiguration(
         color: Colors.blue,
         transparency: 0.5,
-        thickness: 2.0,
-        indent: 5.0,
-        endIndent: 10.0,
+        thickness: 2,
+        indent: 5,
+        endIndent: 10,
         blurStyle: BlurStyle.normal,
-        blurRadius: 3.0,
-        spreadRadius: 1.0,
+        blurRadius: 3,
+        spreadRadius: 1,
       );
 
       expect(config1, equals(config2));
@@ -131,22 +131,22 @@ void main() {
       const diffTransparency = DividerConfiguration(transparency: 0.5);
       expect(base, isNot(equals(diffTransparency)));
 
-      const diffThickness = DividerConfiguration(thickness: 3.0);
+      const diffThickness = DividerConfiguration(thickness: 3);
       expect(base, isNot(equals(diffThickness)));
 
-      const diffIndent = DividerConfiguration(indent: 5.0);
+      const diffIndent = DividerConfiguration(indent: 5);
       expect(base, isNot(equals(diffIndent)));
 
-      const diffEndIndent = DividerConfiguration(endIndent: 5.0);
+      const diffEndIndent = DividerConfiguration(endIndent: 5);
       expect(base, isNot(equals(diffEndIndent)));
 
       const diffBlurStyle = DividerConfiguration(blurStyle: BlurStyle.inner);
       expect(base, isNot(equals(diffBlurStyle)));
 
-      const diffBlurRadius = DividerConfiguration(blurRadius: 2.0);
+      const diffBlurRadius = DividerConfiguration(blurRadius: 2);
       expect(base, isNot(equals(diffBlurRadius)));
 
-      const diffSpreadRadius = DividerConfiguration(spreadRadius: 2.0);
+      const diffSpreadRadius = DividerConfiguration(spreadRadius: 2);
       expect(base, isNot(equals(diffSpreadRadius)));
     });
 

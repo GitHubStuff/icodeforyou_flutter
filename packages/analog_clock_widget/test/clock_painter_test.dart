@@ -1,6 +1,8 @@
 // clock_painter_test.dart
+// ignore_for_file: lines_longer_than_80_chars, use_setters_to_change_properties
+
 import 'package:analog_clock_widget/analog_clock_widget.dart'
-    show TimeProvider, ClockStyle, ClockFaceStyle, HandStyle, AnalogClock;
+    show AnalogClock, ClockFaceStyle, ClockStyle, HandStyle, TimeProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -28,12 +30,6 @@ void main() {
       tester,
     ) async {
       final time = _FixedTime(DateTime(2024, 1, 15, 3, 27, 42));
-      final style = ClockStyle(
-        faceStyle: ClockFaceStyle.classic, // exercises _drawClassicTicks
-        handStyle: HandStyle.traditional, // exercises _drawTraditionalHand
-        showSecondHand: true, // exercises _drawSecondHandShape
-        showNumbers: true, // exercises _drawNumbers path
-      );
 
       await tester.pumpWidget(
         _host(
@@ -42,7 +38,6 @@ void main() {
             height: 220,
             child: AnalogClock(
               radius: 100, // large → ticks + numbers + minute sweep branch
-              style: style,
               timeProvider: time,
             ),
           ),
@@ -71,12 +66,11 @@ void main() {
               height: 210,
               child: AnalogClock(
                 radius: 96,
-                style: ClockStyle(
+                style: const ClockStyle(
                   faceStyle:
                       ClockFaceStyle.modern, // exercises _drawModernTicks
                   handStyle: HandStyle.modern, // exercises _drawModernHand
                   showSecondHand: false, // skip second hand
-                  showNumbers: true, // numbers path
                 ),
                 timeProvider: time,
               ),
@@ -93,10 +87,9 @@ void main() {
               height: 210,
               child: AnalogClock(
                 radius: 96,
-                style: ClockStyle(
+                style: const ClockStyle(
                   faceStyle: ClockFaceStyle.modern,
                   handStyle: HandStyle.modern,
-                  showSecondHand: true, // now draws second hand
                   showNumbers: false, // numbers disabled
                 ),
                 timeProvider: time,
@@ -113,7 +106,7 @@ void main() {
     testWidgets(
       'minimal face (dots) + sleek hands + tiny canvas (minute sweep off)',
       (tester) async {
-        final time = _FixedTime(DateTime(2024, 1, 15, 12, 0, 0));
+        final time = _FixedTime(DateTime(2024, 1, 15, 12));
 
         // Small outer size to force tiny canvas radius so the painter’s
         // minute-sweep branch uses the small-radius code path (0.0).
@@ -125,12 +118,10 @@ void main() {
               child: FittedBox(
                 child: AnalogClock(
                   radius: 60,
-                  style: ClockStyle(
+                  style: const ClockStyle(
                     faceStyle: ClockFaceStyle
                         .minimal, // exercises _drawMinimalTicks dots; numbers ignored
                     handStyle: HandStyle.sleek, // exercises _drawSleekHand
-                    showSecondHand: true,
-                    showNumbers: true, // ignored by minimal face in painter
                   ),
                   timeProvider: time,
                 ),

@@ -1,9 +1,14 @@
 // lib/src/types.dart
-// ignore_for_file: public_member_api_docs
+// ignore_for_file: comment_references, public_member_api_docs
 // ---------------------------------------------------------------------------
 // types.dart — public and internal value types for the adaptive_modal package.
 // ---------------------------------------------------------------------------
+import 'package:adaptive_modal/adaptive_modal.dart'
+    show AdaptiveModalController;
+import 'package:adaptive_modal/src/_controller.dart'
+    show AdaptiveModalController;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 
 // ---------------------------------------------------------------------------
 // AdaptiveModalConfig
@@ -30,7 +35,8 @@ import 'package:flutter/material.dart';
 ///   barrierDismissible: false,
 /// )
 /// ```
-class AdaptiveModalConfig {
+@immutable
+final class AdaptiveModalConfig {
   const AdaptiveModalConfig({
     this.closeIcon,
     this.barrierDismissible = true,
@@ -40,8 +46,8 @@ class AdaptiveModalConfig {
     this.animationDuration = const Duration(milliseconds: 200),
     this.animationCurve = Curves.easeInOut,
     this.hapticFeedback = true,
-  })  : assert(maxWidth > 0, 'maxWidth must be positive'),
-        assert(maxHeight > 0, 'maxHeight must be positive');
+  }) : assert(maxWidth > 0, 'maxWidth must be positive'),
+       assert(maxHeight > 0, 'maxHeight must be positive');
 
   /// Widget rendered as the close button in the top-right corner of the modal.
   ///
@@ -51,8 +57,8 @@ class AdaptiveModalConfig {
   /// Whether tapping the barrier dismisses the modal.
   ///
   /// When false no barrier is inserted and background widgets remain fully
-  /// interactive.  The modal can still be closed via [AdaptiveModalController.hide]
-  /// or the built-in close button.
+  /// interactive.  The modal can still be closed via
+  /// [AdaptiveModalController.hide] or the built-in close button.
   ///
   /// Defaults to true.
   final bool barrierDismissible;
@@ -73,7 +79,8 @@ class AdaptiveModalConfig {
 
   /// Maximum height of the modal on tablet, desktop, and web.
   ///
-  /// On phone the modal always fills the screen height so this value is ignored.
+  /// On phone the modal always fills the screen height so this value is
+  /// ignored.
   ///
   /// Defaults to 700.0 logical pixels.
   final double maxHeight;
@@ -137,17 +144,18 @@ class AdaptiveModalConfig {
 
   @override
   int get hashCode => Object.hash(
-        barrierDismissible,
-        barrierColor,
-        maxWidth,
-        maxHeight,
-        animationDuration,
-        animationCurve,
-        hapticFeedback,
-      );
+    barrierDismissible,
+    barrierColor,
+    maxWidth,
+    maxHeight,
+    animationDuration,
+    animationCurve,
+    hapticFeedback,
+  );
 
   @override
-  String toString() => 'AdaptiveModalConfig('
+  String toString() =>
+      'AdaptiveModalConfig('
       'barrierDismissible: $barrierDismissible, '
       'barrierColor: $barrierColor, '
       'maxWidth: $maxWidth, '
@@ -211,7 +219,8 @@ class AdaptiveModalAnchorRect {
   double get centerX => left + width / 2;
 
   @override
-  String toString() => 'AdaptiveModalAnchorRect('
+  String toString() =>
+      'AdaptiveModalAnchorRect('
       'left: $left, top: $top, '
       'width: $width, height: $height'
       ')';

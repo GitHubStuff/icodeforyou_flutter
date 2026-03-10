@@ -5,7 +5,7 @@ import 'package:since_when/since_when.dart';
 
 /// Status bar widget.
 class StatusBar extends StatelessWidget {
-  const StatusBar({super.key, required this.status});
+  const StatusBar({required this.status, super.key});
   final String status;
 
   @override
@@ -22,8 +22,8 @@ class StatusBar extends StatelessWidget {
 /// Card displaying a SinceWhenRecord.
 class RecordCard extends StatelessWidget {
   const RecordCard({
-    super.key,
     required this.record,
+    super.key,
     this.highlight = false,
     this.highlightTagNames = const {},
   });
@@ -37,7 +37,9 @@ class RecordCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 4),
       color: highlight
-          ? Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3)
+          ? Theme.of(
+              context,
+            ).colorScheme.primaryContainer.withValues(alpha: 0.3)
           : null,
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -49,7 +51,10 @@ class RecordCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     record.metaData,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
                   ),
                 ),
                 CategoryChip(category: record.category),
@@ -75,12 +80,18 @@ class RecordCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               'Created: ${record.createdTimeStamp}',
-              style: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.outline),
+              style: TextStyle(
+                fontSize: 10,
+                color: Theme.of(context).colorScheme.outline,
+              ),
             ),
             if (record.parentTimeStamp != null)
               Text(
                 'Parent: ${record.parentTimeStamp}',
-                style: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.outline),
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Theme.of(context).colorScheme.outline,
+                ),
               ),
           ],
         ),
@@ -91,7 +102,7 @@ class RecordCard extends StatelessWidget {
 
 /// Tag chip with color from TagDefinition.
 class TagChip extends StatelessWidget {
-  const TagChip({super.key, required this.tag, this.highlighted = false});
+  const TagChip({required this.tag, super.key, this.highlighted = false});
   final TagDefinition tag;
   final bool highlighted;
 
@@ -100,7 +111,9 @@ class TagChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: highlighted ? Color(tag.color) : Color(tag.color).withValues(alpha: 0.3),
+        color: highlighted
+            ? Color(tag.color)
+            : Color(tag.color).withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -117,7 +130,7 @@ class TagChip extends StatelessWidget {
 
 /// Category chip.
 class CategoryChip extends StatelessWidget {
-  const CategoryChip({super.key, required this.category});
+  const CategoryChip({required this.category, super.key});
   final String category;
 
   @override
@@ -141,7 +154,7 @@ class CategoryChip extends StatelessWidget {
 
 /// Info card with title and children.
 class InfoCard extends StatelessWidget {
-  const InfoCard({super.key, required this.title, required this.children});
+  const InfoCard({required this.title, required this.children, super.key});
   final String title;
   final List<Widget> children;
 
@@ -156,8 +169,8 @@ class InfoCard extends StatelessWidget {
             Text(
               title,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const Divider(),
             ...children,
@@ -185,7 +198,10 @@ class InfoRow extends StatelessWidget {
             width: 140,
             child: Text(
               label,
-              style: TextStyle(color: Theme.of(context).colorScheme.outline, fontSize: 13),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.outline,
+                fontSize: 13,
+              ),
             ),
           ),
           Expanded(child: Text(value, style: const TextStyle(fontSize: 13))),
@@ -208,7 +224,10 @@ class CodeBlock extends StatelessWidget {
         color: Colors.grey.shade200,
         borderRadius: BorderRadius.circular(4),
       ),
-      child: Text(code, style: const TextStyle(fontFamily: 'monospace', fontSize: 12)),
+      child: Text(
+        code,
+        style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+      ),
     );
   }
 }

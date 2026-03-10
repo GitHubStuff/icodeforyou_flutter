@@ -13,7 +13,7 @@ mixin InfiniteScrollMixin {
   /// Calculate initial scroll position for infinite scroll
   int calculateInitialScrollPosition(int actualValue, int itemCount) {
     // Start in the middle of the scroll buffer
-    final int middleBuffer = StyleConstants.infiniteScrollBuffer ~/ 2;
+    const int middleBuffer = StyleConstants.infiniteScrollBuffer ~/ 2;
     final int basePosition = middleBuffer - (middleBuffer % itemCount);
     return basePosition + actualValue;
   }
@@ -117,11 +117,11 @@ mixin InfiniteScrollMixin {
 
   /// Format minute for display (with leading zero)
   String formatMinute(int minute) {
-    return formatPickerValue(minute, padZero: true);
+    return formatPickerValue(minute);
   }
 
   /// Format second for display (with leading zero)
   String formatSecond(int second) {
-    return formatPickerValue(second, padZero: true);
+    return formatPickerValue(second);
   }
 }

@@ -1,4 +1,6 @@
 // datetime_unit_test.dart
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:extensions/datetime_ext/datetime_ext.dart';
 import 'package:extensions/datetime_ext/datetime_ordering.dart' show DateTimeOrdering;
 import 'package:flutter_test/flutter_test.dart';
@@ -8,7 +10,7 @@ void main() {
     group('enum values', () {
       test('should contain all expected enum values', () {
         // Arrange & Act
-        final values = DateTimeUnit.values;
+        const values = DateTimeUnit.values;
 
         // Assert
         expect(values, hasLength(8));
@@ -442,7 +444,7 @@ void main() {
     group('enum values', () {
       test('should contain all expected enum values', () {
         // Arrange & Act
-        final values = DateTimeOrdering.values;
+        const values = DateTimeOrdering.values;
 
         // Assert
         expect(values, hasLength(3));
@@ -455,8 +457,8 @@ void main() {
     group('direction', () {
       test('should return before when startEvent is before endEvent', () {
         // Arrange
-        final startEvent = DateTime(2023, 12, 25, 10, 0, 0);
-        final endEvent = DateTime(2023, 12, 25, 11, 0, 0);
+        final startEvent = DateTime(2023, 12, 25, 10);
+        final endEvent = DateTime(2023, 12, 25, 11);
 
         // Act
         final result = DateTimeOrdering.direction(startEvent, endEvent);
@@ -467,8 +469,8 @@ void main() {
 
       test('should return after when startEvent is after endEvent', () {
         // Arrange
-        final startEvent = DateTime(2023, 12, 25, 11, 0, 0);
-        final endEvent = DateTime(2023, 12, 25, 10, 0, 0);
+        final startEvent = DateTime(2023, 12, 25, 11);
+        final endEvent = DateTime(2023, 12, 25, 10);
 
         // Act
         final result = DateTimeOrdering.direction(startEvent, endEvent);
@@ -479,8 +481,8 @@ void main() {
 
       test('should return now when startEvent equals endEvent', () {
         // Arrange
-        final startEvent = DateTime(2023, 12, 25, 10, 0, 0);
-        final endEvent = DateTime(2023, 12, 25, 10, 0, 0);
+        final startEvent = DateTime(2023, 12, 25, 10);
+        final endEvent = DateTime(2023, 12, 25, 10);
 
         // Act
         final result = DateTimeOrdering.direction(startEvent, endEvent);
@@ -503,14 +505,12 @@ void main() {
 
       test('should handle UTC and local time comparisons', () {
         // Arrange
-        final startEventUtc = DateTime.utc(2023, 12, 25, 10, 0, 0);
+        final startEventUtc = DateTime.utc(2023, 12, 25, 10);
         final endEventLocal = DateTime(
           2023,
           12,
           25,
           15,
-          0,
-          0,
         ); // Assuming different timezone
 
         // Act
@@ -522,7 +522,7 @@ void main() {
 
       test('should handle edge case with same microsecond precision', () {
         // Arrange
-        final microseconds = 1703505600000000;
+        const microseconds = 1703505600000000;
         final startEvent = DateTime.fromMicrosecondsSinceEpoch(microseconds);
         final endEvent = DateTime.fromMicrosecondsSinceEpoch(microseconds);
 

@@ -1,5 +1,4 @@
 // lib/src/presentation/widgets/datetime_popover/_datetime_popover_header.dart
-
 part of 'datetime_picker_popover.dart';
 
 class _DateTimePopoverHeader extends StatelessWidget {
@@ -29,31 +28,14 @@ class _DateTimePopoverHeader extends StatelessWidget {
   final TextStyle? confirmButtonTextStyle;
   final VoidCallback onConfirm;
 
-  String _formatDate() {
-    try {
-      return DateFormat(dateFormat).format(currentDateTime);
-      // coverage:ignore-start
-    } catch (_) {
-      return DateFormat(PopoverConstants.defaultDateFormat)
-          .format(currentDateTime);
-    }
-    // coverage:ignore-end
-  }
+  String _formatDate() =>
+      DateFormat(dateFormat).format(currentDateTime);
 
   String _formatTime() {
-    try {
-      final effectiveFormat = showSeconds
-          ? timeFormat
-          : timeFormat.replaceAll(':ss', '').replaceAll('ss', '');
-      return DateFormat(effectiveFormat).format(currentDateTime);
-      // coverage:ignore-start
-    } catch (_) {
-      final fallbackFormat = showSeconds
-          ? PopoverConstants.defaultTimeFormat
-          : PopoverConstants.defaultTimeFormatNoSeconds;
-      return DateFormat(fallbackFormat).format(currentDateTime);
-    }
-    // coverage:ignore-end
+    final effectiveFormat = showSeconds
+        ? timeFormat
+        : timeFormat.replaceAll(':ss', '').replaceAll('ss', '');
+    return DateFormat(effectiveFormat).format(currentDateTime);
   }
 
   @override
@@ -64,7 +46,6 @@ class _DateTimePopoverHeader extends StatelessWidget {
           fontSize: PopoverConstants.headerFontSize,
           fontWeight: FontWeight.w500,
         );
-
     final effectiveTimeStyle = headerTimeTextStyle ??
         TextStyle(
           color: effectiveDateStyle.color,
@@ -82,7 +63,7 @@ class _DateTimePopoverHeader extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(_formatDate(), style: effectiveDateStyle),
-                const SizedBox(height: 4.0),
+                const SizedBox(height: 4),
                 Text(_formatTime(), style: effectiveTimeStyle),
               ],
             ),
@@ -101,7 +82,7 @@ class _DateTimePopoverHeader extends StatelessWidget {
     final effectiveTextStyle = confirmButtonTextStyle ??
         const TextStyle(
           color: Colors.white,
-          fontSize: 14.0,
+          fontSize: 14,
           fontWeight: FontWeight.w600,
         );
 

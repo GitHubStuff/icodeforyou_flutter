@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:sqlite_viewer/sqlite_viewer.dart'
     show DisplayQueryWidget, TextHandling;
-import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 import 'package:widgetbook/widgetbook.dart' show KnobsExtension;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 final _sampleColumns = ['id', 'name', 'email', 'created_at', 'status'];
 
@@ -71,7 +71,6 @@ final _sampleRows = <Map<String, Object?>>[
 Widget buildDisplayQueryWidgetDefault(BuildContext context) {
   final showRowNumbers = context.knobs.boolean(
     label: 'Show Row Numbers',
-    initialValue: false,
   );
 
   final textHandling = context.knobs.object.dropdown<TextHandling>(
@@ -88,30 +87,30 @@ Widget buildDisplayQueryWidgetDefault(BuildContext context) {
 
   final minColumnWidth = context.knobs.double.slider(
     label: 'Min Column Width',
-    initialValue: 60.0,
-    min: 40.0,
-    max: 150.0,
+    initialValue: 60,
+    min: 40,
+    max: 150,
   );
 
   final maxColumnWidth = context.knobs.double.slider(
     label: 'Max Column Width',
-    initialValue: 300.0,
-    min: 150.0,
-    max: 500.0,
+    initialValue: 300,
+    min: 150,
+    max: 500,
   );
 
   final headerHeight = context.knobs.double.slider(
     label: 'Header Height',
-    initialValue: 48.0,
-    min: 32.0,
-    max: 72.0,
+    initialValue: 48,
+    min: 32,
+    max: 72,
   );
 
   final rowHeight = context.knobs.double.slider(
     label: 'Row Height',
-    initialValue: 44.0,
-    min: 32.0,
-    max: 64.0,
+    initialValue: 44,
+    min: 32,
+    max: 64,
   );
 
   final evenRowColorValue = context.knobs.object.dropdown<Color>(
@@ -153,10 +152,10 @@ Widget buildDisplayQueryWidgetDefault(BuildContext context) {
   return DisplayQueryWidget(
     columns: _sampleColumns,
     rows: _sampleRows,
-    evenRowStyle: const TextStyle(fontSize: 14.0, color: Colors.black87),
-    oddRowStyle: const TextStyle(fontSize: 14.0, color: Colors.black87),
+    evenRowStyle: const TextStyle(fontSize: 14, color: Colors.black87),
+    oddRowStyle: const TextStyle(fontSize: 14, color: Colors.black87),
     headerStyle: const TextStyle(
-      fontSize: 14.0,
+      fontSize: 14,
       fontWeight: FontWeight.bold,
       color: Colors.black,
     ),
@@ -183,17 +182,17 @@ Widget buildDisplayQueryWidgetEmpty(BuildContext context) {
   return DisplayQueryWidget(
     columns: _sampleColumns,
     rows: const [],
-    evenRowStyle: const TextStyle(fontSize: 14.0, color: Colors.black87),
-    oddRowStyle: const TextStyle(fontSize: 14.0, color: Colors.black87),
+    evenRowStyle: const TextStyle(fontSize: 14, color: Colors.black87),
+    oddRowStyle: const TextStyle(fontSize: 14, color: Colors.black87),
     emptyWidget: Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.inbox_outlined, size: 48.0, color: Colors.grey),
-          const SizedBox(height: 16.0),
+          const Icon(Icons.inbox_outlined, size: 48, color: Colors.grey),
+          const SizedBox(height: 16),
           Text(
             emptyMessage,
-            style: const TextStyle(fontSize: 16.0, color: Colors.grey),
+            style: const TextStyle(fontSize: 16, color: Colors.grey),
           ),
         ],
       ),
@@ -208,15 +207,15 @@ Widget buildDisplayQueryWidgetDark(BuildContext context) {
     initialValue: true,
   );
 
-  return Container(
+  return ColoredBox(
     color: Colors.grey.shade900,
     child: DisplayQueryWidget(
       columns: _sampleColumns,
       rows: _sampleRows,
-      evenRowStyle: const TextStyle(fontSize: 14.0, color: Colors.white70),
-      oddRowStyle: const TextStyle(fontSize: 14.0, color: Colors.white70),
+      evenRowStyle: const TextStyle(fontSize: 14, color: Colors.white70),
+      oddRowStyle: const TextStyle(fontSize: 14, color: Colors.white70),
       headerStyle: const TextStyle(
-        fontSize: 14.0,
+        fontSize: 14,
         fontWeight: FontWeight.bold,
         color: Colors.amber,
       ),
@@ -290,16 +289,16 @@ Widget buildDisplayQueryWidgetManyColumns(BuildContext context) {
   return DisplayQueryWidget(
     columns: columns,
     rows: rows,
-    evenRowStyle: const TextStyle(fontSize: 12.0, color: Colors.black87),
-    oddRowStyle: const TextStyle(fontSize: 12.0, color: Colors.black87),
+    evenRowStyle: const TextStyle(fontSize: 12, color: Colors.black87),
+    oddRowStyle: const TextStyle(fontSize: 12, color: Colors.black87),
     headerStyle: const TextStyle(
-      fontSize: 12.0,
+      fontSize: 12,
       fontWeight: FontWeight.bold,
       color: Colors.indigo,
     ),
     showRowNumbers: true,
-    minColumnWidth: 50.0,
-    maxColumnWidth: 200.0,
+    minColumnWidth: 50,
+    maxColumnWidth: 200,
     evenRowColor: Colors.white,
     oddRowColor: Colors.indigo.shade50,
     headerBackgroundColor: Colors.indigo.shade100,

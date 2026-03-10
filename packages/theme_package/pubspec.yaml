@@ -8,10 +8,10 @@ environment:
   sdk: ">=3.10.0 <4.0.0"
 
 dependencies:
-  fpdart: ^1.2.0
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  fpdart: ^1.2.0
   hive_ce: ^2.19.3
   hive_ce_flutter: ^2.3.4
   path_provider: ^2.1.5

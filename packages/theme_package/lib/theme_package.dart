@@ -1,20 +1,22 @@
 // lib/theme_package.dart
 library;
 
-import 'package:fpdart/fpdart.dart' hide State;
+import 'dart:async' show unawaited;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fpdart/fpdart.dart' hide State;
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 
-part 'src/error.dart';
+part 'src/builder_widget.dart';
 part 'src/constants.dart';
-part 'src/datasource.dart';
-part 'src/state.dart';
 part 'src/cubit.dart';
+part 'src/datasource.dart';
+part 'src/error.dart';
 part 'src/root_widget.dart';
 part 'src/selector_widget.dart';
-part 'src/builder_widget.dart';
+part 'src/state.dart';
 
 /// Static API for theme management.
 ///
@@ -88,7 +90,7 @@ abstract final class ThemePackage {
   /// path_provider. Useful for platforms where path_provider is unavailable.
   ///
   /// [inMemory] if true, uses in-memory storage instead of Hive.
-  /// Useful for testing, Widgetbook, or environments without file system access.
+  /// Useful for testing, Widgetbook, or environments without file access.
   /// Defaults to false.
   ///
   /// Returns [Either<ThemeError, Unit>] indicating success or failure.
@@ -105,10 +107,9 @@ abstract final class ThemePackage {
     _validateDatabaseName(databaseName);
 
     try {
-      // Allow test injection of datasource initializer
       if (testDatasourceInitializer != null) {
         final result = await testDatasourceInitializer!();
-        return result.match((error) => Left(error), (_) {
+        return result.match(Left.new, (_) {
           _initialized = true;
           return const Right(unit);
         });
@@ -122,14 +123,13 @@ abstract final class ThemePackage {
       );
 
       final initResult = await _datasource!.initialize();
-
-      return initResult.match((error) => Left(error), (_) {
+      return initResult.match(Left.new, (_) {
         final savedMode = _datasource!.getThemeMode();
         _cubit = _ThemeCubit(datasource: _datasource!, initialMode: savedMode);
         _initialized = true;
         return const Right(unit);
       });
-    } catch (e) {
+    } on Object catch (e) {
       return Left(ThemeError.initializationFailed(e.toString()));
     }
   }

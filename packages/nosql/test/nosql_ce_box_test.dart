@@ -1,4 +1,6 @@
 // nosql_ce_box_test.dart
+// ignore_for_file: avoid_catches_without_on_clauses, avoid_slow_async_io
+
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -31,7 +33,7 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
           const MethodChannel('plugins.flutter.io/path_provider'),
-          (MethodCall methodCall) async {
+          (methodCall) async {
             return '/tmp/test_documents';
           },
         );
@@ -39,7 +41,7 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
           const MethodChannel('plugins.flutter.io/hive'),
-          (MethodCall methodCall) async {
+          (methodCall) async {
             return null;
           },
         );

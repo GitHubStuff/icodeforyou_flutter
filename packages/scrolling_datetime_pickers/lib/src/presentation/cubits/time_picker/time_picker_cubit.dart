@@ -10,19 +10,20 @@ import 'package:scrolling_datetime_pickers/src/core/constants/timing_constants.d
 part 'time_picker_state.dart';
 
 class TimePickerCubit extends Cubit<TimePickerState> {
-  Timer? _debounceTimer;
 
   TimePickerCubit({DateTime? initialDateTime})
     : super(
         TimePickerState(
           dateTime: _normalizeDateTime(initialDateTime),
-          isScrolling: false,
         ),
       );
+  Timer? _debounceTimer;
 
   /// Normalize datetime for time picker:
-  /// - If datetime provided: preserve it exactly (caller is responsible for normalization)
-  /// - If no datetime provided: Jan 1st of current year with current time, seconds = 0
+  /// - If datetime provided: preserve it exactly (caller is responsible for
+  /// normalization)
+  /// - If no datetime provided: Jan 1st of current year with current time, 
+  /// seconds = 0
   static DateTime _normalizeDateTime(DateTime? dateTime) {
     if (dateTime != null) {
       // Preserve provided datetime exactly
@@ -37,7 +38,6 @@ class TimePickerCubit extends Cubit<TimePickerState> {
       1,
       now.hour,
       now.minute,
-      0, // Default seconds to 0
     );
   }
 

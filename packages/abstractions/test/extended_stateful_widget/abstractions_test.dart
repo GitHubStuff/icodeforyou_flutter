@@ -1,5 +1,7 @@
 // observing_stateful_widget_test.dart
 // Flutter 3.32.8 / Dart ">3.10.0"
+// ignore_for_file: cascade_invocations, lines_longer_than_80_chars, prefer_foreach
+
 import 'package:abstractions/abstractions.dart' show ExtendedStatefulWidget;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -103,7 +105,7 @@ void main() {
 
     group('Initialization Tests', () {
       testWidgets('initState() calls all required methods in correct order', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(MaterialApp(home: widget));
         state = tester.state<_TestWidgetState>(find.byType(TestWidget));
@@ -120,7 +122,7 @@ void main() {
       });
 
       testWidgets('afterFirstLayout() is called after widget is built', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(MaterialApp(home: widget));
         state = tester.state<_TestWidgetState>(find.byType(TestWidget));
@@ -134,7 +136,7 @@ void main() {
 
     group('Observer Method Tests', () {
       testWidgets('didChangeMetrics() can be triggered and tracked', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(MaterialApp(home: widget));
         state = tester.state<_TestWidgetState>(find.byType(TestWidget));
@@ -150,7 +152,7 @@ void main() {
 
       testWidgets(
         'didChangePlatformBrightness() can be triggered and tracked',
-        (WidgetTester tester) async {
+        (tester) async {
           await tester.pumpWidget(MaterialApp(home: widget));
           state = tester.state<_TestWidgetState>(find.byType(TestWidget));
 
@@ -164,7 +166,7 @@ void main() {
       );
 
       testWidgets('didChangeAppLifecycleState() handles all lifecycle states', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(MaterialApp(home: widget));
         state = tester.state<_TestWidgetState>(find.byType(TestWidget));
@@ -192,7 +194,7 @@ void main() {
 
       testWidgets(
         'didChangeTextScaleFactor() updates scale factor via platform dispatcher',
-        (WidgetTester tester) async {
+        (tester) async {
           await tester.pumpWidget(MaterialApp(home: widget));
           state = tester.state<_TestWidgetState>(find.byType(TestWidget));
 
@@ -213,7 +215,7 @@ void main() {
 
     group('Stress Tests', () {
       testWidgets('handles rapid multiple observer method calls', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(MaterialApp(home: widget));
         state = tester.state<_TestWidgetState>(find.byType(TestWidget));
@@ -221,7 +223,7 @@ void main() {
         final initialCallCount = state.methodCalls.length;
 
         // Rapid fire multiple observer methods
-        for (int i = 0; i < 10; i++) {
+        for (var i = 0; i < 10; i++) {
           state.triggerDidChangeMetrics();
           state.triggerDidChangePlatformBrightness();
           state.triggerDidChangeAppLifecycleState(AppLifecycleState.resumed);
@@ -232,7 +234,7 @@ void main() {
       });
 
       testWidgets('handles concurrent observer events', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(MaterialApp(home: widget));
         state = tester.state<_TestWidgetState>(find.byType(TestWidget));
@@ -261,7 +263,7 @@ void main() {
 
     group('Edge Case Tests', () {
       testWidgets('handles null text scale factor gracefully', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(MaterialApp(home: widget));
         state = tester.state<_TestWidgetState>(find.byType(TestWidget));
@@ -276,7 +278,7 @@ void main() {
       });
 
       testWidgets('afterFirstLayout receives valid BuildContext', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(MaterialApp(home: widget));
         state = tester.state<_TestWidgetState>(find.byType(TestWidget));
@@ -291,7 +293,7 @@ void main() {
       });
 
       testWidgets('reportTextScaleFactor handles extreme values', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(MaterialApp(home: widget));
         state = tester.state<_TestWidgetState>(find.byType(TestWidget));
@@ -308,7 +310,7 @@ void main() {
 
     group('Lifecycle and Cleanup Tests', () {
       testWidgets('dispose() removes observer and calls super', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(MaterialApp(home: widget));
         state = tester.state<_TestWidgetState>(find.byType(TestWidget));
@@ -322,7 +324,7 @@ void main() {
       });
 
       testWidgets('full widget lifecycle works correctly', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(MaterialApp(home: widget));
         state = tester.state<_TestWidgetState>(find.byType(TestWidget));
@@ -343,7 +345,7 @@ void main() {
       });
 
       testWidgets('widget survives rebuild without issues', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(MaterialApp(home: widget));
         state = tester.state<_TestWidgetState>(find.byType(TestWidget));
@@ -361,7 +363,7 @@ void main() {
 
     group('Platform Integration Tests', () {
       testWidgets('multiple platform changes work together', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(MaterialApp(home: widget));
         state = tester.state<_TestWidgetState>(find.byType(TestWidget));

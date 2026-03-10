@@ -47,7 +47,7 @@ void main() {
       });
 
       testWidgets('updates value when increment button tapped', (tester) async {
-        await tester.pumpWidget(buildTestWidget(initialValue: 50.0, step: 5.0));
+        await tester.pumpWidget(buildTestWidget(step: 5));
 
         await tester.tap(find.byIcon(Icons.add));
         await tester.pump();
@@ -57,7 +57,7 @@ void main() {
       });
 
       testWidgets('updates value when decrement button tapped', (tester) async {
-        await tester.pumpWidget(buildTestWidget(initialValue: 50.0, step: 5.0));
+        await tester.pumpWidget(buildTestWidget(step: 5));
 
         await tester.tap(find.byIcon(Icons.remove));
         await tester.pump();
@@ -67,7 +67,7 @@ void main() {
       });
 
       testWidgets('emits multiple updates on successive taps', (tester) async {
-        await tester.pumpWidget(buildTestWidget(initialValue: 50.0, step: 10.0));
+        await tester.pumpWidget(buildTestWidget(step: 10));
 
         await tester.tap(find.byIcon(Icons.add));
         await tester.pump();
@@ -87,29 +87,31 @@ void main() {
 
     group('state isolation', () {
       testWidgets('each StepSlider has independent state', (tester) async {
-        double value1 = 0.0;
-        double value2 = 0.0;
+        var value1 = 0;
+        var value2 = 0;
 
-        await tester.pumpWidget(MaterialApp(
-          home: Scaffold(
-            body: Column(
-              children: [
-                StepSlider(
-                  key: const Key('slider1'),
-                  initialValue: 25.0,
-                  step: 5.0,
-                  onChanged: (v) => value1 = v,
-                ),
-                StepSlider(
-                  key: const Key('slider2'),
-                  initialValue: 75.0,
-                  step: 10.0,
-                  onChanged: (v) => value2 = v,
-                ),
-              ],
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: Column(
+                children: [
+                  StepSlider(
+                    key: const Key('slider1'),
+                    initialValue: 25,
+                    step: 5,
+                    onChanged: (v) => value1 = v.toInt(),
+                  ),
+                  StepSlider(
+                    key: const Key('slider2'),
+                    initialValue: 75,
+                    step: 10,
+                    onChanged: (v) => value2 = v.toInt(),
+                  ),
+                ],
+              ),
             ),
           ),
-        ));
+        );
 
         // Find buttons by their parent key
         final slider1Add = find.descendant(
@@ -135,11 +137,12 @@ void main() {
 
     group('clamping behavior', () {
       testWidgets('clamps value at max when incrementing', (tester) async {
-        await tester.pumpWidget(buildTestWidget(
-          initialValue: 98.0,
-          max: 100.0,
-          step: 5.0,
-        ));
+        await tester.pumpWidget(
+          buildTestWidget(
+            initialValue: 98,
+            step: 5,
+          ),
+        );
 
         await tester.tap(find.byIcon(Icons.add));
         await tester.pump();
@@ -148,11 +151,12 @@ void main() {
       });
 
       testWidgets('clamps value at min when decrementing', (tester) async {
-        await tester.pumpWidget(buildTestWidget(
-          initialValue: 2.0,
-          min: 0.0,
-          step: 5.0,
-        ));
+        await tester.pumpWidget(
+          buildTestWidget(
+            initialValue: 2,
+            step: 5,
+          ),
+        );
 
         await tester.tap(find.byIcon(Icons.remove));
         await tester.pump();

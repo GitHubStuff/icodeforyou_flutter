@@ -18,8 +18,8 @@ part 'scrolling_time_picker_content.dart';
 
 /// Apple-style scrolling time picker widget
 class ScrollingTimePicker extends StatelessWidget {
-
   const ScrollingTimePicker({
+    required this.onDateTimeChanged,
     super.key,
     this.portraitSize = const Size(
       DimensionConstants.defaultPortraitWidth,
@@ -30,7 +30,6 @@ class ScrollingTimePicker extends StatelessWidget {
       DimensionConstants.defaultLandscapeHeight,
     ),
     this.initialDateTime,
-    required this.onDateTimeChanged,
     this.backgroundColor = StyleConstants.defaultBackgroundColor,
     this.timeStyle,
     DividerConfiguration? dividerConfiguration,
@@ -41,6 +40,7 @@ class ScrollingTimePicker extends StatelessWidget {
   }) : dividerConfiguration =
            dividerConfiguration ?? const DividerConfiguration(),
        fadeConfiguration = fadeConfiguration ?? const FadeConfiguration();
+
   /// Size for portrait orientation
   final Size portraitSize;
 
@@ -87,10 +87,10 @@ class ScrollingTimePicker extends StatelessWidget {
         1,
         initialDateTime!.hour,
         initialDateTime!.minute,
-        0, // Time-only picker defaults seconds to 0
       );
     }
-    // Return null to let cubit use its default (Jan 1st current year, current time)
+    // Return null to let cubit use its default (Jan 1st current year + current
+    // time)
     return null;
   }
 

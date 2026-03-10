@@ -4,16 +4,18 @@
 // for the adaptive_modal package.
 //
 // Single responsibility: expose show(), hide(), resolve(), attach(), and
-// dispose() to the caller while delegating all implementation to OverlayManager.
+// dispose() to the caller while delegating all implementation to
+// OverlayManager.
 //
 // AdaptiveModalController<T> is generic so the caller declares the return type
 // once at construction and gets a typed Future<T?> from show().
 // ---------------------------------------------------------------------------
 
-import 'package:flutter/widgets.dart';
+// ignore_for_file: document_ignores, comment_references
 
-import 'types.dart';
-import '_overlay_manager.dart';
+import 'package:adaptive_modal/src/_overlay_manager.dart';
+import 'package:adaptive_modal/src/types.dart';
+import 'package:flutter/widgets.dart';
 
 // ---------------------------------------------------------------------------
 // AdaptiveModalController
@@ -71,15 +73,16 @@ import '_overlay_manager.dart';
 /// }
 /// ```
 class AdaptiveModalController<T> {
+  ///
   AdaptiveModalController({
     required GlobalKey anchorKey,
     required Widget child,
     AdaptiveModalConfig config = const AdaptiveModalConfig(),
   }) : _manager = OverlayManager<T>(
-          config: config,
-          anchorKey: anchorKey,
-          child: child,
-        );
+         config: config,
+         anchorKey: anchorKey,
+         child: child,
+       );
 
   final OverlayManager<T> _manager;
 

@@ -1,15 +1,15 @@
 // abstractions_part_three_test.dart
-// Flutter 3.32.8 / Dart ">3.10.0"
-// Complete coverage testing - accessibility, locale, semantics, frame scheduling
+// ignore_for_file: cascade_invocations, prefer_foreach, lines_longer_than_80_chars
+
 import 'package:abstractions/abstractions.dart' show ExtendedStatefulWidget;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Comprehensive observer tracking widget
 class ComprehensiveObserverWidget extends StatefulWidget {
-  final String widgetId;
 
-  const ComprehensiveObserverWidget({super.key, required this.widgetId});
+  const ComprehensiveObserverWidget({required this.widgetId, super.key});
+  final String widgetId;
 
   @override
   State<ComprehensiveObserverWidget> createState() =>
@@ -115,13 +115,11 @@ class _ComprehensiveObserverWidgetState
 
 // Inherited widget integration test
 class TestInheritedWidget extends InheritedWidget {
-  final String data;
 
   const TestInheritedWidget({
-    super.key,
-    required this.data,
-    required super.child,
+    required this.data, required super.child, super.key,
   });
+  final String data;
 
   @override
   bool updateShouldNotify(TestInheritedWidget oldWidget) {
@@ -254,10 +252,10 @@ void main() {
   group('ExtenedStatefulWidget Complete Coverage Tests', () {
     group('Accessibility and Locale Tests', () {
       testWidgets('handles accessibility features changes', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: ComprehensiveObserverWidget(widgetId: 'accessibility-test'),
           ),
         );
@@ -279,10 +277,10 @@ void main() {
       });
 
       testWidgets('handles locale changes correctly', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: ComprehensiveObserverWidget(widgetId: 'locale-test'),
           ),
         );
@@ -295,9 +293,9 @@ void main() {
 
         // Trigger locale changes
         final testLocales = [
-          Locale('en', 'US'),
-          Locale('es', 'ES'),
-          Locale('fr', 'FR'),
+          const Locale('en', 'US'),
+          const Locale('es', 'ES'),
+          const Locale('fr', 'FR'),
         ];
 
         state.triggerLocaleChange(testLocales);
@@ -307,10 +305,10 @@ void main() {
       });
 
       testWidgets('platform brightness changes via platform dispatcher', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: ComprehensiveObserverWidget(widgetId: 'brightness-test'),
           ),
         );
@@ -338,10 +336,10 @@ void main() {
 
     group('App Lifecycle and Memory Tests', () {
       testWidgets('handles all app lifecycle states', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: ComprehensiveObserverWidget(widgetId: 'lifecycle-test'),
           ),
         );
@@ -383,10 +381,10 @@ void main() {
       });
 
       testWidgets('handles memory pressure events', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: ComprehensiveObserverWidget(widgetId: 'memory-test'),
           ),
         );
@@ -407,9 +405,9 @@ void main() {
 
     group('Frame Scheduling and Callback Tests', () {
       testWidgets('handles frame callbacks correctly', (
-        WidgetTester tester,
+        tester,
       ) async {
-        await tester.pumpWidget(MaterialApp(home: FrameSchedulingWidget()));
+        await tester.pumpWidget(const MaterialApp(home: FrameSchedulingWidget()));
 
         final state = tester.state<_FrameSchedulingWidgetState>(
           find.byType(FrameSchedulingWidget),
@@ -428,9 +426,9 @@ void main() {
       });
 
       testWidgets('frame scheduling works during widget rebuilds', (
-        WidgetTester tester,
+        tester,
       ) async {
-        await tester.pumpWidget(MaterialApp(home: FrameSchedulingWidget()));
+        await tester.pumpWidget(const MaterialApp(home: FrameSchedulingWidget()));
 
         final state = tester.state<_FrameSchedulingWidgetState>(
           find.byType(FrameSchedulingWidget),
@@ -439,8 +437,8 @@ void main() {
         final initialCallbacks = state.frameCallbacks;
 
         // Rebuild widget multiple times
-        for (int i = 0; i < 5; i++) {
-          await tester.pumpWidget(MaterialApp(home: FrameSchedulingWidget()));
+        for (var i = 0; i < 5; i++) {
+          await tester.pumpWidget(const MaterialApp(home: FrameSchedulingWidget()));
         }
 
         // Should maintain frame callback functionality
@@ -450,10 +448,10 @@ void main() {
 
     group('Inherited Widget Integration Tests', () {
       testWidgets('works correctly with inherited widgets', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: TestInheritedWidget(
               data: 'initial-data',
               child: InheritedObserverWidget(),
@@ -470,7 +468,7 @@ void main() {
 
         // Change inherited data
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: TestInheritedWidget(
               data: 'updated-data',
               child: InheritedObserverWidget(),
@@ -483,9 +481,9 @@ void main() {
       });
 
       testWidgets('inherited widget changes during afterFirstLayout', (
-        WidgetTester tester,
+        tester,
       ) async {
-        String currentData = 'first';
+        var currentData = 'first';
 
         await tester.pumpWidget(
           MaterialApp(
@@ -495,14 +493,14 @@ void main() {
                   data: currentData,
                   child: Column(
                     children: [
-                      InheritedObserverWidget(),
+                      const InheritedObserverWidget(),
                       ElevatedButton(
                         onPressed: () {
                           setState(() {
                             currentData = 'changed-via-button';
                           });
                         },
-                        child: Text('Change Data'),
+                        child: const Text('Change Data'),
                       ),
                     ],
                   ),
@@ -527,8 +525,8 @@ void main() {
     });
 
     group('Semantics Integration Tests', () {
-      testWidgets('works with semantics enabled', (WidgetTester tester) async {
-        await tester.pumpWidget(MaterialApp(home: SemanticsObserverWidget()));
+      testWidgets('works with semantics enabled', (tester) async {
+        await tester.pumpWidget(const MaterialApp(home: SemanticsObserverWidget()));
 
         final state = tester.state<_SemanticsObserverWidgetState>(
           find.byType(SemanticsObserverWidget),
@@ -550,11 +548,11 @@ void main() {
       });
 
       testWidgets('semantics observer responds to accessibility changes', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
           MaterialApp(
-            home: Semantics(enabled: true, child: SemanticsObserverWidget()),
+            home: Semantics(enabled: true, child: const SemanticsObserverWidget()),
           ),
         );
 
@@ -574,10 +572,10 @@ void main() {
 
     group('Complex Integration Tests', () {
       testWidgets('all observer methods work together', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: ComprehensiveObserverWidget(widgetId: 'integration-test'),
           ),
         );
@@ -588,7 +586,7 @@ void main() {
 
         // Trigger all observer methods
         state.triggerAccessibilityFeaturesChange();
-        state.triggerLocaleChange([Locale('en', 'US')]);
+        state.triggerLocaleChange([const Locale('en', 'US')]);
         state.triggerPlatformBrightnessChange();
         state.triggerAppLifecycleChange(AppLifecycleState.paused);
         state.triggerMemoryPressure();
@@ -623,19 +621,19 @@ void main() {
       });
 
       testWidgets('observer methods work during complex widget tree changes', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
               appBar: AppBar(
-                title: ComprehensiveObserverWidget(widgetId: 'appbar-observer'),
+                title: const ComprehensiveObserverWidget(widgetId: 'appbar-observer'),
               ),
               body: Column(
                 children: [
                   Expanded(
                     child: ListView(
-                      children: [
+                      children: const [
                         ComprehensiveObserverWidget(
                           widgetId: 'list-observer-1',
                         ),
@@ -645,7 +643,7 @@ void main() {
                       ],
                     ),
                   ),
-                  TestInheritedWidget(
+                  const TestInheritedWidget(
                     data: 'complex-tree-data',
                     child: InheritedObserverWidget(),
                   ),
@@ -653,7 +651,7 @@ void main() {
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {},
-                child: SemanticsObserverWidget(),
+                child: const SemanticsObserverWidget(),
               ),
             ),
           ),
@@ -668,7 +666,7 @@ void main() {
         await tester.pump();
 
         // All observers should have received the platform change
-        for (int i = 0; i < 3; i++) {
+        for (var i = 0; i < 3; i++) {
           final state = tester.state<_ComprehensiveObserverWidgetState>(
             observers.at(i),
           );
@@ -680,7 +678,7 @@ void main() {
       });
 
       testWidgets('performance under complex observer scenarios', (
-        WidgetTester tester,
+        tester,
       ) async {
         final stopwatch = Stopwatch()..start();
 
@@ -717,7 +715,7 @@ void main() {
 
         // Verify all observers received the change
         final observers = find.byType(ComprehensiveObserverWidget);
-        for (int i = 0; i < 10; i++) {
+        for (var i = 0; i < 10; i++) {
           final state = tester.state<_ComprehensiveObserverWidgetState>(
             observers.at(i),
           );

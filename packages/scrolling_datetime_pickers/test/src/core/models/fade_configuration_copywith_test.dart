@@ -1,5 +1,7 @@
 // test/src/core/models/fade_configuration_copywith_test.dart
 
+// ignore_for_file: document_ignores, lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scrolling_datetime_pickers/src/core/models/fade_configuration.dart';
@@ -11,7 +13,7 @@ void main() {
 
       final modified = original.copyWith(
         enabled: false,
-        fadeDistance: 80.0,
+        fadeDistance: 80,
         fadeCurve: Curves.bounceIn,
         topColors: [Colors.red, Colors.blue],
         bottomColors: [Colors.green, Colors.yellow],
@@ -31,7 +33,7 @@ void main() {
     test('should preserve all original values when no params', () {
       const original = FadeConfiguration(
         enabled: false,
-        fadeDistance: 50.0,
+        fadeDistance: 50,
         fadeCurve: Curves.easeOut,
         topColors: [Colors.orange, Colors.pink],
         bottomColors: [Colors.cyan, Colors.teal],
@@ -52,15 +54,14 @@ void main() {
 
     test('should copy individual parameters', () {
       const original = FadeConfiguration(
-        enabled: true,
-        fadeDistance: 40.0,
+        
       );
 
       final enabledOnly = original.copyWith(enabled: false);
       expect(enabledOnly.enabled, isFalse);
       expect(enabledOnly.fadeDistance, 40.0);
 
-      final fadeDistanceOnly = original.copyWith(fadeDistance: 100.0);
+      final fadeDistanceOnly = original.copyWith(fadeDistance: 100);
       expect(fadeDistanceOnly.enabled, isTrue);
       expect(fadeDistanceOnly.fadeDistance, 100.0);
 
@@ -99,7 +100,7 @@ void main() {
     test('should be equal when all properties match', () {
       const config1 = FadeConfiguration(
         enabled: false,
-        fadeDistance: 55.0,
+        fadeDistance: 55,
         fadeCurve: Curves.decelerate,
         topColors: [Colors.purple, Colors.deepPurple],
         bottomColors: [Colors.deepOrange, Colors.orange],
@@ -109,7 +110,7 @@ void main() {
 
       const config2 = FadeConfiguration(
         enabled: false,
-        fadeDistance: 55.0,
+        fadeDistance: 55,
         fadeCurve: Curves.decelerate,
         topColors: [Colors.purple, Colors.deepPurple],
         bottomColors: [Colors.deepOrange, Colors.orange],
@@ -122,19 +123,19 @@ void main() {
     });
 
     test('should not be equal when enabled differs', () {
-      const config1 = FadeConfiguration(enabled: true);
+      const config1 = FadeConfiguration();
       const config2 = FadeConfiguration(enabled: false);
       expect(config1, isNot(equals(config2)));
     });
 
     test('should not be equal when fadeDistance differs', () {
-      const config1 = FadeConfiguration(fadeDistance: 40.0);
-      const config2 = FadeConfiguration(fadeDistance: 50.0);
+      const config1 = FadeConfiguration();
+      const config2 = FadeConfiguration(fadeDistance: 50);
       expect(config1, isNot(equals(config2)));
     });
 
     test('should not be equal when fadeCurve differs', () {
-      const config1 = FadeConfiguration(fadeCurve: Curves.linear);
+      const config1 = FadeConfiguration();
       const config2 = FadeConfiguration(fadeCurve: Curves.easeIn);
       expect(config1, isNot(equals(config2)));
     });
@@ -155,13 +156,13 @@ void main() {
     });
 
     test('should not be equal when stops differs', () {
-      const config1 = FadeConfiguration(stops: [0.0, 1.0]);
+      const config1 = FadeConfiguration();
       const config2 = FadeConfiguration(stops: [0.2, 0.8]);
       expect(config1, isNot(equals(config2)));
     });
 
     test('should not be equal when selectedAlwaysOpaque differs', () {
-      const config1 = FadeConfiguration(selectedAlwaysOpaque: true);
+      const config1 = FadeConfiguration();
       const config2 = FadeConfiguration(selectedAlwaysOpaque: false);
       expect(config1, isNot(equals(config2)));
     });
@@ -179,8 +180,8 @@ void main() {
     });
 
     test('should have different hashCode when properties differ', () {
-      const config1 = FadeConfiguration(fadeDistance: 40.0);
-      const config2 = FadeConfiguration(fadeDistance: 80.0);
+      const config1 = FadeConfiguration();
+      const config2 = FadeConfiguration(fadeDistance: 80);
       expect(config1.hashCode, isNot(equals(config2.hashCode)));
     });
   });
@@ -211,7 +212,7 @@ void main() {
         stops: [0.0, 0.5, 1.0],
       );
       const config2 = FadeConfiguration(
-        stops: [0.0, 1.0],
+        
       );
       expect(config1, isNot(equals(config2)));
     });
@@ -237,12 +238,10 @@ void main() {
       const config1 = FadeConfiguration(
         topColors: [Colors.red, Colors.blue],
         bottomColors: [Colors.green, Colors.yellow],
-        stops: [0.0, 1.0],
       );
       const config2 = FadeConfiguration(
         topColors: [Colors.red, Colors.blue],
         bottomColors: [Colors.green, Colors.yellow],
-        stops: [0.0, 1.0],
       );
       expect(config1, equals(config2));
     });

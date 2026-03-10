@@ -1,4 +1,6 @@
 // test/src/step_button_test.dart
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -38,7 +40,7 @@ void main() {
 
     group('enabled state', () {
       testWidgets('both buttons enabled when value is in middle', (tester) async {
-        await tester.pumpWidget(buildTestWidget(initialValue: 50.0));
+        await tester.pumpWidget(buildTestWidget());
 
         final decrementInkWell = tester.widget<InkWell>(
           find.ancestor(
@@ -58,7 +60,7 @@ void main() {
       });
 
       testWidgets('decrement disabled at min value', (tester) async {
-        await tester.pumpWidget(buildTestWidget(initialValue: 0.0, min: 0.0));
+        await tester.pumpWidget(buildTestWidget(initialValue: 0));
 
         final decrementInkWell = tester.widget<InkWell>(
           find.ancestor(
@@ -71,7 +73,7 @@ void main() {
       });
 
       testWidgets('increment disabled at max value', (tester) async {
-        await tester.pumpWidget(buildTestWidget(initialValue: 100.0, max: 100.0));
+        await tester.pumpWidget(buildTestWidget(initialValue: 100));
 
         final incrementInkWell = tester.widget<InkWell>(
           find.ancestor(
@@ -85,9 +87,8 @@ void main() {
 
       testWidgets('button becomes disabled after reaching max', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 95.0,
-          max: 100.0,
-          step: 10.0,
+          initialValue: 95,
+          step: 10,
         ));
 
         // Initially enabled
@@ -115,9 +116,8 @@ void main() {
 
       testWidgets('button becomes disabled after reaching min', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 5.0,
-          min: 0.0,
-          step: 10.0,
+          initialValue: 5,
+          step: 10,
         ));
 
         // Initially enabled
@@ -146,7 +146,7 @@ void main() {
 
     group('visual appearance', () {
       testWidgets('uses theme colors by default', (tester) async {
-        await tester.pumpWidget(buildTestWidget(initialValue: 50.0));
+        await tester.pumpWidget(buildTestWidget());
 
         final materials = tester.widgetList<Material>(
           find.byType(Material),
@@ -157,7 +157,6 @@ void main() {
 
       testWidgets('uses custom button color when provided', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
           buttonColor: Colors.purple,
         ));
 
@@ -170,7 +169,6 @@ void main() {
 
       testWidgets('uses custom icon color when provided', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
           buttonIconColor: Colors.orange,
         ));
 
@@ -180,8 +178,7 @@ void main() {
 
       testWidgets('disabled button has reduced opacity color', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 0.0,
-          min: 0.0,
+          initialValue: 0,
           buttonColor: Colors.blue,
         ));
 
@@ -197,8 +194,7 @@ void main() {
 
       testWidgets('disabled icon has reduced opacity', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 0.0,
-          min: 0.0,
+          initialValue: 0,
           buttonIconColor: Colors.white,
         ));
 
@@ -207,7 +203,7 @@ void main() {
       });
 
       testWidgets('button size is applied correctly', (tester) async {
-        await tester.pumpWidget(buildTestWidget(buttonSize: 48.0));
+        await tester.pumpWidget(buildTestWidget(buttonSize: 48));
 
         final sizedBoxes = tester.widgetList<SizedBox>(find.byType(SizedBox));
         final buttonSizedBoxes = sizedBoxes.where(
@@ -218,7 +214,7 @@ void main() {
       });
 
       testWidgets('icon size is 60% of button size', (tester) async {
-        await tester.pumpWidget(buildTestWidget(buttonSize: 50.0));
+        await tester.pumpWidget(buildTestWidget(buttonSize: 50));
 
         final icons = tester.widgetList<Icon>(find.byType(Icon));
         expect(icons.every((i) => i.size == 30.0), isTrue);
@@ -248,8 +244,7 @@ void main() {
 
       testWidgets('no haptic when disabled', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
-          enableHapticFeedback: false,
+          
         ));
 
         await tester.tap(find.byIcon(Icons.add));
@@ -260,9 +255,7 @@ void main() {
 
       testWidgets('light haptic feedback triggers', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
           enableHapticFeedback: true,
-          hapticFeedbackType: HapticFeedbackType.light,
         ));
 
         await tester.tap(find.byIcon(Icons.add));
@@ -273,7 +266,6 @@ void main() {
 
       testWidgets('medium haptic feedback triggers', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
           enableHapticFeedback: true,
           hapticFeedbackType: HapticFeedbackType.medium,
         ));
@@ -286,7 +278,6 @@ void main() {
 
       testWidgets('heavy haptic feedback triggers', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
           enableHapticFeedback: true,
           hapticFeedbackType: HapticFeedbackType.heavy,
         ));
@@ -299,7 +290,6 @@ void main() {
 
       testWidgets('selection haptic feedback triggers', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
           enableHapticFeedback: true,
           hapticFeedbackType: HapticFeedbackType.selection,
         ));
@@ -312,7 +302,6 @@ void main() {
 
       testWidgets('vibrate haptic feedback triggers', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
           enableHapticFeedback: true,
           hapticFeedbackType: HapticFeedbackType.vibrate,
         ));
@@ -325,9 +314,7 @@ void main() {
 
       testWidgets('haptic triggers on decrement button too', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
           enableHapticFeedback: true,
-          hapticFeedbackType: HapticFeedbackType.light,
         ));
 
         await tester.tap(find.byIcon(Icons.remove));
@@ -341,8 +328,7 @@ void main() {
       testWidgets('increment button calls onChanged', (tester) async {
         double? changedValue;
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
-          step: 5.0,
+          step: 5,
           onChanged: (v) => changedValue = v,
         ));
 
@@ -355,8 +341,7 @@ void main() {
       testWidgets('decrement button calls onChanged', (tester) async {
         double? changedValue;
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
-          step: 5.0,
+          step: 5,
           onChanged: (v) => changedValue = v,
         ));
 
@@ -369,8 +354,7 @@ void main() {
       testWidgets('disabled button does not call onChanged', (tester) async {
         double? changedValue;
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 0.0,
-          min: 0.0,
+          initialValue: 0,
           onChanged: (v) => changedValue = v,
         ));
 

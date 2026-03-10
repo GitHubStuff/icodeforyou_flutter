@@ -1,6 +1,6 @@
 // datetime_unit.dart
 
-/// DateTime unit enumeration with time conversion constants and utility methods.
+/// DateTime unit enumeration with time conversion constants and utility methods
 enum DateTimeUnit {
   year,
   month,
@@ -41,8 +41,10 @@ enum DateTimeUnit {
 
   /// Creates a UTC DateTime object with the specified DateTimeUnit precision.
   ///
-  /// - [dateTime]: The DateTime object to be rounded (default is the current system time).
-  /// - [truncateAt]: The DateTimeUnit at which the DateTime should be rounded (default is milliseconds).
+  /// - [dateTime]: The DateTime object to be rounded (default is the current 
+  /// system time).
+  /// - [truncateAt]: The DateTimeUnit at which the DateTime should be rounded
+  /// (default is milliseconds).
   static DateTime makeUtc(
     DateTime? dateTime, {
     DateTimeUnit truncateAt = DateTimeUnit.second,
@@ -57,7 +59,8 @@ enum DateTimeUnit {
     return DateTimeUnit.values[index + 1];
   }
 
-  /// Returns a set of DateTimeUnits from the current DateTimeUnit to the last DateTimeUnit
+  /// Returns a set of DateTimeUnits from the current DateTimeUnit to the last 
+  /// DateTimeUnit
   /// Helper method to get a sublist of DateTimeUnits
   Set<DateTimeUnit> sublist() {
     final index = DateTimeUnit.values.indexOf(this);

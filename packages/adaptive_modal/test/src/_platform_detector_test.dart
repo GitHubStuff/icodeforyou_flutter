@@ -1,4 +1,6 @@
 // test/src/_platform_detector_test.dart
+// ignore_for_file: cascade_invocations, lines_longer_than_80_chars, comment_references
+
 import 'package:adaptive_modal/src/_platform_detector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -95,15 +97,13 @@ void main() {
       FormFactor? received;
       final observer = BreakpointObserver(onChange: (f) => received = f);
 
-      await pumpWithMediaSize(tester, const Size(390, 844), (ctx) {
-        observer.evaluate(ctx);
-      });
+      await pumpWithMediaSize(tester, const Size(390, 844), observer.evaluate);
 
       expect(received, isNotNull);
     });
 
     testWidgets('does not fire onChange when FormFactor unchanged', (tester) async {
-      int callCount = 0;
+      var callCount = 0;
       final observer = BreakpointObserver(onChange: (_) => callCount++);
 
       await pumpWithMediaSize(tester, const Size(390, 844), (ctx) {
@@ -115,7 +115,7 @@ void main() {
     });
 
     testWidgets('fires again after dispose resets state', (tester) async {
-      int callCount = 0;
+      var callCount = 0;
       final observer = BreakpointObserver(onChange: (_) => callCount++);
 
       await pumpWithMediaSize(tester, const Size(390, 844), (ctx) {
@@ -157,7 +157,7 @@ void main() {
     });
 
     test('dispose sets last to null allowing re-fire', () {
-      int callCount = 0;
+      var callCount = 0;
       final observer = BreakpointObserver(onChange: (_) => callCount++);
       observer.dispose(); // no crash on dispose before evaluate
       expect(callCount, 0);

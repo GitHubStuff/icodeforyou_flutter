@@ -11,16 +11,17 @@
 // a value — barrier tap, close button, or programmatic hide().
 // ---------------------------------------------------------------------------
 
+// ignore_for_file: document_ignores, public_member_api_docs
+
 import 'dart:async';
 
+import 'package:adaptive_modal/src/_barrier.dart';
+import 'package:adaptive_modal/src/_modal_shell.dart';
+import 'package:adaptive_modal/src/_platform_detector.dart';
+import 'package:adaptive_modal/src/_position_resolver.dart';
+import 'package:adaptive_modal/src/types.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'types.dart';
-import '_barrier.dart';
-import '_modal_shell.dart';
-import '_platform_detector.dart';
-import '_position_resolver.dart';
 
 // ---------------------------------------------------------------------------
 // OverlayManager
@@ -95,9 +96,9 @@ class OverlayManager<T> {
   ///
   /// Does nothing and returns a completed null future if the modal is already
   /// visible or [attach] has not been called.
-  Future<T?> show(BuildContext context) {
+  Future<T?> show(BuildContext context) async {
     if (_overlayState == null || isVisible) {
-      return Future.value(null);
+      return Future.value();
     }
 
     _completer = Completer<T?>();
@@ -125,7 +126,7 @@ class OverlayManager<T> {
       _modalEntry!,
     ]);
 
-    _animationController!.forward();
+    await _animationController!.forward();
     return _completer!.future;
   }
 
@@ -142,12 +143,12 @@ class OverlayManager<T> {
   void resolve(T value) {
     if (!isVisible) return;
 
-    if (config.hapticFeedback) HapticFeedback.lightImpact();
-    _animationController!.reverse().whenComplete(() {
+    if (config.hapticFeedback) unawaited(HapticFeedback.lightImpact());
+    unawaited(_animationController!.reverse().whenComplete(() {
       _removeEntries();
       _completer?.complete(value);
       _completer = null;
-    });
+    }));
   }
 
   // ---------------------------------------------------------------------------
@@ -162,11 +163,11 @@ class OverlayManager<T> {
   /// is true.
   ///
   /// Does nothing if the modal is not currently visible.
-  void hide() {
+  Future<void> hide() async {
     if (!isVisible) return;
 
-    if (config.hapticFeedback) HapticFeedback.lightImpact();
-    _animationController!.reverse().whenComplete(() {
+    if (config.hapticFeedback) unawaited(HapticFeedback.lightImpact());
+    await _animationController!.reverse().whenComplete(() {
       _removeEntries();
       _completer?.complete(null);
       _completer = null;

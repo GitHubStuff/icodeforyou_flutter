@@ -2,8 +2,9 @@
 // ---------------------------------------------------------------------------
 // _demo_widgets.dart — StatefulWidget demos for adaptive_modal use cases.
 //
-// Each demo owns its own controller lifecycle — initState, didChangeDependencies,
-// dispose — so the widgetbook use-case functions stay as simple one-liners.
+// Each demo owns its own controller lifecycle — initState,
+// didChangeDependencies, dispose — so the widgetbook use-case functions stay
+// as simple one-liners.
 // ---------------------------------------------------------------------------
 part of 'adaptive_modal.usecase.dart';
 
@@ -61,7 +62,10 @@ class _ModalContentState extends State<_ModalContent> {
               return ListTile(
                 title: Text(item),
                 trailing: isSelected
-                    ? Icon(Icons.check, color: Theme.of(context).colorScheme.primary)
+                    ? Icon(
+                        Icons.check,
+                        color: Theme.of(context).colorScheme.primary,
+                      )
                     : const Icon(Icons.chevron_right, size: 18),
                 onTap: () => setState(() => _selected = item),
               );
@@ -95,7 +99,7 @@ class _DefaultModalDemo extends StatefulWidget {
 }
 
 class _DefaultModalDemoState extends State<_DefaultModalDemo> {
-  final _anchorKey = GlobalKey();
+  final GlobalKey<State<StatefulWidget>> _anchorKey = GlobalKey();
   late final AdaptiveModalController<void> _modal;
 
   @override
@@ -143,7 +147,7 @@ class _CustomIconModalDemo extends StatefulWidget {
 }
 
 class _CustomIconModalDemoState extends State<_CustomIconModalDemo> {
-  final _anchorKey = GlobalKey();
+  final GlobalKey<State<StatefulWidget>> _anchorKey = GlobalKey();
   late final AdaptiveModalController<void> _modal;
 
   @override
@@ -194,7 +198,7 @@ class _NoBarrierModalDemo extends StatefulWidget {
 }
 
 class _NoBarrierModalDemoState extends State<_NoBarrierModalDemo> {
-  final _anchorKey = GlobalKey();
+  final GlobalKey<State<StatefulWidget>> _anchorKey = GlobalKey();
   late final AdaptiveModalController<void> _modal;
   int _counter = 0;
 
@@ -265,7 +269,7 @@ class _ReturnValueModalDemo extends StatefulWidget {
 }
 
 class _ReturnValueModalDemoState extends State<_ReturnValueModalDemo> {
-  final _anchorKey = GlobalKey();
+  final GlobalKey<State<StatefulWidget>> _anchorKey = GlobalKey();
   late final AdaptiveModalController<String> _modal;
   String? _lastResult;
 

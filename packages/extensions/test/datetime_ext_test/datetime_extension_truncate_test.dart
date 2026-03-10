@@ -1,6 +1,8 @@
 // packages/extensions/test/datetime_extension_truncate_test.dart
-import 'package:flutter_test/flutter_test.dart';
+// ignore_for_file: avoid_redundant_argument_values, lines_longer_than_80_chars
+
 import 'package:extensions/datetime_ext/datetime_unit.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('DateTimeExt.truncate', () {
@@ -225,7 +227,7 @@ void main() {
     });
 
     test('all-zero input remains sane when truncating to minute', () {
-      final d = DateTime(2024, 1, 1, 0, 0, 0, 0, 0);
+      final d = DateTime(2024, 1, 1, 0);
       final t = d.truncate(atDateTimeUnit: DateTimeUnit.minute);
       expect(t.year, 2024);
       expect(t.month, 1);
@@ -253,8 +255,8 @@ void main() {
     // --- Idempotence across all units -------------------------------------------
 
     test('already-aligned values remain unchanged for every unit', () {
-      final alignedLocal = DateTime(2030, 1, 1, 0, 0, 0, 0, 0);
-      final alignedUtc = DateTime.utc(2030, 1, 1, 0, 0, 0, 0, 0);
+      final alignedLocal = DateTime(2030, 1, 1, 0);
+      final alignedUtc = DateTime.utc(2030, 1, 1, 0);
       final units = <DateTimeUnit>[
         DateTimeUnit.year,
         DateTimeUnit.month,

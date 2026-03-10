@@ -31,8 +31,8 @@ class ThemeSelectorWidget extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
+                horizontal: 16,
+                vertical: 8,
               ),
               child: Text(
                 'Select Theme:',
@@ -41,13 +41,13 @@ class ThemeSelectorWidget extends StatelessWidget {
             ),
             RadioGroup<ThemeMode>(
               groupValue: state.themeMode,
-              onChanged: (ThemeMode? mode) {
+              onChanged: (mode) {
                 if (mode != null) {
-                  ThemePackage.setTheme(mode);
+                  unawaited(ThemePackage.setTheme(mode));
                 }
               },
-              child: Column(
-                children: const [
+              child: const Column(
+                children: [
                   _ThemeRadioTile(title: 'System', value: ThemeMode.system),
                   _ThemeRadioTile(title: 'Dark', value: ThemeMode.dark),
                   _ThemeRadioTile(title: 'Light', value: ThemeMode.light),

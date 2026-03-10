@@ -26,8 +26,7 @@ part of '../theme_package.dart';
 /// ```
 class ThemeBuilder extends StatelessWidget {
   const ThemeBuilder({
-    super.key,
-    required this.builder,
+    required this.builder, super.key,
   });
 
   /// Builder function that receives the current [ThemeMode].

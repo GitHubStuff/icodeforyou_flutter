@@ -7,7 +7,6 @@
 // package.
 // ---------------------------------------------------------------------------
 
-library;
 
 export 'src/_controller.dart' show AdaptiveModalController;
 export 'src/types.dart' show AdaptiveModalConfig;

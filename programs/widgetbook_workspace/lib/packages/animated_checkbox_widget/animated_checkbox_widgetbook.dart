@@ -1,5 +1,6 @@
 // wb_animated_checkbox_widgetbook.dart v0.05
-// ignore_for_file: depend_on_referenced_packages
+// ignore_for_file: lines_longer_than_80_chars, use_named_constants
+
 import 'package:animated_checkbox_widget/animated_checkbox_widget.dart'
     show AnimatedCheckbox, PlatformOptimizer;
 import 'package:extensions/widget_ext/widget_ext.dart';
@@ -13,7 +14,6 @@ part 'widgetbook_demo_widgets.dart';
 Widget buildAnimatedCheckboxDefaultCase(BuildContext context) {
   return Center(
     child: AnimatedCheckbox(
-      width: 100.0,
       strokeColor: Colors.green,
       draw: true,
       onAnimationComplete: (isDrawn) {
@@ -59,9 +59,9 @@ Widget buildAnimatedCheckboxCustomShapesCase(BuildContext context) {
                   width: 80,
                   strokeColor: Colors.green,
                   draw: true,
-                  startOffset: const Offset(0.0, 0.3),
+                  startOffset: const Offset(0, 0.3),
                   midOffset: const Offset(0.6, 0.9),
-                  finishOffset: const Offset(1.0, 0.1),
+                  finishOffset: const Offset(1, 0.1),
                   duration: const Duration(milliseconds: 1500),
                   onAnimationComplete: (_) {},
                 ),
@@ -122,9 +122,9 @@ Widget buildAnimatedCheckboxExtremeShapesCase(BuildContext context) {
                   width: 80,
                   strokeColor: Colors.red,
                   draw: true,
-                  startOffset: const Offset(0.0, 0.0),
+                  startOffset: const Offset(0, 0),
                   midOffset: const Offset(0.5, 0.5),
-                  finishOffset: const Offset(1.0, 1.0),
+                  finishOffset: const Offset(1, 1),
                   duration: const Duration(milliseconds: 1500),
                   onAnimationComplete: (_) {},
                 ),
@@ -138,9 +138,9 @@ Widget buildAnimatedCheckboxExtremeShapesCase(BuildContext context) {
                   width: 80,
                   strokeColor: Colors.green,
                   draw: true,
-                  startOffset: const Offset(0.5, 0.0),
+                  startOffset: const Offset(0.5, 0),
                   midOffset: const Offset(0.2, 0.5),
-                  finishOffset: const Offset(0.8, 1.0),
+                  finishOffset: const Offset(0.8, 1),
                   duration: const Duration(milliseconds: 1500),
                   onAnimationComplete: (_) {},
                 ),
@@ -154,9 +154,9 @@ Widget buildAnimatedCheckboxExtremeShapesCase(BuildContext context) {
                   width: 80,
                   strokeColor: Colors.blue,
                   draw: true,
-                  startOffset: const Offset(0.0, 1.0),
+                  startOffset: const Offset(0, 1),
                   midOffset: const Offset(0.5, 0.2),
-                  finishOffset: const Offset(1.0, 0.8),
+                  finishOffset: const Offset(1, 0.8),
                   duration: const Duration(milliseconds: 1500),
                   onAnimationComplete: (_) {},
                 ),
@@ -197,7 +197,7 @@ Widget buildAnimatedCheckboxPlatformCase(BuildContext context) {
           duration: Duration(milliseconds: isHighPerformance ? 800 : 1200),
           onAnimationComplete: (isDrawn) {
             debugPrint(
-              'Platform optimized animation completed: $isDrawn on $platformName',
+              'Optimized animation complete: $isDrawn on $platformName',
             );
           },
         ),
@@ -263,27 +263,27 @@ Widget buildAnimatedCheckboxPerformanceCase(BuildContext context) {
             ];
 
             final offsets = [
-              (Offset(0.0, 0.5), Offset(0.5, 1.0), Offset(1.0, 0.0)), // default
-              (Offset(0.2, 0.4), Offset(0.4, 0.8), Offset(0.8, 0.2)), // compact
-              (Offset(0.0, 0.3), Offset(0.6, 0.9), Offset(1.0, 0.1)), // wide
-              (Offset(0.1, 0.7), Offset(0.3, 0.9), Offset(0.9, 0.3)), // shallow
+              (const Offset(0, 0.5), const Offset(0.5, 1), const Offset(1, 0)), // default
+              (const Offset(0.2, 0.4), const Offset(0.4, 0.8), const Offset(0.8, 0.2)), // compact
+              (const Offset(0, 0.3), const Offset(0.6, 0.9), const Offset(1, 0.1)), // wide
+              (const Offset(0.1, 0.7), const Offset(0.3, 0.9), const Offset(0.9, 0.3)), // shallow
               (
-                Offset(0.0, 0.0),
-                Offset(0.5, 0.5),
-                Offset(1.0, 1.0),
+                const Offset(0, 0),
+                const Offset(0.5, 0.5),
+                const Offset(1, 1),
               ), // diagonal
               (
-                Offset(0.5, 0.0),
-                Offset(0.2, 0.5),
-                Offset(0.8, 1.0),
+                const Offset(0.5, 0),
+                const Offset(0.2, 0.5),
+                const Offset(0.8, 1),
               ), // lightning
               (
-                Offset(0.0, 1.0),
-                Offset(0.5, 0.2),
-                Offset(1.0, 0.8),
+                const Offset(0, 1),
+                const Offset(0.5, 0.2),
+                const Offset(1, 0.8),
               ), // inverted
-              (Offset(0.1, 0.6), Offset(0.4, 0.9), Offset(0.9, 0.1)), // custom1
-              (Offset(0.0, 0.4), Offset(0.6, 1.0), Offset(1.0, 0.0)), // custom2
+              (const Offset(0.1, 0.6), const Offset(0.4, 0.9), const Offset(0.9, 0.1)), // custom1
+              (const Offset(0, 0.4), const Offset(0.6, 1), const Offset(1, 0)), // custom2
             ];
 
             final offset = offsets[index];

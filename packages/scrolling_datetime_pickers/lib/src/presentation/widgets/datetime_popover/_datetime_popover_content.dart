@@ -126,8 +126,8 @@ class _DateTimePopoverContentState extends State<_DateTimePopoverContent> {
     final isPortrait = orientation == Orientation.portrait;
 
     final pickerSize = isPortrait
-        ? (widget.portraitPickerSize ?? const Size(280.0, 200.0))
-        : (widget.landscapePickerSize ?? const Size(320.0, 180.0));
+        ? (widget.portraitPickerSize ?? const Size(280, 200))
+        : (widget.landscapePickerSize ?? const Size(320, 180));
 
     final showTabBar = widget.option == DateTimeOption.dateTime;
 
@@ -222,7 +222,7 @@ class _DateTimePopoverContentState extends State<_DateTimePopoverContent> {
     final anchorTop = widget.anchorPosition.dy;
 
     final tabBarHeight = showTabBar ? PopoverConstants.tabBarHeight : 0.0;
-    final headerHeight = PopoverConstants.headerPadding * 2 +
+    const headerHeight = PopoverConstants.headerPadding * 2 +
         PopoverConstants.headerFontSize * 2 +
         8.0;
     final popoverHeight = headerHeight + tabBarHeight + pickerHeight;

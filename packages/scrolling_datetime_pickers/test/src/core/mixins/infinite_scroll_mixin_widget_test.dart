@@ -3,16 +3,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scrolling_datetime_pickers/src/core/mixins/infinite_scroll_mixin.dart';
 import 'package:scrolling_datetime_pickers/src/core/constants/style_constants.dart';
+import 'package:scrolling_datetime_pickers/src/core/mixins/infinite_scroll_mixin.dart';
 
 // Test widget that uses the mixin
 class _TestScrollWidget extends StatefulWidget {
-  final FixedExtentScrollController controller;
 
   const _TestScrollWidget({
     required this.controller,
   });
+  final FixedExtentScrollController controller;
 
   @override
   State<_TestScrollWidget> createState() => _TestScrollWidgetState();
@@ -52,7 +52,7 @@ class _TestScrollWidgetState extends State<_TestScrollWidget>
 void main() {
   group('InfiniteScrollMixin Widget Tests', () {
     testWidgets('needsRecentering should detect when near start', (
-      WidgetTester tester,
+      tester,
     ) async {
       const threshold = StyleConstants.infiniteScrollBuffer ~/ 4;
       final controller = FixedExtentScrollController(
@@ -73,7 +73,7 @@ void main() {
     });
 
     testWidgets('needsRecentering should detect when near end', (
-      WidgetTester tester,
+      tester,
     ) async {
       const threshold = StyleConstants.infiniteScrollBuffer ~/ 4;
       final controller = FixedExtentScrollController(
@@ -94,7 +94,7 @@ void main() {
     });
 
     testWidgets('needsRecentering should return false when in middle', (
-      WidgetTester tester,
+      tester,
     ) async {
       final controller = FixedExtentScrollController(
         initialItem: StyleConstants.infiniteScrollBuffer ~/ 2,
@@ -123,7 +123,7 @@ void main() {
     });
 
     testWidgets('needsRecentering edge cases at thresholds', (
-      WidgetTester tester,
+      tester,
     ) async {
       const threshold = StyleConstants.infiniteScrollBuffer ~/ 4;
 
@@ -165,7 +165,7 @@ void main() {
     });
 
     testWidgets('recenterScrollController should recenter to middle', (
-      WidgetTester tester,
+      tester,
     ) async {
       final controller = FixedExtentScrollController(
         initialItem: 5, // Start at a low position
@@ -192,7 +192,7 @@ void main() {
     });
 
     testWidgets('recenterScrollController should preserve current value', (
-      WidgetTester tester,
+      tester,
     ) async {
       final controller = FixedExtentScrollController(
         initialItem: 47, // Position with value 47 % 60 = 47
@@ -219,9 +219,9 @@ void main() {
     });
 
     testWidgets('recenterScrollController with no clients returns early', (
-      WidgetTester tester,
+      tester,
     ) async {
-      final controller = FixedExtentScrollController(initialItem: 0);
+      final controller = FixedExtentScrollController();
 
       // Create mixin instance without widget (no clients)
       final testMixin = _TestInfiniteScroll();

@@ -10,12 +10,12 @@ import 'package:scrolling_datetime_pickers/src/core/constants/timing_constants.d
 part 'date_picker_state.dart';
 
 class DatePickerCubit extends Cubit<DatePickerState> {
-  Timer? _debounceTimer;
 
   DatePickerCubit({DateTime? initialDate})
       : super(DatePickerState(
           date: initialDate ?? DateTime.now(),
         ));
+  Timer? _debounceTimer;
 
   static int _getDaysInMonth(int year, int month) {
     if (month == 2) {

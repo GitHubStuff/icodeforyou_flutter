@@ -53,7 +53,7 @@ class _InteractiveTimePickerDemoState
         ScrollingTimePicker(
           initialDateTime: _selectedTime,
           showSeconds: true,
-          borderRadius: 12.0,
+          borderRadius: 12,
           dividerConfiguration: DividerConfiguration.withGlow(
             color: Theme.of(context).colorScheme.primary,
           ),
@@ -84,8 +84,6 @@ class _InteractiveTimePickerDemoState
                     _selectedTime.month,
                     _selectedTime.day,
                     12,
-                    0,
-                    0,
                   );
                 });
               },
@@ -148,7 +146,7 @@ class _InteractiveDatePickerDemoState
         const Gap(24),
         ScrollingDatePicker(
           initialDate: _selectedDate,
-          borderRadius: 12.0,
+          borderRadius: 12,
           dividerConfiguration: DividerConfiguration.withGlow(
             color: Theme.of(context).colorScheme.primary,
           ),
@@ -174,7 +172,7 @@ class _InteractiveDatePickerDemoState
             FilledButton.tonal(
               onPressed: () {
                 setState(() {
-                  _selectedDate = DateTime(2000, 1, 1);
+                  _selectedDate = DateTime(2000);
                 });
               },
               child: const Text('Set to Y2K'),

@@ -80,7 +80,7 @@ void main() {
         expect(container.child, equals(testWidget));
         expect(container.decoration, isA<BoxDecoration>());
 
-        final boxDecoration = container.decoration as BoxDecoration;
+        final boxDecoration = container.decoration! as BoxDecoration;
         expect(boxDecoration.border, isA<Border>());
         expect(boxDecoration.borderRadius, isA<BorderRadius>());
       });
@@ -90,14 +90,14 @@ void main() {
         final result = testWidget.withBorder(color: testColor);
 
         final container = result as Container;
-        final boxDecoration = container.decoration as BoxDecoration;
-        final border = boxDecoration.border as Border;
+        final boxDecoration = container.decoration! as BoxDecoration;
+        final border = boxDecoration.border! as Border;
 
         expect(border.top.color, equals(testColor));
         expect(border.top.width, equals(1.5)); // default width
         expect(border.top.style, equals(BorderStyle.solid)); // default style
 
-        final borderRadius = boxDecoration.borderRadius as BorderRadius;
+        final borderRadius = boxDecoration.borderRadius! as BorderRadius;
         expect(borderRadius.topLeft.x, equals(0.0)); // default radius
       });
 
@@ -113,9 +113,9 @@ void main() {
         );
 
         final container = result as Container;
-        final boxDecoration = container.decoration as BoxDecoration;
-        final border = boxDecoration.border as Border;
-        final borderRadius = boxDecoration.borderRadius as BorderRadius;
+        final boxDecoration = container.decoration! as BoxDecoration;
+        final border = boxDecoration.border! as Border;
+        final borderRadius = boxDecoration.borderRadius! as BorderRadius;
 
         expect(border.top.width, equals(testWidth));
         expect(borderRadius.topLeft.x, equals(testRadius));
@@ -131,15 +131,15 @@ void main() {
         );
 
         final container = result as Container;
-        final boxDecoration = container.decoration as BoxDecoration;
-        final border = boxDecoration.border as Border;
+        final boxDecoration = container.decoration! as BoxDecoration;
+        final border = boxDecoration.border! as Border;
 
         expect(border.top.style, equals(testStyle));
       });
 
       test('throws ArgumentError for negative width', () {
         expect(
-          () => testWidget.withBorder(color: Colors.black, width: -1.0),
+          () => testWidget.withBorder(color: Colors.black, width: -1),
           throwsA(
             isA<ArgumentError>()
                 .having((e) => e.name, 'name', 'width')
@@ -154,7 +154,7 @@ void main() {
 
       test('throws ArgumentError for negative radius', () {
         expect(
-          () => testWidget.withBorder(color: Colors.black, radius: -5.0),
+          () => testWidget.withBorder(color: Colors.black, radius: -5),
           throwsA(
             isA<ArgumentError>()
                 .having((e) => e.name, 'name', 'radius')
@@ -170,8 +170,7 @@ void main() {
       test('accepts zero width and radius', () {
         final result = testWidget.withBorder(
           color: Colors.black,
-          width: 0.0,
-          radius: 0.0,
+          width: 0,
         );
 
         expect(result, isA<Container>());
@@ -191,8 +190,8 @@ void main() {
       });
 
       test('accepts boundary values 0.0 and 1.0', () {
-        final result1 = testWidget.withOpacity(0.0);
-        final result2 = testWidget.withOpacity(1.0);
+        final result1 = testWidget.withOpacity(0);
+        final result2 = testWidget.withOpacity(1);
 
         expect((result1 as Opacity).opacity, equals(0.0));
         expect((result2 as Opacity).opacity, equals(1.0));
@@ -238,18 +237,18 @@ void main() {
 
         final padding = result as Padding;
         expect(padding.child, equals(testWidget));
-        expect(padding.padding, equals(EdgeInsets.all(paddingValue)));
+        expect(padding.padding, equals(const EdgeInsets.all(paddingValue)));
       });
 
       test('accepts zero padding', () {
-        final result = testWidget.withPaddingAll(0.0);
+        final result = testWidget.withPaddingAll(0);
         final padding = result as Padding;
-        expect(padding.padding, equals(EdgeInsets.all(0.0)));
+        expect(padding.padding, equals(EdgeInsets.zero));
       });
 
       test('throws ArgumentError for negative padding', () {
         expect(
-          () => testWidget.withPaddingAll(-5.0),
+          () => testWidget.withPaddingAll(-5),
           throwsA(
             isA<ArgumentError>()
                 .having((e) => e.name, 'name', 'paddingValue')
@@ -274,7 +273,7 @@ void main() {
         expect(
           padding.padding,
           equals(
-            const EdgeInsets.only(left: 0.0, top: 0.0, right: 0.0, bottom: 0.0),
+            EdgeInsets.zero,
           ),
         );
       });
@@ -319,8 +318,6 @@ void main() {
             const EdgeInsets.only(
               left: left,
               top: top,
-              right: 0.0,
-              bottom: 0.0,
             ),
           ),
         );
@@ -328,7 +325,7 @@ void main() {
 
       test('throws ArgumentError for negative left padding', () {
         expect(
-          () => testWidget.withPaddingOnly(left: -1.0),
+          () => testWidget.withPaddingOnly(left: -1),
           throwsA(
             isA<ArgumentError>()
                 .having((e) => e.name, 'name', 'left')
@@ -343,7 +340,7 @@ void main() {
 
       test('throws ArgumentError for negative top padding', () {
         expect(
-          () => testWidget.withPaddingOnly(top: -1.0),
+          () => testWidget.withPaddingOnly(top: -1),
           throwsA(
             isA<ArgumentError>()
                 .having((e) => e.name, 'name', 'top')
@@ -358,7 +355,7 @@ void main() {
 
       test('throws ArgumentError for negative right padding', () {
         expect(
-          () => testWidget.withPaddingOnly(right: -1.0),
+          () => testWidget.withPaddingOnly(right: -1),
           throwsA(
             isA<ArgumentError>()
                 .having((e) => e.name, 'name', 'right')
@@ -373,7 +370,7 @@ void main() {
 
       test('throws ArgumentError for negative bottom padding', () {
         expect(
-          () => testWidget.withPaddingOnly(bottom: -1.0),
+          () => testWidget.withPaddingOnly(bottom: -1),
           throwsA(
             isA<ArgumentError>()
                 .having((e) => e.name, 'name', 'bottom')
@@ -399,7 +396,7 @@ void main() {
           expect(padding.child, equals(testWidget));
           expect(
             padding.padding,
-            equals(const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0)),
+            equals(EdgeInsets.zero),
           );
         },
       );
@@ -434,7 +431,7 @@ void main() {
         expect(
           padding.padding,
           equals(
-            const EdgeInsets.symmetric(horizontal: horizontal, vertical: 0.0),
+            const EdgeInsets.symmetric(horizontal: horizontal),
           ),
         );
       });
@@ -448,14 +445,14 @@ void main() {
         expect(
           padding.padding,
           equals(
-            const EdgeInsets.symmetric(horizontal: 0.0, vertical: vertical),
+            const EdgeInsets.symmetric(vertical: vertical),
           ),
         );
       });
 
       test('throws ArgumentError for negative horizontal padding', () {
         expect(
-          () => testWidget.withPaddingSymmetric(horizontal: -5.0),
+          () => testWidget.withPaddingSymmetric(horizontal: -5),
           throwsA(
             isA<ArgumentError>()
                 .having((e) => e.name, 'name', 'horizontal')
@@ -470,7 +467,7 @@ void main() {
 
       test('throws ArgumentError for negative vertical padding', () {
         expect(
-          () => testWidget.withPaddingSymmetric(vertical: -3.0),
+          () => testWidget.withPaddingSymmetric(vertical: -3),
           throwsA(
             isA<ArgumentError>()
                 .having((e) => e.name, 'name', 'vertical')
@@ -487,9 +484,9 @@ void main() {
     group('chaining methods', () {
       test('allows chaining multiple extension methods', () {
         final result = testWidget
-            .withPaddingAll(16.0)
+            .withPaddingAll(16)
             .withBackground(color: Colors.blue)
-            .withBorder(color: Colors.black, width: 2.0, radius: 8.0)
+            .withBorder(color: Colors.black, width: 2, radius: 8)
             .withOpacity(0.8);
 
         expect(result, isA<Opacity>());
@@ -501,19 +498,19 @@ void main() {
           isA<Container>(),
         ); // The border creates a Container
 
-        final container = opacity.child as Container;
+        final container = opacity.child! as Container;
         expect(
           container.child,
           isA<DecoratedBox>(),
         ); // The background creates a DecoratedBox
 
-        final decoratedBox = container.child as DecoratedBox;
+        final decoratedBox = container.child! as DecoratedBox;
         expect(
           decoratedBox.child,
           isA<Padding>(),
         ); // The padding creates a Padding
 
-        final padding = decoratedBox.child as Padding;
+        final padding = decoratedBox.child! as Padding;
         expect(
           padding.child,
           equals(testWidget),
@@ -522,17 +519,17 @@ void main() {
 
       test('allows conditional chaining with hide and remove', () {
         final result1 = testWidget
-            .withPaddingAll(8.0)
+            .withPaddingAll(8)
             .hide(false)
             .remove(false);
 
         expect(result1, isA<Padding>());
 
-        final result2 = testWidget.withPaddingAll(8.0).hide(true).remove(false);
+        final result2 = testWidget.withPaddingAll(8).hide(true).remove(false);
 
         expect(result2, isA<Opacity>());
 
-        final result3 = testWidget.withPaddingAll(8.0).hide(false).remove(true);
+        final result3 = testWidget.withPaddingAll(8).hide(false).remove(true);
 
         expect(result3, isA<SizedBox>());
       });

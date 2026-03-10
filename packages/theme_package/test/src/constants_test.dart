@@ -7,9 +7,7 @@ import 'package:theme_package/theme_package.dart';
 void main() {
   const validDbName = 'test_db_1234567890ab';
 
-  setUp(() {
-    ThemePackage.reset();
-  });
+  setUp(ThemePackage.reset);
 
   group('ThemeConstants (via ThemePackage)', () {
     group('stringToThemeMode', () {

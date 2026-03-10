@@ -39,11 +39,10 @@ final class _ThemeLocalDatasource {
       }
 
       await Hive.initFlutter(dbPath);
-
       _box = await Hive.openBox<String>(databaseName);
 
       return const Right(unit);
-    } catch (e) {
+    } on Object catch (e) {
       return Left(ThemeError.initializationFailed(e.toString()));
     }
     // coverage:ignore-end
@@ -67,7 +66,6 @@ final class _ThemeLocalDatasource {
   ///
   /// Returns [Either<ThemeError, Unit>] indicating success or failure.
   Future<Either<ThemeError, Unit>> setThemeMode(ThemeMode mode) async {
-    // Test hook to force failure
     if (ThemePackage.forceSetThemeFailure) {
       return const Left(ThemeError.persistenceFailed('Forced test failure'));
     }
@@ -83,7 +81,7 @@ final class _ThemeLocalDatasource {
       // coverage:ignore-start
       await _box?.put(_ThemeConstants.themeKey, value);
       return const Right(unit);
-    } catch (e) {
+    } on Object catch (e) {
       return Left(ThemeError.persistenceFailed(e.toString()));
     }
     // coverage:ignore-end

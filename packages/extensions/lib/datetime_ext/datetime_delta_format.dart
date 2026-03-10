@@ -1,11 +1,14 @@
 // datetime_delta_format.dart - CLEAN CODE VERSION
 
+// ignore_for_file: document_ignores
+
 import 'package:extensions/datetime_ext/datetime_delta.dart' show DateTimeDelta;
 
 extension DateTimeDeltaFormat on DateTimeDelta {
   /// Default pattern:
-  /// years (2-digit, only if >0), months (only if >0 or higher shown, in parens),
-  /// days (always), then h:m:s with cascade gating and separators when printed.
+  /// years (2-digit, only if >0), months (only if >0 or higher shown,
+  /// in parens), days (always), then h:m:s with cascade gating and separators
+  /// when printed.
   String format([
     String fmt = r'$*{[YY]} $*{(M>)} ${D} $*{hh>}:${*mm>}:$*{ss>}',
   ]) {
@@ -15,6 +18,18 @@ extension DateTimeDeltaFormat on DateTimeDelta {
 }
 
 class _DateTimeDeltaFormatter {
+
+  _DateTimeDeltaFormatter(this._delta)
+    : _values = {
+        'Y': _delta.years ?? 0,
+        'M': _delta.months ?? 0,
+        'D': _delta.days ?? 0,
+        'h': _delta.hours ?? 0,
+        'm': _delta.minutes ?? 0,
+        's': _delta.seconds ?? 0,
+        'S': _delta.milliseconds ?? 0,
+        'u': _delta.microseconds ?? 0,
+      };
   final DateTimeDelta _delta;
   final Map<String, int> _values;
   final List<String> _unitsOrder = const [
@@ -28,27 +43,15 @@ class _DateTimeDeltaFormatter {
     'u',
   ];
 
-  _DateTimeDeltaFormatter(this._delta)
-    : _values = {
-        'Y': _delta.years ?? 0,
-        'M': _delta.months ?? 0,
-        'D': _delta.days ?? 0,
-        'h': _delta.hours ?? 0,
-        'm': _delta.minutes ?? 0,
-        's': _delta.seconds ?? 0,
-        'S': _delta.milliseconds ?? 0,
-        'u': _delta.microseconds ?? 0,
-      };
-
   String format(String fmt) {
     final parser = _FormatParser(fmt);
     final segments = parser.parse();
     final renderer = _SegmentRenderer(_values, _unitsOrder);
 
     final result = segments
-        .map((segment) => renderer.render(segment))
+        .map(renderer.render)
         .where((text) => text.isNotEmpty)
-        .join('')
+        .join()
         .replaceAll(RegExp(r'\s+'), ' ')
         .trim();
 
@@ -64,10 +67,10 @@ class _DateTimeDeltaFormatter {
 }
 
 class _FormatParser {
-  final String _format;
-  int _index = 0;
 
   _FormatParser(this._format);
+  final String _format;
+  int _index = 0;
 
   List<_FormatSegment> parse() {
     final segments = <_FormatSegment>[];
@@ -164,7 +167,7 @@ class _FormatParser {
       );
     }
 
-    final unitMatch = RegExp(r'(.*?)([YMDhmsSu]+)(.*)').firstMatch(content);
+    final unitMatch = RegExp('(.*?)([YMDhmsSu]+)(.*)').firstMatch(content);
     if (unitMatch != null) {
       return _UnitParse(
         prefix: unitMatch.group(1)!,
@@ -175,7 +178,7 @@ class _FormatParser {
     }
 
     // Fallback for invalid content
-    return _UnitParse(prefix: '', symbol: 'D', width: 1, trailing: '');
+    return const _UnitParse(prefix: '', symbol: 'D', width: 1, trailing: '');
   }
 
   String _parseLiteral() {
@@ -198,10 +201,10 @@ class _FormatParser {
 }
 
 class _SegmentRenderer {
-  final Map<String, int> _values;
-  final List<String> _unitsOrder;
 
   _SegmentRenderer(this._values, this._unitsOrder);
+  final Map<String, int> _values;
+  final List<String> _unitsOrder;
 
   String render(_FormatSegment segment) {
     if (segment.isLiteral) {
@@ -215,6 +218,7 @@ class _SegmentRenderer {
     final value = _values[segment.symbol] ?? 0;
     final formattedValue = _formatValue(value, segment.width);
 
+    // ignore: lines_longer_than_80_chars
     return '${segment.prefix}$formattedValue${segment.trailing}${segment.suffix}';
   }
 
@@ -252,15 +256,6 @@ class _SegmentRenderer {
 }
 
 class _FormatSegment {
-  final bool isLiteral;
-  final String content;
-  final String symbol;
-  final String prefix;
-  final int width;
-  final String trailing;
-  final String suffix;
-  final bool isStarGated;
-  final bool hasCascade;
 
   const _FormatSegment._({
     required this.isLiteral,
@@ -309,13 +304,18 @@ class _FormatSegment {
       hasCascade: hasCascade,
     );
   }
+  final bool isLiteral;
+  final String content;
+  final String symbol;
+  final String prefix;
+  final int width;
+  final String trailing;
+  final String suffix;
+  final bool isStarGated;
+  final bool hasCascade;
 }
 
 class _UnitParse {
-  final String prefix;
-  final String symbol;
-  final int width;
-  final String trailing;
 
   const _UnitParse({
     required this.prefix,
@@ -323,4 +323,8 @@ class _UnitParse {
     required this.width,
     required this.trailing,
   });
+  final String prefix;
+  final String symbol;
+  final int width;
+  final String trailing;
 }

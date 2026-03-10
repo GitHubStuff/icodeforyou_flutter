@@ -1,14 +1,14 @@
 // lib/src/platform_optimizer.dart
-import 'platform_identifer.dart';
+import 'package:animated_checkbox_widget/src/platform_identifer.dart';
 
 class PlatformOptimizer {
+
+  const PlatformOptimizer({PlatformIdentifier? platformDetector})
+    : _platformDetector = platformDetector ?? _defaultDetector;
   static const DefaultPlatformIdentifier _defaultDetector =
       DefaultPlatformIdentifier();
 
   final PlatformIdentifier _platformDetector;
-
-  const PlatformOptimizer({PlatformIdentifier? platformDetector})
-    : _platformDetector = platformDetector ?? _defaultDetector;
 
   // Instance methods with different names to avoid conflicts
   int calculateOptimalParticleCount(double widgetWidth) {
@@ -46,14 +46,14 @@ class PlatformOptimizer {
       return 2.5;
     }
     if (_platformDetector.isIOS || _platformDetector.isAndroid) {
-      return 2.0;
+      return 2;
     }
     if (_platformDetector.isMacOS ||
         _platformDetector.isWindows ||
         _platformDetector.isLinux) {
       return 1.5;
     }
-    return 2.0;
+    return 2;
   }
 
   bool isHighPerformanceModeEnabled() {

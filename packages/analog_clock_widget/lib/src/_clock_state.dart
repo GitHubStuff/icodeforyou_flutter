@@ -30,7 +30,7 @@ class _AnalogClockState extends ExtendedStatefulWidget<AnalogClock> {
   /// Only recreates the configuration if it has actually changed,
   /// preventing unnecessary rebuilds and improving performance.
   void _createConfiguration(BuildContext context) {
-    final colorScheme = widget.themeProvider.getColorScheme(context);
+    final colorScheme = widget.themeProvider(context);
     final dimensions = _ClockDimensions.fromRadius(widget.radius);
     final colors = _ClockColors.fromTheme(
       colorScheme: colorScheme,

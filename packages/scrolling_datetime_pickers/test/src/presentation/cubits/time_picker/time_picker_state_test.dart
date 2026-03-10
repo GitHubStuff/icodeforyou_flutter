@@ -27,14 +27,14 @@ void main() {
     group('hour12 getter', () {
       test('should return 12 for midnight (0 hours)', () {
         final state = TimePickerState(
-          dateTime: DateTime(2024, 1, 1, 0, 30, 0),
+          dateTime: DateTime(2024, 1, 1, 0, 30),
         );
         expect(state.hour12, 12);
       });
 
       test('should return 12 for noon (12 hours)', () {
         final state = TimePickerState(
-          dateTime: DateTime(2024, 1, 1, 12, 30, 0),
+          dateTime: DateTime(2024, 1, 1, 12, 30),
         );
         expect(state.hour12, 12);
       });
@@ -42,7 +42,7 @@ void main() {
       test('should return morning hours as is (1-11)', () {
         for (int hour = 1; hour <= 11; hour++) {
           final state = TimePickerState(
-            dateTime: DateTime(2024, 1, 1, hour, 0, 0),
+            dateTime: DateTime(2024, 1, 1, hour),
           );
           expect(state.hour12, hour);
         }
@@ -51,7 +51,7 @@ void main() {
       test('should convert afternoon hours (13-23)', () {
         for (int hour = 13; hour <= 23; hour++) {
           final state = TimePickerState(
-            dateTime: DateTime(2024, 1, 1, hour, 0, 0),
+            dateTime: DateTime(2024, 1, 1, hour),
           );
           expect(state.hour12, hour - 12);
         }
@@ -62,7 +62,7 @@ void main() {
       test('should return true for morning hours (0-11)', () {
         for (int hour = 0; hour <= 11; hour++) {
           final state = TimePickerState(
-            dateTime: DateTime(2024, 1, 1, hour, 0, 0),
+            dateTime: DateTime(2024, 1, 1, hour),
           );
           expect(state.isAm, true, reason: 'Hour $hour should be AM');
         }
@@ -71,7 +71,7 @@ void main() {
       test('should return false for afternoon hours (12-23)', () {
         for (int hour = 12; hour <= 23; hour++) {
           final state = TimePickerState(
-            dateTime: DateTime(2024, 1, 1, hour, 0, 0),
+            dateTime: DateTime(2024, 1, 1, hour),
           );
           expect(state.isAm, false, reason: 'Hour $hour should be PM');
         }
@@ -97,7 +97,7 @@ void main() {
     group('copyWith', () {
       test('should copy with new dateTime', () {
         final original = TimePickerState(
-          dateTime: DateTime(2024, 1, 1, 14, 30, 0),
+          dateTime: DateTime(2024, 1, 1, 14, 30),
           isScrolling: true,
         );
 
@@ -110,8 +110,7 @@ void main() {
 
       test('should copy with new scrolling state', () {
         final original = TimePickerState(
-          dateTime: DateTime(2024, 1, 1, 14, 30, 0),
-          isScrolling: false,
+          dateTime: DateTime(2024, 1, 1, 14, 30),
         );
 
         final modified = original.copyWith(isScrolling: true);
@@ -122,7 +121,7 @@ void main() {
 
       test('should preserve values when not specified', () {
         final original = TimePickerState(
-          dateTime: DateTime(2024, 1, 1, 14, 30, 0),
+          dateTime: DateTime(2024, 1, 1, 14, 30),
           isScrolling: true,
         );
 
@@ -135,7 +134,7 @@ void main() {
 
     group('equality', () {
       test('should be equal when all properties match', () {
-        final dateTime = DateTime(2024, 1, 1, 14, 30, 0);
+        final dateTime = DateTime(2024, 1, 1, 14, 30);
         final state1 = TimePickerState(dateTime: dateTime);
         final state2 = TimePickerState(dateTime: dateTime);
 
@@ -145,7 +144,7 @@ void main() {
 
       test('should not be equal when dateTime differs', () {
         final state1 = TimePickerState(
-          dateTime: DateTime(2024, 1, 1, 14, 30, 0),
+          dateTime: DateTime(2024, 1, 1, 14, 30),
         );
         final state2 = TimePickerState(
           dateTime: DateTime(2024, 1, 1, 14, 30, 1),
@@ -155,14 +154,13 @@ void main() {
       });
 
       test('should not be equal when scrolling differs', () {
-        final dateTime = DateTime(2024, 1, 1, 14, 30, 0);
+        final dateTime = DateTime(2024, 1, 1, 14, 30);
         final state1 = TimePickerState(
           dateTime: dateTime,
           isScrolling: true,
         );
         final state2 = TimePickerState(
           dateTime: dateTime,
-          isScrolling: false,
         );
 
         expect(state1, isNot(equals(state2)));
@@ -171,7 +169,7 @@ void main() {
 
     test('stringify should return true', () {
       final state = TimePickerState(
-        dateTime: DateTime(2024, 1, 1, 14, 30, 0),
+        dateTime: DateTime(2024, 1, 1, 14, 30),
       );
 
       expect(state.stringify, true);
@@ -183,7 +181,7 @@ void main() {
     });
 
     test('props should contain dateTime and isScrolling', () {
-      final dateTime = DateTime(2024, 1, 1, 14, 30, 0);
+      final dateTime = DateTime(2024, 1, 1, 14, 30);
       final state = TimePickerState(
         dateTime: dateTime,
         isScrolling: true,

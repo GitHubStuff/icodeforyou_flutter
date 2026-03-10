@@ -7,9 +7,7 @@ import 'package:theme_package/theme_package.dart';
 void main() {
   const validDbName = 'test_db_1234567890ab';
 
-  setUp(() {
-    ThemePackage.reset();
-  });
+  setUp(ThemePackage.reset);
 
   group('ThemeBuilder', () {
     Future<void> pumpThemeBuilder(
@@ -32,7 +30,7 @@ void main() {
     }
 
     group('builder function', () {
-      testWidgets('receives BuildContext', (WidgetTester tester) async {
+      testWidgets('receives BuildContext', (tester) async {
         BuildContext? capturedContext;
 
         await pumpThemeBuilder(
@@ -47,7 +45,7 @@ void main() {
         expect(capturedContext, isA<BuildContext>());
       });
 
-      testWidgets('receives current ThemeMode', (WidgetTester tester) async {
+      testWidgets('receives current ThemeMode', (tester) async {
         ThemeMode? capturedMode;
 
         await pumpThemeBuilder(
@@ -62,7 +60,7 @@ void main() {
         expect(find.text('Mode: system'), findsOneWidget);
       });
 
-      testWidgets('returns widget from builder', (WidgetTester tester) async {
+      testWidgets('returns widget from builder', (tester) async {
         await pumpThemeBuilder(
           tester,
           builder: (context, themeMode) {
@@ -76,7 +74,7 @@ void main() {
 
     group('reactivity', () {
       testWidgets('rebuilds when theme changes to dark',
-          (WidgetTester tester) async {
+          (tester) async {
         await pumpThemeBuilder(
           tester,
           builder: (context, themeMode) {
@@ -93,7 +91,7 @@ void main() {
       });
 
       testWidgets('rebuilds when theme changes to light',
-          (WidgetTester tester) async {
+          (tester) async {
         await pumpThemeBuilder(
           tester,
           builder: (context, themeMode) {
@@ -108,8 +106,8 @@ void main() {
       });
 
       testWidgets('rebuilds on every theme change',
-          (WidgetTester tester) async {
-        int buildCount = 0;
+          (tester) async {
+        var buildCount = 0;
 
         await pumpThemeBuilder(
           tester,
@@ -137,7 +135,7 @@ void main() {
 
     group('MaterialApp integration', () {
       testWidgets('can be used to configure MaterialApp themeMode',
-          (WidgetTester tester) async {
+          (tester) async {
         await tester.pumpWidget(
           ThemePackageRoot(
             databaseName: validDbName,
@@ -182,7 +180,7 @@ void main() {
 
     group('nested usage', () {
       testWidgets('multiple ThemeBuilders receive same themeMode',
-          (WidgetTester tester) async {
+          (tester) async {
         await tester.pumpWidget(
           ThemePackageRoot(
             databaseName: validDbName,

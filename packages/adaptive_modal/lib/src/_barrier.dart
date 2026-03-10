@@ -10,6 +10,9 @@
 // this widget is never instantiated in that case.
 // ---------------------------------------------------------------------------
 
+// ignore_for_file: document_ignores, comment_references
+
+import 'package:adaptive_modal/src/_overlay_manager.dart' show OverlayManager;
 import 'package:flutter/widgets.dart';
 
 // ---------------------------------------------------------------------------
@@ -25,11 +28,12 @@ import 'package:flutter/widgets.dart';
 /// is true — which is always the case when this widget is used, since the
 /// barrier is never inserted otherwise.
 class BarrierWidget extends StatelessWidget {
+  /// Constructor
   const BarrierWidget({
-    super.key,
     required this.color,
     required this.opacity,
     required this.onDismiss,
+    super.key,
   });
 
   /// The barrier color at full opacity.

@@ -42,10 +42,10 @@ part of '../theme_package.dart';
 /// ```
 class ThemePackageRoot extends StatefulWidget {
   const ThemePackageRoot({
-    super.key,
-    this.databaseName,
     required this.splash,
     required this.child,
+    super.key,
+    this.databaseName,
     this.splashMinDuration,
     this.transitionDuration = const Duration(milliseconds: 750),
     this.customPath,
@@ -81,7 +81,7 @@ class ThemePackageRoot extends StatefulWidget {
   final String? customPath;
 
   /// If true, uses in-memory storage instead of Hive.
-  /// Useful for testing, Widgetbook, or environments without file system access.
+  /// Useful for testing, Widgetbook, or environments without file access.
   /// Defaults to false.
   final bool inMemory;
 
@@ -104,7 +104,7 @@ class _ThemePackageRootState extends State<ThemePackageRoot> {
   void initState() {
     super.initState();
     _validateConfiguration();
-    _startInitialization();
+    unawaited(_startInitialization());
     _startMinDurationTimer();
   }
 
@@ -146,13 +146,15 @@ class _ThemePackageRootState extends State<ThemePackageRoot> {
       return;
     }
 
-    Future<void>.delayed(minDuration, () {
-      if (mounted) {
-        setState(() {
-          _minDurationElapsed = true;
-        });
-      }
-    });
+    unawaited(
+      Future<void>.delayed(minDuration, () {
+        if (mounted) {
+          setState(() {
+            _minDurationElapsed = true;
+          });
+        }
+      }),
+    );
   }
 
   @override
@@ -167,7 +169,7 @@ class _ThemePackageRootState extends State<ThemePackageRoot> {
   }
 
   Widget _buildSplash() {
-    return Container(
+    return ColoredBox(
       key: const ValueKey('splash'),
       color: Colors.black,
       child: widget.splash,

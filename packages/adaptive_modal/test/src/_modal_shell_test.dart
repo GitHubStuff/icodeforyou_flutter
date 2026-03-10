@@ -1,4 +1,6 @@
 // test/src/_modal_shell_test.dart
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:adaptive_modal/src/_modal_shell.dart';
 import 'package:adaptive_modal/src/_position_resolver.dart';
 import 'package:adaptive_modal/src/types.dart';
@@ -148,7 +150,7 @@ void main() {
 
   group('ModalShell large layout', () {
     testWidgets('contains Positioned wrapper on large', (tester) async {
-      await pumpShell(tester, isPhone: false);
+      await pumpShell(tester);
       expect(
         find.descendant(of: find.byType(ModalShell), matching: find.byType(Positioned)),
         findsWidgets,
@@ -156,7 +158,7 @@ void main() {
     });
 
     testWidgets('does not use SafeArea on large', (tester) async {
-      await pumpShell(tester, isPhone: false);
+      await pumpShell(tester);
       expect(
         find.descendant(of: find.byType(ModalShell), matching: find.byType(SafeArea)),
         findsNothing,
@@ -164,12 +166,12 @@ void main() {
     });
 
     testWidgets('renders child on large', (tester) async {
-      await pumpShell(tester, isPhone: false, child: const Text('large content'));
+      await pumpShell(tester, child: const Text('large content'));
       expect(find.text('large content'), findsOneWidget);
     });
 
     testWidgets('uses ClipRRect on large', (tester) async {
-      await pumpShell(tester, isPhone: false);
+      await pumpShell(tester);
       expect(
         find.descendant(of: find.byType(ModalShell), matching: find.byType(ClipRRect)),
         findsOneWidget,
@@ -179,7 +181,6 @@ void main() {
     testWidgets('SizedBox uses maxWidth and maxHeight from config', (tester) async {
       await pumpShell(
         tester,
-        isPhone: false,
         config: const AdaptiveModalConfig(maxWidth: 320, maxHeight: 500),
       );
       final boxes = tester.widgetList<SizedBox>(
@@ -195,7 +196,7 @@ void main() {
 
   group('ModalShell close button', () {
     testWidgets('calls onClose when tapped', (tester) async {
-      bool closed = false;
+      var closed = false;
       await pumpShell(tester, onClose: () => closed = true);
       await tester.tap(
         find
@@ -206,7 +207,7 @@ void main() {
     });
 
     testWidgets('shows default Icons.close when closeIcon is null', (tester) async {
-      await pumpShell(tester, config: const AdaptiveModalConfig(closeIcon: null));
+      await pumpShell(tester);
       expect(
         find.descendant(of: find.byType(ModalShell), matching: find.byIcon(Icons.close)),
         findsOneWidget,
@@ -229,7 +230,7 @@ void main() {
     });
 
     testWidgets('calls onClose on phone layout', (tester) async {
-      bool closed = false;
+      var closed = false;
       await pumpShell(tester, isPhone: true, onClose: () => closed = true);
       await tester.tap(
         find
@@ -246,12 +247,12 @@ void main() {
 
   group('ModalShell animation', () {
     testWidgets('FadeTransition at 1.0 when animation fully forward', (tester) async {
-      await pumpShell(tester, animationValue: 1.0);
+      await pumpShell(tester);
       expect(shellFade(tester).opacity.value, closeTo(1.0, 0.001));
     });
 
     testWidgets('FadeTransition at 0.0 when animation at start', (tester) async {
-      await pumpShell(tester, animationValue: 0.0);
+      await pumpShell(tester, animationValue: 0);
       expect(shellFade(tester).opacity.value, closeTo(0.0, 0.001));
     });
   });
@@ -262,7 +263,7 @@ void main() {
 
   group('ModalShell scale alignment', () {
     testWidgets('below uses topCenter alignment', (tester) async {
-      await pumpShell(tester, position: AdaptiveModalPosition.below);
+      await pumpShell(tester);
       expect(shellScale(tester).alignment, Alignment.topCenter);
     });
 

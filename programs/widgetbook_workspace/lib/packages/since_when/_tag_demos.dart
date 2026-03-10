@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:since_when/since_when.dart';
 
-import '_mock_data.dart';
-import '_shared_widgets.dart';
+import 'package:widgetbook_workspace/packages/since_when/_mock_data.dart';
+import 'package:widgetbook_workspace/packages/since_when/_shared_widgets.dart';
 
 /// Tags filtering demo widget.
 class TagsDemo extends StatefulWidget {
@@ -85,7 +85,7 @@ class _TagsDemoState extends State<TagsDemo> {
         actions: [
           if (_selectedTagNames.isNotEmpty)
             TextButton.icon(
-              onPressed: () => setState(() => _selectedTagNames.clear()),
+              onPressed: () => setState(_selectedTagNames.clear),
               icon: const Icon(Icons.clear_all),
               label: const Text('Clear'),
             ),
@@ -163,7 +163,10 @@ class _MatchModeSelector extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
-          const Text('Match Mode:', style: TextStyle(fontWeight: FontWeight.w500)),
+          const Text(
+            'Match Mode:',
+            style: TextStyle(fontWeight: FontWeight.w500),
+          ),
           const SizedBox(width: 16),
           SegmentedButton<TagMatchMode>(
             segments: const [
@@ -224,10 +227,11 @@ class _ResultsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tagOrTags = 'of $selectedCount tag${selectedCount == 1} ? "" : "s"';
     final text = selectedCount == 0
         ? 'Showing all $total records'
         : 'Found $filtered of $total matching '
-            '${mode == TagMatchMode.any ? "ANY" : "ALL"} of $selectedCount tag(s)';
+              '${mode == TagMatchMode.any ? "ANY" : "ALL"} $tagOrTags';
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -247,10 +251,15 @@ class _EmptyState extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.search_off, size: 48, color: Theme.of(context).colorScheme.outline),
+          Icon(
+            Icons.search_off,
+            size: 48,
+            color: Theme.of(context).colorScheme.outline,
+          ),
           const SizedBox(height: 8),
           Text(
-            'No records match ${mode == TagMatchMode.all ? "ALL" : "ANY"} of the selected tags',
+            'No records match ${mode == TagMatchMode.all ? "ALL" : "ANY"}'
+            ' of the selected tags',
             style: TextStyle(color: Theme.of(context).colorScheme.outline),
           ),
         ],

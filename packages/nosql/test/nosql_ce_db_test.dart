@@ -1,4 +1,6 @@
 // nosql_ce_db_test.dart
+// ignore_for_file: avoid_catches_without_on_clauses, avoid_slow_async_io, lines_longer_than_80_chars
+
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -41,7 +43,7 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
           const MethodChannel('plugins.flutter.io/path_provider'),
-          (MethodCall methodCall) async {
+          (methodCall) async {
             return uniqueTestPath;
           },
         );
@@ -49,7 +51,7 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
           const MethodChannel('plugins.flutter.io/hive'),
-          (MethodCall methodCall) async {
+          (methodCall) async {
             return null;
           },
         );

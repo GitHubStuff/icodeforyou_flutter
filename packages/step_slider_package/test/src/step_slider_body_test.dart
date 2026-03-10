@@ -1,4 +1,6 @@
 // test/src/step_slider_body_test.dart
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:step_slider_package/step_slider_package.dart';
@@ -90,7 +92,6 @@ void main() {
       testWidgets('updates internal state and calls callback', (tester) async {
         double? capturedValue;
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
           onChanged: (v) => capturedValue = v,
         ));
 
@@ -106,8 +107,7 @@ void main() {
 
       testWidgets('works without onChanged callback', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
-          onChanged: null,
+          
         ));
 
         await tester.tap(find.byIcon(Icons.add));
@@ -121,7 +121,6 @@ void main() {
       testWidgets('slider drag updates value', (tester) async {
         double? capturedValue;
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
           onChanged: (v) => capturedValue = v,
         ));
 
@@ -137,8 +136,7 @@ void main() {
       testWidgets('decrements by step value', (tester) async {
         double? capturedValue;
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
-          step: 5.0,
+          step: 5,
           onChanged: (v) => capturedValue = v,
         ));
 
@@ -151,9 +149,8 @@ void main() {
       testWidgets('clamps to min when step exceeds', (tester) async {
         double? capturedValue;
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 3.0,
-          min: 0.0,
-          step: 10.0,
+          initialValue: 3,
+          step: 10,
           onChanged: (v) => capturedValue = v,
         ));
 
@@ -167,8 +164,7 @@ void main() {
         double? capturedValue;
         await tester.pumpWidget(buildTestWidget(
           initialValue: 1.5,
-          min: 0.0,
-          max: 5.0,
+          max: 5,
           step: 0.25,
           onChanged: (v) => capturedValue = v,
         ));
@@ -180,11 +176,10 @@ void main() {
       });
 
       testWidgets('multiple decrements work correctly', (tester) async {
-        double capturedValue = 0.0;
+        var capturedValue = 0;
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
-          step: 10.0,
-          onChanged: (v) => capturedValue = v,
+          step: 10,
+          onChanged: (v) => capturedValue = v.toInt(),
         ));
 
         await tester.tap(find.byIcon(Icons.remove));
@@ -205,8 +200,7 @@ void main() {
       testWidgets('increments by step value', (tester) async {
         double? capturedValue;
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
-          step: 5.0,
+          step: 5,
           onChanged: (v) => capturedValue = v,
         ));
 
@@ -219,9 +213,8 @@ void main() {
       testWidgets('clamps to max when step exceeds', (tester) async {
         double? capturedValue;
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 97.0,
-          max: 100.0,
-          step: 10.0,
+          initialValue: 97,
+          step: 10,
           onChanged: (v) => capturedValue = v,
         ));
 
@@ -235,8 +228,7 @@ void main() {
         double? capturedValue;
         await tester.pumpWidget(buildTestWidget(
           initialValue: 1.5,
-          min: 0.0,
-          max: 5.0,
+          max: 5,
           step: 0.25,
           onChanged: (v) => capturedValue = v,
         ));
@@ -248,11 +240,10 @@ void main() {
       });
 
       testWidgets('multiple increments work correctly', (tester) async {
-        double capturedValue = 0.0;
+        var capturedValue = 0;
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
-          step: 10.0,
-          onChanged: (v) => capturedValue = v,
+          step: 10,
+          onChanged: (v) => capturedValue = v.toInt(),
         ));
 
         await tester.tap(find.byIcon(Icons.add));
@@ -272,11 +263,9 @@ void main() {
     group('theme integration', () {
       testWidgets('uses theme primary color for buttons by default', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
           theme: ThemeData(
             colorScheme: const ColorScheme.light(
               primary: Colors.teal,
-              onPrimary: Colors.white,
             ),
           ),
         ));
@@ -290,7 +279,6 @@ void main() {
 
       testWidgets('uses theme onPrimary color for icons by default', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
           theme: ThemeData(
             colorScheme: const ColorScheme.light(
               primary: Colors.teal,
@@ -305,13 +293,11 @@ void main() {
 
       testWidgets('custom colors override theme colors', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
           buttonColor: Colors.purple,
           buttonIconColor: Colors.orange,
           theme: ThemeData(
             colorScheme: const ColorScheme.light(
               primary: Colors.teal,
-              onPrimary: Colors.white,
             ),
           ),
         ));
@@ -329,9 +315,9 @@ void main() {
     group('slider properties', () {
       testWidgets('passes min/max to Slider', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 25.0,
-          min: 10.0,
-          max: 50.0,
+          initialValue: 25,
+          min: 10,
+          max: 50,
         ));
 
         final slider = tester.widget<Slider>(find.byType(Slider));
@@ -384,7 +370,7 @@ void main() {
 
     group('BlocBuilder integration', () {
       testWidgets('rebuilds only affected widgets on state change', (tester) async {
-        await tester.pumpWidget(buildTestWidget(initialValue: 50.0));
+        await tester.pumpWidget(buildTestWidget());
 
         final initialSlider = tester.widget<Slider>(find.byType(Slider));
         expect(initialSlider.value, 50.0);

@@ -1,4 +1,6 @@
 // clock_painter.dart
+// ignore_for_file: lines_longer_than_80_chars
+
 part of 'analog_clock.dart';
 
 /// Private custom painter that renders the analog clock face and hands.
@@ -64,13 +66,10 @@ class _ClockPainter extends CustomPainter {
     switch (configuration.style.faceStyle) {
       case ClockFaceStyle.classic:
         _drawClassicTicks(canvas);
-        break;
       case ClockFaceStyle.modern:
         _drawModernTicks(canvas);
-        break;
       case ClockFaceStyle.minimal:
         _drawMinimalTicks(canvas);
-        break;
     }
   }
 
@@ -80,7 +79,7 @@ class _ClockPainter extends CustomPainter {
       ..color = _tickConfig.color
       ..strokeWidth = _tickConfig.strokeWidth;
 
-    for (int i = 0; i < _ClockConstants.totalTicks; i++) {
+    for (var i = 0; i < _ClockConstants.totalTicks; i++) {
       final isHourTick = i % _ClockConstants.ticksPerHour == 0;
       final tickLength = isHourTick
           ? _tickConfig.longLength
@@ -102,7 +101,7 @@ class _ClockPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     // Only draw hour ticks for modern style
-    for (int i = 0; i < _ClockConstants.totalTicks; i += _ClockConstants.ticksPerHour) {
+    for (var i = 0; i < _ClockConstants.totalTicks; i += _ClockConstants.ticksPerHour) {
       final angle = i * _ClockConstants.radiansPerTick;
       final tickStart = _calculateTickStart(angle);
       final tickEnd = _calculateTickEnd(angle, _tickConfig.longLength);
@@ -118,7 +117,7 @@ class _ClockPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     // Only draw dots at cardinal positions for minimal style
-    for (int i = 0; i < _ClockConstants.totalTicks; i += _ClockConstants.ticksPerQuarter) {
+    for (var i = 0; i < _ClockConstants.totalTicks; i += _ClockConstants.ticksPerQuarter) {
       final angle = i * _ClockConstants.radiansPerTick;
       final dotDistance = _radius - _tickConfig.longLength * _ClockConstants.minimalDotDistanceMultiplier;
       final dotCenter = Offset(
@@ -163,7 +162,7 @@ class _ClockPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
 
-    for (int i = 0; i < _ClockConstants.totalTicks; i += _ClockConstants.ticksPerHour) {
+    for (var i = 0; i < _ClockConstants.totalTicks; i += _ClockConstants.ticksPerHour) {
       final hourNumber = _getHourNumber(i);
       final numberPosition = _calculateNumberPosition(i);
 
@@ -317,13 +316,10 @@ class _ClockPainter extends CustomPainter {
     switch (config.style) {
       case HandStyle.traditional:
         _drawTraditionalHand(canvas, config, angle);
-        break;
       case HandStyle.modern:
         _drawModernHand(canvas, config, angle, isHourHand: isHourHand);
-        break;
       case HandStyle.sleek:
         _drawSleekHand(canvas, config, angle);
-        break;
     }
   }
 
@@ -382,11 +378,11 @@ class _ClockPainter extends CustomPainter {
     );
 
     // Build the tapered path
-    path.moveTo(baseLeft.dx, baseLeft.dy);
-    path.lineTo(tipLeft.dx, tipLeft.dy);
-    path.lineTo(tipRight.dx, tipRight.dy);
-    path.lineTo(baseRight.dx, baseRight.dy);
-    path.close();
+    path..moveTo(baseLeft.dx, baseLeft.dy)
+    ..lineTo(tipLeft.dx, tipLeft.dy)
+    ..lineTo(tipRight.dx, tipRight.dy)
+    ..lineTo(baseRight.dx, baseRight.dy)
+    ..close();
 
     canvas.drawPath(path, paint);
   }

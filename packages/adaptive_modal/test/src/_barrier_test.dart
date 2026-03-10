@@ -1,4 +1,6 @@
 // test/src/_barrier_test.dart
+// ignore_for_file: lines_longer_than_80_chars, comment_references
+
 import 'package:adaptive_modal/src/_barrier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -82,13 +84,13 @@ void main() {
 
   group('BarrierWidget opacity', () {
     testWidgets('FadeTransition opacity is 1.0 when controller at 1.0', (tester) async {
-      await pumpBarrier(tester, opacityValue: 1.0);
+      await pumpBarrier(tester);
       final fade = tester.widget<FadeTransition>(find.byType(FadeTransition));
       expect(fade.opacity.value, closeTo(1.0, 0.001));
     });
 
     testWidgets('FadeTransition opacity is 0.0 when controller at 0.0', (tester) async {
-      await pumpBarrier(tester, opacityValue: 0.0);
+      await pumpBarrier(tester, opacityValue: 0);
       final fade = tester.widget<FadeTransition>(find.byType(FadeTransition));
       expect(fade.opacity.value, closeTo(0.0, 0.001));
     });
@@ -106,7 +108,7 @@ void main() {
 
   group('BarrierWidget onDismiss', () {
     testWidgets('calls onDismiss when tapped', (tester) async {
-      bool dismissed = false;
+      var dismissed = false;
       await pumpBarrier(tester, onDismiss: () => dismissed = true);
 
       await tester.tap(find.byType(GestureDetector));
@@ -114,7 +116,7 @@ void main() {
     });
 
     testWidgets('calls onDismiss exactly once per tap', (tester) async {
-      int count = 0;
+      var count = 0;
       await pumpBarrier(tester, onDismiss: () => count++);
 
       await tester.tap(find.byType(GestureDetector));
@@ -122,7 +124,7 @@ void main() {
     });
 
     testWidgets('calls onDismiss on each separate tap', (tester) async {
-      int count = 0;
+      var count = 0;
       await pumpBarrier(tester, onDismiss: () => count++);
 
       await tester.tap(find.byType(GestureDetector));

@@ -1,28 +1,26 @@
 // test/src/root_widget_test.dart
 
-import 'package:fpdart/fpdart.dart' hide State;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fpdart/fpdart.dart' hide State;
 import 'package:theme_package/theme_package.dart';
 
 void main() {
   const validDbName = 'test_db_1234567890ab';
 
-  setUp(() {
-    ThemePackage.reset();
-  });
+  setUp(ThemePackage.reset);
 
   group('ThemePackageRoot', () {
     group('initialization', () {
       testWidgets('initializes and shows child after splash', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          ThemePackageRoot(
+          const ThemePackageRoot(
             databaseName: validDbName,
             inMemory: true,
-            splash: const Text('Splash'),
-            child: const MaterialApp(home: Scaffold(body: Text('App Content'))),
+            splash: Text('Splash'),
+            child: MaterialApp(home: Scaffold(body: Text('App Content'))),
           ),
         );
 
@@ -40,7 +38,7 @@ void main() {
 
       testWidgets(
         'uses pre-initialized ThemePackage when already initialized',
-        (WidgetTester tester) async {
+        (tester) async {
           // Pre-initialize
           await ThemePackage.initialize(
             databaseName: validDbName,
@@ -70,13 +68,13 @@ void main() {
 
       testWidgets(
         'throws StateError when databaseName is null and not pre-initialized',
-        (WidgetTester tester) async {
+        (tester) async {
           // Build widget - error is caught by Flutter's error handling
           await tester.pumpWidget(
-            ThemePackageRoot(
+            const ThemePackageRoot(
               // databaseName is null
-              splash: const Text('Splash'),
-              child: const MaterialApp(home: Scaffold(body: Text('App'))),
+              splash: Text('Splash'),
+              child: MaterialApp(home: Scaffold(body: Text('App'))),
             ),
           );
 
@@ -89,32 +87,32 @@ void main() {
 
     group('splash screen', () {
       testWidgets('displays splash with black background', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          ThemePackageRoot(
+          const ThemePackageRoot(
             databaseName: validDbName,
             inMemory: true,
-            splash: const Text('Loading...'),
-            child: const MaterialApp(home: Scaffold(body: Text('App'))),
+            splash: Text('Loading...'),
+            child: MaterialApp(home: Scaffold(body: Text('App'))),
           ),
         );
 
-        // Find the Container with black background
-        final containerFinder = find.byWidgetPredicate(
-          (widget) => widget is Container && widget.color == Colors.black,
+        // Find the ColoredBox with black background
+        final coloredBoxFinder = find.byWidgetPredicate(
+          (widget) => widget is ColoredBox && widget.color == Colors.black,
         );
-        expect(containerFinder, findsOneWidget);
+        expect(coloredBoxFinder, findsOneWidget);
       });
 
-      testWidgets('respects splashMinDuration', (WidgetTester tester) async {
+      testWidgets('respects splashMinDuration', (tester) async {
         await tester.pumpWidget(
-          ThemePackageRoot(
+          const ThemePackageRoot(
             databaseName: validDbName,
             inMemory: true,
-            splashMinDuration: const Duration(seconds: 2),
-            splash: const Text('Splash'),
-            child: const MaterialApp(home: Scaffold(body: Text('App'))),
+            splashMinDuration: Duration(seconds: 2),
+            splash: Text('Splash'),
+            child: MaterialApp(home: Scaffold(body: Text('App'))),
           ),
         );
 
@@ -132,14 +130,14 @@ void main() {
       });
 
       testWidgets('shows app immediately when no splashMinDuration', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          ThemePackageRoot(
+          const ThemePackageRoot(
             databaseName: validDbName,
             inMemory: true,
-            splash: const Text('Splash'),
-            child: const MaterialApp(home: Scaffold(body: Text('App'))),
+            splash: Text('Splash'),
+            child: MaterialApp(home: Scaffold(body: Text('App'))),
           ),
         );
 
@@ -152,14 +150,14 @@ void main() {
 
     group('transition', () {
       testWidgets('uses default transition duration of 750ms', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          ThemePackageRoot(
+          const ThemePackageRoot(
             databaseName: validDbName,
             inMemory: true,
-            splash: const Text('Splash'),
-            child: const MaterialApp(home: Scaffold(body: Text('App'))),
+            splash: Text('Splash'),
+            child: MaterialApp(home: Scaffold(body: Text('App'))),
           ),
         );
 
@@ -174,15 +172,15 @@ void main() {
       });
 
       testWidgets('respects custom transitionDuration', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          ThemePackageRoot(
+          const ThemePackageRoot(
             databaseName: validDbName,
             inMemory: true,
-            transitionDuration: const Duration(milliseconds: 500),
-            splash: const Text('Splash'),
-            child: const MaterialApp(home: Scaffold(body: Text('App'))),
+            transitionDuration: Duration(milliseconds: 500),
+            splash: Text('Splash'),
+            child: MaterialApp(home: Scaffold(body: Text('App'))),
           ),
         );
 
@@ -198,7 +196,7 @@ void main() {
     group('error handling', () {
       testWidgets(
         'calls onInitializationError callback on initialization failure',
-        (WidgetTester tester) async {
+        (tester) async {
           ThemeError? capturedError;
 
           // Force initialization to fail
@@ -234,14 +232,14 @@ void main() {
 
     group('BlocProvider', () {
       testWidgets('provides ThemeCubit to child widgets', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          ThemePackageRoot(
+          const ThemePackageRoot(
             databaseName: validDbName,
             inMemory: true,
-            splash: const Text('Splash'),
-            child: const _TestChildWidget(),
+            splash: Text('Splash'),
+            child: _TestChildWidget(),
           ),
         );
 

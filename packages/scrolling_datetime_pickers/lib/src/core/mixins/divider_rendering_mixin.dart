@@ -1,5 +1,7 @@
 // lib/src/core/mixins/divider_rendering_mixin.dart
 
+// ignore_for_file: document_ignores, public_member_api_docs
+
 import 'package:flutter/material.dart';
 import 'package:scrolling_datetime_pickers/src/core/constants/dimensions_constants.dart';
 import 'package:scrolling_datetime_pickers/src/core/models/divider_configuration.dart';
@@ -123,13 +125,13 @@ mixin DividerRenderingMixin {
 
 /// Container for calculated divider positions
 class DividerPositions {
-  final double topDivider;
-  final double bottomDivider;
 
   const DividerPositions({
     required this.topDivider,
     required this.bottomDivider,
   });
+  final double topDivider;
+  final double bottomDivider;
 
   double get spacing => bottomDivider - topDivider;
 }

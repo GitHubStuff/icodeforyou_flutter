@@ -17,7 +17,7 @@ final class _ThemeCubit extends Cubit<_ThemeState> {
     final result = await _datasource.setThemeMode(mode);
 
     return result.match(
-      (error) => Left(error),
+      Left.new,
       (_) {
         emit(state.copyWith(themeMode: mode));
         return const Right(unit);

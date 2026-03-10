@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:since_when/since_when.dart';
 
-import '_mock_data.dart';
-import '_shared_widgets.dart';
+import 'package:widgetbook_workspace/packages/since_when/_mock_data.dart';
+import 'package:widgetbook_workspace/packages/since_when/_shared_widgets.dart';
 
 /// Table info demo widget.
 class TableInfoDemo extends StatelessWidget {
@@ -22,7 +22,7 @@ class TableInfoDemo extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          InfoCard(
+          const InfoCard(
             title: 'Database Metadata (Mock)',
             children: [
               InfoRow('Path', ':memory:'),
@@ -46,11 +46,11 @@ class TableInfoDemo extends StatelessWidget {
 /// Playground demo widget.
 class PlaygroundDemo extends StatefulWidget {
   const PlaygroundDemo({
-    super.key,
     required this.metaData,
     required this.dataString,
     required this.category,
     required this.tagsPreset,
+    super.key,
   });
   final String metaData;
   final String dataString;
@@ -223,11 +223,11 @@ class TagMatchModeDemo extends StatelessWidget {
       appBar: AppBar(title: const Text('TagMatchMode Enum')),
       body: ListView(
         padding: const EdgeInsets.all(16),
-        children: [
+        children: const [
           InfoCard(
             title: 'TagMatchMode.any',
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(bottom: 8),
                 child: Text(
                   'Returns records that have at least one of the '
@@ -241,11 +241,11 @@ class TagMatchModeDemo extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           InfoCard(
             title: 'TagMatchMode.all',
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(bottom: 8),
                 child: Text(
                   'Returns records that have all of the specified tags.',

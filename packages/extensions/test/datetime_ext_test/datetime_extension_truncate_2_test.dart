@@ -1,14 +1,16 @@
 // packages/extensions/test/datetime_extension_truncate_2_test.dart
-import 'package:flutter_test/flutter_test.dart';
+// ignore_for_file: lines_longer_than_80_chars, avoid_redundant_argument_values
+
 import 'package:extensions/datetime_ext/datetime_extension.dart'; // brings DateTimeExt into scope
 import 'package:extensions/datetime_ext/datetime_unit.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('DateTimeExt.truncate (explicit extension invocation)', () {
     test('local: covers all units + DateTime.new path', () {
       final d = DateTime(2025, 8, 30, 23, 59, 58, 987, 654);
 
-      Map<DateTimeUnit, List<int>> cases = {
+      final Map<DateTimeUnit, List<int>> cases = {
         DateTimeUnit.usec: [2025, 8, 30, 23, 59, 58, 987, 654],
         DateTimeUnit.msec: [2025, 8, 30, 23, 59, 58, 987, 0],
         DateTimeUnit.second: [2025, 8, 30, 23, 59, 58, 0, 0],
@@ -122,8 +124,8 @@ void main() {
     test(
       'idempotence: already aligned stays identical for all units (local & UTC)',
       () {
-        final alignedLocal = DateTime(2030, 1, 1, 0, 0, 0, 0, 0);
-        final alignedUtc = DateTime.utc(2030, 1, 1, 0, 0, 0, 0, 0);
+        final alignedLocal = DateTime(2030, 1, 1, 0);
+        final alignedUtc = DateTime.utc(2030, 1, 1, 0);
 
         final units = <DateTimeUnit>[
           DateTimeUnit.year,

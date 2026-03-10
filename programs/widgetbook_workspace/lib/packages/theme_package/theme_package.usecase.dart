@@ -15,7 +15,7 @@ Widget buildThemeSelectorWidgetUseCase(BuildContext context) {
         title: const Text('Theme Selector'),
       ),
       body: const Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16),
         child: ThemeSelectorWidget(),
       ),
     ),
@@ -35,7 +35,7 @@ Widget buildThemeBuilderUseCase(BuildContext context) {
             title: const Text('Theme Builder Demo'),
           ),
           body: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -116,7 +116,7 @@ Widget buildThemeSelectorInSettingsUseCase(BuildContext context) {
           ),
           const Divider(),
           const Padding(
-            padding: EdgeInsets.only(left: 16.0, top: 16.0),
+            padding: EdgeInsets.only(left: 16, top: 16),
             child: Text(
               'Appearance',
               style: TextStyle(

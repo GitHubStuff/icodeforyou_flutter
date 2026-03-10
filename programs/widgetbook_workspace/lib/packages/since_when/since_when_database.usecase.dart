@@ -517,7 +517,8 @@ class _TagsTableDemo extends StatelessWidget {
                 const Icon(Icons.link, size: 16),
                 const SizedBox(width: 8),
                 Text(
-                  'FK: created_time_stamp → since_when.createdTimeStamp (ON DELETE CASCADE)',
+                  'FK: created_time_stamp → since_when.createdTimeStamp'
+                  ' (ON DELETE CASCADE)',
                   style: TextStyle(
                     fontFamily: 'monospace',
                     fontSize: 11,
@@ -594,7 +595,7 @@ class _TagsTableDemo extends StatelessWidget {
               return ListTile(
                 dense: true,
                 title: Text(
-                  col['name'] as String,
+                  col['name']! as String,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(
@@ -734,9 +735,9 @@ class _PragmaDataDemoState extends State<_PragmaDataDemo>
           ),
         ),
         const SizedBox(height: 16),
-        _InfoCard(
+        const _InfoCard(
           title: 'Index Origin Codes',
-          children: const [
+          children: [
             _InfoRow('c', 'CREATE INDEX statement'),
             _InfoRow('u', 'UNIQUE constraint'),
             _InfoRow('pk', 'PRIMARY KEY constraint'),
@@ -839,7 +840,7 @@ class _SqliteViewerDemo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Note: On web, we can't use real SqliteViewerPage since sqflite doesn't work.
+    // Note: On web, can't use real SqliteViewerPage since sqflite doesn't work.
     // This demonstrates the layout and components with mock data.
 
     return Scaffold(
@@ -876,8 +877,6 @@ class _SqliteViewerDemo extends StatelessWidget {
               rows: _MockDatabaseMetadata.sinceWhenRows,
               rowCount: _MockDatabaseMetadata.sinceWhenRows.length,
               showRowNumbers: showRowNumbers,
-              nullValueDisplay: 'NULL',
-              textHandling: TextHandling.trunc,
             ),
           ),
         ],
@@ -903,7 +902,7 @@ class _MockMetadataPanelState extends State<_MockMetadataPanel> {
     final metadata = _MockDatabaseMetadata.metadata;
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
+    return ColoredBox(
       color: colorScheme.surfaceContainerLow,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1078,7 +1077,6 @@ class _MainTableDetailDemo extends StatelessWidget {
         rows: _MockDatabaseMetadata.sinceWhenRows,
         rowCount: _MockDatabaseMetadata.sinceWhenRows.length,
         showRowNumbers: showRowNumbers,
-        nullValueDisplay: 'NULL',
         textHandling: textHandling,
       ),
     );
@@ -1092,7 +1090,7 @@ class _TagAnalyticsDemo extends StatelessWidget {
   Widget build(BuildContext context) {
     final stats = _MockDatabaseMetadata.tagUsageStats;
     final maxCount = stats
-        .map((s) => s['count'] as int)
+        .map((s) => s['count']! as int)
         .reduce((a, b) => a > b ? a : b);
 
     return Scaffold(
@@ -1116,8 +1114,8 @@ class _TagAnalyticsDemo extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           ...stats.map((stat) {
-            final tag = stat['tag'] as String;
-            final count = stat['count'] as int;
+            final tag = stat['tag']! as String;
+            final count = stat['count']! as int;
             final percentage = count / maxCount;
 
             return Padding(
@@ -1164,7 +1162,7 @@ class _TagAnalyticsDemo extends StatelessWidget {
               _InfoRow('Unique tags', '${stats.length}'),
               _InfoRow(
                 'Total tag assignments',
-                '${stats.fold(0, (int sum, s) => sum + (s['count'] as int))}',
+                '${stats.fold(0, (sum, s) => sum + (s['count']! as int))}',
               ),
               _InfoRow(
                 'Records',
@@ -1172,7 +1170,7 @@ class _TagAnalyticsDemo extends StatelessWidget {
               ),
               _InfoRow(
                 'Avg tags per record',
-                (stats.fold(0, (int sum, s) => sum + (s['count'] as int)) /
+                (stats.fold(0, (sum, s) => sum + (s['count']! as int)) /
                         _MockDatabaseMetadata.sinceWhenRows.length)
                     .toStringAsFixed(1),
               ),

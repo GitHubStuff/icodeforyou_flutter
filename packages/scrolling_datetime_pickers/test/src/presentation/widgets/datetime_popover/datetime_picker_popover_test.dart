@@ -1,5 +1,7 @@
 // test/src/presentation/widgets/datetime_popover/datetime_picker_popover_test.dart
 
+// ignore_for_file: document_ignores, lines_longer_than_80_chars
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -63,7 +65,6 @@ void main() {
           DateTimePickerPopover.show(
             context: tester.element(find.byType(Scaffold)),
             anchorKey: anchorKey,
-            option: DateTimeOption.dateTime,
           ),
         );
 
@@ -130,7 +131,6 @@ void main() {
             context: tester.element(find.byType(Scaffold)),
             anchorKey: anchorKey,
             initialDateTime: DateTime(2024, 6, 15, 10, 30),
-            option: DateTimeOption.dateTime,
           ).then((value) => result = value),
         );
 
@@ -221,7 +221,6 @@ void main() {
           DateTimePickerPopover.show(
             context: tester.element(find.byType(Scaffold)),
             anchorKey: anchorKey,
-            option: DateTimeOption.dateTime,
           ),
         );
 
@@ -268,8 +267,8 @@ void main() {
         final bgContainer = containers.firstWhere(
           (c) =>
               c.decoration is BoxDecoration &&
-              (c.decoration as BoxDecoration).color == customBgColor,
-          orElse: () => Container(),
+              (c.decoration! as BoxDecoration).color == customBgColor,
+          orElse: Container.new,
         );
         expect(bgContainer, isNotNull);
       });
@@ -364,8 +363,6 @@ void main() {
             context: tester.element(find.byType(Scaffold)),
             anchorKey: anchorKey,
             initialDateTime: DateTime(2024, 6, 15, 14, 30, 45),
-            option: DateTimeOption.dateTime,
-            showSeconds: true,
             useCurrentSecond: true,
           ).then((value) => result = value),
         );
@@ -391,9 +388,6 @@ void main() {
             context: tester.element(find.byType(Scaffold)),
             anchorKey: anchorKey,
             initialDateTime: DateTime(2024, 6, 15, 14, 30, 45),
-            option: DateTimeOption.dateTime,
-            showSeconds: true,
-            useCurrentSecond: false,
           ).then((value) => result = value),
         );
 
@@ -420,7 +414,6 @@ void main() {
             anchorKey: anchorKey,
             initialDateTime: DateTime(2024, 6, 15, 14, 30, 45),
             option: DateTimeOption.time,
-            showSeconds: true,
             useCurrentSecond: true,
           ).then((value) => result = value),
         );
@@ -448,7 +441,6 @@ void main() {
             anchorKey: anchorKey,
             // No initialDateTime provided
             option: DateTimeOption.time,
-            showSeconds: true,
             useCurrentSecond: true,
           ).then((value) => result = value),
         );
@@ -475,9 +467,6 @@ void main() {
           DateTimePickerPopover.show(
             context: tester.element(find.byType(Scaffold)),
             anchorKey: anchorKey,
-            // No initialDateTime provided
-            option: DateTimeOption.dateTime,
-            showSeconds: true,
             useCurrentSecond: true,
           ).then((value) => result = value),
         );
@@ -662,7 +651,6 @@ void main() {
             initialDateTime: DateTime(2024, 12, 25, 10, 30, 45),
             // Unclosed quote causes DateFormat to throw
             timeFormat: "hh:mm 'unclosed",
-            showSeconds: true,
           ),
         );
 
@@ -868,8 +856,7 @@ void main() {
           DateTimePickerPopover.show(
             context: tester.element(find.byType(Scaffold)),
             anchorKey: anchorKey,
-            initialDateTime: DateTime(2024, 6, 15, 10, 30, 0),
-            option: DateTimeOption.dateTime,
+            initialDateTime: DateTime(2024, 6, 15, 10, 30),
           ).then((value) => result = value),
         );
 
@@ -917,8 +904,6 @@ void main() {
             context: tester.element(find.byType(Scaffold)),
             anchorKey: anchorKey,
             initialDateTime: DateTime(2024, 6, 15, 14, 45, 30),
-            option: DateTimeOption.dateTime,
-            showSeconds: true,
             useCurrentSecond: true,
           ).then((value) => result = value),
         );
@@ -955,7 +940,6 @@ void main() {
             context: tester.element(find.byType(Scaffold)),
             anchorKey: anchorKey,
             initialDateTime: DateTime(2024, 6, 15, 10, 30),
-            option: DateTimeOption.dateTime,
           ).then((value) => result = value),
         );
 

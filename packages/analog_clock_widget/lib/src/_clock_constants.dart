@@ -1,4 +1,6 @@
 // clock_constants.dart
+// ignore_for_file: lines_longer_than_80_chars
+
 part of 'analog_clock.dart';
 
 /// Private constants used throughout the clock implementation.
@@ -29,31 +31,31 @@ class _ClockConstants {
   /// (90° or π/2) to rotate 12 to the top position.
   static const int topPositionTickOffset = 15;
 
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ───────────────────────────────────────────────────────────────────────────
   // RADIAN CONSTANTS (final because pi is not compile-time const)
-  // ─────────────────────────────────────────────────────────────────────────────
+  // ───────────────────────────────────────────────────────────────────────────
 
   /// Radians per tick mark (2π / 60 ticks = π / 30).
-  static final double radiansPerTick = pi / 30;
+  static const double radiansPerTick = pi / 30;
 
   /// Radians per hour for the hour hand (2π / 12 hours = π / 6).
-  static final double radiansPerHour = pi / 6;
+  static const double radiansPerHour = pi / 6;
 
   /// Radians the hour hand moves per minute (π/6 per hour / 60 minutes).
-  static final double radiansPerMinuteForHourHand = pi / 360;
+  static const double radiansPerMinuteForHourHand = pi / 360;
 
   /// Rotation offset to convert from 3 o'clock reference to 12 o'clock reference.
   /// 
   /// Standard trig starts at 3 o'clock (east), but clocks start at 12 o'clock (north).
   /// Subtracting π/2 (90°) rotates the coordinate system appropriately.
-  static final double twelveOClockRotationOffset = pi / 2;
+  static const double twelveOClockRotationOffset = pi / 2;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // SIZING & LAYOUT
   // ═══════════════════════════════════════════════════════════════════════════
 
   /// Minimum allowed radius for readable clock display.
-  static const double minimumRadius = 30.0;
+  static const double minimumRadius = 30;
 
   /// Stroke width for tick marks and borders.
   static const double tickStroke = 1.1;
@@ -65,10 +67,10 @@ class _ClockConstants {
   static const double hourOffsetMultiplier = 0.15;
 
   /// Padding inside the clock border for the painted content.
-  static const double borderPadding = 4.0;
+  static const double borderPadding = 4;
 
   /// Divisor to calculate base stroke width from radius.
-  static const double strokeWidthDivisor = 20.0;
+  static const double strokeWidthDivisor = 20;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // HAND LENGTH RATIOS (relative to radius)
@@ -100,9 +102,9 @@ class _ClockConstants {
   static const double sleekHandThicknessFactor = 0.6;
 
   /// Second hand width divisors by style.
-  static const double traditionalSecondHandDivisor = 3.0;
+  static const double traditionalSecondHandDivisor = 3;
   static const double modernSecondHandDivisor = 2.5;
-  static const double sleekSecondHandDivisor = 4.0;
+  static const double sleekSecondHandDivisor = 4;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // MODERN HAND SHAPE
@@ -129,22 +131,22 @@ class _ClockConstants {
   // ═══════════════════════════════════════════════════════════════════════════
 
   /// Multiplier for dot distance from edge in minimal style.
-  static const double minimalDotDistanceMultiplier = 2.0;
+  static const double minimalDotDistanceMultiplier = 2;
 
   /// Multiplier for dot radius in minimal style.
-  static const double minimalDotRadiusMultiplier = 2.0;
+  static const double minimalDotRadiusMultiplier = 2;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // TICK CONFIGURATION BY STYLE
   // ═══════════════════════════════════════════════════════════════════════════
 
   /// Base offset from clock edge for tick marks.
-  static const double tickDeltaBase = 4.0;
+  static const double tickDeltaBase = 4;
 
   // Classic style tick proportions
   static const double classicShortTickMultiplier = 0.025;
   static const double classicLongTickMultiplier = 0.05;
-  static const double classicStrokeMultiplier = 1.0;
+  static const double classicStrokeMultiplier = 1;
 
   // Modern style tick proportions (bolder)
   static const double modernShortTickMultiplier = 0.04;
@@ -167,7 +169,7 @@ class _ClockConstants {
   static const double minuteSweepOffset = 0.16;
 
   /// Seconds in a minute (for sweep calculation).
-  static const double secondsPerMinute = 60.0;
+  static const double secondsPerMinute = 60;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // TIMING

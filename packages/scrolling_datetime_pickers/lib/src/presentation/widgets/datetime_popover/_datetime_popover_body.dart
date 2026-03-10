@@ -60,9 +60,6 @@ class _DateTimePopoverBody extends StatelessWidget {
   Widget _buildCrossFadePickers() {
     return AnimatedCrossFade(
       duration: PopoverConstants.crossfadeDuration,
-      firstCurve: PopoverConstants.crossfadeCurve,
-      secondCurve: PopoverConstants.crossfadeCurve,
-      sizeCurve: PopoverConstants.crossfadeCurve,
       crossFadeState: activeTab == _DateTimeTab.date
           ? CrossFadeState.showFirst
           : CrossFadeState.showSecond,

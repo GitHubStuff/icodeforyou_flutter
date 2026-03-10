@@ -1,3 +1,5 @@
+// ignore_for_file: document_ignores, lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tag_chip/tag_chip.dart'; // adjust import to your package name
@@ -28,7 +30,7 @@ void main() {
   group('TagChip', () {
     group('border color', () {
       testWidgets('uses black border when background is light', (tester) async {
-        await tester.pumpWidget(buildSubject(backgroundColor: Colors.white));
+        await tester.pumpWidget(buildSubject());
 
         final text = tester.widget<Text>(find.text('Test'));
         expect(text.style?.color, Colors.black);
@@ -44,10 +46,10 @@ void main() {
 
     group('state', () {
       testWidgets('renders with TagChipState.none — no border', (tester) async {
-        await tester.pumpWidget(buildSubject(state: TagChipState.none));
+        await tester.pumpWidget(buildSubject());
 
         final chip = tester.widget<ActionChip>(find.byType(ActionChip));
-        final shape = chip.shape as StadiumBorder;
+        final shape = chip.shape! as StadiumBorder;
         expect(shape.side, BorderSide.none);
       });
 
@@ -55,18 +57,17 @@ void main() {
         await tester.pumpWidget(buildSubject(state: TagChipState.disabled));
 
         final chip = tester.widget<ActionChip>(find.byType(ActionChip));
-        final shape = chip.shape as StadiumBorder;
+        final shape = chip.shape! as StadiumBorder;
         expect(shape.side, BorderSide.none);
       });
 
       testWidgets('renders with TagChipState.enabled — shows border', (tester) async {
         await tester.pumpWidget(buildSubject(
           state: TagChipState.enabled,
-          backgroundColor: Colors.white,
         ));
 
         final chip = tester.widget<ActionChip>(find.byType(ActionChip));
-        final shape = chip.shape as StadiumBorder;
+        final shape = chip.shape! as StadiumBorder;
         expect(shape.side.width, 2);
         expect(shape.side.color, Colors.black);
       });
@@ -109,7 +110,7 @@ void main() {
       });
 
       testWidgets('does not throw when onPressed is null and chip is tapped', (tester) async {
-        await tester.pumpWidget(buildSubject(onPressed: null));
+        await tester.pumpWidget(buildSubject());
 
         await tester.tap(find.byType(ActionChip));
         await tester.pump();
@@ -132,7 +133,6 @@ void main() {
       testWidgets('calls onPressed with none state', (tester) async {
         TagChipState? received;
         await tester.pumpWidget(buildSubject(
-          state: TagChipState.none,
           onPressed: (state) => received = state,
         ));
 

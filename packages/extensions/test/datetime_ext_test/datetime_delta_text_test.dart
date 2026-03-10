@@ -1,9 +1,9 @@
 // delta_datetime_text_test.dart
 
+import 'package:extensions/datetime_ext/datetime_delta.dart';
 import 'package:extensions/extensions.dart' show DateTimeDeltaText;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:extensions/datetime_ext/datetime_delta.dart';
 
 void main() {
   group('DateTimeDeltaText Widget Tests', () {
@@ -14,7 +14,7 @@ void main() {
 
     setUpAll(() {
       // Create test DateTimeDelta objects
-      positiveDelta = DateTimeDelta(
+      positiveDelta = const DateTimeDelta(
         years: 2,
         months: 3,
         days: 15,
@@ -24,14 +24,14 @@ void main() {
         isFuture: true,
       );
 
-      negativeDelta = DateTimeDelta(
+      negativeDelta = const DateTimeDelta(
         days: 5,
         hours: 2,
         minutes: 15,
         isFuture: false,
       );
 
-      zeroDelta = DateTimeDelta(isFuture: true);
+      zeroDelta = const DateTimeDelta(isFuture: true);
     });
 
     group('Basic Functionality', () {
@@ -106,7 +106,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
-              body: DateTimeDeltaText(delta: positiveDelta, format: null),
+              body: DateTimeDeltaText(delta: positiveDelta),
             ),
           ),
         );
@@ -157,7 +157,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
-              body: DateTimeDeltaText(delta: positiveDelta, leading: null),
+              body: DateTimeDeltaText(delta: positiveDelta),
             ),
           ),
         );
@@ -197,7 +197,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
-              body: DateTimeDeltaText(delta: positiveDelta, trailing: null),
+              body: DateTimeDeltaText(delta: positiveDelta),
             ),
           ),
         );
@@ -242,12 +242,12 @@ void main() {
         tester,
       ) async {
         final leadingWidget = Padding(
-          padding: const EdgeInsets.only(right: 8.0),
+          padding: const EdgeInsets.only(right: 8),
           child: Container(width: 20, height: 20, color: Colors.red),
         );
 
         final trailingWidget = Padding(
-          padding: const EdgeInsets.only(left: 8.0),
+          padding: const EdgeInsets.only(left: 8),
           child: Container(width: 15, height: 15, color: Colors.blue),
         );
 
@@ -431,7 +431,7 @@ void main() {
       });
 
       testWidgets('applies textScaler parameter', (tester) async {
-        const textScaler = TextScaler.linear(2.0);
+        const textScaler = TextScaler.linear(2);
 
         await tester.pumpWidget(
           MaterialApp(

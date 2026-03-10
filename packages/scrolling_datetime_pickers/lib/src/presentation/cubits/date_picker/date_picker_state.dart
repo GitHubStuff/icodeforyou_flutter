@@ -3,13 +3,13 @@
 part of 'date_picker_cubit.dart';
 
 class DatePickerState extends Equatable {
-  final DateTime date;
-  final bool isScrolling;
 
   const DatePickerState({
     required this.date,
     this.isScrolling = false,
   });
+  final DateTime date;
+  final bool isScrolling;
 
   int get year => date.year;
   int get month => date.month;

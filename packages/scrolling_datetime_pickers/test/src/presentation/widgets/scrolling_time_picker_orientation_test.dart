@@ -6,17 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scrolling_datetime_pickers/scrolling_datetime_pickers.dart';
 import 'package:scrolling_datetime_pickers/src/presentation/widgets/scrolling_time_picker.dart';
 
-// Need access to the column widget for testing
-class TestableScrollingTimePicker extends ScrollingTimePicker {
-  const TestableScrollingTimePicker({
-    super.key,
-    required super.onDateTimeChanged,
-    super.portraitSize,
-    super.landscapeSize,
-    super.showSeconds,
-  });
-}
-
 void main() {
   group('ScrollingTimePicker Orientation', () {
     testWidgets('should use landscape size in landscape orientation',
@@ -123,7 +112,6 @@ void main() {
           home: Scaffold(
             body: ScrollingTimePicker(
               onDateTimeChanged: (_) {},
-              showSeconds: false,
             ),
           ),
         ),
@@ -159,7 +147,6 @@ void main() {
           home: Scaffold(
             body: ScrollingTimePicker(
               onDateTimeChanged: (_) {},
-              showSeconds: false,
             ),
           ),
         ),
@@ -207,7 +194,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: ScrollingTimePicker(
-              initialDateTime: DateTime(2024, 1, 1, 9, 0, 0),
+              initialDateTime: DateTime(2024, 1, 1, 9),
               onDateTimeChanged: (_) {},
             ),
           ),
@@ -225,7 +212,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: ScrollingTimePicker(
-              initialDateTime: DateTime(2024, 1, 1, 0, 0, 0),
+              initialDateTime: DateTime(2024, 1),
               onDateTimeChanged: (_) {},
             ),
           ),
@@ -240,7 +227,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: ScrollingTimePicker(
-              initialDateTime: DateTime(2024, 1, 1, 12, 0, 0),
+              initialDateTime: DateTime(2024, 1, 1, 12),
               onDateTimeChanged: (_) {},
             ),
           ),

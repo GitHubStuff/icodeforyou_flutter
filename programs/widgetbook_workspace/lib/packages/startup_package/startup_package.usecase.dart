@@ -1,5 +1,7 @@
 // lib/packages/startup_package/startup_package.usecase.dart
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:startup_package/startup_package.dart';
@@ -63,7 +65,12 @@ class _DemoSplashScreenState extends State<_DemoSplashScreen>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
-    )..forward().whenComplete(() => widget.signalAnimationComplete(context));
+    );
+    unawaited(
+      _controller.forward().whenComplete(
+        () => widget.signalAnimationComplete(context),
+      ),
+    );
   }
 
   @override
@@ -97,7 +104,7 @@ class _DemoSplashScreenState extends State<_DemoSplashScreen>
                 Positioned(
                   bottom: 80,
                   child: Text(
-                    'Error: ${(state).exception}',
+                    'Error: ${state.exception}',
                     style: const TextStyle(color: Colors.red),
                   ),
                 ),
@@ -162,7 +169,11 @@ class _StartupUseCaseWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => StartupCubit(tasks)..runTasks(),
+      create: (_) {
+        final cubit = StartupCubit(tasks);
+        unawaited(cubit.runTasks());
+        return cubit;
+      },
       child: SizedBox.expand(
         child: ColoredBox(
           color: Colors.black,

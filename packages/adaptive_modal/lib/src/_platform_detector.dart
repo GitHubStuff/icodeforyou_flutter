@@ -54,7 +54,7 @@ enum FormFactor {
 /// flutter_adaptive_scaffold package.
 class PlatformDetector {
   /// The logical pixel width below which a device is considered a phone.
-  static const double _phoneBreakpoint = 600.0;
+  static const double _phoneBreakpoint = 600;
 
   /// Returns the [FormFactor] for the given [context].
   ///
@@ -78,11 +78,11 @@ class PlatformDetector {
         defaultTargetPlatform == TargetPlatform.linux;
   }
 
-  /// Convenience accessor — true when [resolve] would return [FormFactor.phone].
+  /// Convenience accessor — true when [resolve] would return [FormFactor.phone]
   static bool isPhone(BuildContext context) =>
       resolve(context) == FormFactor.phone;
 
-  /// Convenience accessor — true when [resolve] would return [FormFactor.large].
+  /// Convenience accessor — true when [resolve] would return [FormFactor.large]
   static bool isLarge(BuildContext context) =>
       resolve(context) == FormFactor.large;
 }

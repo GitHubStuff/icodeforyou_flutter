@@ -14,14 +14,6 @@ class FadeConfiguration {
     this.selectedAlwaysOpaque = true,
   }) : assert(fadeDistance > 0.0, 'Fade distance must be positive');
 
-  final bool enabled;
-  final double fadeDistance;
-  final Curve fadeCurve;
-  final List<Color> topColors;
-  final List<Color> bottomColors;
-  final List<double> stops;
-  final bool selectedAlwaysOpaque;
-
   /// Light theme preset.
   factory FadeConfiguration.light() {
     return const FadeConfiguration(
@@ -41,7 +33,7 @@ class FadeConfiguration {
   /// Generate fade from background color.
   factory FadeConfiguration.forBackground(Color backgroundColor) {
     final opaque = backgroundColor;
-    final transparent = backgroundColor.withValues(alpha: 0.0);
+    final transparent = backgroundColor.withValues(alpha: 0);
     return FadeConfiguration(
       topColors: [opaque, transparent],
       bottomColors: [transparent, opaque],
@@ -52,6 +44,14 @@ class FadeConfiguration {
   factory FadeConfiguration.noFade() {
     return const FadeConfiguration(enabled: false);
   }
+
+  final bool enabled;
+  final double fadeDistance;
+  final Curve fadeCurve;
+  final List<Color> topColors;
+  final List<Color> bottomColors;
+  final List<double> stops;
+  final bool selectedAlwaysOpaque;
 
   LinearGradient get topGradient => LinearGradient(
         begin: Alignment.topCenter,

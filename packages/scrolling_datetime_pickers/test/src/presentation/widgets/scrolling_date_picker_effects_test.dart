@@ -39,7 +39,7 @@ void main() {
       for (final container in containers) {
         if (container.decoration != null &&
             container.decoration is BoxDecoration) {
-          final decoration = container.decoration as BoxDecoration;
+          final decoration = container.decoration! as BoxDecoration;
           if (decoration.boxShadow != null) {
             shadowCount++;
             expect(decoration.boxShadow!.isNotEmpty, true);
@@ -59,7 +59,6 @@ void main() {
     testWidgets('should apply BoxShadow to dividers with blur', (tester) async {
       final blurConfig = DividerConfiguration.withBlur(
         color: Colors.green,
-        thickness: 2.0,
         transparency: 0.7,
       );
 
@@ -85,7 +84,7 @@ void main() {
       for (final container in containers) {
         if (container.decoration != null &&
             container.decoration is BoxDecoration) {
-          final decoration = container.decoration as BoxDecoration;
+          final decoration = container.decoration! as BoxDecoration;
           if (decoration.boxShadow != null &&
               decoration.boxShadow!.isNotEmpty) {
             shadowCount++;
@@ -126,7 +125,7 @@ void main() {
       for (final container in containers) {
         if (container.decoration != null &&
             container.decoration is BoxDecoration) {
-          final decoration = container.decoration as BoxDecoration;
+          final decoration = container.decoration! as BoxDecoration;
           if (decoration.boxShadow != null &&
               decoration.boxShadow!.isNotEmpty) {
             shadowCount++;
@@ -140,8 +139,8 @@ void main() {
 
     testWidgets('should apply divider indents', (tester) async {
       const indentConfig = DividerConfiguration(
-        indent: 20.0,
-        endIndent: 30.0,
+        indent: 20,
+        endIndent: 30,
       );
 
       await tester.pumpWidget(
@@ -165,7 +164,7 @@ void main() {
       bool foundIndentedContainer = false;
       for (final container in containers) {
         if (container.margin is EdgeInsets) {
-          final margin = container.margin as EdgeInsets;
+          final margin = container.margin! as EdgeInsets;
           if (margin.left == indentConfig.indent &&
               margin.right == indentConfig.endIndent) {
             foundIndentedContainer = true;
@@ -179,7 +178,7 @@ void main() {
 
     testWidgets('should apply divider thickness', (tester) async {
       const thickConfig = DividerConfiguration(
-        thickness: 3.0,
+        thickness: 3,
       );
 
       await tester.pumpWidget(

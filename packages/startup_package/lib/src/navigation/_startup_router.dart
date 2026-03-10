@@ -1,13 +1,13 @@
 // lib/src/navigation/_startup_router.dart
+// ignore_for_file: public_member_api_docs
 
-// ignore_for_file: document_ignores, public_member_api_docs
+import 'dart:async' show unawaited;
 
 import 'package:flutter/material.dart';
 
 const Duration _duration = Duration(milliseconds: 3500);
 
 class StartupRouter {
-
   static Route<void> _fadeRoute(Widget page) {
     return PageRouteBuilder(
       transitionDuration: _duration,
@@ -19,6 +19,6 @@ class StartupRouter {
   }
 
   static void navigateToLanding(BuildContext context, Widget landingPage) {
-    Navigator.of(context).pushReplacement(_fadeRoute(landingPage));
+    unawaited(Navigator.of(context).pushReplacement(_fadeRoute(landingPage)));
   }
 }

@@ -2,7 +2,7 @@
 
 import 'package:flutter/widgets.dart';
 
-import 'startup_splash_screen.dart';
+import 'package:startup_package/src/startup_splash_screen.dart';
 
 class StartupConfig {
   const StartupConfig({

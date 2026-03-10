@@ -17,10 +17,12 @@ abstract class _TimeService {
   void dispose();
 }
 
-/// Private implementation of [_TimeService] that handles UTC offset and streaming.
+/// Private implementation of [_TimeService] that handles UTC offset and
+/// streaming.
 ///
 /// Takes a [TimeProvider] and timezone offset, then provides a stream of
-/// time updates that automatically handles timezone conversion and resource cleanup.
+/// time updates that automatically handles timezone conversion and resource
+/// cleanup.
 class _UtcTimeService implements _TimeService {
   _UtcTimeService({required this.offsetMinutes, required this.timeProvider});
 
@@ -55,7 +57,7 @@ class _UtcTimeService implements _TimeService {
   void dispose() {
     _timer?.cancel();
     _timer = null;
-    _controller?.close();
+    unawaited(_controller?.close());
     _controller = null;
   }
 }

@@ -10,8 +10,8 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 /// Demonstrates basic usage with a text controller and result callback.
 @widgetbook.UseCase(name: 'Default', type: EditorTextField)
 Widget editorTextFieldDefault(BuildContext context) {
-  return _EditorTextFieldWrapper(
-    decoration: const InputDecoration(
+  return const _EditorTextFieldWrapper(
+    decoration: InputDecoration(
       labelText: 'Tap to edit',
       border: OutlineInputBorder(),
     ),
@@ -23,20 +23,20 @@ Widget editorTextFieldDefault(BuildContext context) {
 /// Demonstrates custom text styles for both the field and editor.
 @widgetbook.UseCase(name: 'Custom Styling', type: EditorTextField)
 Widget editorTextFieldCustomStyling(BuildContext context) {
-  return _EditorTextFieldWrapper(
+  return const _EditorTextFieldWrapper(
     initialText: 'Custom styled text',
-    decoration: const InputDecoration(
+    decoration: InputDecoration(
       labelText: 'Styled Editor',
       border: OutlineInputBorder(),
       filled: true,
       fillColor: Color(0xFFF5F5F5),
     ),
-    style: const TextStyle(
+    style: TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w500,
       color: Colors.indigo,
     ),
-    editorTextStyle: const TextStyle(
+    editorTextStyle: TextStyle(
       fontSize: 20,
       fontFamily: 'Courier',
       color: Colors.indigo,
@@ -49,12 +49,12 @@ Widget editorTextFieldCustomStyling(BuildContext context) {
 /// Shows how the editor handles multiple lines of text.
 @widgetbook.UseCase(name: 'Multiline Content', type: EditorTextField)
 Widget editorTextFieldMultiline(BuildContext context) {
-  return _EditorTextFieldWrapper(
+  return const _EditorTextFieldWrapper(
     initialText: 'Line 1: First line of text\n'
         'Line 2: Second line of text\n'
         'Line 3: Third line of text\n'
         'Line 4: Fourth line with more content',
-    decoration: const InputDecoration(
+    decoration: InputDecoration(
       labelText: 'Multiline Notes',
       border: OutlineInputBorder(),
       helperText: 'Tap to edit multiple lines',
@@ -67,13 +67,13 @@ Widget editorTextFieldMultiline(BuildContext context) {
 /// Demonstrates replacing default SAVE/CANCEL buttons with custom widgets.
 @widgetbook.UseCase(name: 'Custom Buttons', type: EditorTextField)
 Widget editorTextFieldCustomButtons(BuildContext context) {
-  return _EditorTextFieldWrapper(
+  return const _EditorTextFieldWrapper(
     initialText: 'Edit me!',
-    decoration: const InputDecoration(
+    decoration: InputDecoration(
       labelText: 'Custom Buttons Demo',
       border: OutlineInputBorder(),
     ),
-    editorSaveWidget: const Row(
+    editorSaveWidget: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(Icons.check, size: 20),
@@ -84,7 +84,7 @@ Widget editorTextFieldCustomButtons(BuildContext context) {
         ),
       ],
     ),
-    editorCancelWidget: const Row(
+    editorCancelWidget: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(Icons.close, size: 20),
@@ -142,7 +142,6 @@ Widget editorTextFieldPlayground(BuildContext context) {
 
   final useFilled = context.knobs.boolean(
     label: 'Filled Input',
-    initialValue: false,
   );
 
   final barrierOpacity = context.knobs.double.slider(

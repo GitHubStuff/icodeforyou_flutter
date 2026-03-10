@@ -1,5 +1,7 @@
 // test/src/error_test.dart
 
+// ignore_for_file: document_ignores, lines_longer_than_80_chars
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:theme_package/theme_package.dart';
 
@@ -22,7 +24,7 @@ void main() {
       });
 
       test('can pattern match on initializationFailed', () {
-        const ThemeError error =
+        const error =
             ThemeError.initializationFailed('init failed');
 
         final message = switch (error) {
@@ -52,7 +54,7 @@ void main() {
       });
 
       test('can pattern match on persistenceFailed', () {
-        const ThemeError error =
+        const error =
             ThemeError.persistenceFailed('save failed');
 
         final message = switch (error) {

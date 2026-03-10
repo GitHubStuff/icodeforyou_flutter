@@ -1,4 +1,6 @@
 // test/animated_checkbox_test.dart
+// ignore_for_file: avoid_positional_boolean_parameters
+
 import 'package:animated_checkbox_widget/animated_checkbox_widget.dart'
     show AnimatedCheckbox;
 import 'package:flutter/material.dart';
@@ -9,7 +11,7 @@ void main() {
     testWidgets(
       'updates duration when animation is complete and only duration changes',
       (tester) async {
-        bool animationCompleted = false;
+        var animationCompleted = false;
 
         // Create widget with initial duration
         await tester.pumpWidget(
@@ -32,7 +34,8 @@ void main() {
         animationCompleted = false;
 
         // Update ONLY the duration (same draw state, same curve)
-        // This should trigger _updateDuration() path instead of full reinitialization
+        // This should trigger _updateDuration() path instead of
+        // full reinitialization
         await tester.pumpWidget(
           MaterialApp(
             home: AnimatedCheckbox(
@@ -84,7 +87,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: AnimatedCheckbox(
-              width: 150.0,
+              width: 150,
               background: Colors.red,
               strokeColor: Colors.blue,
               draw: false,
@@ -104,7 +107,7 @@ void main() {
       test('throws assertion error for width less than 5.0', () {
         expect(
           () => AnimatedCheckbox(
-            width: 4.0,
+            width: 4,
             draw: true,
             onAnimationComplete: (_) {},
           ),
@@ -115,7 +118,7 @@ void main() {
       test('accepts minimum width of 5.0', () {
         expect(
           () => AnimatedCheckbox(
-            width: 5.0,
+            width: 5,
             draw: true,
             onAnimationComplete: (_) {},
           ),
@@ -334,8 +337,8 @@ void main() {
           MaterialApp(
             home: AnimatedCheckbox(
               draw: true,
-              startOffset: const Offset(0.0, 0.0),
-              midOffset: const Offset(1.0, 1.0),
+              startOffset: Offset.zero,
+              midOffset: const Offset(1, 1),
               finishOffset: const Offset(0.5, 0.5),
               onAnimationComplete: onAnimationComplete,
             ),
@@ -479,8 +482,8 @@ void main() {
       testWidgets('triggers new animation when draw state changes', (
         tester,
       ) async {
-        bool firstAnimationCompleted = false;
-        bool secondAnimationCompleted = false;
+        var firstAnimationCompleted = false;
+        var secondAnimationCompleted = false;
 
         await tester.pumpWidget(
           MaterialApp(
@@ -514,7 +517,7 @@ void main() {
       });
 
       testWidgets('triggers new animation when curve changes', (tester) async {
-        int animationCount = 0;
+        var animationCount = 0;
 
         await tester.pumpWidget(
           MaterialApp(
@@ -554,7 +557,6 @@ void main() {
           MaterialApp(
             home: AnimatedCheckbox(
               draw: true,
-              width: 100.0,
               strokeColor: Colors.red,
               background: Colors.blue,
               duration: const Duration(milliseconds: 100),
@@ -569,7 +571,7 @@ void main() {
           MaterialApp(
             home: AnimatedCheckbox(
               draw: true,
-              width: 120.0,
+              width: 120,
               strokeColor: Colors.green,
               background: Colors.yellow,
               duration: const Duration(milliseconds: 200),
@@ -622,7 +624,7 @@ void main() {
       );
 
       testWidgets('callback called once per animation cycle', (tester) async {
-        int callCount = 0;
+        var callCount = 0;
 
         await tester.pumpWidget(
           MaterialApp(
@@ -662,7 +664,7 @@ void main() {
       });
 
       testWidgets('handles rapid widget updates', (tester) async {
-        for (int i = 0; i < 3; i++) {
+        for (var i = 0; i < 3; i++) {
           await tester.pumpWidget(
             MaterialApp(
               home: AnimatedCheckbox(
@@ -684,7 +686,7 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(
             home: AnimatedCheckbox(
-              width: 5.0,
+              width: 5,
               draw: true,
               duration: const Duration(milliseconds: 100),
               onAnimationComplete: onAnimationComplete,
@@ -701,9 +703,9 @@ void main() {
           MaterialApp(
             home: AnimatedCheckbox(
               draw: true,
-              startOffset: const Offset(0.0, 0.0),
-              midOffset: const Offset(1.0, 1.0),
-              finishOffset: const Offset(0.0, 1.0),
+              startOffset: Offset.zero,
+              midOffset: const Offset(1, 1),
+              finishOffset: const Offset(0, 1),
               duration: const Duration(milliseconds: 100),
               onAnimationComplete: onAnimationComplete,
             ),

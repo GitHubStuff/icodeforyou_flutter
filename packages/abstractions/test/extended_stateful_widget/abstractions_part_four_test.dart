@@ -1,17 +1,13 @@
 // abstractions_part_four_test.dart
-// Flutter 3.32.8 / Dart ">3.10.0"
 // Critical edge cases and failure modes that could break the widget in production
+// ignore_for_file: cascade_invocations, avoid_catches_without_on_clauses, lines_longer_than_80_chars
+
 import 'package:abstractions/abstractions.dart' show ExtendedStatefulWidget;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Widget that violates @mustCallSuper requirements
 class BadImplementationWidget extends StatefulWidget {
-  final bool skipSuperInInit;
-  final bool skipSuperInDispose;
-  final bool skipSuperInDidChangeMetrics;
-  final bool skipSuperInDidChangeTextScaleFactor;
-
   const BadImplementationWidget({
     super.key,
     this.skipSuperInInit = false,
@@ -19,6 +15,10 @@ class BadImplementationWidget extends StatefulWidget {
     this.skipSuperInDidChangeMetrics = false,
     this.skipSuperInDidChangeTextScaleFactor = false,
   });
+  final bool skipSuperInInit;
+  final bool skipSuperInDispose;
+  final bool skipSuperInDidChangeMetrics;
+  final bool skipSuperInDidChangeTextScaleFactor;
 
   @override
   State<BadImplementationWidget> createState() =>
@@ -360,10 +360,12 @@ void main() {
   group('ExtenedStatefulWidget Critical Edge Cases', () {
     group('@mustCallSuper Violation Tests', () {
       testWidgets('widget still works when subclass skips super.initState()', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(home: BadImplementationWidget(skipSuperInInit: true)),
+          const MaterialApp(
+            home: BadImplementationWidget(skipSuperInInit: true),
+          ),
         );
 
         final state = tester.state<_BadImplementationWidgetState>(
@@ -379,10 +381,12 @@ void main() {
       });
 
       testWidgets('Flutter catches when subclass skips super.dispose()', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(home: BadImplementationWidget(skipSuperInDispose: true)),
+          const MaterialApp(
+            home: BadImplementationWidget(skipSuperInDispose: true),
+          ),
         );
 
         final state = tester.state<_BadImplementationWidgetState>(
@@ -390,7 +394,7 @@ void main() {
         );
 
         // Dispose the widget - Flutter should catch the missing super.dispose()
-        await tester.pumpWidget(MaterialApp(home: Placeholder()));
+        await tester.pumpWidget(const MaterialApp(home: Placeholder()));
 
         // Flutter throws an assertion error for missing super.dispose()
         expect(tester.takeException(), isA<FlutterError>());
@@ -401,9 +405,9 @@ void main() {
 
       testWidgets(
         'didChangeMetrics post-frame callback missing when super skipped',
-        (WidgetTester tester) async {
+        (tester) async {
           await tester.pumpWidget(
-            MaterialApp(
+            const MaterialApp(
               home: BadImplementationWidget(skipSuperInDidChangeMetrics: true),
             ),
           );
@@ -423,10 +427,10 @@ void main() {
       );
 
       testWidgets('reportTextScaleFactor not called when super skipped', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: BadImplementationWidget(
               skipSuperInDidChangeTextScaleFactor: true,
             ),
@@ -462,8 +466,10 @@ void main() {
     group('MediaQuery Timing and Frame Callback Tests', () {
       testWidgets(
         'didChangeMetrics schedules post-frame callback for MediaQuery timing',
-        (WidgetTester tester) async {
-          await tester.pumpWidget(MaterialApp(home: MediaQueryTimingWidget()));
+        (tester) async {
+          await tester.pumpWidget(
+            const MaterialApp(home: MediaQueryTimingWidget()),
+          );
 
           final state = tester.state<_MediaQueryTimingWidgetState>(
             find.byType(MediaQueryTimingWidget),
@@ -491,33 +497,37 @@ void main() {
 
       testWidgets(
         'afterFirstLayout receives valid context with correct MediaQuery',
-        (WidgetTester tester) async {
-          await tester.pumpWidget(MaterialApp(home: MediaQueryTimingWidget()));
+        (tester) async {
+          await tester.pumpWidget(
+            const MaterialApp(home: MediaQueryTimingWidget()),
+          );
 
           final state = tester.state<_MediaQueryTimingWidgetState>(
             find.byType(MediaQueryTimingWidget),
           );
 
           expect(state.capturedSizes, isNotEmpty);
-          expect(state.capturedSizes.first, equals(Size(800, 600)));
+          expect(state.capturedSizes.first, equals(const Size(800, 600)));
           expect(state.timingEvents, contains('afterFirstLayout-800.0x600.0'));
         },
       );
 
       testWidgets(
         'multiple frame callbacks handle MediaQuery updates correctly',
-        (WidgetTester tester) async {
-          await tester.pumpWidget(MaterialApp(home: MediaQueryTimingWidget()));
+        (tester) async {
+          await tester.pumpWidget(
+            const MaterialApp(home: MediaQueryTimingWidget()),
+          );
 
           final state = tester.state<_MediaQueryTimingWidgetState>(
             find.byType(MediaQueryTimingWidget),
           );
 
           // Multiple size changes in rapid succession
-          await tester.binding.setSurfaceSize(Size(300, 200));
+          await tester.binding.setSurfaceSize(const Size(300, 200));
           await tester.pump();
 
-          await tester.binding.setSurfaceSize(Size(500, 400));
+          await tester.binding.setSurfaceSize(const Size(500, 400));
           await tester.pump();
 
           // Should handle all changes correctly
@@ -535,9 +545,9 @@ void main() {
 
     group('Disposal and Race Condition Tests', () {
       testWidgets('observer methods handle disposal during execution', (
-        WidgetTester tester,
+        tester,
       ) async {
-        await tester.pumpWidget(MaterialApp(home: DisposalRaceWidget()));
+        await tester.pumpWidget(const MaterialApp(home: DisposalRaceWidget()));
 
         final state = tester.state<_DisposalRaceWidgetState>(
           find.byType(DisposalRaceWidget),
@@ -554,7 +564,7 @@ void main() {
         expect(state.callbackException, isNull);
 
         // Dispose widget
-        await tester.pumpWidget(MaterialApp(home: Placeholder()));
+        await tester.pumpWidget(const MaterialApp(home: Placeholder()));
 
         expect(
           state.observerEvents,
@@ -563,9 +573,9 @@ void main() {
       });
 
       testWidgets('afterFirstLayout handles context becoming invalid', (
-        WidgetTester tester,
+        tester,
       ) async {
-        await tester.pumpWidget(MaterialApp(home: DisposalRaceWidget()));
+        await tester.pumpWidget(const MaterialApp(home: DisposalRaceWidget()));
 
         final state = tester.state<_DisposalRaceWidgetState>(
           find.byType(DisposalRaceWidget),
@@ -580,9 +590,11 @@ void main() {
 
       testWidgets(
         'rapid disposal and recreation does not cause observer leaks',
-        (WidgetTester tester) async {
-          for (int i = 0; i < 20; i++) {
-            await tester.pumpWidget(MaterialApp(home: DisposalRaceWidget()));
+        (tester) async {
+          for (var i = 0; i < 20; i++) {
+            await tester.pumpWidget(
+              const MaterialApp(home: DisposalRaceWidget()),
+            );
 
             final state = tester.state<_DisposalRaceWidgetState>(
               find.byType(DisposalRaceWidget),
@@ -591,7 +603,7 @@ void main() {
             // Trigger some observer activity
             state.didChangeTextScaleFactor();
 
-            await tester.pumpWidget(MaterialApp(home: Placeholder()));
+            await tester.pumpWidget(const MaterialApp(home: Placeholder()));
           }
 
           // Should complete without memory issues or exceptions
@@ -601,10 +613,10 @@ void main() {
 
     group('Platform Dispatcher Edge Cases', () {
       testWidgets('handles platform dispatcher in inconsistent states', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(home: PlatformDispatcherEdgeWidget()),
+          const MaterialApp(home: PlatformDispatcherEdgeWidget()),
         );
 
         final state = tester.state<_PlatformDispatcherEdgeWidgetState>(
@@ -631,10 +643,10 @@ void main() {
       });
 
       testWidgets('platform dispatcher null values handled gracefully', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(home: PlatformDispatcherEdgeWidget()),
+          const MaterialApp(home: PlatformDispatcherEdgeWidget()),
         );
 
         final state = tester.state<_PlatformDispatcherEdgeWidgetState>(
@@ -651,9 +663,11 @@ void main() {
 
     group('Concurrent Observer Operations Tests', () {
       testWidgets('handles multiple observer methods executing simultaneously', (
-        WidgetTester tester,
+        tester,
       ) async {
-        await tester.pumpWidget(MaterialApp(home: ConcurrentObserverWidget()));
+        await tester.pumpWidget(
+          const MaterialApp(home: ConcurrentObserverWidget()),
+        );
 
         final state = tester.state<_ConcurrentObserverWidgetState>(
           find.byType(ConcurrentObserverWidget),
@@ -684,9 +698,11 @@ void main() {
       });
 
       testWidgets('concurrent platform changes processed correctly', (
-        WidgetTester tester,
+        tester,
       ) async {
-        await tester.pumpWidget(MaterialApp(home: ConcurrentObserverWidget()));
+        await tester.pumpWidget(
+          const MaterialApp(home: ConcurrentObserverWidget()),
+        );
 
         final state = tester.state<_ConcurrentObserverWidgetState>(
           find.byType(ConcurrentObserverWidget),
@@ -711,16 +727,18 @@ void main() {
       });
 
       testWidgets('observer method reentrancy handled safely', (
-        WidgetTester tester,
+        tester,
       ) async {
-        await tester.pumpWidget(MaterialApp(home: ConcurrentObserverWidget()));
+        await tester.pumpWidget(
+          const MaterialApp(home: ConcurrentObserverWidget()),
+        );
 
         final state = tester.state<_ConcurrentObserverWidgetState>(
           find.byType(ConcurrentObserverWidget),
         );
 
         // Trigger methods multiple times rapidly
-        for (int i = 0; i < 5; i++) {
+        for (var i = 0; i < 5; i++) {
           state.didChangeMetrics();
           state.didChangeTextScaleFactor();
         }
@@ -734,11 +752,11 @@ void main() {
 
     group('Production Failure Mode Tests', () {
       testWidgets('survives complex real-world usage patterns', (
-        WidgetTester tester,
+        tester,
       ) async {
         // Simulate complex app with multiple observer widgets
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Scaffold(
               body: Column(
                 children: [
@@ -754,12 +772,12 @@ void main() {
 
         // Trigger platform changes affecting all widgets
         tester.platformDispatcher.textScaleFactorTestValue = 1.3;
-        await tester.binding.setSurfaceSize(Size(600, 800));
+        await tester.binding.setSurfaceSize(const Size(600, 800));
         await tester.pump();
 
         // Change again
         tester.platformDispatcher.textScaleFactorTestValue = 1.7;
-        await tester.binding.setSurfaceSize(Size(400, 600));
+        await tester.binding.setSurfaceSize(const Size(400, 600));
         await tester.pump();
 
         // All widgets should survive without errors
@@ -773,9 +791,9 @@ void main() {
       });
 
       testWidgets('handles widget tree rebuilds during observer callbacks', (
-        WidgetTester tester,
+        tester,
       ) async {
-        bool rebuildTrigger = false;
+        var rebuildTrigger = false;
 
         await tester.pumpWidget(
           MaterialApp(
@@ -787,22 +805,22 @@ void main() {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if (!rebuildTrigger)
-                          SizedBox(
+                          const SizedBox(
                             height: 100,
                             child: MediaQueryTimingWidget(),
                           ),
-                        SizedBox(
+                        const SizedBox(
                           height: 100,
                           child: ConcurrentObserverWidget(),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         ElevatedButton(
                           onPressed: () {
                             setState(() {
                               rebuildTrigger = true;
                             });
                           },
-                          child: Text('Rebuild'),
+                          child: const Text('Rebuild'),
                         ),
                       ],
                     );

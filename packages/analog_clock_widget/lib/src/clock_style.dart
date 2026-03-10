@@ -1,6 +1,6 @@
 import 'package:analog_clock_widget/src/analog_clock.dart'
     show ClockFaceStyle, HandStyle;
-import 'package:flutter/material.dart' show immutable, Color;
+import 'package:flutter/material.dart' show Color, immutable;
 
 @immutable
 class ClockStyle {

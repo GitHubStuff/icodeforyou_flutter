@@ -3,4 +3,4 @@
 /// and optional haptic feedback.
 library;
 
-export 'src/step_slider.dart' show StepSlider, HapticFeedbackType;
+export 'src/step_slider.dart' show HapticFeedbackType, StepSlider;

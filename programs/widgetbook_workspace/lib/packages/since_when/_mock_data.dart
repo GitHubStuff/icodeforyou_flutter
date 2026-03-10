@@ -17,8 +17,6 @@ class MockDataGenerator {
       1,
       19,
       10,
-      0,
-      0,
     ).add(Duration(seconds: _timestampCounter));
     return now.toIso8601String();
   }

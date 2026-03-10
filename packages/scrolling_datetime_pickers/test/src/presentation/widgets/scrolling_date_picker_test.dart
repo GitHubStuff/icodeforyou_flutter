@@ -40,9 +40,9 @@ void main() {
             .first,
       );
 
-      final decoration = container.decoration as BoxDecoration;
+      final decoration = container.decoration! as BoxDecoration;
       expect(decoration.color, StyleConstants.defaultBackgroundColor);
-      expect(decoration.borderRadius, BorderRadius.circular(0.0));
+      expect(decoration.borderRadius, BorderRadius.circular(0));
     });
 
     testWidgets('should use custom initial date', (tester) async {
@@ -86,7 +86,7 @@ void main() {
             .first,
       );
 
-      final decoration = container.decoration as BoxDecoration;
+      final decoration = container.decoration! as BoxDecoration;
       expect(decoration.color, customColor);
     });
 
@@ -141,7 +141,7 @@ void main() {
             .first,
       );
 
-      final decoration = container.decoration as BoxDecoration;
+      final decoration = container.decoration! as BoxDecoration;
       expect(decoration.borderRadius, BorderRadius.circular(customRadius));
     });
 
@@ -230,7 +230,6 @@ void main() {
           home: Scaffold(
             body: ScrollingDatePicker(
               onDateChanged: (_) {},
-              dayAscending: true,
             ),
           ),
         ),

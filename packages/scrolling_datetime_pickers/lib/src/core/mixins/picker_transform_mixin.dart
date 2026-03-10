@@ -18,12 +18,12 @@ mixin PickerTransformMixin {
     // Only apply transform to outer columns
     if (columnIndex == 0) {
       // Left column - tilt right
-      matrix.setEntry(3, 2, perspective);
-      matrix.rotateY(-DimensionConstants.outerColumnAngle);
+      matrix..setEntry(3, 2, perspective)
+      ..rotateY(-DimensionConstants.outerColumnAngle);
     } else if (columnIndex == totalColumns - 1) {
       // Right column - tilt left
-      matrix.setEntry(3, 2, perspective);
-      matrix.rotateY(DimensionConstants.outerColumnAngle);
+      matrix..setEntry(3, 2, perspective)
+      ..rotateY(DimensionConstants.outerColumnAngle);
     }
 
     return matrix;
@@ -41,12 +41,12 @@ mixin PickerTransformMixin {
     // Only apply transform to outer columns
     if (columnIndex == 0) {
       // Left column - tilt right
-      matrix.setEntry(3, 2, perspective);
-      matrix.rotateY(-angle);
+      matrix..setEntry(3, 2, perspective)
+      ..rotateY(-angle);
     } else if (columnIndex == totalColumns - 1) {
       // Right column - tilt left
-      matrix.setEntry(3, 2, perspective);
-      matrix.rotateY(angle);
+      matrix..setEntry(3, 2, perspective)
+      ..rotateY(angle);
     }
 
     return matrix;
@@ -64,7 +64,7 @@ mixin PickerTransformMixin {
     } else if (columnIndex == totalColumns - 1) {
       return DimensionConstants.outerColumnAngle;
     }
-    return 0.0;
+    return 0;
   }
 
   /// Create a transform widget for column
@@ -104,17 +104,17 @@ mixin PickerTransformMixin {
     bool fadeEnabled,
     double fadeDistance,
   ) {
-    if (!fadeEnabled) return 1.0;
+    if (!fadeEnabled) return 1;
 
     final center = viewportHeight / 2;
     final distanceFromCenter = (itemOffset - center).abs();
 
     if (distanceFromCenter <= fadeDistance) {
-      return 1.0;
+      return 1;
     }
 
     final fadeRange = center - fadeDistance;
-    if (fadeRange <= 0) return 1.0;
+    if (fadeRange <= 0) return 1;
 
     final opacity = 1.0 - ((distanceFromCenter - fadeDistance) / fadeRange);
     return opacity.clamp(0.0, 1.0);

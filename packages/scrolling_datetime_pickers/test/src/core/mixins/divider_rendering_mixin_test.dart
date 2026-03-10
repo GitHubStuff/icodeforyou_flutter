@@ -17,11 +17,11 @@ void main() {
     });
 
     testWidgets('buildDivider creates container with config', (tester) async {
-      final config = DividerConfiguration(
+      const config = DividerConfiguration(
         color: Colors.red,
-        thickness: 2.0,
-        indent: 10.0,
-        endIndent: 15.0,
+        thickness: 2,
+        indent: 10,
+        endIndent: 15,
         transparency: 0.5,
       );
 
@@ -34,9 +34,9 @@ void main() {
       );
 
       final container = tester.widget<Container>(find.byType(Container));
-      expect(container.margin, EdgeInsets.only(left: 10.0, right: 15.0));
+      expect(container.margin, const EdgeInsets.only(left: 10, right: 15));
 
-      final decoration = container.decoration as BoxDecoration;
+      final decoration = container.decoration! as BoxDecoration;
       expect(decoration.color, config.effectiveColor);
       expect(decoration.boxShadow, isNull); // No effect
     });
@@ -53,7 +53,7 @@ void main() {
       );
 
       final container = tester.widget<Container>(find.byType(Container));
-      final decoration = container.decoration as BoxDecoration;
+      final decoration = container.decoration! as BoxDecoration;
 
       expect(decoration.boxShadow, isNotNull);
       expect(decoration.boxShadow!.length, 1);
@@ -65,7 +65,7 @@ void main() {
     });
 
     testWidgets('buildDividerPair creates two dividers', (tester) async {
-      final config = DividerConfiguration();
+      const config = DividerConfiguration();
 
       await tester.pumpWidget(
         MaterialApp(
@@ -101,14 +101,14 @@ void main() {
     });
 
     testWidgets('buildDividerPair with custom width', (tester) async {
-      final config = DividerConfiguration();
+      const config = DividerConfiguration();
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: renderer.buildDividerPair(
               config: config,
-              width: 200.0,
+              width: 200,
             ),
           ),
         ),
@@ -127,7 +127,7 @@ void main() {
     });
 
     testWidgets('buildDividerPair with custom itemExtent', (tester) async {
-      final config = DividerConfiguration();
+      const config = DividerConfiguration();
       const customExtent = 60.0;
 
       await tester.pumpWidget(
@@ -156,7 +156,7 @@ void main() {
 
     testWidgets('buildPositionedDividers creates positioned stack',
         (tester) async {
-      final config = DividerConfiguration();
+      const config = DividerConfiguration();
 
       await tester.pumpWidget(
         MaterialApp(
@@ -164,10 +164,10 @@ void main() {
             children: [
               renderer.buildPositionedDividers(
                 config: config,
-                top: 50.0,
-                bottom: 150.0,
-                left: 10.0,
-                right: 20.0,
+                top: 50,
+                bottom: 150,
+                left: 10,
+                right: 20,
               ),
             ],
           ),
@@ -192,8 +192,7 @@ void main() {
 
     test('calculateDividerPositions computes correct positions', () {
       final positions = renderer.calculateDividerPositions(
-        viewportHeight: 200.0,
-        itemExtent: 40.0,
+        viewportHeight: 200,
       );
 
       expect(positions.topDivider, 80.0); // 100 - 20
@@ -203,8 +202,8 @@ void main() {
 
     test('calculateDividerPositions with custom itemExtent', () {
       final positions = renderer.calculateDividerPositions(
-        viewportHeight: 300.0,
-        itemExtent: 60.0,
+        viewportHeight: 300,
+        itemExtent: 60,
       );
 
       expect(positions.topDivider, 120.0); // 150 - 30
@@ -214,7 +213,7 @@ void main() {
 
     testWidgets('buildAnimatedDividers creates animated container',
         (tester) async {
-      final config = DividerConfiguration();
+      const config = DividerConfiguration();
 
       await tester.pumpWidget(
         MaterialApp(
@@ -222,7 +221,7 @@ void main() {
             children: [
               renderer.buildAnimatedDividers(
                 config: config,
-                viewportHeight: 200.0,
+                viewportHeight: 200,
                 animationDuration: const Duration(milliseconds: 300),
                 animationCurve: Curves.bounceIn,
               ),
@@ -243,8 +242,8 @@ void main() {
 
     test('DividerPositions spacing calculation', () {
       const positions = DividerPositions(
-        topDivider: 50.0,
-        bottomDivider: 90.0,
+        topDivider: 50,
+        bottomDivider: 90,
       );
 
       expect(positions.spacing, 40.0);

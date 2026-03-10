@@ -56,7 +56,7 @@ void main() {
       });
 
       testWidgets('builds with custom initial value', (tester) async {
-        await tester.pumpWidget(buildTestWidget(initialValue: 50.0));
+        await tester.pumpWidget(buildTestWidget(initialValue: 50));
 
         final slider = tester.widget<Slider>(find.byType(Slider));
         expect(slider.value, 50.0);
@@ -64,9 +64,9 @@ void main() {
 
       testWidgets('builds with custom min/max', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 25.0,
-          min: 10.0,
-          max: 50.0,
+          initialValue: 25,
+          min: 10,
+          max: 50,
         ));
 
         final slider = tester.widget<Slider>(find.byType(Slider));
@@ -88,8 +88,8 @@ void main() {
         expect(slider.label, 'Custom Label');
       });
 
-      testWidgets('builds with default label when not provided', (tester) async {
-        await tester.pumpWidget(buildTestWidget(initialValue: 42.0));
+      testWidgets('builds a default label when not provided', (tester) async {
+        await tester.pumpWidget(buildTestWidget(initialValue: 42));
 
         final slider = tester.widget<Slider>(find.byType(Slider));
         expect(slider.label, '42');
@@ -109,7 +109,7 @@ void main() {
       });
 
       testWidgets('builds with custom button size', (tester) async {
-        await tester.pumpWidget(buildTestWidget(buttonSize: 48.0));
+        await tester.pumpWidget(buildTestWidget(buttonSize: 48));
 
         final sizedBoxes = tester.widgetList<SizedBox>(find.byType(SizedBox));
         final buttonSizedBoxes = sizedBoxes.where(
@@ -120,7 +120,7 @@ void main() {
 
       testWidgets('builds with custom button colors', (tester) async {
         await tester.pumpWidget(buildTestWidget(
-          initialValue: 50.0,
+          initialValue: 50,
           buttonColor: Colors.green,
           buttonIconColor: Colors.yellow,
         ));
@@ -149,7 +149,7 @@ void main() {
       for (final type in HapticFeedbackType.values) {
         testWidgets('builds with $type haptic feedback', (tester) async {
           await tester.pumpWidget(buildTestWidget(
-            initialValue: 50.0,
+            initialValue: 50,
             enableHapticFeedback: true,
             hapticFeedbackType: type,
           ));

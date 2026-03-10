@@ -85,7 +85,7 @@ class _TabButton extends StatelessWidget {
           border: Border(
             bottom: BorderSide(
               color: isSelected ? selectedColor : Colors.transparent,
-              width: 2.0,
+              width: 2,
             ),
           ),
         ),

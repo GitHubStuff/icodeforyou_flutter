@@ -13,7 +13,7 @@ class _AnimationCurvesDemo extends StatefulWidget {
 }
 
 class _AnimationCurvesDemoState extends State<_AnimationCurvesDemo> {
-  double _duration = 2.0;
+  double _duration = 2;
 
   // Master list of all available curves
   static const List<Curve> _allCurves = [
@@ -161,9 +161,7 @@ class _AnimationCurvesDemoState extends State<_AnimationCurvesDemo> {
   void _reloadFullList() {
     if (_anyAnimating) return;
 
-    setState(() {
-      _fullReload();
-    });
+    setState(_fullReload);
   }
 
   void _toggleCheckmark(Curve curve) {
@@ -175,10 +173,8 @@ class _AnimationCurvesDemoState extends State<_AnimationCurvesDemo> {
       switch (currentState) {
         case CheckmarkState.notDrawn:
           _checkmarkStates[curve] = CheckmarkState.drawing;
-          break;
         case CheckmarkState.drawn:
           _checkmarkStates[curve] = CheckmarkState.dissolving;
-          break;
         case CheckmarkState.drawing:
         case CheckmarkState.dissolving:
           break;
@@ -213,7 +209,7 @@ class _AnimationCurvesDemoState extends State<_AnimationCurvesDemo> {
         state == CheckmarkState.drawn || state == CheckmarkState.dissolving;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
           // Fixed size container to prevent layout jank
@@ -225,7 +221,6 @@ class _AnimationCurvesDemoState extends State<_AnimationCurvesDemo> {
                   ? const SizedBox.shrink()
                   : AnimatedCheckbox(
                       width: 45,
-                      strokeColor: Colors.purple,
                       draw:
                           state == CheckmarkState.drawing ||
                           state == CheckmarkState.drawn,
@@ -259,7 +254,7 @@ class _AnimationCurvesDemoState extends State<_AnimationCurvesDemo> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Column(
         children: [
           Text(
@@ -284,7 +279,7 @@ class _AnimationCurvesDemoState extends State<_AnimationCurvesDemo> {
               Slider(
                 value: _duration,
                 min: 0.5,
-                max: 3.0,
+                max: 3,
                 divisions: 10,
                 onChanged: _anyAnimating ? null : _onDurationChanged,
                 label: '${_duration.toStringAsFixed(1)}s',
@@ -335,27 +330,27 @@ class _InteractiveCheckboxDemoState extends State<_InteractiveCheckboxDemo> {
   final List<({Offset start, Offset mid, Offset finish, String name})> _shapes =
       [
         (
-          start: Offset(0.0, 0.5),
-          mid: Offset(0.5, 1.0),
-          finish: Offset(1.0, 0.0),
+          start: const Offset(0, 0.5),
+          mid: const Offset(0.5, 1),
+          finish: const Offset(1, 0),
           name: 'Default',
         ),
         (
-          start: Offset(0.2, 0.5),
-          mid: Offset(0.4, 0.8),
-          finish: Offset(0.8, 0.2),
+          start: const Offset(0.2, 0.5),
+          mid: const Offset(0.4, 0.8),
+          finish: const Offset(0.8, 0.2),
           name: 'Compact',
         ),
         (
-          start: Offset(0.0, 0.3),
-          mid: Offset(0.6, 0.9),
-          finish: Offset(1.0, 0.1),
+          start: const Offset(0, 0.3),
+          mid: const Offset(0.6, 0.9),
+          finish: const Offset(1, 0.1),
           name: 'Wide',
         ),
         (
-          start: Offset(0.0, 0.0),
-          mid: Offset(0.5, 0.5),
-          finish: Offset(1.0, 1.0),
+          start: Offset.zero,
+          mid: const Offset(0.5, 0.5),
+          finish: const Offset(1, 1),
           name: 'Diagonal',
         ),
       ];
@@ -512,9 +507,9 @@ class _DissolveDemoState extends State<_DissolveDemo> {
               width: 150,
               strokeColor: Colors.deepOrange,
               draw: false, // Always dissolve
-              startOffset: const Offset(0.0, 0.3),
+              startOffset: const Offset(0, 0.3),
               midOffset: const Offset(0.6, 0.9),
-              finishOffset: const Offset(1.0, 0.1),
+              finishOffset: const Offset(1, 0.1),
               curve: Curves.easeInQuart,
               duration: const Duration(milliseconds: 2000),
               onAnimationComplete: _onDissolveComplete,

@@ -7,9 +7,7 @@ import 'package:theme_package/theme_package.dart';
 void main() {
   const validDbName = 'test_db_1234567890ab';
 
-  setUp(() {
-    ThemePackage.reset();
-  });
+  setUp(ThemePackage.reset);
 
   group('ThemeSelectorWidget', () {
     Future<void> pumpSelectorWidget(WidgetTester tester) async {
@@ -38,13 +36,13 @@ void main() {
     }
 
     group('UI elements', () {
-      testWidgets('can be constructed with a key', (WidgetTester tester) async {
+      testWidgets('can be constructed with a key', (tester) async {
         await tester.pumpWidget(
-          ThemePackageRoot(
+          const ThemePackageRoot(
             databaseName: validDbName,
             inMemory: true,
-            splash: const SizedBox.shrink(),
-            child: const MaterialApp(
+            splash: SizedBox.shrink(),
+            child: MaterialApp(
               home: Scaffold(
                 body: ThemeSelectorWidget(key: Key('selector')),
               ),
@@ -57,33 +55,33 @@ void main() {
       });
 
       testWidgets('displays "Select Theme:" label', (
-        WidgetTester tester,
+        tester,
       ) async {
         await pumpSelectorWidget(tester);
 
         expect(find.text('Select Theme:'), findsOneWidget);
       });
 
-      testWidgets('displays System radio option', (WidgetTester tester) async {
+      testWidgets('displays System radio option', (tester) async {
         await pumpSelectorWidget(tester);
 
         expect(find.text('System'), findsOneWidget);
       });
 
-      testWidgets('displays Dark radio option', (WidgetTester tester) async {
+      testWidgets('displays Dark radio option', (tester) async {
         await pumpSelectorWidget(tester);
 
         expect(find.text('Dark'), findsOneWidget);
       });
 
-      testWidgets('displays Light radio option', (WidgetTester tester) async {
+      testWidgets('displays Light radio option', (tester) async {
         await pumpSelectorWidget(tester);
 
         expect(find.text('Light'), findsOneWidget);
       });
 
       testWidgets('has three RadioListTile widgets', (
-        WidgetTester tester,
+        tester,
       ) async {
         await pumpSelectorWidget(tester);
 
@@ -92,7 +90,7 @@ void main() {
     });
 
     group('initial state', () {
-      testWidgets('System is selected by default', (WidgetTester tester) async {
+      testWidgets('System is selected by default', (tester) async {
         await pumpSelectorWidget(tester);
 
         expect(find.text('Current: system'), findsOneWidget);
@@ -106,7 +104,7 @@ void main() {
 
     group('theme selection', () {
       testWidgets('tapping Dark changes theme to dark', (
-        WidgetTester tester,
+        tester,
       ) async {
         await pumpSelectorWidget(tester);
 
@@ -118,7 +116,7 @@ void main() {
       });
 
       testWidgets('tapping Light changes theme to light', (
-        WidgetTester tester,
+        tester,
       ) async {
         await pumpSelectorWidget(tester);
 
@@ -130,7 +128,7 @@ void main() {
       });
 
       testWidgets('tapping System changes theme to system', (
-        WidgetTester tester,
+        tester,
       ) async {
         await pumpSelectorWidget(tester);
 
@@ -146,7 +144,7 @@ void main() {
       });
 
       testWidgets('radio button visually updates when selection changes', (
-        WidgetTester tester,
+        tester,
       ) async {
         await pumpSelectorWidget(tester);
 
@@ -167,7 +165,7 @@ void main() {
 
     group('persistence', () {
       testWidgets('selection persists to datasource', (
-        WidgetTester tester,
+        tester,
       ) async {
         await pumpSelectorWidget(tester);
 
@@ -180,7 +178,7 @@ void main() {
 
     group('null mode handling', () {
       testWidgets('onChanged does nothing when mode is null', (
-        WidgetTester tester,
+        tester,
       ) async {
         await pumpSelectorWidget(tester);
 

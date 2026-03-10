@@ -1,5 +1,7 @@
 // test/src/cubit/startup_cubit_test.dart
 
+import 'dart:async' show unawaited;
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:startup_package/src/cubit/startup_cubit.dart';
@@ -28,7 +30,7 @@ void main() {
           () => Future<void>.delayed(const Duration(milliseconds: 50)),
         ]),
         act: (cubit) async {
-          cubit.runTasks();
+          unawaited(cubit.runTasks());
           cubit.signalAnimationComplete();
           await Future<void>.delayed(const Duration(milliseconds: 100));
         },
@@ -106,7 +108,7 @@ void main() {
           () => Future<void>.delayed(const Duration(seconds: 10)),
         ]),
         act: (cubit) {
-          cubit.runTasks();
+          unawaited(cubit.runTasks());
           cubit.signalAnimationComplete();
         },
         expect: () => [

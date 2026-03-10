@@ -1,4 +1,6 @@
 // test/platform_identifier_test.dart
+// ignore_for_file: cascade_invocations
+
 import 'package:animated_checkbox_widget/animated_checkbox_widget.dart'
     show DefaultPlatformIdentifier;
 import 'package:flutter_test/flutter_test.dart';

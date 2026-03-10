@@ -1,5 +1,5 @@
 // test_datetime_delta_validation.dart
-// ignore_for_file: avoid_print
+// ignore_for_file: lines_longer_than_80_chars
 
 import 'package:extensions/datetime_ext/datetime_ext.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,7 +11,7 @@ void main() {
     late DateTime validUtcEnd;
 
     setUp(() {
-      validUtcStart = DateTime(2023, 1, 1).toUtc();
+      validUtcStart = DateTime(2023).toUtc();
       validUtcEnd = DateTime(2023, 6, 15).toUtc();
     });
 
@@ -170,7 +170,6 @@ void main() {
           () => DateTimeDelta.delta(
             startTime: validUtcStart,
             endTime: validUtcEnd,
-            firstDateTimeUnit: DateTimeUnit.year, // Larger unit
             precision: DateTimeUnit.day, // Smaller unit - valid
           ),
           returnsNormally,
@@ -195,7 +194,7 @@ void main() {
 
       test('should handle extreme date ranges', () {
         // Arrange
-        final veryOldDate = DateTime(1900, 1, 1).toUtc();
+        final veryOldDate = DateTime(1900).toUtc();
         final futureDate = DateTime(2100, 12, 31).toUtc();
 
         // Act & Assert - Should not throw
@@ -209,7 +208,7 @@ void main() {
       test('should handle reversed time order (end before start)', () {
         // Arrange
         final laterTime = DateTime(2023, 12, 31).toUtc();
-        final earlierTime = DateTime(2023, 1, 1).toUtc();
+        final earlierTime = DateTime(2023).toUtc();
 
         // Act
         final delta = DateTimeDelta.delta(
@@ -227,7 +226,7 @@ void main() {
       test('should fail gracefully with common timezone mistakes', () {
         // Arrange - Common mistake: using DateTime.now() directly
         final nowLocal = DateTime.now();
-        final startUtc = DateTime(2023, 1, 1).toUtc();
+        final startUtc = DateTime(2023).toUtc();
 
         // Act & Assert
         expect(
@@ -247,27 +246,24 @@ void main() {
 
       test('should provide helpful timezone offset information', () {
         // Arrange
-        final localTime = DateTime(2023, 6, 15, 14, 30); // Has timezone offset
+        final localTime = DateTime(2023, 6, 15, 14, 30);
         final utcTime = DateTime.now().toUtc();
 
         // Act & Assert
-        try {
-          DateTimeDelta.delta(startTime: localTime, endTime: utcTime);
-          fail('Expected ArgumentError');
-        } catch (e) {
-          expect(e, isA<ArgumentError>());
-          expect(e.toString(), contains('Current timezone offset:'));
-          expect(e.toString(), contains('Use startTime.toUtc()'));
-        }
+        expect(
+          () => DateTimeDelta.delta(startTime: localTime, endTime: utcTime),
+          throwsA(
+            isA<ArgumentError>().having(
+              (e) => e.toString(),
+              'message',
+              allOf(
+                contains('Current timezone offset:'),
+                contains('Use startTime.toUtc()'),
+              ),
+            ),
+          ),
+        );
       });
     });
   });
-}
-
-// Helper function for debugging test failures
-void debugTimezoneInfo(DateTime dateTime) {
-  print('DateTime: $dateTime');
-  print('Is UTC: ${dateTime.isUtc}');
-  print('Timezone offset: ${dateTime.timeZoneOffset}');
-  print('UTC equivalent: ${dateTime.toUtc()}');
 }

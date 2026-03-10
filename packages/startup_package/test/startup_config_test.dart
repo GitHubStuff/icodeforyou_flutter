@@ -19,8 +19,8 @@ class _FakeSplashScreenState extends State<_FakeSplashScreen> {
 
 void main() {
   group('StartupConfig', () {
-    final splash = const _FakeSplashScreen();
-    final landing = const SizedBox.shrink();
+    const splash = _FakeSplashScreen();
+    const landing = SizedBox.shrink();
     final tasks = <Future<void> Function()>[() async {}];
 
     test('holds splashScreen, landingPage, and tasks', () {
@@ -36,10 +36,10 @@ void main() {
     });
 
     test('accepts an empty task list', () {
-      final config = StartupConfig(
+      const config = StartupConfig(
         splashScreen: splash,
         landingPage: landing,
-        tasks: const [],
+        tasks: [],
       );
 
       expect(config.tasks, isEmpty);

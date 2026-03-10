@@ -48,9 +48,9 @@ void main() {
             .first,
       );
 
-      final decoration = container.decoration as BoxDecoration;
+      final decoration = container.decoration! as BoxDecoration;
       expect(decoration.color, StyleConstants.defaultBackgroundColor);
-      expect(decoration.borderRadius, BorderRadius.circular(0.0));
+      expect(decoration.borderRadius, BorderRadius.circular(0));
     });
 
     testWidgets('should show seconds column when enabled', (tester) async {
@@ -111,7 +111,7 @@ void main() {
             .first,
       );
 
-      final decoration = container.decoration as BoxDecoration;
+      final decoration = container.decoration! as BoxDecoration;
       expect(decoration.color, customColor);
     });
 
@@ -167,7 +167,7 @@ void main() {
             .first,
       );
 
-      final decoration = container.decoration as BoxDecoration;
+      final decoration = container.decoration! as BoxDecoration;
       expect(decoration.borderRadius, BorderRadius.circular(customRadius));
     });
 

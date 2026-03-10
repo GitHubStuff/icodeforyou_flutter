@@ -17,7 +17,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: ScrollingTimePicker(
-              initialDateTime: DateTime(2024, 1, 1, 12, 0, 0),
+              initialDateTime: DateTime(2024, 1, 1, 12),
               onDateTimeChanged: (dateTime) {
                 lastDateTime = dateTime;
                 callCount++;
@@ -47,7 +47,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: ScrollingTimePicker(
-              initialDateTime: DateTime(2024, 1, 1, 12, 0, 0),
+              initialDateTime: DateTime(2024, 1, 1, 12),
               onDateTimeChanged: (dateTime) {
                 lastDateTime = dateTime;
                 callCount++;
@@ -78,7 +78,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: ScrollingTimePicker(
-              initialDateTime: DateTime(2024, 1, 1, 10, 0, 0), // 10 AM
+              initialDateTime: DateTime(2024, 1, 1, 10), // 10 AM
               onDateTimeChanged: (dateTime) {
                 lastDateTime = dateTime;
                 callCount++;
@@ -109,7 +109,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: ScrollingTimePicker(
-              initialDateTime: DateTime(2024, 1, 1, 12, 0, 0),
+              initialDateTime: DateTime(2024, 1, 1, 12),
               showSeconds: true,
               onDateTimeChanged: (dateTime) {
                 lastDateTime = dateTime;
@@ -137,7 +137,7 @@ void main() {
 
       tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
         SystemChannels.platform,
-        (MethodCall methodCall) async {
+        (methodCall) async {
           log.add(methodCall);
           return null;
         },
@@ -148,7 +148,6 @@ void main() {
           home: Scaffold(
             body: ScrollingTimePicker(
               onDateTimeChanged: (_) {},
-              enableHaptics: true,
             ),
           ),
         ),
@@ -177,7 +176,7 @@ void main() {
 
       tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
         SystemChannels.platform,
-        (MethodCall methodCall) async {
+        (methodCall) async {
           log.add(methodCall);
           return null;
         },

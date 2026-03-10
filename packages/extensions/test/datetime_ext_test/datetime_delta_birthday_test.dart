@@ -4,7 +4,7 @@ import 'package:extensions/datetime_ext/datetime_delta.dart' show DateTimeDelta;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final DateTime birthday = DateTime(1960, 12, 19, 15, 56, 0).toUtc();
+  final DateTime birthday = DateTime(1960, 12, 19, 15, 56).toUtc();
 
   group('DateTimeDelta Birthday Validation', () {
     test('Birth day', () {
@@ -24,7 +24,7 @@ void main() {
     });
 
     test('Birth day + 1 minute', () {
-      final DateTime oneMinute = DateTime(1960, 12, 19, 15, 57, 0).toUtc();
+      final DateTime oneMinute = DateTime(1960, 12, 19, 15, 57).toUtc();
       final dateTimeDelta = DateTimeDelta.delta(
         startTime: birthday,
         endTime: oneMinute,
@@ -40,7 +40,7 @@ void main() {
       expect(dateTimeDelta.isFuture, true);
     });
     test('Birth day + 1 hour', () {
-      final DateTime oneHour = DateTime(1960, 12, 19, 16, 56, 0).toUtc();
+      final DateTime oneHour = DateTime(1960, 12, 19, 16, 56).toUtc();
       final dateTimeDelta = DateTimeDelta.delta(
         startTime: birthday,
         endTime: oneHour,
@@ -57,7 +57,7 @@ void main() {
     });
 
     test('Birth day + 64yrs', () {
-      final DateTime sixtyfourYears = DateTime(2024, 12, 19, 15, 56, 0).toUtc();
+      final DateTime sixtyfourYears = DateTime(2024, 12, 19, 15, 56).toUtc();
       final dateTimeDelta = DateTimeDelta.delta(
         startTime: birthday,
         endTime: sixtyfourYears,

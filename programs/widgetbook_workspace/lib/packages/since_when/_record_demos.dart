@@ -1,10 +1,12 @@
 // lib/package/since_when/_record_demos.dart
 
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:since_when/since_when.dart';
 
-import '_mock_data.dart';
-import '_shared_widgets.dart';
+import 'package:widgetbook_workspace/packages/since_when/_mock_data.dart';
+import 'package:widgetbook_workspace/packages/since_when/_shared_widgets.dart';
 
 /// Record creation demo widget.
 class RecordCreationDemo extends StatefulWidget {

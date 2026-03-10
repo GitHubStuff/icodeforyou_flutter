@@ -1,4 +1,6 @@
 // int_ext_test.dart
+// ignore_for_file: avoid_redundant_argument_values
+
 import 'package:extensions/extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -27,7 +29,7 @@ void main() {
 
       test('should convert positive microseconds to UTC DateTime', () {
         // Arrange
-        final expectedDateTime = DateTime.utc(2023, 12, 25, 12, 0, 0);
+        final expectedDateTime = DateTime.utc(2023, 12, 25, 12);
         final microseconds = expectedDateTime.microsecondsSinceEpoch;
 
         // Act
@@ -79,7 +81,7 @@ void main() {
 
       test('should convert large future timestamp to UTC DateTime', () {
         // Arrange
-        final futureDateTime = DateTime.utc(2100, 1, 1, 0, 0, 0);
+        final futureDateTime = DateTime.utc(2100, 1);
         final futureMicroseconds = futureDateTime.microsecondsSinceEpoch;
 
         // Act
@@ -121,7 +123,6 @@ void main() {
           0,
           0,
           123,
-          0,
         );
         final millisecondsOnly = dateTimeWithMillisOnly.microsecondsSinceEpoch;
 
@@ -137,7 +138,7 @@ void main() {
 
       test('should ensure returned DateTime is always UTC', () {
         // Arrange
-        final testDateTime = DateTime.utc(2023, 12, 25, 12, 0, 0);
+        final testDateTime = DateTime.utc(2023, 12, 25, 12);
         final testMicroseconds = testDateTime.microsecondsSinceEpoch;
 
         // Act
@@ -153,8 +154,8 @@ void main() {
         'should handle microsecond values that create exact minute boundaries',
         () {
           // Arrange
-          final baseDateTime = DateTime.utc(2023, 12, 25, 12, 0, 0);
-          final oneMinuteLater = baseDateTime.add(Duration(minutes: 1));
+          final baseDateTime = DateTime.utc(2023, 12, 25, 12);
+          final oneMinuteLater = baseDateTime.add(const Duration(minutes: 1));
           final exactMinuteMicroseconds = oneMinuteLater.microsecondsSinceEpoch;
 
           // Act

@@ -3,13 +3,13 @@
 part of 'time_picker_cubit.dart';
 
 class TimePickerState extends Equatable {
-  final DateTime dateTime;
-  final bool isScrolling;
 
   const TimePickerState({
     required this.dateTime,
     this.isScrolling = false,
   });
+  final DateTime dateTime;
+  final bool isScrolling;
 
   /// Get hour in 12-hour format (1-12)
   int get hour12 {

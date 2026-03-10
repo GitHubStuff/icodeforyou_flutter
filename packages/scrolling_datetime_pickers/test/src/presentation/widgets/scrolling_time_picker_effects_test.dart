@@ -9,7 +9,7 @@ void main() {
     testWidgets('should apply BoxShadow to dividers with glow', (tester) async {
       final glowConfig = DividerConfiguration.withGlow(
         color: Colors.purple,
-        thickness: 3.0,
+        thickness: 3,
         transparency: 0.8,
       );
 
@@ -39,7 +39,7 @@ void main() {
       for (final container in containers) {
         if (container.decoration != null &&
             container.decoration is BoxDecoration) {
-          final decoration = container.decoration as BoxDecoration;
+          final decoration = container.decoration! as BoxDecoration;
           if (decoration.boxShadow != null) {
             shadowCount++;
             expect(decoration.boxShadow!.isNotEmpty, true);
@@ -85,7 +85,7 @@ void main() {
       for (final container in containers) {
         if (container.decoration != null &&
             container.decoration is BoxDecoration) {
-          final decoration = container.decoration as BoxDecoration;
+          final decoration = container.decoration! as BoxDecoration;
           if (decoration.boxShadow != null &&
               decoration.boxShadow!.isNotEmpty) {
             shadowCount++;

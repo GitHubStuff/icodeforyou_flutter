@@ -1,5 +1,7 @@
 // test/src/core/models/divider_configuration_test.dart
 
+// ignore_for_file: document_ignores, lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scrolling_datetime_pickers/src/core/models/divider_configuration.dart';
@@ -23,12 +25,12 @@ void main() {
       const config = DividerConfiguration(
         color: Colors.blue,
         transparency: 0.5,
-        thickness: 2.0,
-        indent: 10.0,
-        endIndent: 15.0,
+        thickness: 2,
+        indent: 10,
+        endIndent: 15,
         blurStyle: BlurStyle.normal,
-        blurRadius: 3.0,
-        spreadRadius: 2.0,
+        blurRadius: 3,
+        spreadRadius: 2,
       );
 
       expect(config.color, Colors.blue);
@@ -47,33 +49,33 @@ void main() {
       expect(
           () => DividerConfiguration(transparency: 1.1), throwsAssertionError);
       expect(
-          () => const DividerConfiguration(transparency: 0.0), returnsNormally);
+          () => const DividerConfiguration(transparency: 0), returnsNormally);
       expect(
-          () => const DividerConfiguration(transparency: 1.0), returnsNormally);
+          () => const DividerConfiguration(), returnsNormally);
     });
 
     test('should enforce positive thickness', () {
-      expect(() => DividerConfiguration(thickness: 0.0), throwsAssertionError);
-      expect(() => DividerConfiguration(thickness: -1.0), throwsAssertionError);
+      expect(() => DividerConfiguration(thickness: 0), throwsAssertionError);
+      expect(() => DividerConfiguration(thickness: -1), throwsAssertionError);
       expect(() => const DividerConfiguration(thickness: 0.1), returnsNormally);
     });
 
     test('should enforce non-negative indents', () {
-      expect(() => DividerConfiguration(indent: -1.0), throwsAssertionError);
-      expect(() => DividerConfiguration(endIndent: -1.0), throwsAssertionError);
-      expect(() => const DividerConfiguration(indent: 0.0), returnsNormally);
-      expect(() => const DividerConfiguration(endIndent: 0.0), returnsNormally);
+      expect(() => DividerConfiguration(indent: -1), throwsAssertionError);
+      expect(() => DividerConfiguration(endIndent: -1), throwsAssertionError);
+      expect(() => const DividerConfiguration(), returnsNormally);
+      expect(() => const DividerConfiguration(), returnsNormally);
     });
 
     test('should enforce non-negative radii', () {
       expect(
-          () => DividerConfiguration(blurRadius: -1.0), throwsAssertionError);
+          () => DividerConfiguration(blurRadius: -1), throwsAssertionError);
       expect(
-          () => DividerConfiguration(spreadRadius: -1.0), throwsAssertionError);
+          () => DividerConfiguration(spreadRadius: -1), throwsAssertionError);
       expect(
-          () => const DividerConfiguration(blurRadius: 0.0), returnsNormally);
+          () => const DividerConfiguration(), returnsNormally);
       expect(
-          () => const DividerConfiguration(spreadRadius: 0.0), returnsNormally);
+          () => const DividerConfiguration(), returnsNormally);
     });
   });
 
@@ -133,7 +135,7 @@ void main() {
       final config = DividerConfiguration.withBlur(
         color: Colors.green,
         transparency: 0.6,
-        thickness: 3.0,
+        thickness: 3,
         blurStyle: BlurStyle.inner,
       );
 
@@ -162,7 +164,7 @@ void main() {
     test('effectiveColor with zero transparency', () {
       const config = DividerConfiguration(
         color: Colors.blue,
-        transparency: 0.0,
+        transparency: 0,
       );
       expect(config.effectiveColor.a, 0.0);
     });
@@ -170,7 +172,6 @@ void main() {
     test('effectiveColor with full opacity', () {
       const config = DividerConfiguration(
         color: Colors.red,
-        transparency: 1.0,
       );
       expect(config.effectiveColor.a, 1.0);
     });
@@ -186,7 +187,7 @@ void main() {
     test('hasEffect should detect blur effect', () {
       const config = DividerConfiguration(
         blurStyle: BlurStyle.normal,
-        blurRadius: 2.0,
+        blurRadius: 2,
       );
       expect(config.hasEffect, isTrue);
     });
@@ -194,7 +195,7 @@ void main() {
     test('hasEffect should detect spread effect', () {
       const config = DividerConfiguration(
         blurStyle: BlurStyle.outer,
-        spreadRadius: 1.0,
+        spreadRadius: 1,
       );
       expect(config.hasEffect, isTrue);
     });
@@ -202,8 +203,8 @@ void main() {
     test('hasEffect should detect both effects', () {
       const config = DividerConfiguration(
         blurStyle: BlurStyle.inner,
-        blurRadius: 2.0,
-        spreadRadius: 1.0,
+        blurRadius: 2,
+        spreadRadius: 1,
       );
       expect(config.hasEffect, isTrue);
     });

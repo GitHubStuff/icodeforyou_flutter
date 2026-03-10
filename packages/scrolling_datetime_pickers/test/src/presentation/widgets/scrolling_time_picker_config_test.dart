@@ -7,9 +7,9 @@ import 'package:scrolling_datetime_pickers/scrolling_datetime_pickers.dart';
 void main() {
   group('ScrollingTimePicker Configuration', () {
     testWidgets('should use custom divider configuration', (tester) async {
-      final customDivider = DividerConfiguration(
+      const customDivider = DividerConfiguration(
         color: Colors.red,
-        thickness: 3.0,
+        thickness: 3,
         transparency: 0.5,
       );
 
@@ -40,7 +40,7 @@ void main() {
     testWidgets('should render dividers with glow effect', (tester) async {
       final glowDivider = DividerConfiguration.withGlow(
         color: Colors.blue,
-        thickness: 2.0,
+        thickness: 2,
       );
 
       await tester.pumpWidget(
@@ -67,7 +67,7 @@ void main() {
       for (final container in containers) {
         if (container.decoration != null &&
             container.decoration is BoxDecoration) {
-          final decoration = container.decoration as BoxDecoration;
+          final decoration = container.decoration! as BoxDecoration;
           if (decoration.boxShadow != null &&
               decoration.boxShadow!.isNotEmpty) {
             foundShadow = true;
@@ -110,7 +110,7 @@ void main() {
       for (final container in containers) {
         if (container.decoration != null &&
             container.decoration is BoxDecoration) {
-          final decoration = container.decoration as BoxDecoration;
+          final decoration = container.decoration! as BoxDecoration;
           if (decoration.boxShadow != null &&
               decoration.boxShadow!.isNotEmpty) {
             foundBlur = true;

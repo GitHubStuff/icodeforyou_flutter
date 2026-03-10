@@ -18,27 +18,6 @@ class _ClockColors {
     required this.numbers,
   });
 
-  /// Background color of the clock face.
-  final Color face;
-
-  /// Color of the outer border and main structural elements.
-  final Color border;
-
-  /// Color of the hour hand.
-  final Color hour;
-
-  /// Color of the minute hand.
-  final Color minute;
-
-  /// Color of the second hand.
-  final Color second;
-
-  /// Color of tick marks around the clock edge.
-  final Color tick;
-
-  /// Color of the hour numbers (1-12).
-  final Color numbers;
-
   /// Factory constructor that resolves colors from style and theme.
   ///
   /// Takes user-provided colors from [style] and fills in any null
@@ -60,6 +39,27 @@ class _ClockColors {
       numbers: resolvedHour,
     );
   }
+
+  /// Background color of the clock face.
+  final Color face;
+
+  /// Color of the outer border and main structural elements.
+  final Color border;
+
+  /// Color of the hour hand.
+  final Color hour;
+
+  /// Color of the minute hand.
+  final Color minute;
+
+  /// Color of the second hand.
+  final Color second;
+
+  /// Color of tick marks around the clock edge.
+  final Color tick;
+
+  /// Color of the hour numbers (1-12).
+  final Color numbers;
 
   @override
   bool operator ==(Object other) {
@@ -93,18 +93,6 @@ class _ClockDimensions {
     required this.strokeWidth,
   });
 
-  /// The radius of the clock face in pixels.
-  final double radius;
-
-  /// Font size for hour numbers, scaled to clock size.
-  final double fontSize;
-
-  /// Distance from clock edge to place hour numbers.
-  final double numberOffset;
-
-  /// Stroke width for lines and borders.
-  final double strokeWidth;
-
   /// Factory constructor that computes all dimensions from radius.
   ///
   /// Uses the constants from [_ClockConstants] to maintain consistent
@@ -117,6 +105,18 @@ class _ClockDimensions {
       strokeWidth: _ClockConstants.tickStroke,
     );
   }
+
+  /// The radius of the clock face in pixels.
+  final double radius;
+
+  /// Font size for hour numbers, scaled to clock size.
+  final double fontSize;
+
+  /// Distance from clock edge to place hour numbers.
+  final double numberOffset;
+
+  /// Stroke width for lines and borders.
+  final double strokeWidth;
 
   /// The full diameter of the clock (radius * 2).
   double get diameter => radius * 2;
@@ -215,6 +215,47 @@ class _TickConfiguration {
     required this.style,
   });
 
+  /// Factory constructor that computes tick dimensions and style.
+  ///
+  /// Different face styles get different tick proportions:
+  /// - Classic: Standard proportions with all ticks
+  /// - Modern: Larger, bolder ticks with rounded caps
+  /// - Minimal: Tiny ticks that become dots
+  factory _TickConfiguration.fromDimensions(
+    _ClockDimensions dimensions,
+    Color color,
+    ClockFaceStyle style,
+  ) {
+    // Different tick sizes based on style
+    double shortMultiplier;
+    double longMultiplier;
+    double strokeMultiplier;
+
+    switch (style) {
+      case ClockFaceStyle.classic:
+        shortMultiplier = _ClockConstants.classicShortTickMultiplier;
+        longMultiplier = _ClockConstants.classicLongTickMultiplier;
+        strokeMultiplier = _ClockConstants.classicStrokeMultiplier;
+      case ClockFaceStyle.modern:
+        shortMultiplier = _ClockConstants.modernShortTickMultiplier;
+        longMultiplier = _ClockConstants.modernLongTickMultiplier;
+        strokeMultiplier = _ClockConstants.modernTickStrokeMultiplier;
+      case ClockFaceStyle.minimal:
+        shortMultiplier = _ClockConstants.minimalShortTickMultiplier;
+        longMultiplier = _ClockConstants.minimalLongTickMultiplier;
+        strokeMultiplier = _ClockConstants.minimalTickStrokeMultiplier;
+    }
+
+    return _TickConfiguration(
+      color: color,
+      strokeWidth: dimensions.strokeWidth * strokeMultiplier,
+      shortLength: dimensions.radius * shortMultiplier,
+      longLength: dimensions.radius * longMultiplier,
+      delta: _ClockConstants.tickDeltaBase + dimensions.strokeWidth,
+      style: style,
+    );
+  }
+
   /// Color to draw tick marks.
   final Color color;
 
@@ -232,48 +273,6 @@ class _TickConfiguration {
 
   /// Visual style that determines tick appearance.
   final ClockFaceStyle style;
-
-  /// Factory constructor that computes tick dimensions and style.
-  ///
-  /// Different face styles get different tick proportions:
-  /// - Classic: Standard proportions with all ticks
-  /// - Modern: Larger, bolder ticks with rounded caps
-  /// - Minimal: Tiny ticks that become dots
-  factory _TickConfiguration.fromDimensions(
-    _ClockDimensions dimensions,
-    Color color,
-    ClockFaceStyle style,
-  ) {
-    // Different tick sizes based on style
-    double shortMultiplier, longMultiplier, strokeMultiplier;
-
-    switch (style) {
-      case ClockFaceStyle.classic:
-        shortMultiplier = _ClockConstants.classicShortTickMultiplier;
-        longMultiplier = _ClockConstants.classicLongTickMultiplier;
-        strokeMultiplier = _ClockConstants.classicStrokeMultiplier;
-        break;
-      case ClockFaceStyle.modern:
-        shortMultiplier = _ClockConstants.modernShortTickMultiplier;
-        longMultiplier = _ClockConstants.modernLongTickMultiplier;
-        strokeMultiplier = _ClockConstants.modernTickStrokeMultiplier;
-        break;
-      case ClockFaceStyle.minimal:
-        shortMultiplier = _ClockConstants.minimalShortTickMultiplier;
-        longMultiplier = _ClockConstants.minimalLongTickMultiplier;
-        strokeMultiplier = _ClockConstants.minimalTickStrokeMultiplier;
-        break;
-    }
-
-    return _TickConfiguration(
-      color: color,
-      strokeWidth: dimensions.strokeWidth * strokeMultiplier,
-      shortLength: dimensions.radius * shortMultiplier,
-      longLength: dimensions.radius * longMultiplier,
-      delta: _ClockConstants.tickDeltaBase + dimensions.strokeWidth,
-      style: style,
-    );
-  }
 }
 
 /// Special testing helpers
@@ -288,12 +287,14 @@ int debugClockColorsHash({
 }
 
 @visibleForTesting
+// ignore: public_member_api_docs  document_ignores
 int debugClockDimensionsHash(double radius) {
   final d = _ClockDimensions.fromRadius(radius);
   return d.hashCode;
 }
 
 @visibleForTesting
+// ignore: public_member_api_docs  document_ignores
 int debugClockConfigurationHash({
   required double radius,
   required ColorScheme colorScheme,

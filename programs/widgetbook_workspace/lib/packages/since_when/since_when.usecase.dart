@@ -51,7 +51,14 @@ Widget sinceWhenPlayground(BuildContext context) {
   );
   final tagsPreset = context.knobs.object.dropdown<String>(
     label: 'Tags Preset',
-    options: ['personal', 'work', 'urgent', 'personal, ideas', 'work, urgent', 'none'],
+    options: [
+      'personal',
+      'work',
+      'urgent',
+      'personal, ideas',
+      'work, urgent',
+      'none',
+    ],
     initialOption: 'personal',
   );
   return PlaygroundDemo(

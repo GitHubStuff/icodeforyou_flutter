@@ -21,7 +21,7 @@ class StyleConstants {
   static const Color defaultUnselectedTextColor = Colors.white70;
 
   /// Default text size for picker items
-  static const double defaultTextSize = 24.0;
+  static const double defaultTextSize = 24;
 
   /// Default font weight for picker items
   static const FontWeight defaultFontWeight = FontWeight.bold;
@@ -42,7 +42,7 @@ class StyleConstants {
   static const List<double> defaultFadeStops = [0.0, 1.0];
 
   /// Default divider opacity
-  static const double defaultDividerOpacity = 1.0;
+  static const double defaultDividerOpacity = 1;
 
   /// Hours column min value
   static const int hoursMin = 1;

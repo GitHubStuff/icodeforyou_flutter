@@ -1,5 +1,7 @@
 // test/src/presentation/widgets/datetime_popover/datetime_picker_field_test.dart
 
+// ignore_for_file: document_ignores, lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scrolling_datetime_pickers/scrolling_datetime_pickers.dart';
@@ -188,7 +190,6 @@ void main() {
         buildTestApp(
           child: DateTimePickerField(
             onDateTimeSelected: (_) {},
-            option: DateTimeOption.dateTime,
             child: const Text('Select DateTime'),
           ),
         ),
@@ -299,7 +300,7 @@ void main() {
             onDateTimeSelected: (_) {},
             dividerConfiguration: const DividerConfiguration(
               color: Colors.red,
-              thickness: 2.0,
+              thickness: 2,
             ),
             child: const Text('Select'),
           ),
@@ -369,7 +370,6 @@ void main() {
         buildTestApp(
           child: DateTimePickerField(
             onDateTimeSelected: (_) {},
-            enabled: true,
             child: GestureDetector(
               onTap: () => childTapped = true,
               child: const Text('Tap Me'),

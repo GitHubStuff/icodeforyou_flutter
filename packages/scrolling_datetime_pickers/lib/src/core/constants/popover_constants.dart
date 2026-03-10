@@ -1,5 +1,7 @@
 // lib/src/core/constants/popover_constants.dart
 
+// ignore_for_file: document_ignores, public_member_api_docs
+
 import 'package:flutter/material.dart';
 
 /// Default values for DateTimePickerPopover styling and animation.
@@ -23,23 +25,23 @@ class PopoverConstants {
   // Confirm button
   static const Color defaultConfirmButtonColor = Color(0xFF4CAF50);
   static const String defaultConfirmButtonText = 'Set';
-  static const double confirmButtonHorizontalPadding = 16.0;
-  static const double confirmButtonVerticalPadding = 8.0;
-  static const double confirmButtonBorderRadius = 16.0;
+  static const double confirmButtonHorizontalPadding = 16;
+  static const double confirmButtonVerticalPadding = 8;
+  static const double confirmButtonBorderRadius = 16;
 
   // Header
-  static const double headerPadding = 12.0;
-  static const double headerFontSize = 18.0;
+  static const double headerPadding = 12;
+  static const double headerFontSize = 18;
 
   // Tab bar
-  static const double tabBarHeight = 44.0;
-  static const double tabButtonFontSize = 16.0;
+  static const double tabBarHeight = 44;
+  static const double tabButtonFontSize = 16;
   static const FontWeight tabButtonSelectedFontWeight = FontWeight.bold;
   static const FontWeight tabButtonUnselectedFontWeight = FontWeight.normal;
 
   // Popover dimensions
-  static const double popoverBorderRadius = 12.0;
-  static const double popoverScreenPadding = 16.0;
+  static const double popoverBorderRadius = 12;
+  static const double popoverScreenPadding = 16;
 
   // Date/Time format defaults
   static const String defaultDateFormat = 'EEE, dd-MMM-yyyy';

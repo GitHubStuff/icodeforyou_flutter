@@ -27,7 +27,6 @@ This package requires:
 - `flutter_bloc` — State management
 - `hive_ce_flutter` — Local persistence
 - `path_provider` — File system access
-- `dartz` — Functional programming utilities
 
 ## Usage
 

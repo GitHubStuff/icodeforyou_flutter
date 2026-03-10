@@ -1,5 +1,6 @@
 // nosql_ce_db.dart
-// ignore_for_file: avoid_slow_async_io
+// ignore: lines_longer_than_80_chars
+// ignore_for_file: public_member_api_docs, library_prefixes, document_ignores, avoid_slow_async_io
 
 import 'dart:async' show FutureOr;
 import 'dart:io' show Directory;
@@ -7,12 +8,10 @@ import 'dart:io' show Directory;
 import 'package:flutter/foundation.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart' show Hive, HiveX;
 import 'package:nosql/abstract/abstract.dart' show NoSqlDBAbstract;
-// ignore: library_prefixes
+import 'package:nosql/nosql_ce/nosql_ce_box.dart' show NoSqlCEBox;
 import 'package:path/path.dart' as P;
 import 'package:path_provider/path_provider.dart'
     show getApplicationDocumentsDirectory;
-
-import 'nosql_ce_box.dart' show NoSqlCEBox;
 
 @visibleForTesting
 void resetForTesting() => NoSqlCEdb._fullPath = null;

@@ -1,4 +1,6 @@
 // test/src/haptic_feedback_type_test.dart
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -77,7 +79,7 @@ void main() {
       return MaterialApp(
         home: Scaffold(
           body: StepSlider(
-            initialValue: 50.0,
+            initialValue: 50,
             enableHapticFeedback: true,
             hapticFeedbackType: type,
           ),

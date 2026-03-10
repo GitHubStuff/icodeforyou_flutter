@@ -1,3 +1,7 @@
+// abstractiions/lib/src/extended_stateful_widget.dart
+
+// ignore_for_file: document_ignores, public_member_api_docs
+
 import 'package:flutter/material.dart';
 
 /// Adds helpers:
@@ -30,8 +34,8 @@ MediaQueryCubit.
 
 Avoids Overlap: Even though addPostFrameCallback is called each time 
 didChangeMetrics is invoked, the callback itself is only run once per frame. 
-This approach doesn't lead to callbacks stacking up because each is only executed
-after the metrics have changed and the frame has been processed.
+This approach doesn't lead to callbacks stacking up because each is only
+executed after the metrics have changed and the frame has been processed.
 
 Performance: This method is efficient and commonly used in Flutter applications
 for handling updates based on screen metrics or orientation changes. It does not

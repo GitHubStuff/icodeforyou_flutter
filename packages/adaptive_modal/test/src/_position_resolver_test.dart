@@ -1,4 +1,6 @@
 // test/src/_position_resolver_test.dart
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:adaptive_modal/src/_platform_detector.dart';
 import 'package:adaptive_modal/src/_position_resolver.dart';
 import 'package:adaptive_modal/src/types.dart';

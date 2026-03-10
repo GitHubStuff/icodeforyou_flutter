@@ -5,10 +5,6 @@ import 'dart:ui';
 ///
 /// Follows Single Responsibility Principle - only builds paths
 class CheckmarkPathBuilder {
-  final double _width;
-  final Offset _startOffset;
-  final Offset _midOffset;
-  final Offset _finishOffset;
 
   const CheckmarkPathBuilder({
     required double width,
@@ -19,15 +15,19 @@ class CheckmarkPathBuilder {
        _startOffset = startOffset,
        _midOffset = midOffset,
        _finishOffset = finishOffset;
+  final double _width;
+  final Offset _startOffset;
+  final Offset _midOffset;
+  final Offset _finishOffset;
 
   /// Creates the checkmark path: start -> middle -> finish
   Path buildCheckmarkPath() {
     final path = Path();
     final points = _getCheckmarkPoints();
 
-    path.moveTo(points.start.dx, points.start.dy);
-    path.lineTo(points.middle.dx, points.middle.dy);
-    path.lineTo(points.finish.dx, points.finish.dy);
+    path..moveTo(points.start.dx, points.start.dy)
+    ..lineTo(points.middle.dx, points.middle.dy)
+    ..lineTo(points.finish.dx, points.finish.dy);
 
     return path;
   }
@@ -60,28 +60,28 @@ class CheckmarkPathBuilder {
 
 /// Data class for checkmark points
 class CheckmarkPoints {
-  final Offset start;
-  final Offset middle;
-  final Offset finish;
 
   const CheckmarkPoints({
     required this.start,
     required this.middle,
     required this.finish,
   });
+  final Offset start;
+  final Offset middle;
+  final Offset finish;
 }
 
 /// Data class for path segments
 class PathSegments {
-  final double firstLength;
-  final double secondLength;
-  final CheckmarkPoints points;
 
   const PathSegments({
     required this.firstLength,
     required this.secondLength,
     required this.points,
   });
+  final double firstLength;
+  final double secondLength;
+  final CheckmarkPoints points;
 
   double get totalLength => firstLength + secondLength;
 }

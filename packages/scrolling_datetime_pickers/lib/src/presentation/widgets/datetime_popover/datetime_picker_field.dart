@@ -10,9 +10,7 @@ import 'package:scrolling_datetime_pickers/src/presentation/widgets/datetime_pop
 /// Convenience wrapper that shows DateTimePickerPopover when child is tapped.
 class DateTimePickerField extends StatefulWidget {
   const DateTimePickerField({
-    super.key,
-    required this.child,
-    required this.onDateTimeSelected,
+    required this.child, required this.onDateTimeSelected, super.key,
     this.initialDateTime,
     this.option = DateTimeOption.dateTime,
     this.dateFormat = PopoverConstants.defaultDateFormat,

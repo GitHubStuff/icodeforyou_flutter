@@ -133,7 +133,7 @@ void main() {
 
       test('should return null for string with special characters', () {
         // Arrange
-        const specialCharsString = '@#\$%^&*()';
+        const specialCharsString = r'@#$%^&*()';
 
         // Act
         final result = specialCharsString.toMicrosecondsOrNull();

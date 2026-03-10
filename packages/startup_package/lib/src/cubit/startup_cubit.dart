@@ -21,7 +21,7 @@ class StartupCubit extends Cubit<StartupState> {
       );
       _tasksComplete = true;
       _emitCompletionIfReady();
-    } catch (e) {
+    } on Object catch (e) {
       emit(StartupError(e));
     }
   }

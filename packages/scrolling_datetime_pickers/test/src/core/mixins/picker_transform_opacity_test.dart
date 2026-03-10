@@ -19,10 +19,10 @@ void main() {
     group('calculateItemOpacity', () {
       test('should return 1.0 when fade is disabled', () {
         final opacity = testTransform.calculateItemOpacity(
-          50.0,
-          200.0,
+          50,
+          200,
           false, // Fade disabled
-          40.0,
+          40,
         );
 
         expect(opacity, 1.0);
@@ -30,10 +30,10 @@ void main() {
 
       test('should return 1.0 for items within fade distance', () {
         final opacity = testTransform.calculateItemOpacity(
-          100.0, // At center
-          200.0, // Viewport height
+          100, // At center
+          200, // Viewport height
           true,
-          40.0,
+          40,
         );
 
         expect(opacity, 1.0);
@@ -42,29 +42,29 @@ void main() {
       test('should return 1.0 for items close to center', () {
         // Item at center + 30 (within 40 fade distance)
         final opacity1 = testTransform.calculateItemOpacity(
-          130.0,
-          200.0,
+          130,
+          200,
           true,
-          40.0,
+          40,
         );
         expect(opacity1, 1.0);
 
         // Item at center - 30 (within 40 fade distance)
         final opacity2 = testTransform.calculateItemOpacity(
-          70.0,
-          200.0,
+          70,
+          200,
           true,
-          40.0,
+          40,
         );
         expect(opacity2, 1.0);
       });
 
       test('should calculate fade for items outside fade distance', () {
         final opacity = testTransform.calculateItemOpacity(
-          0.0, // At top
-          200.0, // Viewport height (center at 100)
+          0, // At top
+          200, // Viewport height (center at 100)
           true,
-          40.0, // Fade distance
+          40, // Fade distance
         );
 
         // Distance from center is 100, fade starts at 40
@@ -76,10 +76,10 @@ void main() {
         // Center at 100, fade distance 40
         // Items at 140+ should start fading
         final opacity1 = testTransform.calculateItemOpacity(
-          150.0, // 50 from center, 10 beyond fade distance
-          200.0,
+          150, // 50 from center, 10 beyond fade distance
+          200,
           true,
-          40.0,
+          40,
         );
 
         // Fade range is 60 (100 - 40), distance beyond fade is 10
@@ -87,10 +87,10 @@ void main() {
         expect(opacity1, closeTo(0.833, 0.01));
 
         final opacity2 = testTransform.calculateItemOpacity(
-          200.0, // At edge, 100 from center
-          200.0,
+          200, // At edge, 100 from center
+          200,
           true,
-          40.0,
+          40,
         );
 
         // Distance beyond fade is 60, fade range is 60
@@ -100,10 +100,10 @@ void main() {
 
       test('should clamp opacity between 0 and 1', () {
         final opacity = testTransform.calculateItemOpacity(
-          -100.0, // Far outside viewport
-          200.0,
+          -100, // Far outside viewport
+          200,
           true,
-          40.0,
+          40,
         );
 
         expect(opacity, greaterThanOrEqualTo(0.0));
@@ -112,10 +112,10 @@ void main() {
 
       test('should handle edge case when fade distance equals center', () {
         final opacity = testTransform.calculateItemOpacity(
-          50.0,
-          100.0,
+          50,
+          100,
           true,
-          50.0, // Fade distance equals center
+          50, // Fade distance equals center
         );
 
         expect(opacity, 1.0);
@@ -123,10 +123,10 @@ void main() {
 
       test('should handle edge case when fade range is negative', () {
         final opacity = testTransform.calculateItemOpacity(
-          0.0,
-          100.0,
+          0,
+          100,
           true,
-          60.0, // Fade distance > center
+          60, // Fade distance > center
         );
 
         expect(opacity, 1.0);

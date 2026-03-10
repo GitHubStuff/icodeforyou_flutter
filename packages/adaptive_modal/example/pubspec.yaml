@@ -9,10 +9,10 @@ environment:
   flutter: '>=3.10.0'
 
 dependencies:
-  flutter:
-    sdk: flutter
   adaptive_modal:
     path: ../
+  flutter:
+    sdk: flutter
   very_good_analysis: ^10.2.0
 
 flutter:

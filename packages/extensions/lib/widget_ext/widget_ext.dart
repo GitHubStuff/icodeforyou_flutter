@@ -37,7 +37,8 @@ import 'package:flutter/material.dart';
 extension WidgetExt on Widget {
   /// Conditionally hides the widget by making it transparent.
   ///
-  /// When [shouldHide] is true, applies 0.0 opacity while maintaining layout space.
+  /// When [shouldHide] is true, applies 0.0 opacity while maintaining layout
+  /// space.
   /// This is useful for temporarily hiding content without affecting layout.
   ///
   /// Example:
@@ -45,11 +46,12 @@ extension WidgetExt on Widget {
   /// Text('Loading...')
   ///   .hide(isDataLoaded)  // Hide when data is loaded
   /// ```
-  Widget hide(bool shouldHide) => shouldHide ? withOpacity(0.0) : this;
+  Widget hide(bool shouldHide) => shouldHide ? withOpacity(0) : this;
 
   /// Conditionally removes the widget from the widget tree.
   ///
-  /// When [shouldRemove] is true, returns [SizedBox.shrink] which takes no space.
+  /// When [shouldRemove] is true, returns [SizedBox.shrink] which takes no
+  /// space.
   /// This completely removes the widget from layout calculations.
   ///
   /// Example:
@@ -63,7 +65,8 @@ extension WidgetExt on Widget {
   /// Wraps the widget with a solid background color.
   ///
   /// Uses [DecoratedBox] for optimal performance when only applying color.
-  /// Prefer this over [Container] when you don't need other decoration properties.
+  /// Prefer this over [Container] when you don't need other decoration
+  /// properties.
   ///
   /// Example:
   /// ```dart
@@ -166,7 +169,8 @@ extension WidgetExt on Widget {
   /// Wraps the widget with individual padding values for each side.
   ///
   /// Provides fine-grained control over padding for complex layouts.
-  /// All values default to 0.0 for convenience when only some sides need padding.
+  /// All values default to 0.0 for convenience when only some sides need
+  /// padding.
   ///
   /// Throws [ArgumentError] if any padding value is negative.
   ///
@@ -219,7 +223,8 @@ extension WidgetExt on Widget {
 
   /// Wraps the widget with symmetric padding for horizontal and vertical axes.
   ///
-  /// Ideal for layouts where you need different padding for horizontal vs vertical spacing.
+  /// Ideal for layouts where you need different padding for horizontal vs
+  /// vertical spacing.
   /// Common pattern for responsive designs and consistent spacing systems.
   ///
   /// Throws [ArgumentError] if [horizontal] or [vertical] values are negative.

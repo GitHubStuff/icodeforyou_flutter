@@ -1,21 +1,14 @@
 // lib/src/checkmark_painter.dart
-import 'package:flutter/material.dart';
+// ignore_for_file: cascade_invocations
 
-import '_dissolve_particle.dart';
-import '_checkmark_path_builder.dart';
+import 'package:animated_checkbox_widget/src/_checkmark_path_builder.dart';
+import 'package:animated_checkbox_widget/src/_dissolve_particle.dart';
+import 'package:flutter/material.dart';
 
 /// Custom painter for drawing and dissolving checkmarks with custom offsets
 ///
 /// Follows Single Responsibility Principle - only handles painting
 class CheckmarkPainter extends CustomPainter {
-  final double _progress;
-  final Color _strokeColor;
-  final bool _isDraw;
-  final List<DissolveParticle> _particles;
-  final double _width;
-  final Offset _startOffset;
-  final Offset _midOffset;
-  final Offset _finishOffset;
 
   const CheckmarkPainter({
     required double progress,
@@ -34,6 +27,14 @@ class CheckmarkPainter extends CustomPainter {
        _startOffset = startOffset,
        _midOffset = midOffset,
        _finishOffset = finishOffset;
+  final double _progress;
+  final Color _strokeColor;
+  final bool _isDraw;
+  final List<DissolveParticle> _particles;
+  final double _width;
+  final Offset _startOffset;
+  final Offset _midOffset;
+  final Offset _finishOffset;
 
   @override
   void paint(Canvas canvas, Size size) {

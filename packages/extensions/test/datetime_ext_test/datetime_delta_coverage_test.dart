@@ -1,6 +1,8 @@
 // datetime_delta_coverage_test.dart - TESTS FOR MISSED COVERAGE
 // Specifically targets uncovered lines in datetime_delta.dart
 
+// ignore_for_file: document_ignores, lines_longer_than_80_chars
+
 import 'package:extensions/datetime_ext/datetime_delta.dart' show DateTimeDelta;
 import 'package:extensions/datetime_ext/datetime_unit.dart' show DateTimeUnit;
 import 'package:flutter_test/flutter_test.dart';
@@ -16,7 +18,7 @@ void main() {
       // We can only verify that the class works via static methods
       expect(
         () => DateTimeDelta.delta(
-          startTime: DateTime.utc(2024, 1, 1),
+          startTime: DateTime.utc(2024),
           endTime: DateTime.utc(2024, 1, 2),
         ),
         returnsNormally,
@@ -31,7 +33,7 @@ void main() {
       // In debug mode, this throws AssertionError:
       expect(
         () => DateTimeDelta.delta(
-          startTime: DateTime.utc(2024, 1, 1),
+          startTime: DateTime.utc(2024),
           endTime: DateTime.utc(2024, 1, 2),
           firstDateTimeUnit: DateTimeUnit.minute,
           precision: DateTimeUnit.hour,
@@ -68,7 +70,7 @@ void main() {
     });
 
     test('valid firstDateTimeUnit/precision combinations work', () {
-      final startTime = DateTime.utc(2024, 1, 1);
+      final startTime = DateTime.utc(2024);
       final endTime = DateTime.utc(2024, 1, 2);
 
       // These should all work (firstUnitIndex <= precisionIndex)
@@ -103,7 +105,7 @@ void main() {
       // Note: This test demonstrates the ArgumentError path that would execute
       // in release mode when assertions are disabled. In debug mode, the assert
       // fires first, but this documents the expected behavior.
-      final startTime = DateTime.utc(2024, 1, 1);
+      final startTime = DateTime.utc(2024);
       final endTime = DateTime.utc(2024, 1, 2);
 
       // In release mode, this would throw ArgumentError instead of AssertionError
@@ -124,8 +126,8 @@ void main() {
     });
 
     test('AssertionError thrown when firstDateTimeUnit smaller than precision', () {
-      final startTime = DateTime.utc(2024, 1, 1, 10, 0, 0);
-      final endTime = DateTime.utc(2024, 1, 1, 12, 0, 0);
+      final startTime = DateTime.utc(2024, 1, 1, 10);
+      final endTime = DateTime.utc(2024, 1, 1, 12);
 
       // This should throw AssertionError because minute (index 4) > hour (index 3) in hierarchy
       expect(
@@ -148,7 +150,7 @@ void main() {
     });
 
     test('General ArgumentError with specific message format', () {
-      final startTime = DateTime.utc(2024, 1, 1);
+      final startTime = DateTime.utc(2024);
       final endTime = DateTime.utc(2024, 1, 2);
       expect(
         () => DateTimeDelta.delta(
@@ -171,7 +173,7 @@ void main() {
       );
     });
     test('ArgumentError with specific message format', () {
-      final startTime = DateTime.utc(2024, 1, 1);
+      final startTime = DateTime.utc(2024);
       final endTime = DateTime.utc(2024, 1, 2);
       expect(
         () => DateTimeDelta.delta(
@@ -193,7 +195,7 @@ void main() {
     });
 
     test('various precision/firstDateTimeUnit error combinations', () {
-      final startTime = DateTime.utc(2024, 1, 1);
+      final startTime = DateTime.utc(2024);
       final endTime = DateTime.utc(2024, 1, 2);
 
       // Test minute > hour (should fail) - minute is index 4, hour is index 3
@@ -252,8 +254,8 @@ void main() {
       // In practice, this constructor should never be called directly
       expect(
         () => DateTimeDelta.delta(
-          startTime: DateTime.utc(2024, 1, 1),
-          endTime: DateTime.utc(2024, 1, 1),
+          startTime: DateTime.utc(2024),
+          endTime: DateTime.utc(2024),
         ),
         returnsNormally,
       );
@@ -330,8 +332,8 @@ void main() {
 
     test('UTC assertion coverage', () {
       // Create explicitly non-UTC DateTime
-      final startTime = DateTime(2024, 1, 1, 10, 0, 0); // Local time
-      final endTime = DateTime.utc(2024, 1, 1, 12, 0, 0); // UTC
+      final startTime = DateTime(2024, 1, 1, 10); // Local time
+      final endTime = DateTime.utc(2024, 1, 1, 12); // UTC
 
       // Verify these are actually different UTC states
       expect(startTime.isUtc, isFalse, reason: 'startTime should not be UTC');
@@ -346,8 +348,8 @@ void main() {
         ]),
       );
 
-      final startTimeUtc = DateTime.utc(2024, 1, 1, 10, 0, 0); // UTC
-      final endTimeNonUtc = DateTime(2024, 1, 1, 12, 0, 0); // Local time
+      final startTimeUtc = DateTime.utc(2024, 1, 1, 10); // UTC
+      final endTimeNonUtc = DateTime(2024, 1, 1, 12); // Local time
 
       // Verify UTC states
       expect(startTimeUtc.isUtc, isTrue, reason: 'startTimeUtc should be UTC');
@@ -390,21 +392,21 @@ void main() {
         ),
         // Minute borrowing
         (
-          DateTime.utc(2024, 1, 1, 10, 30, 0),
-          DateTime.utc(2024, 1, 1, 11, 15, 0),
+          DateTime.utc(2024, 1, 1, 10, 30),
+          DateTime.utc(2024, 1, 1, 11, 15),
         ),
         // Hour borrowing
         (
-          DateTime.utc(2024, 1, 1, 20, 0, 0),
-          DateTime.utc(2024, 1, 2, 10, 0, 0),
+          DateTime.utc(2024, 1, 1, 20),
+          DateTime.utc(2024, 1, 2, 10),
         ),
         // Day borrowing (month-end)
         (
-          DateTime.utc(2024, 1, 31, 0, 0, 0),
-          DateTime.utc(2024, 2, 15, 0, 0, 0),
+          DateTime.utc(2024, 1, 31),
+          DateTime.utc(2024, 2, 15),
         ),
         // Month borrowing (year-end)
-        (DateTime.utc(2024, 11, 1, 0, 0, 0), DateTime.utc(2025, 2, 1, 0, 0, 0)),
+        (DateTime.utc(2024, 11), DateTime.utc(2025, 2)),
       ];
 
       for (final (start, end) in testCases) {

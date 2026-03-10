@@ -8,11 +8,11 @@
 // Knows nothing about OverlayEntry management, barrier, or the controller.
 // ---------------------------------------------------------------------------
 
+import 'package:adaptive_modal/src/_overlay_manager.dart' show OverlayManager;
+import 'package:adaptive_modal/src/_platform_detector.dart';
+import 'package:adaptive_modal/src/_position_resolver.dart';
+import 'package:adaptive_modal/src/types.dart';
 import 'package:flutter/material.dart';
-
-import 'types.dart';
-import '_platform_detector.dart';
-import '_position_resolver.dart';
 
 // ---------------------------------------------------------------------------
 // _ModalShell
@@ -26,14 +26,15 @@ import '_position_resolver.dart';
 /// - Fade + scale animation with origin derived from [ModalPlacement.position]
 /// - Close button in the top-right corner
 class ModalShell extends StatelessWidget {
+  /// Constructor
   const ModalShell({
-    super.key,
     required this.child,
     required this.placement,
     required this.config,
     required this.animation,
     required this.onClose,
     required this.isPhone,
+    super.key,
   });
 
   /// Caller-supplied modal content.
@@ -171,7 +172,7 @@ class _AnimatedShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scale = Tween<double>(begin: 0.85, end: 1.0).animate(animation);
+    final scale = Tween<double>(begin: 0.85, end: 1).animate(animation);
 
     return FadeTransition(
       opacity: animation,
@@ -190,6 +191,7 @@ class _AnimatedShell extends StatelessWidget {
 
 /// Tappable close button rendered in the top-right corner of the modal.
 ///
+// ignore: comment_references
 /// Uses [config.closeIcon] when provided, otherwise defaults to [Icons.close].
 class _CloseButton extends StatelessWidget {
   const _CloseButton({

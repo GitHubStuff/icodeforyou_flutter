@@ -1,23 +1,21 @@
 // clock_style_test.dart
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/material.dart';
-import 'package:analog_clock_widget/src/clock_style.dart';
+// ignore_for_file: document_ignores
+
 import 'package:analog_clock_widget/src/analog_clock.dart'
     show ClockFaceStyle, HandStyle;
+import 'package:analog_clock_widget/src/clock_style.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('ClockStyle.copyWith', () {
     test('returns an equal instance when no arguments are provided', () {
-      final original = ClockStyle(
-        faceColor: const Color(0xFF112233),
-        borderColor: const Color(0xFF445566),
-        hourHandColor: const Color(0xFF778899),
-        minuteHandColor: const Color(0xFFAABBCC),
-        secondHandColor: const Color(0xFFDDEEFF),
-        showNumbers: true,
-        showSecondHand: true,
-        faceStyle: ClockFaceStyle.classic,
-        handStyle: HandStyle.traditional,
+      const original = ClockStyle(
+        faceColor: Color(0xFF112233),
+        borderColor: Color(0xFF445566),
+        hourHandColor: Color(0xFF778899),
+        minuteHandColor: Color(0xFFAABBCC),
+        secondHandColor: Color(0xFFDDEEFF),
       );
 
       final copy = original.copyWith();
@@ -29,16 +27,12 @@ void main() {
     });
 
     test('overrides provided fields and preserves the rest', () {
-      final original = ClockStyle(
-        faceColor: const Color(0xFF010101),
-        borderColor: const Color(0xFF020202),
-        hourHandColor: const Color(0xFF030303),
-        minuteHandColor: const Color(0xFF040404),
-        secondHandColor: const Color(0xFF050505),
-        showNumbers: true,
-        showSecondHand: true,
-        faceStyle: ClockFaceStyle.classic,
-        handStyle: HandStyle.traditional,
+      const original = ClockStyle(
+        faceColor: Color(0xFF010101),
+        borderColor: Color(0xFF020202),
+        hourHandColor: Color(0xFF030303),
+        minuteHandColor: Color(0xFF040404),
+        secondHandColor: Color(0xFF050505),
       );
 
       final updated = original.copyWith(
@@ -71,55 +65,45 @@ void main() {
 
   group('ClockStyle.== (equality)', () {
     test('identical reference returns true (fast path)', () {
-      const base = ClockStyle();
+      const base = ClockStyle.defaultStyle;
       expect(base == base, isTrue);
     });
 
     test('value equality across distinct instances returns true', () {
-      final a = ClockStyle(
-        faceColor: const Color(0xFFABCDEF),
-        borderColor: const Color(0xFF123456),
-        hourHandColor: const Color(0xFF0F0F0F),
-        minuteHandColor: const Color(0xFF1F1F1F),
-        secondHandColor: const Color(0xFF2F2F2F),
+      const a = ClockStyle(
+        faceColor: Color(0xFFABCDEF),
+        borderColor: Color(0xFF123456),
+        hourHandColor: Color(0xFF0F0F0F),
+        minuteHandColor: Color(0xFF1F1F1F),
+        secondHandColor: Color(0xFF2F2F2F),
         showNumbers: false,
-        showSecondHand: true,
-        faceStyle: ClockFaceStyle.classic,
-        handStyle: HandStyle.traditional,
       );
 
-      final b = ClockStyle(
-        faceColor: const Color(0xFFABCDEF),
-        borderColor: const Color(0xFF123456),
-        hourHandColor: const Color(0xFF0F0F0F),
-        minuteHandColor: const Color(0xFF1F1F1F),
-        secondHandColor: const Color(0xFF2F2F2F),
+      const b = ClockStyle(
+        faceColor: Color(0xFFABCDEF),
+        borderColor: Color(0xFF123456),
+        hourHandColor: Color(0xFF0F0F0F),
+        minuteHandColor: Color(0xFF1F1F1F),
+        secondHandColor: Color(0xFF2F2F2F),
         showNumbers: false,
-        showSecondHand: true,
-        faceStyle: ClockFaceStyle.classic,
-        handStyle: HandStyle.traditional,
       );
 
       expect(a == b, isTrue);
     });
 
     test('comparison with non-ClockStyle returns false', () {
-      const base = ClockStyle();
+      const base = ClockStyle.defaultStyle;
       // ignore: unrelated_type_equality_checks
       expect(base == 42, isFalse);
     });
 
     test('inequality when any single field differs', () {
-      final base = ClockStyle(
-        faceColor: const Color(0xFFAAAAAA),
-        borderColor: const Color(0xFFBBBBBB),
-        hourHandColor: const Color(0xFFCCCCCC),
-        minuteHandColor: const Color(0xFFDDDDDD),
-        secondHandColor: const Color(0xFFEEEEEE),
-        showNumbers: true,
-        showSecondHand: true,
-        faceStyle: ClockFaceStyle.classic,
-        handStyle: HandStyle.traditional,
+      const base = ClockStyle(
+        faceColor: Color(0xFFAAAAAA),
+        borderColor: Color(0xFFBBBBBB),
+        hourHandColor: Color(0xFFCCCCCC),
+        minuteHandColor: Color(0xFFDDDDDD),
+        secondHandColor: Color(0xFFEEEEEE),
       );
 
       expect(
@@ -145,7 +129,8 @@ void main() {
       expect(base == base.copyWith(showNumbers: false), isFalse);
       expect(base == base.copyWith(showSecondHand: false), isFalse);
 
-      // Also exercise enum fields explicitly (using same values still hits the branch).
+      // Also exercise enum fields explicitly (using same values still hits the
+      // branch).
       // Change via copyWith but keep same enum values -> remains equal.
       expect(
         base ==

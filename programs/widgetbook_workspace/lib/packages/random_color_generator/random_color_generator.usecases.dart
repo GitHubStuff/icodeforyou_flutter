@@ -1,3 +1,5 @@
+// programs/widgetbook_workspace/lib/packages/random_color_generator/random_color_generator.usecases.dart
+
 import 'package:flutter/material.dart';
 import 'package:random_color_generator/random_color_generator.dart'
     show RandomColorGenerator;
@@ -105,7 +107,6 @@ Widget buildGenerateUseCase(BuildContext context) {
     alpha: context.knobs.int.slider(
       label: 'Alpha (0-255)',
       initialValue: 255,
-      min: 0,
       max: 255,
     ),
   );
@@ -115,8 +116,9 @@ Widget buildGenerateUseCase(BuildContext context) {
 // Use Case 2: toHex() / fromHex() — Hex Roundtrip
 // ---------------------------------------------------------------------------
 
-/// Demonstrates [RandomColorGenerator.toHex] and [RandomColorGenerator.fromHex]
-/// by converting a color to hex and back, proving the roundtrip.
+/// Demonstrates [RandomColorGenerator.toHex] and
+/// [RandomColorGenerator.fromHex] by converting a color to hex and back,
+/// proving the roundtrip.
 class _HexRoundtripShowcase extends StatefulWidget {
   const _HexRoundtripShowcase();
 
@@ -274,7 +276,7 @@ class _FromHexShowcaseState extends State<_FromHexShowcase> {
         _parsed = color;
         _error = null;
       });
-    } catch (e) {
+    } on Object catch (e) {
       setState(() {
         _parsed = null;
         _error = e.toString();
@@ -365,6 +367,7 @@ class _ContrastShowcase extends StatelessWidget {
         final fg = RandomColorGenerator.contrastingTextColor(bg);
         final hex = RandomColorGenerator.toHex(bg);
         final luminance = bg.computeLuminance().toStringAsFixed(3);
+        final fgName = fg == Colors.white ? 'white' : 'black';
 
         return Padding(
           padding: const EdgeInsets.only(bottom: 8),
@@ -377,7 +380,7 @@ class _ContrastShowcase extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             alignment: Alignment.centerLeft,
             child: Text(
-              '$hex  •  luminance: $luminance  •  text: ${fg == Colors.white ? "white" : "black"}',
+              '$hex  •  luminance: $luminance  •  text: $fgName',
               style: TextStyle(color: fg, fontWeight: FontWeight.w600),
             ),
           ),

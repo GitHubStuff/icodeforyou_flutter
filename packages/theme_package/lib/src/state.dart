@@ -1,6 +1,7 @@
 // lib/src/state.dart
 part of '../theme_package.dart';
 
+@immutable
 final class _ThemeState {
   const _ThemeState({
     required this.themeMode,

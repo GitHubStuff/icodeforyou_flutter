@@ -73,7 +73,7 @@ void main() {
 
     test('alpha of 255 is equivalent to default', () {
       // Just verifies the path works without error.
-      final color = RandomColorGenerator.generate(alpha: 255);
+      final color = RandomColorGenerator.generate();
       final alphaInt = (color.a * 255.0).round();
       expect(alphaInt, equals(255));
     });

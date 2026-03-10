@@ -52,7 +52,6 @@ class _DateTimePopoverThemeShowcaseState
       context: context,
       anchorKey: _darkAnchorKey,
       initialDateTime: _darkSelectedDateTime ?? DateTime.now(),
-      popoverBackgroundColor: const Color(0xFF2D2D2D),
       pickerBackgroundColor: const Color(0xFF1E1E1E),
       headerDateTextStyle: const TextStyle(
         color: Colors.white,

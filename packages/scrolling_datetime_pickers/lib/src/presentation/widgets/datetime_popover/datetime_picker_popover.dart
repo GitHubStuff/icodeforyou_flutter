@@ -1,5 +1,7 @@
 // lib/src/presentation/widgets/datetime_popover/datetime_picker_popover.dart
 
+// ignore_for_file: document_ignores
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:scrolling_datetime_pickers/src/core/constants/popover_constants.dart';
@@ -27,7 +29,8 @@ class DateTimePickerPopover {
 
   /// Normalize initial datetime based on the picker option:
   /// - DateOnly: current date at midnight (00:00:00.000)
-  /// - TimeOnly: Jan 1st of current year with current time (seconds based on flag)
+  /// - TimeOnly: Jan 1st of current year with current time (seconds based on
+  /// flag)
   /// - DateTime: current date/time with seconds based on flag, no milliseconds
   static DateTime _normalizeInitialDateTime(
     DateTime? initialDateTime,
@@ -54,6 +57,7 @@ class DateTimePickerPopover {
             1,
             initialDateTime.hour,
             initialDateTime.minute,
+            // ignore: lines_longer_than_80_chars
             useCurrentSecond ? initialDateTime.second : 0, // coverage:ignore-line
           );
         case DateTimeOption.dateTime:

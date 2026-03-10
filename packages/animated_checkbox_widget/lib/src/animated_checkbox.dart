@@ -1,13 +1,26 @@
 // lib/src/animated_checkbox.dart
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-import '_dissolve_particle.dart';
-import '_particle_generator.dart';
-import '_checkmark_path_builder.dart';
-import '_checkmark_painter.dart';
+import 'package:animated_checkbox_widget/src/_checkmark_painter.dart';
+import 'package:animated_checkbox_widget/src/_checkmark_path_builder.dart';
+import 'package:animated_checkbox_widget/src/_dissolve_particle.dart';
+import 'package:animated_checkbox_widget/src/_particle_generator.dart';
+import 'package:flutter/material.dart';
 
 /// A widget that animates a checkmark drawing or dissolving effect
 class AnimatedCheckbox extends StatefulWidget {
+
+  const AnimatedCheckbox({
+    required this.draw, required this.onAnimationComplete, super.key,
+    this.width = 100.0,
+    this.background = Colors.transparent,
+    this.strokeColor = Colors.purple,
+    this.duration = const Duration(milliseconds: 850),
+    this.startOffset = const Offset(0.05, 0.52),
+    this.midOffset = const Offset(0.45, 0.95),
+    this.finishOffset = const Offset(0.95, 0.06),
+    this.curve = Curves.easeInOutQuart,
+  }) : assert(width >= 5.0, 'Width must be at least 5.0');
   /// Width and height of the checkbox widget (minimum 5.0)
   final double width;
 
@@ -37,20 +50,6 @@ class AnimatedCheckbox extends StatefulWidget {
 
   /// Callback fired when animation completes with the final draw state
   final ValueChanged<bool> onAnimationComplete;
-
-  const AnimatedCheckbox({
-    super.key,
-    this.width = 100.0,
-    this.background = Colors.transparent,
-    this.strokeColor = Colors.purple,
-    required this.draw,
-    this.duration = const Duration(milliseconds: 850),
-    this.startOffset = const Offset(0.05, 0.52),
-    this.midOffset = const Offset(0.45, 0.95),
-    this.finishOffset = const Offset(0.95, 0.06),
-    this.curve = Curves.easeInOutQuart,
-    required this.onAnimationComplete,
-  }) : assert(width >= 5.0, 'Width must be at least 5.0');
 
   @override
   State<AnimatedCheckbox> createState() => _AnimatedCheckboxState();
@@ -125,8 +124,8 @@ class _AnimatedCheckboxState extends State<AnimatedCheckbox>
     _controller = AnimationController(duration: widget.duration, vsync: this);
 
     _animation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(CurvedAnimation(parent: _controller!, curve: widget.curve));
 
     _controller!.addStatusListener(_handleAnimationComplete);
@@ -142,7 +141,7 @@ class _AnimatedCheckboxState extends State<AnimatedCheckbox>
       _generateDissolveParticles();
     }
 
-    _controller!.forward(from: 0.0);
+    unawaited(_controller!.forward(from: 0));
   }
 
   void _generateDissolveParticles() {

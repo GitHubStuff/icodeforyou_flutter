@@ -31,20 +31,20 @@ void main() {
     });
 
     test('should format month abbreviation', () {
-      final january = DatePickerState(date: DateTime(2024, 1, 1));
+      final january = DatePickerState(date: DateTime(2024));
       expect(january.monthAbbreviation, 'Jan');
 
-      final february = DatePickerState(date: DateTime(2024, 2, 1));
+      final february = DatePickerState(date: DateTime(2024, 2));
       expect(february.monthAbbreviation, 'Feb');
 
-      final december = DatePickerState(date: DateTime(2024, 12, 1));
+      final december = DatePickerState(date: DateTime(2024, 12));
       expect(december.monthAbbreviation, 'Dec');
     });
 
     test('should copy with new values', () {
       final original = DatePickerState(date: DateTime(2024, 6, 15));
 
-      final newDate = DateTime(2025, 1, 1);
+      final newDate = DateTime(2025);
       final copied = original.copyWith(date: newDate);
 
       expect(copied.date, newDate);

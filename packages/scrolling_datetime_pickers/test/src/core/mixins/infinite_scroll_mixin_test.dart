@@ -144,8 +144,8 @@ void main() {
 
     group('formatting', () {
       test('formatPickerValue should pad zeros when requested', () {
-        expect(testScroll.formatPickerValue(5, padZero: true), '05');
-        expect(testScroll.formatPickerValue(10, padZero: true), '10');
+        expect(testScroll.formatPickerValue(5), '05');
+        expect(testScroll.formatPickerValue(10), '10');
         expect(testScroll.formatPickerValue(5, padZero: false), '5');
         expect(testScroll.formatPickerValue(10, padZero: false), '10');
       });

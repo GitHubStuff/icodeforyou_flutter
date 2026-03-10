@@ -1,7 +1,6 @@
 // test/platform_optimizer_test.dart
-import 'package:flutter_test/flutter_test.dart';
-
 import 'package:animated_checkbox_widget/animated_checkbox_widget.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 // Mock platform detectors for 100% coverage
 class MockWebPlatformIdentifier extends PlatformIdentifier {
@@ -126,7 +125,7 @@ class MockUnknownPlatformIdentifier extends PlatformIdentifier {
 void main() {
   group('PlatformOptimizer Static Methods', () {
     test('getOptimalParticleCount returns integer', () {
-      final result = PlatformOptimizer.getOptimalParticleCount(100.0);
+      final result = PlatformOptimizer.getOptimalParticleCount(100);
       expect(result, isA<int>());
       expect(result, greaterThanOrEqualTo(0));
     });
@@ -155,8 +154,8 @@ void main() {
     });
 
     test('static methods are consistent', () {
-      final count1 = PlatformOptimizer.getOptimalParticleCount(100.0);
-      final count2 = PlatformOptimizer.getOptimalParticleCount(100.0);
+      final count1 = PlatformOptimizer.getOptimalParticleCount(100);
+      final count2 = PlatformOptimizer.getOptimalParticleCount(100);
       expect(count1, equals(count2));
 
       final rate1 = PlatformOptimizer.getOptimalFrameRate();
@@ -190,8 +189,8 @@ void main() {
     });
 
     test('calculateOptimalParticleCount returns web values', () {
-      expect(optimizer.calculateOptimalParticleCount(100.0), equals(80));
-      expect(optimizer.calculateOptimalParticleCount(0.0), equals(0));
+      expect(optimizer.calculateOptimalParticleCount(100), equals(80));
+      expect(optimizer.calculateOptimalParticleCount(0), equals(0));
       expect(optimizer.calculateOptimalParticleCount(123.7), equals(99));
     });
 
@@ -225,8 +224,8 @@ void main() {
     });
 
     test('calculateOptimalParticleCount returns iOS values', () {
-      expect(optimizer.calculateOptimalParticleCount(100.0), equals(60));
-      expect(optimizer.calculateOptimalParticleCount(0.0), equals(0));
+      expect(optimizer.calculateOptimalParticleCount(100), equals(60));
+      expect(optimizer.calculateOptimalParticleCount(0), equals(0));
       expect(optimizer.calculateOptimalParticleCount(123.7), equals(74));
     });
 
@@ -260,8 +259,8 @@ void main() {
     });
 
     test('calculateOptimalParticleCount returns Android values', () {
-      expect(optimizer.calculateOptimalParticleCount(100.0), equals(60));
-      expect(optimizer.calculateOptimalParticleCount(0.0), equals(0));
+      expect(optimizer.calculateOptimalParticleCount(100), equals(60));
+      expect(optimizer.calculateOptimalParticleCount(0), equals(0));
       expect(optimizer.calculateOptimalParticleCount(123.7), equals(74));
     });
 
@@ -295,8 +294,8 @@ void main() {
     });
 
     test('calculateOptimalParticleCount returns macOS values', () {
-      expect(optimizer.calculateOptimalParticleCount(100.0), equals(120));
-      expect(optimizer.calculateOptimalParticleCount(0.0), equals(0));
+      expect(optimizer.calculateOptimalParticleCount(100), equals(120));
+      expect(optimizer.calculateOptimalParticleCount(0), equals(0));
       expect(optimizer.calculateOptimalParticleCount(123.7), equals(148));
     });
 
@@ -330,8 +329,8 @@ void main() {
     });
 
     test('calculateOptimalParticleCount returns Windows values', () {
-      expect(optimizer.calculateOptimalParticleCount(100.0), equals(120));
-      expect(optimizer.calculateOptimalParticleCount(0.0), equals(0));
+      expect(optimizer.calculateOptimalParticleCount(100), equals(120));
+      expect(optimizer.calculateOptimalParticleCount(0), equals(0));
       expect(optimizer.calculateOptimalParticleCount(123.7), equals(148));
     });
 
@@ -365,8 +364,8 @@ void main() {
     });
 
     test('calculateOptimalParticleCount returns Linux values', () {
-      expect(optimizer.calculateOptimalParticleCount(100.0), equals(120));
-      expect(optimizer.calculateOptimalParticleCount(0.0), equals(0));
+      expect(optimizer.calculateOptimalParticleCount(100), equals(120));
+      expect(optimizer.calculateOptimalParticleCount(0), equals(0));
       expect(optimizer.calculateOptimalParticleCount(123.7), equals(148));
     });
 
@@ -400,8 +399,8 @@ void main() {
     });
 
     test('calculateOptimalParticleCount returns fallback values', () {
-      expect(optimizer.calculateOptimalParticleCount(100.0), equals(100));
-      expect(optimizer.calculateOptimalParticleCount(0.0), equals(0));
+      expect(optimizer.calculateOptimalParticleCount(100), equals(100));
+      expect(optimizer.calculateOptimalParticleCount(0), equals(0));
       expect(optimizer.calculateOptimalParticleCount(123.7), equals(124));
     });
 
@@ -430,8 +429,8 @@ void main() {
       const optimizer = PlatformOptimizer();
 
       expect(
-        PlatformOptimizer.getOptimalParticleCount(100.0),
-        equals(optimizer.calculateOptimalParticleCount(100.0)),
+        PlatformOptimizer.getOptimalParticleCount(100),
+        equals(optimizer.calculateOptimalParticleCount(100)),
       );
 
       expect(
@@ -466,8 +465,8 @@ void main() {
       );
 
       expect(
-        ios.calculateOptimalParticleCount(100.0),
-        equals(android.calculateOptimalParticleCount(100.0)),
+        ios.calculateOptimalParticleCount(100),
+        equals(android.calculateOptimalParticleCount(100)),
       );
       expect(
         ios.calculateOptimalFrameRate(),
@@ -495,12 +494,12 @@ void main() {
       );
 
       expect(
-        macos.calculateOptimalParticleCount(100.0),
-        equals(windows.calculateOptimalParticleCount(100.0)),
+        macos.calculateOptimalParticleCount(100),
+        equals(windows.calculateOptimalParticleCount(100)),
       );
       expect(
-        macos.calculateOptimalParticleCount(100.0),
-        equals(linux.calculateOptimalParticleCount(100.0)),
+        macos.calculateOptimalParticleCount(100),
+        equals(linux.calculateOptimalParticleCount(100)),
       );
 
       expect(
@@ -543,7 +542,7 @@ void main() {
       ];
 
       for (final platform in platforms) {
-        expect(platform.calculateOptimalParticleCount(0.0), equals(0));
+        expect(platform.calculateOptimalParticleCount(0), equals(0));
       }
     });
 
@@ -559,7 +558,7 @@ void main() {
       ];
 
       for (final platform in platforms) {
-        expect(platform.calculateOptimalParticleCount(100.0), greaterThan(0));
+        expect(platform.calculateOptimalParticleCount(100), greaterThan(0));
         expect(
           platform.calculateOptimalFrameRate().inMicroseconds,
           greaterThan(0),
@@ -597,8 +596,8 @@ void main() {
       ];
 
       for (final platform in platforms) {
-        final small = platform.calculateOptimalParticleCount(50.0);
-        final large = platform.calculateOptimalParticleCount(100.0);
+        final small = platform.calculateOptimalParticleCount(50);
+        final large = platform.calculateOptimalParticleCount(100);
         expect(large, greaterThan(small));
       }
     });
@@ -612,8 +611,8 @@ void main() {
       ];
 
       for (final platform in platforms) {
-        final count1 = platform.calculateOptimalParticleCount(75.0);
-        final count2 = platform.calculateOptimalParticleCount(75.0);
+        final count1 = platform.calculateOptimalParticleCount(75);
+        final count2 = platform.calculateOptimalParticleCount(75);
         expect(count1, equals(count2));
 
         final rate1 = platform.calculateOptimalFrameRate();

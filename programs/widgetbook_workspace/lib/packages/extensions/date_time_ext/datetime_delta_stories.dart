@@ -1,16 +1,15 @@
 // datetime_delta_text.stories.dart
 
-// ignore_for_file: depend_on_referenced_packages
 
+import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
-import 'package:extensions/extensions.dart';
 
 @widgetbook.UseCase(name: 'Basic Demo', type: DateTimeDeltaText)
 Widget buildDateTimeDeltaTextDefault(BuildContext context) {
   final sampleDeltas = [
-    DateTimeDelta(
+    const DateTimeDelta(
       years: 2,
       months: 3,
       days: 15,
@@ -19,15 +18,13 @@ Widget buildDateTimeDeltaTextDefault(BuildContext context) {
       seconds: 45,
       isFuture: true,
     ),
-    DateTimeDelta(days: 5, hours: 2, minutes: 15, isFuture: false),
-    DateTimeDelta(minutes: 45, seconds: 30, isFuture: true),
-    DateTimeDelta(isFuture: true),
+    const DateTimeDelta(days: 5, hours: 2, minutes: 15, isFuture: false),
+    const DateTimeDelta(minutes: 45, seconds: 30, isFuture: true),
+    const DateTimeDelta(isFuture: true),
   ];
 
   final deltaIndex = context.knobs.int.slider(
     label: 'Delta Sample',
-    initialValue: 0,
-    min: 0,
     max: sampleDeltas.length - 1,
   );
 
@@ -48,7 +45,7 @@ Widget buildDateTimeDeltaTextDefault(BuildContext context) {
 
 @widgetbook.UseCase(name: 'Full Features', type: DateTimeDeltaText)
 Widget buildDateTimeDeltaTextFull(BuildContext context) {
-  final delta = DateTimeDelta(
+  const delta = DateTimeDelta(
     years: 1,
     months: 6,
     days: 10,
@@ -59,12 +56,10 @@ Widget buildDateTimeDeltaTextFull(BuildContext context) {
 
   final showLeading = context.knobs.boolean(
     label: 'Show Leading Icon',
-    initialValue: false,
   );
 
   final showTrailing = context.knobs.boolean(
     label: 'Show Trailing Icon',
-    initialValue: false,
   );
 
   final fontSize = context.knobs.double.slider(

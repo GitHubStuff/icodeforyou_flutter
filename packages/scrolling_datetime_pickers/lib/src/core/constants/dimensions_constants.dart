@@ -3,19 +3,19 @@
 /// Default dimensions for picker widgets
 class DimensionConstants {
   /// Default width for portrait orientation
-  static const double defaultPortraitWidth = 175.0;
+  static const double defaultPortraitWidth = 175;
 
   /// Default height for portrait orientation
-  static const double defaultPortraitHeight = 200.0;
+  static const double defaultPortraitHeight = 200;
 
   /// Default width for landscape orientation
-  static const double defaultLandscapeWidth = 175.0;
+  static const double defaultLandscapeWidth = 175;
 
   /// Default height for landscape orientation
-  static const double defaultLandscapeHeight = 200.0;
+  static const double defaultLandscapeHeight = 200;
 
   /// Height of each item in the scroll wheel
-  static const double itemExtent = 40.0;
+  static const double itemExtent = 40;
 
   /// Magnification factor for selected item
   static const double magnification = 1.2;
@@ -27,7 +27,7 @@ class DimensionConstants {
   static const double diameterRatio = 1.1;
 
   /// Spacing between picker columns
-  static const double columnSpacing = 0.0;
+  static const double columnSpacing = 0;
 
   /// Height of divider lines
   static const double dividerThickness = 1.5;
@@ -39,5 +39,5 @@ class DimensionConstants {
   static const double perspectiveValue = 0.003;
 
   /// Border radius for picker container
-  static const double borderRadius = 12.0;
+  static const double borderRadius = 12;
 }

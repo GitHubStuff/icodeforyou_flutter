@@ -1,16 +1,16 @@
 // test/theme_package_test.dart
 
-import 'package:fpdart/fpdart.dart' hide State;
+// ignore_for_file: lines_longer_than_80_chars, document_ignores, inference_failure_on_instance_creation
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fpdart/fpdart.dart' hide State;
 import 'package:theme_package/theme_package.dart';
 
 void main() {
   const validDbName = 'test_db_1234567890ab';
 
-  setUp(() {
-    ThemePackage.reset();
-  });
+  setUp(ThemePackage.reset);
 
   group('ThemePackage', () {
     group('isInitialized', () {
@@ -179,7 +179,6 @@ void main() {
           final result = await ThemePackage.initialize(
             databaseName: validDbName,
             customPath: '/nonexistent/readonly/path',
-            inMemory: false,
           );
 
           expect(result.isLeft(), isTrue);

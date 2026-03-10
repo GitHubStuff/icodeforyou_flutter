@@ -1,5 +1,5 @@
 // test/src/_controller_test.dart
-// ignore_for_file: simplify_variable_pattern, comment_references
+// ignore_for_file: lines_longer_than_80_chars, simplify_variable_pattern, comment_references
 
 import 'dart:async';
 

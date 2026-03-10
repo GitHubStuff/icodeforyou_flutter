@@ -276,7 +276,7 @@ class _ScrollingDatePickerContentState
                     : null,
               ),
             ),
-            SizedBox(height: DimensionConstants.itemExtent),
+            const SizedBox(height: DimensionConstants.itemExtent),
             Container(
               height: widget.dividerConfiguration.thickness,
               margin: EdgeInsets.only(

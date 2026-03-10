@@ -1,6 +1,8 @@
 // datetime_delta_format_test.dart - COMPREHENSIVE TEST SUITE
 // Tests for DateTimeDelta.format mini-DSL
 
+// ignore_for_file: document_ignores, avoid_redundant_argument_values
+
 import 'package:extensions/datetime_ext/datetime_delta.dart' show DateTimeDelta;
 import 'package:extensions/datetime_ext/datetime_delta_format.dart';
 import 'package:extensions/datetime_ext/datetime_unit.dart' show DateTimeUnit;
@@ -10,8 +12,8 @@ void main() {
   group('Basic formatting', () {
     test('default format works', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 15, 10, 0, 0),
-        endTime: DateTime.utc(2025, 1, 15, 12, 0, 0),
+        startTime: DateTime.utc(2024, 1, 15, 10),
+        endTime: DateTime.utc(2025, 1, 15, 12),
       );
       final result = delta.format();
       expect(result, isNotEmpty);
@@ -20,7 +22,7 @@ void main() {
 
     test('simple hour difference', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
+        startTime: DateTime.utc(2024, 1, 1, 10),
         endTime: DateTime.utc(2024, 1, 1, 12, 30, 45),
       );
       expect(delta.hours, 2);
@@ -30,8 +32,8 @@ void main() {
 
     test('zero difference', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
-        endTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
+        startTime: DateTime.utc(2024, 1, 1, 10),
+        endTime: DateTime.utc(2024, 1, 1, 10),
       );
       expect(delta.years ?? 0, 0);
       expect(delta.hours ?? 0, 0);
@@ -39,11 +41,11 @@ void main() {
     });
   });
 
-  group('Star gating (\$*{...})', () {
+  group(r'Star gating ($*{...})', () {
     test('shows values when greater than zero', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
-        endTime: DateTime.utc(2024, 1, 1, 12, 30, 0),
+        startTime: DateTime.utc(2024, 1, 1, 10),
+        endTime: DateTime.utc(2024, 1, 1, 12, 30),
       );
 
       final result = delta.format(r'$*{h} $*{m}');
@@ -52,8 +54,8 @@ void main() {
 
     test('hides values when zero', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
-        endTime: DateTime.utc(2024, 1, 1, 12, 0, 0),
+        startTime: DateTime.utc(2024, 1, 1, 10),
+        endTime: DateTime.utc(2024, 1, 1, 12),
       );
 
       final result = delta.format(r'$*{Y} $*{M} $*{D} $*{h} $*{m} $*{s}');
@@ -62,8 +64,8 @@ void main() {
 
     test('literal text outside braces always shows', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
-        endTime: DateTime.utc(2024, 1, 1, 12, 0, 0),
+        startTime: DateTime.utc(2024, 1, 1, 10),
+        endTime: DateTime.utc(2024, 1, 1, 12),
       );
 
       final result = delta.format(r'$*{Y}y $*{h}h');
@@ -72,8 +74,8 @@ void main() {
 
     test('literal text inside braces conditionally shows', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
-        endTime: DateTime.utc(2024, 1, 1, 12, 0, 0),
+        startTime: DateTime.utc(2024, 1, 1, 10),
+        endTime: DateTime.utc(2024, 1, 1, 12),
       );
 
       final result = delta.format(r'$*{Yy} $*{hh}');
@@ -81,11 +83,11 @@ void main() {
     });
   });
 
-  group('Unconditional segments (\${...})', () {
+  group(r'Unconditional segments (${...})', () {
     test('always shows values even when zero', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
-        endTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
+        startTime: DateTime.utc(2024, 1, 1, 10),
+        endTime: DateTime.utc(2024, 1, 1, 10),
       );
 
       final result = delta.format(r'${Y} ${M} ${D} ${h}');
@@ -94,8 +96,8 @@ void main() {
 
     test('star inside braces works like star outside', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
-        endTime: DateTime.utc(2024, 1, 1, 12, 0, 0),
+        startTime: DateTime.utc(2024, 1, 1, 10),
+        endTime: DateTime.utc(2024, 1, 1, 12),
       );
 
       final result = delta.format(r'${*Y} ${*h} ${D}');
@@ -106,8 +108,8 @@ void main() {
   group('Cascade gating (>)', () {
     test('shows when higher units are non-zero', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 0, 0, 0),
-        endTime: DateTime.utc(2024, 1, 3, 0, 0, 0),
+        startTime: DateTime.utc(2024, 1),
+        endTime: DateTime.utc(2024, 1, 3),
       );
 
       final result = delta.format(r'${D} $*{h>} $*{m>} $*{s>}');
@@ -116,8 +118,8 @@ void main() {
 
     test('hides when no higher units and own value zero', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 10, 5, 0),
-        endTime: DateTime.utc(2024, 1, 1, 12, 7, 0),
+        startTime: DateTime.utc(2024, 1, 1, 10, 5),
+        endTime: DateTime.utc(2024, 1, 1, 12, 7),
       );
 
       final result = delta.format(r'$*{h>} $*{m>} $*{s>}');
@@ -126,8 +128,8 @@ void main() {
 
     test('suffix appears when segment renders', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
-        endTime: DateTime.utc(2024, 1, 1, 10, 3, 0),
+        startTime: DateTime.utc(2024, 1, 1, 10),
+        endTime: DateTime.utc(2024, 1, 1, 10, 3),
       );
 
       final result = delta.format(r'$*{m>min}');
@@ -136,8 +138,8 @@ void main() {
 
     test('suffix hidden when segment does not render', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
-        endTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
+        startTime: DateTime.utc(2024, 1, 1, 10),
+        endTime: DateTime.utc(2024, 1, 1, 10),
       );
 
       final result = delta.format(r'$*{m>min}');
@@ -148,8 +150,8 @@ void main() {
   group('Bracket formatting ([...])', () {
     test('retains brackets in output', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2020, 1, 1),
-        endTime: DateTime.utc(2021, 1, 1),
+        startTime: DateTime.utc(2020),
+        endTime: DateTime.utc(2021),
       );
 
       final result = delta.format(r'$*{[YY]}');
@@ -168,8 +170,8 @@ void main() {
 
     test('works with literals inside brackets', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1),
-        endTime: DateTime.utc(2024, 2, 1),
+        startTime: DateTime.utc(2024),
+        endTime: DateTime.utc(2024, 2),
       );
 
       final result = delta.format(r'$*{[MM]months}');
@@ -200,8 +202,8 @@ void main() {
 
     test('excessive width still pads', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 1, 0, 0),
-        endTime: DateTime.utc(2024, 1, 1, 2, 0, 0),
+        startTime: DateTime.utc(2024, 1, 1, 1),
+        endTime: DateTime.utc(2024, 1, 1, 2),
       );
 
       final result = delta.format(r'${hhhhh}');
@@ -257,7 +259,6 @@ void main() {
           10,
         ), // CORRECTED: same as non-truncate test
         precision: DateTimeUnit.minute,
-        truncate: true,
       );
 
       // From 0:0:50 to 0:2:10 = 1 minute 20 seconds
@@ -295,8 +296,8 @@ void main() {
   group('Negative deltas', () {
     test('past intervals get negative sign', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 2, 12, 0, 0),
-        endTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
+        startTime: DateTime.utc(2024, 1, 2, 12),
+        endTime: DateTime.utc(2024, 1, 1, 10),
       );
 
       final result = delta.format(r'${D} ${h}');
@@ -305,8 +306,8 @@ void main() {
 
     test('future intervals have no sign', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
-        endTime: DateTime.utc(2024, 1, 2, 12, 0, 0),
+        startTime: DateTime.utc(2024, 1, 1, 10),
+        endTime: DateTime.utc(2024, 1, 2, 12),
       );
 
       final result = delta.format(r'${D} ${h}');
@@ -317,7 +318,7 @@ void main() {
   group('Complex format strings', () {
     test('mixed literals and segments', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
+        startTime: DateTime.utc(2024, 1, 1, 10),
         endTime: DateTime.utc(2024, 1, 1, 12, 30, 45),
       );
 
@@ -327,7 +328,7 @@ void main() {
 
     test('complex cascade with separators', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 10, 0, 0),
+        startTime: DateTime.utc(2024, 1, 1, 10),
         endTime: DateTime.utc(2024, 1, 3, 12, 30, 45),
       );
 
@@ -337,7 +338,7 @@ void main() {
 
     test('all unit types together', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2020, 1, 1, 0, 0, 0, 0),
+        startTime: DateTime.utc(2020, 1, 1),
         endTime: DateTime.utc(2024, 3, 5, 6, 7, 8, 9),
         precision: DateTimeUnit.usec,
       );
@@ -355,7 +356,7 @@ void main() {
   group('Edge cases and error handling', () {
     test('empty format string', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1),
+        startTime: DateTime.utc(2024),
         endTime: DateTime.utc(2024, 1, 2),
       );
 
@@ -365,7 +366,7 @@ void main() {
 
     test('only literals', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1),
+        startTime: DateTime.utc(2024),
         endTime: DateTime.utc(2024, 1, 2),
       );
 
@@ -375,7 +376,7 @@ void main() {
 
     test('malformed segments ignored', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1),
+        startTime: DateTime.utc(2024),
         endTime: DateTime.utc(2024, 1, 2),
       );
 
@@ -388,7 +389,7 @@ void main() {
 
     test('unclosed segments treated as literals', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1),
+        startTime: DateTime.utc(2024),
         endTime: DateTime.utc(2024, 1, 2),
       );
 
@@ -399,14 +400,14 @@ void main() {
 
     test('escaped dollar signs', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1),
+        startTime: DateTime.utc(2024),
         endTime: DateTime.utc(2024, 1, 2),
       );
 
       final result = delta.format(r'$ not a segment ${D}');
       expect(
         result,
-        '\$ not a segment 1',
+        r'$ not a segment 1',
       ); // CORRECTED: formatter doesn't escape $
     });
   });
@@ -415,7 +416,7 @@ void main() {
     test('leap year handling', () {
       final delta = DateTimeDelta.delta(
         startTime: DateTime.utc(2020, 2, 28),
-        endTime: DateTime.utc(2020, 3, 1),
+        endTime: DateTime.utc(2020, 3),
       );
 
       expect(delta.days, 2); // Feb 28 -> 29 -> Mar 1
@@ -424,7 +425,7 @@ void main() {
     test('month end borrowing', () {
       final delta = DateTimeDelta.delta(
         startTime: DateTime.utc(2024, 1, 31),
-        endTime: DateTime.utc(2024, 3, 1),
+        endTime: DateTime.utc(2024, 3),
       );
 
       // Algorithm should handle month-end correctly
@@ -447,7 +448,7 @@ void main() {
   group('Field set filtering', () {
     test('starting at day excludes years and months', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1),
+        startTime: DateTime.utc(2024),
         endTime: DateTime.utc(2025, 2, 3),
         firstDateTimeUnit: DateTimeUnit.day,
       );
@@ -456,7 +457,7 @@ void main() {
       expect(delta.months, isNull);
       expect(delta.days, isNotNull);
       expect(
-        delta.days!,
+        delta.days,
         greaterThan(1),
       ); // CORRECTED: may not convert to total days yet
     });
@@ -478,7 +479,7 @@ void main() {
   group('Real-world scenarios', () {
     test('uptime display', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 0, 0, 0),
+        startTime: DateTime.utc(2024, 1),
         endTime: DateTime.utc(2024, 1, 1, 5, 30, 45),
       );
 
@@ -498,7 +499,7 @@ void main() {
 
     test('timer display', () {
       final delta = DateTimeDelta.delta(
-        startTime: DateTime.utc(2024, 1, 1, 0, 0, 0, 0),
+        startTime: DateTime.utc(2024, 1, 1),
         endTime: DateTime.utc(2024, 1, 1, 0, 1, 23, 456),
         precision: DateTimeUnit.msec,
       );

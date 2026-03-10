@@ -1,9 +1,11 @@
 // nosql_ce_box.dart
+// ignore_for_file: public_member_api_docs
+
 import 'dart:async' show FutureOr;
 
 import 'package:hive_ce_flutter/hive_flutter.dart' show Box;
 
-import '../abstract/nosql_box_abstract.dart' show NoSqlBoxAbstract;
+import 'package:nosql/abstract/nosql_box_abstract.dart' show NoSqlBoxAbstract;
 
 class NoSqlCEBox<T> implements NoSqlBoxAbstract<T> {
   NoSqlCEBox(this._box);

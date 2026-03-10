@@ -12,10 +12,11 @@
 // confirming. The result is shown in a SnackBar.
 // ---------------------------------------------------------------------------
 
-import 'package:flutter/material.dart';
-import 'package:adaptive_modal/adaptive_modal.dart';
+// ignore_for_file: document_ignores, public_member_api_docs
 
-import 'modal_content.dart';
+import 'package:adaptive_modal/adaptive_modal.dart';
+import 'package:adaptive_modal_example/modal_content.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(const AdaptiveModalExampleApp());
@@ -49,9 +50,9 @@ class ExampleScreen extends StatefulWidget {
 }
 
 class _ExampleScreenState extends State<ExampleScreen> {
-  final _defaultAnchor = GlobalKey();
-  final _customIconAnchor = GlobalKey();
-  final _noBarrierAnchor = GlobalKey();
+  final GlobalKey<State<StatefulWidget>> _defaultAnchor = GlobalKey();
+  final GlobalKey<State<StatefulWidget>> _customIconAnchor = GlobalKey();
+  final GlobalKey<State<StatefulWidget>> _noBarrierAnchor = GlobalKey();
 
   late final AdaptiveModalController<String> _defaultModal;
   late final AdaptiveModalController<String> _customIconModal;

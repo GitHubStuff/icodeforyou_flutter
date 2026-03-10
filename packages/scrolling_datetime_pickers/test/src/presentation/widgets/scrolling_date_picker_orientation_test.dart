@@ -1,5 +1,7 @@
 // test/src/presentation/widgets/scrolling_date_picker_orientation_test.dart
 
+// ignore_for_file: document_ignores, lines_longer_than_80_chars
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -130,7 +132,6 @@ void main() {
             body: ScrollingDatePicker(
               initialDate: DateTime(2024, 6, 15),
               onDateChanged: (_) {},
-              dayAscending: true, // day-month-year
             ),
           ),
         ),
@@ -190,7 +191,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: ScrollingDatePicker(
-              initialDate: DateTime(2024, 1, 1),
+              initialDate: DateTime(2024),
               onDateChanged: (_) {},
             ),
           ),
@@ -249,7 +250,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: ScrollingDatePicker(
-              initialDate: DateTime(2024, 1, 1),
+              initialDate: DateTime(2024),
               onDateChanged: (_) {},
             ),
           ),

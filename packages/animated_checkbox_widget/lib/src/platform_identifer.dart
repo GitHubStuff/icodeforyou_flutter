@@ -15,12 +15,6 @@ abstract class PlatformIdentifier {
 
 /// Testable implementation that allows dependency injection
 class DefaultPlatformIdentifier extends PlatformIdentifier {
-  final bool Function() webChecker;
-  final bool Function() iosChecker;
-  final bool Function() androidChecker;
-  final bool Function() macosChecker;
-  final bool Function() windowsChecker;
-  final bool Function() linuxChecker;
 
   const DefaultPlatformIdentifier({
     this.webChecker = _defaultWebChecker,
@@ -30,6 +24,12 @@ class DefaultPlatformIdentifier extends PlatformIdentifier {
     this.windowsChecker = _defaultWindowsChecker,
     this.linuxChecker = _defaultLinuxChecker,
   });
+  final bool Function() webChecker;
+  final bool Function() iosChecker;
+  final bool Function() androidChecker;
+  final bool Function() macosChecker;
+  final bool Function() windowsChecker;
+  final bool Function() linuxChecker;
 
   // Default implementations
   static bool _defaultWebChecker() => kIsWeb;

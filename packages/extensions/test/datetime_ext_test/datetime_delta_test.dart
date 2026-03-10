@@ -1,12 +1,14 @@
 // datetime_delta_test.dart
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:extensions/datetime_ext/datetime_ext.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('DateTimeDelta UTC Validation', () {
     test('should reject non-UTC startTime', () {
-      final localTime = DateTime(2023, 6, 15, 10, 0, 0);
-      final utcTime = DateTime.utc(2023, 6, 15, 12, 0, 0);
+      final localTime = DateTime(2023, 6, 15, 10);
+      final utcTime = DateTime.utc(2023, 6, 15, 12);
 
       expect(
         () => DateTimeDelta.delta(startTime: localTime, endTime: utcTime),
@@ -15,8 +17,8 @@ void main() {
     });
 
     test('should reject non-UTC endTime', () {
-      final utcTime = DateTime.utc(2023, 6, 15, 10, 0, 0);
-      final localTime = DateTime(2023, 6, 15, 12, 0, 0);
+      final utcTime = DateTime.utc(2023, 6, 15, 10);
+      final localTime = DateTime(2023, 6, 15, 12);
 
       expect(
         () => DateTimeDelta.delta(startTime: utcTime, endTime: localTime),
@@ -25,8 +27,8 @@ void main() {
     });
 
     test('should accept valid UTC times', () {
-      final start = DateTime.utc(2023, 6, 15, 10, 0, 0);
-      final end = DateTime.utc(2023, 6, 15, 12, 0, 0);
+      final start = DateTime.utc(2023, 6, 15, 10);
+      final end = DateTime.utc(2023, 6, 15, 12);
 
       expect(
         () => DateTimeDelta.delta(startTime: start, endTime: end),
@@ -37,15 +39,14 @@ void main() {
     test(
       'should reject firstDateTimeUnit smaller than precision with AssertionError',
       () {
-        final start = DateTime.utc(2023, 6, 15, 10, 0, 0);
-        final end = DateTime.utc(2023, 6, 15, 12, 0, 0);
+        final start = DateTime.utc(2023, 6, 15, 10);
+        final end = DateTime.utc(2023, 6, 15, 12);
 
         expect(
           () => DateTimeDelta.delta(
             startTime: start,
             endTime: end,
             firstDateTimeUnit: DateTimeUnit.msec,
-            precision: DateTimeUnit.second,
           ),
           throwsA(isA<ArgumentError>()),
         );
@@ -75,14 +76,12 @@ void main() {
         6,
         15,
         12,
-        0,
-        0,
       ).millisecondsSinceEpoch;
       final time1 = DateTime.fromMillisecondsSinceEpoch(
         milliseconds,
         isUtc: true,
       );
-      final time2 = DateTime.utc(2023, 6, 15, 12, 0, 0);
+      final time2 = DateTime.utc(2023, 6, 15, 12);
 
       final delta = DateTimeDelta.delta(startTime: time1, endTime: time2);
 
@@ -99,8 +98,8 @@ void main() {
 
   group('DateTimeDelta Basic Future Time Calculations', () {
     test('should calculate simple year difference', () {
-      final start = DateTime.utc(2020, 1, 1);
-      final end = DateTime.utc(2023, 1, 1);
+      final start = DateTime.utc(2020);
+      final end = DateTime.utc(2023);
 
       final delta = DateTimeDelta.delta(startTime: start, endTime: end);
 
@@ -111,8 +110,8 @@ void main() {
     });
 
     test('should calculate simple month difference', () {
-      final start = DateTime.utc(2023, 1, 1);
-      final end = DateTime.utc(2023, 6, 1);
+      final start = DateTime.utc(2023);
+      final end = DateTime.utc(2023, 6);
 
       final delta = DateTimeDelta.delta(startTime: start, endTime: end);
 
@@ -123,7 +122,7 @@ void main() {
     });
 
     test('should calculate simple day difference', () {
-      final start = DateTime.utc(2023, 6, 1);
+      final start = DateTime.utc(2023, 6);
       final end = DateTime.utc(2023, 6, 15);
 
       final delta = DateTimeDelta.delta(startTime: start, endTime: end);
@@ -171,8 +170,8 @@ void main() {
 
   group('DateTimeDelta Basic Past Time Calculations', () {
     test('should calculate past year difference', () {
-      final start = DateTime.utc(2023, 1, 1);
-      final end = DateTime.utc(2020, 1, 1);
+      final start = DateTime.utc(2023);
+      final end = DateTime.utc(2020);
 
       final delta = DateTimeDelta.delta(startTime: start, endTime: end);
 
@@ -183,8 +182,8 @@ void main() {
     });
 
     test('should calculate past month difference', () {
-      final start = DateTime.utc(2023, 6, 1);
-      final end = DateTime.utc(2023, 1, 1);
+      final start = DateTime.utc(2023, 6);
+      final end = DateTime.utc(2023);
 
       final delta = DateTimeDelta.delta(startTime: start, endTime: end);
 
@@ -195,7 +194,7 @@ void main() {
     });
 
     test('should handle symmetric past/future calculations', () {
-      final base = DateTime.utc(2023, 6, 15, 12, 0, 0);
+      final base = DateTime.utc(2023, 6, 15, 12);
       final future = DateTime.utc(2023, 8, 20, 15, 30, 45);
 
       final futureDelta = DateTimeDelta.delta(startTime: base, endTime: future);
@@ -216,8 +215,8 @@ void main() {
 
   group('DateTimeDelta Direction (isFuture) Tests', () {
     test('should correctly identify future direction', () {
-      final start = DateTime.utc(2023, 1, 1);
-      final end = DateTime.utc(2023, 6, 1);
+      final start = DateTime.utc(2023);
+      final end = DateTime.utc(2023, 6);
 
       final delta = DateTimeDelta.delta(startTime: start, endTime: end);
 
@@ -227,8 +226,8 @@ void main() {
     });
 
     test('should correctly identify past direction', () {
-      final start = DateTime.utc(2023, 6, 1);
-      final end = DateTime.utc(2023, 1, 1);
+      final start = DateTime.utc(2023, 6);
+      final end = DateTime.utc(2023);
 
       final delta = DateTimeDelta.delta(startTime: start, endTime: end);
 
@@ -238,7 +237,7 @@ void main() {
     });
 
     test('should handle microsecond future difference', () {
-      final start = DateTime.utc(2023, 6, 15, 12, 0, 0, 0, 0);
+      final start = DateTime.utc(2023, 6, 15, 12);
       final end = DateTime.utc(2023, 6, 15, 12, 0, 0, 0, 1);
 
       final delta = DateTimeDelta.delta(
@@ -254,7 +253,7 @@ void main() {
 
     test('should handle microsecond past difference', () {
       final start = DateTime.utc(2023, 6, 15, 12, 0, 0, 0, 1);
-      final end = DateTime.utc(2023, 6, 15, 12, 0, 0, 0, 0);
+      final end = DateTime.utc(2023, 6, 15, 12);
 
       final delta = DateTimeDelta.delta(
         startTime: start,
@@ -271,7 +270,7 @@ void main() {
   group('DateTimeDelta Leap Year Tests', () {
     test('Feb 27 to Mar 1 in leap year 2020', () {
       final start = DateTime.utc(2020, 2, 27);
-      final end = DateTime.utc(2020, 3, 1);
+      final end = DateTime.utc(2020, 3);
 
       final delta = DateTimeDelta.delta(startTime: start, endTime: end);
 
@@ -285,7 +284,7 @@ void main() {
 
     test('Feb 27 to Mar 1 in non-leap year 2021', () {
       final start = DateTime.utc(2021, 2, 27);
-      final end = DateTime.utc(2021, 3, 1);
+      final end = DateTime.utc(2021, 3);
 
       final delta = DateTimeDelta.delta(startTime: start, endTime: end);
 
@@ -369,7 +368,6 @@ void main() {
         startTime: start,
         endTime: end,
         precision: DateTimeUnit.year,
-        truncate: true,
       );
 
       expect(delta.years, equals(3));
@@ -408,8 +406,6 @@ void main() {
       final delta = DateTimeDelta.delta(
         startTime: start,
         endTime: end,
-        precision: DateTimeUnit.second,
-        truncate: true,
       );
 
       expect(delta.minutes, equals(2));
@@ -582,8 +578,6 @@ void main() {
       final delta = DateTimeDelta.delta(
         startTime: start,
         endTime: end,
-        precision: DateTimeUnit.second,
-        truncate: true,
       );
 
       expect(delta.milliseconds, equals(0));
@@ -599,7 +593,6 @@ void main() {
       final delta = DateTimeDelta.delta(
         startTime: start,
         endTime: end,
-        precision: DateTimeUnit.second,
         truncate: false,
       );
 
@@ -617,7 +610,6 @@ void main() {
         startTime: start,
         endTime: end,
         precision: DateTimeUnit.year,
-        truncate: true,
       );
 
       final deltaFalse = DateTimeDelta.delta(
@@ -652,7 +644,6 @@ void main() {
           startTime: start,
           endTime: end,
           precision: precision,
-          truncate: true,
         );
 
         final truncateFalse = DateTimeDelta.delta(
@@ -743,7 +734,7 @@ void main() {
     });
 
     test('microsecond precision boundaries', () {
-      final base = DateTime.utc(2023, 6, 15, 12, 0, 0, 0, 0);
+      final base = DateTime.utc(2023, 6, 15, 12);
 
       for (int i = 1; i <= 10; i++) {
         final end = DateTime.utc(2023, 6, 15, 12, 0, 0, 0, i);
@@ -759,10 +750,10 @@ void main() {
     });
 
     test('millisecond precision boundaries', () {
-      final base = DateTime.utc(2023, 6, 15, 12, 0, 0, 0, 0);
+      final base = DateTime.utc(2023, 6, 15, 12);
 
       for (int i = 1; i <= 10; i++) {
-        final end = DateTime.utc(2023, 6, 15, 12, 0, 0, i, 0);
+        final end = DateTime.utc(2023, 6, 15, 12, 0, 0, i);
         final delta = DateTimeDelta.delta(
           startTime: base,
           endTime: end,
@@ -844,7 +835,6 @@ void main() {
         years: 2,
         months: 0,
         days: 15,
-        hours: null,
         minutes: 30,
         isFuture: true,
       );
@@ -900,13 +890,11 @@ void main() {
     test('handle null fields in equality', () {
       const delta1 = DateTimeDelta(
         years: 1,
-        months: null,
         days: 3,
         isFuture: true,
       );
       const delta2 = DateTimeDelta(
         years: 1,
-        months: null,
         days: 3,
         isFuture: true,
       );
@@ -940,8 +928,8 @@ void main() {
     });
 
     test('project duration calculation', () {
-      final projectStart = DateTime.utc(2023, 1, 15, 9, 0, 0);
-      final projectEnd = DateTime.utc(2023, 6, 30, 17, 30, 0);
+      final projectStart = DateTime.utc(2023, 1, 15, 9);
+      final projectEnd = DateTime.utc(2023, 6, 30, 17, 30);
 
       final duration = DateTimeDelta.delta(
         startTime: projectStart,
@@ -955,8 +943,8 @@ void main() {
     });
 
     test('subscription expiry calculation', () {
-      final subscriptionStart = DateTime.utc(2023, 6, 1);
-      final subscriptionEnd = DateTime.utc(2024, 6, 1);
+      final subscriptionStart = DateTime.utc(2023, 6);
+      final subscriptionEnd = DateTime.utc(2024, 6);
 
       final duration = DateTimeDelta.delta(
         startTime: subscriptionStart,
@@ -979,27 +967,27 @@ void main() {
         },
         {
           'description': 'Project timeline',
-          'start': DateTime.utc(2023, 1, 1, 9, 0, 0),
-          'end': DateTime.utc(2023, 12, 31, 17, 0, 0),
+          'start': DateTime.utc(2023, 1, 1, 9),
+          'end': DateTime.utc(2023, 12, 31, 17),
           'expectedMonths': 11,
         },
         {
           'description': 'Contract duration',
-          'start': DateTime.utc(2023, 6, 1),
+          'start': DateTime.utc(2023, 6),
           'end': DateTime.utc(2026, 5, 31),
           'expectedYears': 2,
         },
         {
           'description': 'Microsecond precision',
-          'start': DateTime.utc(2023, 6, 15, 12, 0, 0, 0, 0),
+          'start': DateTime.utc(2023, 6, 15, 12),
           'end': DateTime.utc(2023, 6, 15, 12, 0, 0, 1, 500),
           'expectedMs': 1,
         },
       ];
 
       for (final scenario in scenarios) {
-        final start = scenario['start'] as DateTime;
-        final end = scenario['end'] as DateTime;
+        final start = scenario['start']! as DateTime;
+        final end = scenario['end']! as DateTime;
 
         final delta = DateTimeDelta.delta(
           startTime: start,
@@ -1009,16 +997,16 @@ void main() {
 
         // Verify expected values where provided
         if (scenario.containsKey('expectedYears')) {
-          expect(delta.years, equals(scenario['expectedYears'] as int));
+          expect(delta.years, equals(scenario['expectedYears']! as int));
         }
         if (scenario.containsKey('expectedMonths')) {
           expect(
             delta.months,
-            greaterThanOrEqualTo(scenario['expectedMonths'] as int),
+            greaterThanOrEqualTo(scenario['expectedMonths']! as int),
           );
         }
         if (scenario.containsKey('expectedMs')) {
-          expect(delta.milliseconds, equals(scenario['expectedMs'] as int));
+          expect(delta.milliseconds, equals(scenario['expectedMs']! as int));
         }
 
         // Verify basic integrity
@@ -1035,7 +1023,7 @@ void main() {
 
   group('DateTimeDelta Performance Tests', () {
     test('handle large date ranges efficiently', () {
-      final start = DateTime.utc(1900, 1, 1);
+      final start = DateTime.utc(1900);
       final end = DateTime.utc(2100, 12, 31);
 
       final stopwatch = Stopwatch()..start();
@@ -1050,7 +1038,7 @@ void main() {
     });
 
     test('handle rapid successive calculations', () {
-      final start = DateTime.utc(2023, 1, 1);
+      final start = DateTime.utc(2023);
       final results = <DateTimeDelta>[];
 
       final stopwatch = Stopwatch()..start();
@@ -1070,7 +1058,7 @@ void main() {
     });
 
     test('maintain precision with microsecond differences', () {
-      final start = DateTime.utc(2023, 6, 15, 12, 0, 0, 0, 0);
+      final start = DateTime.utc(2023, 6, 15, 12);
 
       for (int i = 1; i <= 50; i++) {
         final end = DateTime.utc(2023, 6, 15, 12, 0, 0, 0, i);

@@ -11,6 +11,10 @@
 // the controller directly.
 // ---------------------------------------------------------------------------
 
+// ignore_for_file: document_ignores, public_member_api_docs
+
+import 'package:adaptive_modal/adaptive_modal.dart'
+    show AdaptiveModalController;
 import 'package:flutter/material.dart';
 
 // ---------------------------------------------------------------------------
@@ -23,9 +27,9 @@ import 'package:flutter/material.dart';
 /// is tapped. The caller wires this to [AdaptiveModalController.resolve].
 class ModalContent extends StatefulWidget {
   const ModalContent({
-    super.key,
     required this.label,
     required this.onConfirm,
+    super.key,
   });
 
   final String label;
@@ -133,7 +137,11 @@ class _ItemList extends StatelessWidget {
           ),
           title: Text(item, style: Theme.of(context).textTheme.bodyMedium),
           trailing: isSelected
-              ? Icon(Icons.check, size: 18, color: Theme.of(context).colorScheme.primary)
+              ? Icon(
+                  Icons.check,
+                  size: 18,
+                  color: Theme.of(context).colorScheme.primary,
+                )
               : const Icon(Icons.chevron_right, size: 18),
           onTap: () => onSelected(item),
         );

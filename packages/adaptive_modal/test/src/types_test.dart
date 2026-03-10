@@ -1,4 +1,6 @@
 // test/src/types_test.dart
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:adaptive_modal/src/types.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,13 +28,13 @@ void main() {
   // -------------------------------------------------------------------------
 
   group('AdaptiveModalConfig custom values', () {
-    final config = AdaptiveModalConfig(
-      closeIcon: const Icon(Icons.arrow_back),
+    const config = AdaptiveModalConfig(
+      closeIcon: Icon(Icons.arrow_back),
       barrierDismissible: false,
       barrierColor: Colors.red,
-      maxWidth: 300.0,
-      maxHeight: 500.0,
-      animationDuration: const Duration(milliseconds: 400),
+      maxWidth: 300,
+      maxHeight: 500,
+      animationDuration: Duration(milliseconds: 400),
       animationCurve: Curves.bounceIn,
       hapticFeedback: false,
     );
@@ -104,13 +106,13 @@ void main() {
     });
 
     test('overrides maxWidth', () {
-      final copy = base.copyWith(maxWidth: 320.0);
+      final copy = base.copyWith(maxWidth: 320);
       expect(copy.maxWidth, 320.0);
       expect(copy.maxHeight, base.maxHeight);
     });
 
     test('overrides maxHeight', () {
-      final copy = base.copyWith(maxHeight: 600.0);
+      final copy = base.copyWith(maxHeight: 600);
       expect(copy.maxHeight, 600.0);
     });
 
@@ -136,7 +138,7 @@ void main() {
     });
 
     test('preserves all other fields when one is overridden', () {
-      final copy = base.copyWith(maxWidth: 350.0);
+      final copy = base.copyWith(maxWidth: 350);
       expect(copy.barrierDismissible, base.barrierDismissible);
       expect(copy.barrierColor, base.barrierColor);
       expect(copy.maxHeight, base.maxHeight);
@@ -162,7 +164,7 @@ void main() {
 
     test('different barrierDismissible are not equal', () {
       expect(
-        const AdaptiveModalConfig(barrierDismissible: true),
+        const AdaptiveModalConfig(),
         isNot(equals(const AdaptiveModalConfig(barrierDismissible: false))),
       );
     });
@@ -177,27 +179,27 @@ void main() {
     test('different maxWidth are not equal', () {
       expect(
         const AdaptiveModalConfig(maxWidth: 300),
-        isNot(equals(const AdaptiveModalConfig(maxWidth: 400))),
+        isNot(equals(const AdaptiveModalConfig())),
       );
     });
 
     test('different maxHeight are not equal', () {
       expect(
         const AdaptiveModalConfig(maxHeight: 500),
-        isNot(equals(const AdaptiveModalConfig(maxHeight: 700))),
+        isNot(equals(const AdaptiveModalConfig())),
       );
     });
 
     test('different animationDuration are not equal', () {
       expect(
         const AdaptiveModalConfig(animationDuration: Duration(milliseconds: 100)),
-        isNot(equals(const AdaptiveModalConfig(animationDuration: Duration(milliseconds: 200)))),
+        isNot(equals(const AdaptiveModalConfig())),
       );
     });
 
     test('different hapticFeedback are not equal', () {
       expect(
-        const AdaptiveModalConfig(hapticFeedback: true),
+        const AdaptiveModalConfig(),
         isNot(equals(const AdaptiveModalConfig(hapticFeedback: false))),
       );
     });
@@ -222,7 +224,7 @@ void main() {
     test('different configs have different hashCodes', () {
       expect(
         const AdaptiveModalConfig(maxWidth: 300).hashCode,
-        isNot(equals(const AdaptiveModalConfig(maxWidth: 400).hashCode)),
+        isNot(equals(const AdaptiveModalConfig().hashCode)),
       );
     });
   });

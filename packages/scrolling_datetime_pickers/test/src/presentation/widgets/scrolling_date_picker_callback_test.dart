@@ -100,7 +100,7 @@ void main() {
 
       tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
         SystemChannels.platform,
-        (MethodCall methodCall) async {
+        (methodCall) async {
           log.add(methodCall);
           return null;
         },
@@ -111,7 +111,6 @@ void main() {
           home: Scaffold(
             body: ScrollingDatePicker(
               onDateChanged: (_) {},
-              enableHaptics: true,
             ),
           ),
         ),
@@ -140,7 +139,7 @@ void main() {
 
       tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
         SystemChannels.platform,
-        (MethodCall methodCall) async {
+        (methodCall) async {
           log.add(methodCall);
           return null;
         },

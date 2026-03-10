@@ -1,16 +1,14 @@
 // abstractions_part_two_test.dart
 // Flutter 3.32.8 / Dart ">3.10.0"
 // Advanced edge cases and scenarios not covered in main tests
+// ignore_for_file: lines_longer_than_80_chars, avoid_catches_without_on_clauses, document_ignores
+
 import 'package:abstractions/abstractions.dart' show ExtendedStatefulWidget;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Error-throwing test widget to test exception handling
 class ErrorThrowingWidget extends StatefulWidget {
-  final bool throwInInit;
-  final bool throwInObserver;
-  final bool throwInDispose;
-  final bool throwInAfterFirstLayout;
 
   const ErrorThrowingWidget({
     super.key,
@@ -19,6 +17,10 @@ class ErrorThrowingWidget extends StatefulWidget {
     this.throwInDispose = false,
     this.throwInAfterFirstLayout = false,
   });
+  final bool throwInInit;
+  final bool throwInObserver;
+  final bool throwInDispose;
+  final bool throwInAfterFirstLayout;
 
   @override
   State<ErrorThrowingWidget> createState() => _ErrorThrowingWidgetState();
@@ -75,13 +77,13 @@ class _ErrorThrowingWidgetState
 
 // Multiple instance tracking widget
 class InstanceTrackingWidget extends StatefulWidget {
+
+  const InstanceTrackingWidget({required this.instanceId, super.key});
   final String instanceId;
 
   // ignore: library_private_types_in_public_api
   static Map<String, _InstanceTrackingWidgetState> instances = {};
   static List<String> globalObserverCalls = [];
-
-  const InstanceTrackingWidget({super.key, required this.instanceId});
 
   @override
   State<InstanceTrackingWidget> createState() => _InstanceTrackingWidgetState();
@@ -155,7 +157,7 @@ class _StressTestWidgetState extends ExtendedStatefulWidget<StressTestWidget> {
     callTimestamps.add(startTime);
 
     // Simulate some processing
-    for (int i = 0; i < 1000; i++) {
+    for (var i = 0; i < 1000; i++) {
       // Busy work
     }
 
@@ -178,7 +180,7 @@ class _StressTestWidgetState extends ExtendedStatefulWidget<StressTestWidget> {
   void reportTextScaleFactor(double? textScaleFactor) {}
 
   double get averageProcessingTimeMs {
-    if (callTimestamps.isEmpty) return 0.0;
+    if (callTimestamps.isEmpty) return 0;
     return totalProcessingTime.inMicroseconds / callTimestamps.length / 1000.0;
   }
 }
@@ -240,25 +242,23 @@ class _ContextTestWidgetState
 
 void main() {
   group('ExtenedStatefulWidget Advanced Edge Cases', () {
-    setUp(() {
-      InstanceTrackingWidget.clearGlobalState();
-    });
+    setUp(InstanceTrackingWidget.clearGlobalState);
 
     group('Error Handling Tests', () {
       testWidgets('handles exceptions in initState gracefully', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(home: ErrorThrowingWidget(throwInInit: true)),
+          const MaterialApp(home: ErrorThrowingWidget(throwInInit: true)),
         );
         expect(tester.takeException(), isA<Exception>());
       });
 
       testWidgets('handles exceptions in observer methods', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(home: ErrorThrowingWidget(throwInObserver: true)),
+          const MaterialApp(home: ErrorThrowingWidget(throwInObserver: true)),
         );
 
         final state = tester.state<_ErrorThrowingWidgetState>(
@@ -266,35 +266,35 @@ void main() {
         );
 
         // Should not crash when observer throws
-        expect(() => state.didChangeMetrics(), throwsException);
+        expect(state.didChangeMetrics, throwsException);
         expect(state.methodCalls, contains('didChangeMetrics'));
       });
 
       testWidgets('handles exceptions in afterFirstLayout', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(home: ErrorThrowingWidget(throwInAfterFirstLayout: true)),
+          const MaterialApp(home: ErrorThrowingWidget(throwInAfterFirstLayout: true)),
         );
         expect(tester.takeException(), isA<Exception>());
       });
 
-      testWidgets('handles exceptions in dispose', (WidgetTester tester) async {
+      testWidgets('handles exceptions in dispose', (tester) async {
         await tester.pumpWidget(
-          MaterialApp(home: ErrorThrowingWidget(throwInDispose: true)),
+          const MaterialApp(home: ErrorThrowingWidget(throwInDispose: true)),
         );
 
-        await tester.pumpWidget(MaterialApp(home: Placeholder()));
+        await tester.pumpWidget(const MaterialApp(home: Placeholder()));
         expect(tester.takeException(), isA<Exception>());
       });
     });
 
     group('Multiple Instance Tests', () {
       testWidgets('multiple widget instances do not interfere', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Column(
               children: [
                 InstanceTrackingWidget(instanceId: 'widget1'),
@@ -331,10 +331,10 @@ void main() {
       });
 
       testWidgets('partial disposal of multiple instances works correctly', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Column(
               children: [
                 InstanceTrackingWidget(
@@ -354,7 +354,7 @@ void main() {
 
         // Remove one widget by rebuilding with only one
         await tester.pumpWidget(
-          MaterialApp(
+          const MaterialApp(
             home: Column(
               children: [
                 InstanceTrackingWidget(
@@ -373,9 +373,9 @@ void main() {
 
     group('Performance and Stress Tests', () {
       testWidgets('handles rapid observer method calls efficiently', (
-        WidgetTester tester,
+        tester,
       ) async {
-        await tester.pumpWidget(MaterialApp(home: StressTestWidget()));
+        await tester.pumpWidget(const MaterialApp(home: StressTestWidget()));
 
         final state = tester.state<_StressTestWidgetState>(
           find.byType(StressTestWidget),
@@ -384,7 +384,7 @@ void main() {
         final stopwatch = Stopwatch()..start();
 
         // Rapid fire observer calls
-        for (int i = 0; i < 100; i++) {
+        for (var i = 0; i < 100; i++) {
           state.didChangeMetrics();
         }
 
@@ -399,17 +399,17 @@ void main() {
       });
 
       testWidgets('maintains performance under sustained load', (
-        WidgetTester tester,
+        tester,
       ) async {
-        await tester.pumpWidget(MaterialApp(home: StressTestWidget()));
+        await tester.pumpWidget(const MaterialApp(home: StressTestWidget()));
 
         final state = tester.state<_StressTestWidgetState>(
           find.byType(StressTestWidget),
         );
 
         // Sustained load test
-        for (int batch = 0; batch < 10; batch++) {
-          for (int i = 0; i < 50; i++) {
+        for (var batch = 0; batch < 10; batch++) {
+          for (var i = 0; i < 50; i++) {
             state.didChangeMetrics();
           }
           await tester.pump(); // Allow frame processing
@@ -425,9 +425,9 @@ void main() {
 
     group('Context Validity Tests', () {
       testWidgets('afterFirstLayout receives valid context', (
-        WidgetTester tester,
+        tester,
       ) async {
-        await tester.pumpWidget(MaterialApp(home: ContextTestWidget()));
+        await tester.pumpWidget(const MaterialApp(home: ContextTestWidget()));
 
         final state = tester.state<_ContextTestWidgetState>(
           find.byType(ContextTestWidget),
@@ -441,7 +441,7 @@ void main() {
       });
 
       testWidgets('context becomes invalid after disposal', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(const MaterialApp(home: ContextTestWidget()));
 
@@ -460,17 +460,17 @@ void main() {
 
     group('Hot Reload and Rebuild Tests', () {
       testWidgets('survives hot reload simulation', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(home: InstanceTrackingWidget(instanceId: 'reload-test')),
+          const MaterialApp(home: InstanceTrackingWidget(instanceId: 'reload-test')),
         );
 
         expect(InstanceTrackingWidget.instances.length, equals(1));
 
         // Simulate hot reload by rebuilding with same widget
         await tester.pumpWidget(
-          MaterialApp(home: InstanceTrackingWidget(instanceId: 'reload-test')),
+          const MaterialApp(home: InstanceTrackingWidget(instanceId: 'reload-test')),
         );
 
         // Should maintain single instance
@@ -478,9 +478,9 @@ void main() {
       });
 
       testWidgets('handles rapid mount/unmount cycles', (
-        WidgetTester tester,
+        tester,
       ) async {
-        for (int i = 0; i < 20; i++) {
+        for (var i = 0; i < 20; i++) {
           await tester.pumpWidget(
             MaterialApp(home: InstanceTrackingWidget(instanceId: 'cycle-$i')),
           );
@@ -495,10 +495,10 @@ void main() {
 
     group('Platform Edge Cases', () {
       testWidgets('handles extreme text scale factor values', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(home: InstanceTrackingWidget(instanceId: 'extreme')),
+          const MaterialApp(home: InstanceTrackingWidget(instanceId: 'extreme')),
         );
 
         final extremeValues = [0.01, 0.1, 10.0, 100.0, 1000.0];
@@ -520,14 +520,14 @@ void main() {
       });
 
       testWidgets('handles rapid platform changes', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
-          MaterialApp(home: InstanceTrackingWidget(instanceId: 'rapid')),
+          const MaterialApp(home: InstanceTrackingWidget(instanceId: 'rapid')),
         );
 
         // Rapid platform changes
-        for (int i = 0; i < 50; i++) {
+        for (var i = 0; i < 50; i++) {
           tester.platformDispatcher.textScaleFactorTestValue = 1.0 + (i * 0.1);
           await tester.pump();
         }
@@ -542,10 +542,10 @@ void main() {
 
     group('Memory and Resource Tests', () {
       testWidgets('does not leak observers with rapid widget creation', (
-        WidgetTester tester,
+        tester,
       ) async {
         // Create and destroy many widgets rapidly
-        for (int i = 0; i < 10; i++) {
+        for (var i = 0; i < 10; i++) {
           await tester.pumpWidget(
             MaterialApp(
               home: InstanceTrackingWidget(instanceId: 'leak-test-$i'),
@@ -554,7 +554,7 @@ void main() {
           await tester.pumpAndSettle();
 
           // Destroy the widget
-          await tester.pumpWidget(MaterialApp(home: Placeholder()));
+          await tester.pumpWidget(const MaterialApp(home: Placeholder()));
           await tester.pumpAndSettle();
         }
 
@@ -563,9 +563,9 @@ void main() {
       });
 
       testWidgets('handles widget tree rebuilds efficiently', (
-        WidgetTester tester,
+        tester,
       ) async {
-        for (int i = 0; i < 20; i++) {
+        for (var i = 0; i < 20; i++) {
           await tester.pumpWidget(
             MaterialApp(
               home: Column(
@@ -587,25 +587,25 @@ void main() {
 
     group('Integration Tests', () {
       testWidgets('works correctly in complex widget tree', (
-        WidgetTester tester,
+        tester,
       ) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
               appBar: AppBar(
-                title: InstanceTrackingWidget(instanceId: 'appbar'),
+                title: const InstanceTrackingWidget(instanceId: 'appbar'),
               ),
               body: Column(
                 children: [
                   Expanded(
                     child: ListView(
-                      children: [
+                      children: const [
                         InstanceTrackingWidget(instanceId: 'list-1'),
                         InstanceTrackingWidget(instanceId: 'list-2'),
                       ],
                     ),
                   ),
-                  InstanceTrackingWidget(instanceId: 'footer'),
+                  const InstanceTrackingWidget(instanceId: 'footer'),
                 ],
               ),
             ),

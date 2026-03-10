@@ -23,15 +23,15 @@ extension _HapticFeedbackTypeExtension on HapticFeedbackType {
   void trigger() {
     switch (this) {
       case HapticFeedbackType.light:
-        HapticFeedback.lightImpact();
+        unawaited(HapticFeedback.lightImpact());
       case HapticFeedbackType.medium:
-        HapticFeedback.mediumImpact();
+        unawaited(HapticFeedback.mediumImpact());
       case HapticFeedbackType.heavy:
-        HapticFeedback.heavyImpact();
+        unawaited(HapticFeedback.heavyImpact());
       case HapticFeedbackType.selection:
-        HapticFeedback.selectionClick();
+        unawaited(HapticFeedback.selectionClick());
       case HapticFeedbackType.vibrate:
-        HapticFeedback.vibrate();
+        unawaited(HapticFeedback.vibrate());
     }
   }
 }

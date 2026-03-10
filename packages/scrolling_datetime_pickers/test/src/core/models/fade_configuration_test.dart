@@ -1,5 +1,7 @@
 // test/src/core/models/fade_configuration_test.dart
 
+// ignore_for_file: document_ignores, lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scrolling_datetime_pickers/src/core/models/fade_configuration.dart';
@@ -22,7 +24,7 @@ void main() {
     test('should create with custom values', () {
       const config = FadeConfiguration(
         enabled: false,
-        fadeDistance: 60.0,
+        fadeDistance: 60,
         fadeCurve: Curves.easeInOut,
         topColors: [Colors.red, Colors.blue],
         bottomColors: [Colors.green, Colors.yellow],
@@ -40,11 +42,11 @@ void main() {
     });
 
     test('should enforce positive fadeDistance', () {
-      expect(() => FadeConfiguration(fadeDistance: 0.0), throwsAssertionError);
-      expect(() => FadeConfiguration(fadeDistance: -1.0), throwsAssertionError);
+      expect(() => FadeConfiguration(fadeDistance: 0), throwsAssertionError);
+      expect(() => FadeConfiguration(fadeDistance: -1), throwsAssertionError);
       expect(() => FadeConfiguration(fadeDistance: -0.001), throwsAssertionError);
       expect(() => const FadeConfiguration(fadeDistance: 0.1), returnsNormally);
-      expect(() => const FadeConfiguration(fadeDistance: 1.0), returnsNormally);
+      expect(() => const FadeConfiguration(fadeDistance: 1), returnsNormally);
     });
   });
 
