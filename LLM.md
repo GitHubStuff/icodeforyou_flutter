@@ -106,3 +106,37 @@ D - Dependency Inversion Principle
 - ask questions if something is not clear, or its an evolving project
 - I want questions and clarification requests before coding anything
 - don't present several options, use the path of SOLID-principals, and CLEAN-CODE
+
+
+
+
+
+
+
+## Done
+
+There can be multiple sqlite databases.
+
+for since_when, it will be something like
+```
+static SinceWhen filed = SinceWhen({String? name,...anything else...});
+
+static SinceWhen memory = SinceWhen.InMemory({String tag = ':memory:',...anything else...});
+
+```
+
+'filed' or 'memory' should be available (via get_it) or injectable to a flutter cubit.
+
+- Yes use fpdart Either
+
+just read the instructions...
+- 1: the core database is 'SinceWhenDatabase'
+- 2: enum DatabaseAccess { create, open, automatic}
+- - create - if database exists throw an error, otherwise create it
+- - open - if database does not exist throw an error, otherwise open it
+- - automatic - if database does not exists, create it. if database does exist open/use it.
+  
+For in-memory, that's a special constructor.
+
+- 1: best practice and clean-code you asshole
+- 2: has to be public doesn't it? How could it work if private?

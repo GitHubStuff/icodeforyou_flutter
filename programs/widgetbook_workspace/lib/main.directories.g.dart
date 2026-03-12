@@ -25,10 +25,6 @@ import 'package:widgetbook_workspace/packages/random_color_generator/random_colo
     as _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecases;
 import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/scrolling_datetime_pickers_widgetbook.dart'
     as _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook;
-import 'package:widgetbook_workspace/packages/since_when/since_when.usecase.dart'
-    as _widgetbook_workspace_packages_since_when_since_when_usecase;
-import 'package:widgetbook_workspace/packages/since_when/since_when_database.usecase.dart'
-    as _widgetbook_workspace_packages_since_when_since_when_database_usecase;
 import 'package:widgetbook_workspace/packages/sqlite_viewer/sqlite_viewer.usecase.dart'
     as _widgetbook_workspace_packages_sqlite_viewer_sqlite_viewer_usecase;
 import 'package:widgetbook_workspace/packages/startup_package/startup_package.usecase.dart'
@@ -157,41 +153,6 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookComponent(
-    name: 'SinceWhenDatabase',
-    useCases: [
-      _widgetbook.WidgetbookUseCase(
-        name: 'Main Table Detail',
-        builder:
-            _widgetbook_workspace_packages_since_when_since_when_database_usecase
-                .mainTableDetail,
-      ),
-      _widgetbook.WidgetbookUseCase(
-        name: 'Pragma Data',
-        builder:
-            _widgetbook_workspace_packages_since_when_since_when_database_usecase
-                .pragmaDataView,
-      ),
-      _widgetbook.WidgetbookUseCase(
-        name: 'SqliteViewer Integration',
-        builder:
-            _widgetbook_workspace_packages_since_when_since_when_database_usecase
-                .sqliteViewerIntegration,
-      ),
-      _widgetbook.WidgetbookUseCase(
-        name: 'Tag Analytics',
-        builder:
-            _widgetbook_workspace_packages_since_when_since_when_database_usecase
-                .tagAnalytics,
-      ),
-      _widgetbook.WidgetbookUseCase(
-        name: 'Tags Table View',
-        builder:
-            _widgetbook_workspace_packages_since_when_since_when_database_usecase
-                .tagsTableView,
-      ),
-    ],
-  ),
-  _widgetbook.WidgetbookComponent(
     name: 'StepSlider',
     useCases: [
       _widgetbook.WidgetbookUseCase(
@@ -277,73 +238,6 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder:
                 _widgetbook_workspace_packages_extensions_date_time_ext_datetime_delta_stories
                     .buildDateTimeDeltaTextFull,
-          ),
-        ],
-      ),
-    ],
-  ),
-  _widgetbook.WidgetbookFolder(
-    name: 'domain',
-    children: [
-      _widgetbook.WidgetbookComponent(
-        name: 'SinceWhenFailure',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Failure Types',
-            builder:
-                _widgetbook_workspace_packages_since_when_since_when_usecase
-                    .sinceWhenFailures,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'SinceWhenRecord',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Hierarchical Records',
-            builder:
-                _widgetbook_workspace_packages_since_when_since_when_usecase
-                    .sinceWhenHierarchical,
-          ),
-          _widgetbook.WidgetbookUseCase(
-            name: 'Interactive Playground',
-            builder:
-                _widgetbook_workspace_packages_since_when_since_when_usecase
-                    .sinceWhenPlayground,
-          ),
-          _widgetbook.WidgetbookUseCase(
-            name: 'Record Creation Demo',
-            builder:
-                _widgetbook_workspace_packages_since_when_since_when_usecase
-                    .sinceWhenRecordCreation,
-          ),
-          _widgetbook.WidgetbookUseCase(
-            name: 'Tags Demo',
-            builder:
-                _widgetbook_workspace_packages_since_when_since_when_usecase
-                    .sinceWhenTags,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'TableInfo',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Table Info',
-            builder:
-                _widgetbook_workspace_packages_since_when_since_when_usecase
-                    .sinceWhenTableInfo,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'TagMatchMode',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'TagMatchMode',
-            builder:
-                _widgetbook_workspace_packages_since_when_since_when_usecase
-                    .tagMatchModeDemo,
           ),
         ],
       ),
