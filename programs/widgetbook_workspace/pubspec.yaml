@@ -12,8 +12,6 @@ dependencies:
     path: ../../packages/adaptive_modal
   analog_clock_widget:
     path: ../../packages/analog_clock_widget
-  animated_checkbox_widget:
-    path: ../../packages/animated_checkbox_widget
   edittext_popover:
     path: ../../packages/edittext_popover
   extensions:
@@ -34,8 +32,6 @@ dependencies:
     path: ../../packages/startup_package
   step_slider_package:
     path: ../../packages/step_slider_package
-  theme_package:
-    path: ../../packages/theme_package
   widgetbook: ^3.22.0
   widgetbook_annotation: ^3.11.0
 

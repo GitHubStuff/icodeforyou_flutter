@@ -15,8 +15,6 @@ import 'package:widgetbook_workspace/packages/adaptive_modal/adaptive_modal.usec
     as _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase;
 import 'package:widgetbook_workspace/packages/analog_clock_widget/analog_clock_widget.dart'
     as _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget;
-import 'package:widgetbook_workspace/packages/animated_checkbox_widget/animated_checkbox_widgetbook.dart'
-    as _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widgetbook;
 import 'package:widgetbook_workspace/packages/edittext_popover/edittext_popover.usecase.dart'
     as _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase;
 import 'package:widgetbook_workspace/packages/extensions/date_time_ext/datetime_delta_stories.dart'
@@ -31,8 +29,6 @@ import 'package:widgetbook_workspace/packages/startup_package/startup_package.us
     as _widgetbook_workspace_packages_startup_package_startup_package_usecase;
 import 'package:widgetbook_workspace/packages/step_slider_package/step_slider_package.usecase.dart'
     as _widgetbook_workspace_packages_step_slider_package_step_slider_package_usecase;
-import 'package:widgetbook_workspace/packages/theme_package/theme_package.usecase.dart'
-    as _widgetbook_workspace_packages_theme_package_theme_package_usecase;
 
 final directories = <_widgetbook.WidgetbookNode>[
   _widgetbook.WidgetbookComponent(
@@ -49,59 +45,6 @@ final directories = <_widgetbook.WidgetbookNode>[
         builder:
             _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget
                 .buildAnalogClockDarkCase,
-      ),
-    ],
-  ),
-  _widgetbook.WidgetbookComponent(
-    name: 'AnimatedCheckbox',
-    useCases: [
-      _widgetbook.WidgetbookUseCase(
-        name: 'Animation Curves',
-        builder:
-            _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widgetbook
-                .buildAnimatedCheckboxCurvesCase,
-      ),
-      _widgetbook.WidgetbookUseCase(
-        name: 'Custom Shapes',
-        builder:
-            _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widgetbook
-                .buildAnimatedCheckboxCustomShapesCase,
-      ),
-      _widgetbook.WidgetbookUseCase(
-        name: 'Default',
-        builder:
-            _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widgetbook
-                .buildAnimatedCheckboxDefaultCase,
-      ),
-      _widgetbook.WidgetbookUseCase(
-        name: 'Dissolve Effect',
-        builder:
-            _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widgetbook
-                .buildAnimatedCheckboxDissolveCase,
-      ),
-      _widgetbook.WidgetbookUseCase(
-        name: 'Extreme Shapes',
-        builder:
-            _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widgetbook
-                .buildAnimatedCheckboxExtremeShapesCase,
-      ),
-      _widgetbook.WidgetbookUseCase(
-        name: 'Interactive Demo',
-        builder:
-            _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widgetbook
-                .buildAnimatedCheckboxInteractiveCase,
-      ),
-      _widgetbook.WidgetbookUseCase(
-        name: 'Performance Test',
-        builder:
-            _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widgetbook
-                .buildAnimatedCheckboxPerformanceCase,
-      ),
-      _widgetbook.WidgetbookUseCase(
-        name: 'Platform Optimized',
-        builder:
-            _widgetbook_workspace_packages_animated_checkbox_widget_animated_checkbox_widgetbook
-                .buildAnimatedCheckboxPlatformCase,
       ),
     ],
   ),
@@ -190,34 +133,6 @@ final directories = <_widgetbook.WidgetbookNode>[
         builder:
             _widgetbook_workspace_packages_step_slider_package_step_slider_package_usecase
                 .buildStepSliderCustomColors,
-      ),
-    ],
-  ),
-  _widgetbook.WidgetbookComponent(
-    name: 'ThemeBuilder',
-    useCases: [
-      _widgetbook.WidgetbookUseCase(
-        name: 'Default',
-        builder:
-            _widgetbook_workspace_packages_theme_package_theme_package_usecase
-                .buildThemeBuilderUseCase,
-      ),
-    ],
-  ),
-  _widgetbook.WidgetbookComponent(
-    name: 'ThemeSelectorWidget',
-    useCases: [
-      _widgetbook.WidgetbookUseCase(
-        name: 'Default',
-        builder:
-            _widgetbook_workspace_packages_theme_package_theme_package_usecase
-                .buildThemeSelectorWidgetUseCase,
-      ),
-      _widgetbook.WidgetbookUseCase(
-        name: 'In Settings Page',
-        builder:
-            _widgetbook_workspace_packages_theme_package_theme_package_usecase
-                .buildThemeSelectorInSettingsUseCase,
       ),
     ],
   ),

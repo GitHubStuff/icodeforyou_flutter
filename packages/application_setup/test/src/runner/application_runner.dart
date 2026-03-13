@@ -5,7 +5,6 @@ import 'package:application_setup/src/app/startup_task.dart';
 import 'package:application_setup/src/runner/_app_bootstrapper.dart';
 import 'package:application_setup/src/runner/_app_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:theme_manager/theme_manager.dart';
 
 class ApplicationRunner {

@@ -7,11 +7,10 @@ workspace:
   - packages/abstractions
   - packages/adaptive_modal
   - packages/analog_clock_widget
-  - packages/animated_checkbox_widget
+  - packages/animated_widgets
   - packages/application_setup
   - packages/edittext_popover
   - packages/extensions
-  # - packages/nosql
   - packages/random_color_generator
   - packages/scrolling_datetime_pickers
   - packages/since_when
@@ -20,7 +19,6 @@ workspace:
   - packages/step_slider_package
   - packages/tag_chip
   - packages/theme_manager
-  # - packages/theme_package
   - packages/theme_selection_widget
   - programs/startup_demo
   - programs/widgetbook_workspace

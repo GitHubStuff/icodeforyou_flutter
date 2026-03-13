@@ -17,19 +17,19 @@ class ThemeRadioRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => onChanged(option.mode),
-      child: Row(
-        children: [
-          Icon(option.icon),
-          const SizedBox(width: 12),
-          Expanded(child: Text(option.label)),
-          Radio<ThemeMode>(
-            value: option.mode,
-            groupValue: selected ? option.mode : null,
-            onChanged: (_) => onChanged(option.mode),
-          ),
-        ],
+    return RadioGroup<ThemeMode>(
+      groupValue: selected ? option.mode : null,
+      onChanged: (_) => onChanged(option.mode),
+      child: InkWell(
+        onTap: () => onChanged(option.mode),
+        child: Row(
+          children: [
+            Icon(option.icon),
+            const SizedBox(width: 12),
+            Expanded(child: Text(option.label)),
+            Radio<ThemeMode>(value: option.mode),
+          ],
+        ),
       ),
     );
   }

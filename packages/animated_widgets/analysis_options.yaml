@@ -1,0 +1,8 @@
+# animated_widgets/analysis_options.yaml
+
+analyzer:
+  errors:
+    comment_references: ignore
+    document_ignores: ignore
+    public_member_api_docs: ignore
+include: package:very_good_analysis/analysis_options.yaml

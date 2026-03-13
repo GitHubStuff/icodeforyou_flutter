@@ -38,9 +38,9 @@ void main() {
     });
 
     test('default values are set correctly', () {
-      final runner = ApplicationRunner(
-        splashChild: const SizedBox(),
-        landingChild: const SizedBox(),
+      const runner = ApplicationRunner(
+        splashChild: SizedBox(),
+        landingChild: SizedBox(),
       );
       expect(runner.tasks, isEmpty);
       expect(runner.splashDuration, const Duration(seconds: 3));
@@ -51,12 +51,12 @@ void main() {
     });
 
     test('accepts custom tasks and durations', () {
-      final runner = ApplicationRunner(
-        splashChild: const SizedBox(),
-        landingChild: const SizedBox(),
-        tasks: const [_FakeTask()],
-        splashDuration: const Duration(seconds: 5),
-        transitionDuration: const Duration(milliseconds: 300),
+      const runner = ApplicationRunner(
+        splashChild: SizedBox(),
+        landingChild: SizedBox(),
+        tasks: [_FakeTask()],
+        splashDuration: Duration(seconds: 5),
+        transitionDuration: Duration(milliseconds: 300),
       );
       expect(runner.tasks.length, 1);
       expect(runner.splashDuration, const Duration(seconds: 5));
