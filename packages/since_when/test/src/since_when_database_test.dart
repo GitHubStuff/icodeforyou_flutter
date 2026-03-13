@@ -1,5 +1,7 @@
 // test/src/since_when_database_test.dart
 
+// ignore_for_file: document_ignores, avoid_types_on_closure_parameters
+
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';

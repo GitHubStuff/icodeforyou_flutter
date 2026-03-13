@@ -8,9 +8,10 @@ workspace:
   - packages/adaptive_modal
   - packages/analog_clock_widget
   - packages/animated_checkbox_widget
+  - packages/application_setup
   - packages/edittext_popover
   - packages/extensions
-  - packages/nosql
+  # - packages/nosql
   - packages/random_color_generator
   - packages/scrolling_datetime_pickers
   - packages/since_when
@@ -18,7 +19,10 @@ workspace:
   - packages/startup_package
   - packages/step_slider_package
   - packages/tag_chip
-  - packages/theme_package
+  - packages/theme_manager
+  # - packages/theme_package
+  - packages/theme_selection_widget
+  - programs/startup_demo
   - programs/widgetbook_workspace
 
 environment:
@@ -107,7 +111,7 @@ melos:
       description: Cleans up /tmp files created by NoSql package tests
       run: |
         echo "🛀 Clean /tmp files created by nosql_ce_box_test.dart and nosql_ce_db_test.dart"
-        ./packages/nosql/test/nosql_cleanup
+#        ./packages/nosql/test/nosql_cleanup
 
     test_package:
       description: |

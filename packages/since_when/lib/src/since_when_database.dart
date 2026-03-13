@@ -1,5 +1,7 @@
 // lib/src/since_when_database.dart
 
+// ignore_for_file: document_ignores
+
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -20,7 +22,8 @@ typedef _OpenOrCreate = Future<DatabaseInitResult> Function({
 ///
 /// File-based:
 /// ```dart
-/// final result = await SinceWhenDatabase.open(access: DatabaseAccess.automatic);
+/// final result = 
+///      await SinceWhenDatabase.open(access: DatabaseAccess.automatic);
 /// final db = result.getOrElse((f) => throw Exception(f));
 /// ```
 ///
@@ -42,6 +45,7 @@ class SinceWhenDatabase {
 
   /// Overrides the database factory for testing only.
   @visibleForTesting
+  // ignore: library_private_types_in_public_api, avoid_setters_without_getters
   static set openOrCreateOverride(_OpenOrCreate override) =>
       _openOrCreate = override;
 
