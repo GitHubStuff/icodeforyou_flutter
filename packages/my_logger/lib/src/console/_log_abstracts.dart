@@ -1,7 +1,12 @@
-// log_abstracts.dart
+// lib/src/console/_log_abstracts.dart
+
 // ignore_for_file: one_member_abstracts
 
-part of 'my_loggerlog.dart';
+part of 'my_logger.dart';
+
+abstract class CrashlyticsReporter {
+  void report(String message, Object? error, StackTrace? stackTrace);
+}
 
 abstract class _LogFormatter {
   String format(_LogMessage message);

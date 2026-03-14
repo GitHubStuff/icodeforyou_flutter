@@ -1,3 +1,7 @@
+// lib/src/console/_log_level.dart
+
+part of 'my_logger.dart';
+
 const String _blue = '\x1B[34m';
 const String _brightCyan = '\x1B[96m';
 const String _brightRed = '\x1B[91m';
@@ -20,15 +24,12 @@ enum LoggerLevel {
   fatal(8000, '☠️ ', _brightRed, false),
   output(9000, '💡 ', _brightCyan, true);
 
+  const LoggerLevel(this.value, this.icon, this.color, this.fat);
+
   final int value;
-  final String _icon;
+  final String icon;
   final String color;
   final bool fat;
-
-  // ignore: sort_constructors_first
-  const LoggerLevel(this.value, this._icon, this.color, this.fat);
-
-  String get icon => _icon;
 
   bool operator <(LoggerLevel other) => value < other.value;
   bool operator <=(LoggerLevel other) => value <= other.value;

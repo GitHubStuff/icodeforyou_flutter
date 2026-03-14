@@ -1,4 +1,6 @@
+// lib/my_logger.dart
+
 library;
 
-export 'src/console/my_loggerlog.dart';
-export 'src/console/loglevel_enum.dart';
+export '/src/console/my_logger.dart'
+    show CrashlyticsReporter, LoggerLevel, MyLogger;

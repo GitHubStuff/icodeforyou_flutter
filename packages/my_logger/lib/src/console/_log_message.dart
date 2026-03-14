@@ -1,11 +1,8 @@
-// log_message.dart
-part of 'my_loggerlog.dart';
+// lib/src/console/_log_message.dart
 
-// ============================================================================
-// Private Data Models
-// ============================================================================
+part of 'my_logger.dart';
 
-class _LogMessage {
+final class _LogMessage {
   const _LogMessage({
     required this.level,
     required this.message,

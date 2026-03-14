@@ -1,6 +1,7 @@
 analyzer:
   errors:
     avoid_positional_boolean_parameters: ignore
+    avoid_redundant_argument_values: ignore
     directives_ordering: ignore
     document_ignores: ignore
     omit_local_variable_types: ignore

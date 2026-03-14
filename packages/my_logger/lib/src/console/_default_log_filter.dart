@@ -1,15 +1,15 @@
-// default_log_filter.dart
-// ignore_for_file: use_setters_to_change_properties
+// lib/src/console/_default_log_filter.dart
 
-part of 'my_loggerlog.dart';
+part of 'my_logger.dart';
 
-class _DefaultLogFilter implements _LogFilter {
+final class _DefaultLogFilter implements _LogFilter {
   _DefaultLogFilter({String? filterTag}) : _filterTag = filterTag;
 
   String? _filterTag;
 
-  void setTag(String? tag) => _filterTag = tag;
-  String? get currentTag => _filterTag;
+  set tag(String? value) => _filterTag = value;
+  // ignore: unnecessary_getters_setters
+  String? get tag => _filterTag;
 
   @override
   bool shouldLog(_LogMessage message) {
