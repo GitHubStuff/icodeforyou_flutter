@@ -1,8 +1,10 @@
-// ignore_for_file: document_ignores, lines_longer_than_80_chars
+// test/tag_chip_test.dart
+
+// ignore_for_file: avoid_redundant_argument_values, lines_longer_than_80_chars, document_ignores, no_leading_underscores_for_local_identifiers
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tag_chip/tag_chip.dart'; // adjust import to your package name
+import 'package:tag_chip/tag_chip.dart';
 
 void main() {
   Widget buildSubject({
@@ -12,8 +14,10 @@ void main() {
     CallbackState onPressed,
     double minimumWidth = 32,
     double fontSize = 16,
+    ThemeData? theme,
   }) {
     return MaterialApp(
+      theme: theme ?? ThemeData.light(),
       home: Scaffold(
         body: TagChip(
           backgroundColor: backgroundColor,
@@ -27,16 +31,21 @@ void main() {
     );
   }
 
+  StadiumBorder _chipShape(WidgetTester tester) {
+    final chip = tester.widget<ActionChip>(find.byType(ActionChip));
+    return chip.shape! as StadiumBorder;
+  }
+
   group('TagChip', () {
-    group('border color', () {
-      testWidgets('uses black border when background is light', (tester) async {
-        await tester.pumpWidget(buildSubject());
+    group('text color — background luminance', () {
+      testWidgets('black text on light background', (tester) async {
+        await tester.pumpWidget(buildSubject(backgroundColor: Colors.white));
 
         final text = tester.widget<Text>(find.text('Test'));
         expect(text.style?.color, Colors.black);
       });
 
-      testWidgets('uses white border when background is dark', (tester) async {
+      testWidgets('white text on dark background', (tester) async {
         await tester.pumpWidget(buildSubject(backgroundColor: Colors.black));
 
         final text = tester.widget<Text>(find.text('Test'));
@@ -44,40 +53,143 @@ void main() {
       });
     });
 
-    group('state', () {
-      testWidgets('renders with TagChipState.none — no border', (tester) async {
-        await tester.pumpWidget(buildSubject());
+    group('border — TagChipState.none', () {
+      testWidgets('transparent border in light theme', (tester) async {
+        await tester.pumpWidget(buildSubject(state: TagChipState.none));
 
-        final chip = tester.widget<ActionChip>(find.byType(ActionChip));
-        final shape = chip.shape! as StadiumBorder;
-        expect(shape.side, BorderSide.none);
+        final side = _chipShape(tester).side;
+        expect(side.color, Colors.transparent);
+        expect(side.width, 2);
       });
 
-      testWidgets('renders with TagChipState.disabled — no border', (tester) async {
-        await tester.pumpWidget(buildSubject(state: TagChipState.disabled));
+      testWidgets('transparent border in dark theme', (tester) async {
+        await tester.pumpWidget(
+          buildSubject(state: TagChipState.none, theme: ThemeData.dark()),
+        );
 
-        final chip = tester.widget<ActionChip>(find.byType(ActionChip));
-        final shape = chip.shape! as StadiumBorder;
-        expect(shape.side, BorderSide.none);
-      });
-
-      testWidgets('renders with TagChipState.enabled — shows border', (tester) async {
-        await tester.pumpWidget(buildSubject(
-          state: TagChipState.enabled,
-        ));
-
-        final chip = tester.widget<ActionChip>(find.byType(ActionChip));
-        final shape = chip.shape! as StadiumBorder;
-        expect(shape.side.width, 2);
-        expect(shape.side.color, Colors.black);
+        final side = _chipShape(tester).side;
+        expect(side.color, Colors.transparent);
+        expect(side.width, 2);
       });
     });
 
-    group('constraints', () {
-      testWidgets('respects minimumWidth', (tester) async {
+    group('border — TagChipState.disabled', () {
+      testWidgets('transparent border in light theme', (tester) async {
+        await tester.pumpWidget(buildSubject(state: TagChipState.disabled));
+
+        final side = _chipShape(tester).side;
+        expect(side.color, Colors.transparent);
+        expect(side.width, 2);
+      });
+
+      testWidgets('transparent border in dark theme', (tester) async {
+        await tester.pumpWidget(
+          buildSubject(state: TagChipState.disabled, theme: ThemeData.dark()),
+        );
+
+        final side = _chipShape(tester).side;
+        expect(side.color, Colors.transparent);
+        expect(side.width, 2);
+      });
+    });
+
+    group('border — TagChipState.enabled', () {
+      testWidgets('black 2px border in light theme', (tester) async {
+        await tester.pumpWidget(buildSubject(state: TagChipState.enabled));
+
+        final side = _chipShape(tester).side;
+        expect(side.width, 2);
+        expect(side.color, Colors.black);
+      });
+
+      testWidgets('white 2px border in dark theme', (tester) async {
+        await tester.pumpWidget(
+          buildSubject(state: TagChipState.enabled, theme: ThemeData.dark()),
+        );
+
+        final side = _chipShape(tester).side;
+        expect(side.width, 2);
+        expect(side.color, Colors.white);
+      });
+    });
+
+    group('onPressed', () {
+      testWidgets('does not throw when null and chip is tapped', (
+        tester,
+      ) async {
+        await tester.pumpWidget(buildSubject());
+
+        await tester.tap(find.byType(ActionChip));
+        await tester.pump();
+      });
+
+      testWidgets('receives TagChipState.none', (tester) async {
+        TagChipState? received;
+        await tester.pumpWidget(
+          buildSubject(onPressed: (s) => received = s),
+        );
+
+        await tester.tap(find.byType(ActionChip));
+        await tester.pump();
+
+        expect(received, TagChipState.none);
+      });
+
+      testWidgets('receives TagChipState.disabled', (tester) async {
+        TagChipState? received;
+        await tester.pumpWidget(
+          buildSubject(
+            state: TagChipState.disabled,
+            onPressed: (s) => received = s,
+          ),
+        );
+
+        await tester.tap(find.byType(ActionChip));
+        await tester.pump();
+
+        expect(received, TagChipState.disabled);
+      });
+
+      testWidgets('receives TagChipState.enabled', (tester) async {
+        TagChipState? received;
+        await tester.pumpWidget(
+          buildSubject(
+            state: TagChipState.enabled,
+            onPressed: (s) => received = s,
+          ),
+        );
+
+        await tester.tap(find.byType(ActionChip));
+        await tester.pump();
+
+        expect(received, TagChipState.enabled);
+      });
+    });
+
+    group('construction', () {
+      testWidgets('renders correct text', (tester) async {
+        await tester.pumpWidget(buildSubject(text: 'Hello'));
+
+        expect(find.text('Hello'), findsOneWidget);
+      });
+
+      testWidgets('applies backgroundColor to chip', (tester) async {
+        await tester.pumpWidget(buildSubject(backgroundColor: Colors.red));
+
+        final chip = tester.widget<ActionChip>(find.byType(ActionChip));
+        expect(chip.backgroundColor, Colors.red);
+      });
+
+      testWidgets('applies custom fontSize', (tester) async {
+        await tester.pumpWidget(buildSubject(fontSize: 20));
+
+        final text = tester.widget<Text>(find.text('Test'));
+        expect(text.style?.fontSize, 20);
+      });
+
+      testWidgets('applies minimumWidth constraint', (tester) async {
         await tester.pumpWidget(buildSubject(minimumWidth: 100));
 
-        // Find the outermost ConstrainedBox inside TagChip (the one it owns)
         final box = tester.firstWidget<ConstrainedBox>(
           find.descendant(
             of: find.byType(TagChip),
@@ -86,73 +198,6 @@ void main() {
         );
         expect(box.constraints.minWidth, 100);
       });
-
-      testWidgets('uses custom fontSize', (tester) async {
-        await tester.pumpWidget(buildSubject(fontSize: 20));
-
-        final text = tester.widget<Text>(find.text('Test'));
-        expect(text.style?.fontSize, 20);
-      });
-    });
-
-    group('onPressed', () {
-      testWidgets('calls onPressed with current state when tapped', (tester) async {
-        TagChipState? received;
-        await tester.pumpWidget(buildSubject(
-          state: TagChipState.enabled,
-          onPressed: (state) => received = state,
-        ));
-
-        await tester.tap(find.byType(ActionChip));
-        await tester.pump();
-
-        expect(received, TagChipState.enabled);
-      });
-
-      testWidgets('does not throw when onPressed is null and chip is tapped', (tester) async {
-        await tester.pumpWidget(buildSubject());
-
-        await tester.tap(find.byType(ActionChip));
-        await tester.pump();
-        // no exception
-      });
-
-      testWidgets('calls onPressed with disabled state', (tester) async {
-        TagChipState? received;
-        await tester.pumpWidget(buildSubject(
-          state: TagChipState.disabled,
-          onPressed: (state) => received = state,
-        ));
-
-        await tester.tap(find.byType(ActionChip));
-        await tester.pump();
-
-        expect(received, TagChipState.disabled);
-      });
-
-      testWidgets('calls onPressed with none state', (tester) async {
-        TagChipState? received;
-        await tester.pumpWidget(buildSubject(
-          onPressed: (state) => received = state,
-        ));
-
-        await tester.tap(find.byType(ActionChip));
-        await tester.pump();
-
-        expect(received, TagChipState.none);
-      });
-    });
-
-    testWidgets('renders correct text', (tester) async {
-      await tester.pumpWidget(buildSubject(text: 'Hello'));
-      expect(find.text('Hello'), findsOneWidget);
-    });
-
-    testWidgets('uses backgroundColor on chip', (tester) async {
-      await tester.pumpWidget(buildSubject(backgroundColor: Colors.red));
-
-      final chip = tester.widget<ActionChip>(find.byType(ActionChip));
-      expect(chip.backgroundColor, Colors.red);
     });
   });
 }

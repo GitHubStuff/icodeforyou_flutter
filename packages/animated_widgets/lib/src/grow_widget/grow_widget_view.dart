@@ -35,6 +35,7 @@ class _GrowWidgetViewState extends State<GrowWidgetView>
       curve: widget.curve,
       onComplete: widget.onComplete,
     );
+    startAnimation();
   }
 
   @override

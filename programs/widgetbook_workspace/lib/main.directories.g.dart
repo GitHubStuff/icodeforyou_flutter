@@ -13,38 +13,115 @@
 import 'package:widgetbook/widgetbook.dart' as _widgetbook;
 import 'package:widgetbook_workspace/packages/adaptive_modal/adaptive_modal.usecase.dart'
     as _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase;
-import 'package:widgetbook_workspace/packages/analog_clock_widget/analog_clock_widget.dart'
-    as _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget;
+import 'package:widgetbook_workspace/packages/analog_clock_widget/analog_clock_widget.usecase.dart'
+    as _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase;
+import 'package:widgetbook_workspace/packages/animated_widgets/animated_widgets.usecase.dart'
+    as _widgetbook_workspace_packages_animated_widgets_animated_widgets_usecase;
 import 'package:widgetbook_workspace/packages/edittext_popover/edittext_popover.usecase.dart'
     as _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase;
-import 'package:widgetbook_workspace/packages/extensions/date_time_ext/datetime_delta_stories.dart'
-    as _widgetbook_workspace_packages_extensions_date_time_ext_datetime_delta_stories;
-import 'package:widgetbook_workspace/packages/random_color_generator/random_color_generator.usecases.dart'
-    as _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecases;
-import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/scrolling_datetime_pickers_widgetbook.dart'
-    as _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook;
+import 'package:widgetbook_workspace/packages/random_color_generator/random_color_generator.usecase.dart'
+    as _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecase;
+import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/scrolling_datetime_pickers.usecase.dart'
+    as _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_usecase;
 import 'package:widgetbook_workspace/packages/sqlite_viewer/sqlite_viewer.usecase.dart'
     as _widgetbook_workspace_packages_sqlite_viewer_sqlite_viewer_usecase;
-import 'package:widgetbook_workspace/packages/startup_package/startup_package.usecase.dart'
-    as _widgetbook_workspace_packages_startup_package_startup_package_usecase;
 import 'package:widgetbook_workspace/packages/step_slider_package/step_slider_package.usecase.dart'
     as _widgetbook_workspace_packages_step_slider_package_step_slider_package_usecase;
+import 'package:widgetbook_workspace/packages/tag_chip/tag_chip.usecase.dart'
+    as _widgetbook_workspace_packages_tag_chip_tag_chip_usecase;
 
 final directories = <_widgetbook.WidgetbookNode>[
+  _widgetbook.WidgetbookComponent(
+    name: 'AdaptiveModalController',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Custom Close Icon',
+        builder:
+            _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase
+                .adaptiveModalCustomIcon,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Default',
+        builder:
+            _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase
+                .adaptiveModalDefault,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'No Barrier',
+        builder:
+            _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase
+                .adaptiveModalNoBarrier,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Return Value',
+        builder:
+            _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase
+                .adaptiveModalReturnValue,
+      ),
+    ],
+  ),
   _widgetbook.WidgetbookComponent(
     name: 'AnalogClock',
     useCases: [
       _widgetbook.WidgetbookUseCase(
-        name: 'Default',
+        name: 'Classic Face',
         builder:
-            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget
-                .buildAnalogClockCase,
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockClassic,
       ),
       _widgetbook.WidgetbookUseCase(
-        name: 'Full features',
+        name: 'Default',
         builder:
-            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget
-                .buildAnalogClockDarkCase,
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockDefault,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Minimal Face',
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockMinimal,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Modern Face',
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockModern,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Modern Hands',
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockModernHands,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'No Numbers',
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockNoNumbers,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'No Second Hand',
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockNoSecondHand,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Sleek Hands',
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockSleekHands,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Timezone',
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockTimezone,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Traditional Hands',
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockTraditionalHands,
       ),
     ],
   ),
@@ -52,46 +129,39 @@ final directories = <_widgetbook.WidgetbookNode>[
     name: 'EditorTextField',
     useCases: [
       _widgetbook.WidgetbookUseCase(
-        name: 'Custom Barrier Color',
+        name: 'EditorTextField',
         builder:
             _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase
-                .editorTextFieldCustomBarrier,
+                .editorTextFieldUseCase,
       ),
       _widgetbook.WidgetbookUseCase(
-        name: 'Custom Buttons',
+        name: 'showEditor',
         builder:
             _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase
-                .editorTextFieldCustomButtons,
+                .showEditorUseCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
+    name: 'RandomColorGenerator',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'contrastingTextColor',
+        builder:
+            _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecase
+                .randomColorGeneratorContrast,
       ),
       _widgetbook.WidgetbookUseCase(
-        name: 'Custom Styling',
+        name: 'generate',
         builder:
-            _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase
-                .editorTextFieldCustomStyling,
+            _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecase
+                .randomColorGeneratorGenerate,
       ),
       _widgetbook.WidgetbookUseCase(
-        name: 'Default',
+        name: 'toHex & fromHex',
         builder:
-            _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase
-                .editorTextFieldDefault,
-      ),
-      _widgetbook.WidgetbookUseCase(
-        name: 'Interactive Playground',
-        builder:
-            _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase
-                .editorTextFieldPlayground,
-      ),
-      _widgetbook.WidgetbookUseCase(
-        name: 'Multiline Content',
-        builder:
-            _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase
-                .editorTextFieldMultiline,
-      ),
-      _widgetbook.WidgetbookUseCase(
-        name: 'Show Editor Function',
-        builder:
-            _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase
-                .showEditorDemo,
+            _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecase
+                .randomColorGeneratorHex,
       ),
     ],
   ),
@@ -99,176 +169,89 @@ final directories = <_widgetbook.WidgetbookNode>[
     name: 'StepSlider',
     useCases: [
       _widgetbook.WidgetbookUseCase(
-        name: 'Decimal Precision',
+        name: 'Custom Colours',
         builder:
             _widgetbook_workspace_packages_step_slider_package_step_slider_package_usecase
-                .buildStepSliderDecimal,
+                .stepSliderCustomColours,
       ),
       _widgetbook.WidgetbookUseCase(
         name: 'Default',
         builder:
             _widgetbook_workspace_packages_step_slider_package_step_slider_package_usecase
-                .buildStepSliderDefault,
+                .stepSliderDefault,
       ),
       _widgetbook.WidgetbookUseCase(
-        name: 'Discrete Steps',
+        name: 'Haptic Feedback',
         builder:
             _widgetbook_workspace_packages_step_slider_package_step_slider_package_usecase
-                .buildStepSliderDiscrete,
+                .stepSliderHaptic,
       ),
       _widgetbook.WidgetbookUseCase(
-        name: 'Haptic Feedback Comparison',
+        name: 'Step Sizes',
         builder:
             _widgetbook_workspace_packages_step_slider_package_step_slider_package_usecase
-                .buildStepSliderHapticComparison,
+                .stepSliderStepSizes,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
+    name: 'TagChip',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Interactive',
+        builder: _widgetbook_workspace_packages_tag_chip_tag_chip_usecase
+            .tagChipInteractive,
       ),
       _widgetbook.WidgetbookUseCase(
-        name: 'Multiple Sliders',
-        builder:
-            _widgetbook_workspace_packages_step_slider_package_step_slider_package_usecase
-                .buildStepSliderMultiple,
-      ),
-      _widgetbook.WidgetbookUseCase(
-        name: 'With Custom Colors',
-        builder:
-            _widgetbook_workspace_packages_step_slider_package_step_slider_package_usecase
-                .buildStepSliderCustomColors,
+        name: 'States',
+        builder: _widgetbook_workspace_packages_tag_chip_tag_chip_usecase
+            .tagChipStates,
       ),
     ],
   ),
   _widgetbook.WidgetbookFolder(
-    name: 'datetime_ext',
+    name: 'animated_checkbox',
     children: [
       _widgetbook.WidgetbookComponent(
-        name: 'DateTimeDeltaText',
+        name: 'AnimatedCheckbox',
         useCases: [
           _widgetbook.WidgetbookUseCase(
-            name: 'Basic Demo',
+            name: 'Default',
             builder:
-                _widgetbook_workspace_packages_extensions_date_time_ext_datetime_delta_stories
-                    .buildDateTimeDeltaTextDefault,
-          ),
-          _widgetbook.WidgetbookUseCase(
-            name: 'Full Features',
-            builder:
-                _widgetbook_workspace_packages_extensions_date_time_ext_datetime_delta_stories
-                    .buildDateTimeDeltaTextFull,
+                _widgetbook_workspace_packages_animated_widgets_animated_widgets_usecase
+                    .animatedCheckboxDefault,
           ),
         ],
       ),
     ],
   ),
   _widgetbook.WidgetbookFolder(
-    name: 'packages',
+    name: 'grow_and_fade_widget',
     children: [
-      _widgetbook.WidgetbookFolder(
-        name: 'adaptive_modal',
-        children: [
-          _widgetbook.WidgetbookComponent(
-            name: 'AdaptiveModal',
-            useCases: [
-              _widgetbook.WidgetbookUseCase(
-                name: 'Custom Close Icon',
-                builder:
-                    _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase
-                        .adaptiveModalCustomIcon,
-              ),
-              _widgetbook.WidgetbookUseCase(
-                name: 'Default',
-                builder:
-                    _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase
-                        .adaptiveModalDefault,
-              ),
-              _widgetbook.WidgetbookUseCase(
-                name: 'No Barrier',
-                builder:
-                    _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase
-                        .adaptiveModalNoBarrier,
-              ),
-              _widgetbook.WidgetbookUseCase(
-                name: 'Return Value',
-                builder:
-                    _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase
-                        .adaptiveModalReturnValue,
-              ),
-            ],
+      _widgetbook.WidgetbookComponent(
+        name: 'GrowAndFadeWidgetView',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_animated_widgets_animated_widgets_usecase
+                    .growAndFadeWidgetDefault,
           ),
         ],
       ),
-      _widgetbook.WidgetbookFolder(
-        name: 'random_color_generator',
-        children: [
-          _widgetbook.WidgetbookComponent(
-            name: '_ContrastShowcase',
-            useCases: [
-              _widgetbook.WidgetbookUseCase(
-                name: 'Contrasting Text Color',
-                builder:
-                    _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecases
-                        .buildContrastUseCase,
-              ),
-            ],
-          ),
-          _widgetbook.WidgetbookComponent(
-            name: '_FromHexShowcase',
-            useCases: [
-              _widgetbook.WidgetbookUseCase(
-                name: 'Manual Hex Input',
-                builder:
-                    _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecases
-                        .buildFromHexUseCase,
-              ),
-            ],
-          ),
-          _widgetbook.WidgetbookComponent(
-            name: '_GenerateShowcase',
-            useCases: [
-              _widgetbook.WidgetbookUseCase(
-                name: 'Random Color Grid',
-                builder:
-                    _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecases
-                        .buildGenerateUseCase,
-              ),
-            ],
-          ),
-          _widgetbook.WidgetbookComponent(
-            name: '_HexRoundtripShowcase',
-            useCases: [
-              _widgetbook.WidgetbookUseCase(
-                name: 'Hex Roundtrip',
-                builder:
-                    _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecases
-                        .buildHexRoundtripUseCase,
-              ),
-            ],
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookFolder(
-        name: 'startup_package',
-        children: [
-          _widgetbook.WidgetbookComponent(
-            name: '_DemoSplashScreen',
-            useCases: [
-              _widgetbook.WidgetbookUseCase(
-                name: 'Splash — task failure',
-                builder:
-                    _widgetbook_workspace_packages_startup_package_startup_package_usecase
-                        .buildSplashErrorUseCase,
-              ),
-              _widgetbook.WidgetbookUseCase(
-                name: 'Splash — tasks finish after animation',
-                builder:
-                    _widgetbook_workspace_packages_startup_package_startup_package_usecase
-                        .buildSplashWithLoadingUseCase,
-              ),
-              _widgetbook.WidgetbookUseCase(
-                name: 'Splash — tasks finish before animation',
-                builder:
-                    _widgetbook_workspace_packages_startup_package_startup_package_usecase
-                        .buildSplashTasksFirstUseCase,
-              ),
-            ],
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
+    name: 'grow_widget',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'GrowWidgetView',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_animated_widgets_animated_widgets_usecase
+                    .growWidgetDefault,
           ),
         ],
       ),
@@ -286,14 +269,14 @@ final directories = <_widgetbook.WidgetbookNode>[
               _widgetbook.WidgetbookUseCase(
                 name: 'Default',
                 builder:
-                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
-                        .buildScrollingDatePickerDefaultCase,
+                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_usecase
+                        .scrollingDatePickerDefault,
               ),
               _widgetbook.WidgetbookUseCase(
-                name: 'Interactive Demo',
+                name: 'Glow Dividers',
                 builder:
-                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
-                        .buildScrollingDatePickerInteractiveCase,
+                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_usecase
+                        .scrollingDatePickerGlowDividers,
               ),
             ],
           ),
@@ -303,14 +286,8 @@ final directories = <_widgetbook.WidgetbookNode>[
               _widgetbook.WidgetbookUseCase(
                 name: 'Default',
                 builder:
-                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
-                        .buildScrollingTimePickerDefaultCase,
-              ),
-              _widgetbook.WidgetbookUseCase(
-                name: 'Interactive Demo',
-                builder:
-                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
-                        .buildScrollingTimePickerInteractiveCase,
+                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_usecase
+                        .scrollingTimePickerDefault,
               ),
             ],
           ),
@@ -318,31 +295,25 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'datetime_popover',
             children: [
               _widgetbook.WidgetbookComponent(
-                name: 'DateTimePickerPopover',
+                name: 'DateTimePickerField',
                 useCases: [
                   _widgetbook.WidgetbookUseCase(
-                    name: 'Date Only Mode',
+                    name: 'Date & Time',
                     builder:
-                        _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
-                            .buildDateTimePopoverDateOnlyModeCase,
+                        _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_usecase
+                            .dateTimePickerFieldDateTime,
                   ),
                   _widgetbook.WidgetbookUseCase(
-                    name: 'DateTime Mode',
+                    name: 'Date Only',
                     builder:
-                        _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
-                            .buildDateTimePopoverDateTimeModeCase,
+                        _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_usecase
+                            .dateTimePickerFieldDateOnly,
                   ),
                   _widgetbook.WidgetbookUseCase(
-                    name: 'Light & Dark Theme',
+                    name: 'Time Only',
                     builder:
-                        _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
-                            .buildDateTimePopoverThemeShowcaseCase,
-                  ),
-                  _widgetbook.WidgetbookUseCase(
-                    name: 'Time Only Mode',
-                    builder:
-                        _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_widgetbook
-                            .buildDateTimePopoverTimeOnlyModeCase,
+                        _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_usecase
+                            .dateTimePickerFieldTimeOnly,
                   ),
                 ],
               ),
@@ -356,31 +327,43 @@ final directories = <_widgetbook.WidgetbookNode>[
     name: 'widgets',
     children: [
       _widgetbook.WidgetbookComponent(
-        name: 'DisplayQueryWidget',
+        name: 'SqliteViewerPage',
         useCases: [
           _widgetbook.WidgetbookUseCase(
-            name: 'Dark Theme',
+            name: 'Connecting',
             builder:
                 _widgetbook_workspace_packages_sqlite_viewer_sqlite_viewer_usecase
-                    .buildDisplayQueryWidgetDark,
+                    .sqliteViewerConnecting,
           ),
           _widgetbook.WidgetbookUseCase(
-            name: 'Default',
+            name: 'Connection Failed',
             builder:
                 _widgetbook_workspace_packages_sqlite_viewer_sqlite_viewer_usecase
-                    .buildDisplayQueryWidgetDefault,
+                    .sqliteViewerConnectionFailed,
           ),
           _widgetbook.WidgetbookUseCase(
-            name: 'Empty State',
+            name: 'Metadata Loaded',
             builder:
                 _widgetbook_workspace_packages_sqlite_viewer_sqlite_viewer_usecase
-                    .buildDisplayQueryWidgetEmpty,
+                    .sqliteViewerMetadataLoaded,
           ),
           _widgetbook.WidgetbookUseCase(
-            name: 'Many Columns',
+            name: 'Query Failed',
             builder:
                 _widgetbook_workspace_packages_sqlite_viewer_sqlite_viewer_usecase
-                    .buildDisplayQueryWidgetManyColumns,
+                    .sqliteViewerQueryFailed,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Query Result',
+            builder:
+                _widgetbook_workspace_packages_sqlite_viewer_sqlite_viewer_usecase
+                    .sqliteViewerQueryResult,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Table Detail',
+            builder:
+                _widgetbook_workspace_packages_sqlite_viewer_sqlite_viewer_usecase
+                    .sqliteViewerTableDetail,
           ),
         ],
       ),

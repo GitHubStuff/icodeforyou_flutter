@@ -1,161 +1,120 @@
-// lib/step_slider_package/step_slider.usecase.dart
+// lib/packages/step_slider_package/step_slider_package.usecase.dart
+
 import 'package:flutter/material.dart';
 import 'package:step_slider_package/step_slider_package.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
+// ---------------------------------------------------------------------------
+// Default — all defaults, core knobs
+// ---------------------------------------------------------------------------
+
 @widgetbook.UseCase(name: 'Default', type: StepSlider)
-Widget buildStepSliderDefault(BuildContext context) {
-  return Scaffold(
-    body: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Center(
-        child: StepSlider(
-          initialValue: context.knobs.double.slider(
-            label: 'Initial Value',
-            initialValue: 50,
-            max: 100,
-          ),
-          min: context.knobs.double.input(label: 'Min'),
-          max: context.knobs.double.input(label: 'Max', initialValue: 100),
-          step: context.knobs.double.input(label: 'Step', initialValue: 1),
-          divisions: context.knobs.intOrNull.input(
-            label: 'Divisions',
-          ),
-          buttonSize: context.knobs.double.slider(
-            label: 'Button Size',
-            initialValue: 36,
-            min: 24,
-            max: 56,
-          ),
-          enableHapticFeedback: context.knobs.boolean(
-            label: 'Enable Haptic Feedback',
-          ),
-          hapticFeedbackType: context.knobs.object.dropdown(
-            label: 'Haptic Type',
-            options: HapticFeedbackType.values,
-            initialOption: HapticFeedbackType.light,
-            labelBuilder: (type) => type.name,
-          ),
-          onChanged: (value) => debugPrint('Value: $value'),
-        ),
+Widget stepSliderDefault(BuildContext context) {
+  final min = context.knobs.double.slider(
+    label: 'Min',
+    initialValue: 0,
+    min: -100,
+    max: 0,
+  );
+  final max = context.knobs.double.slider(
+    label: 'Max',
+    initialValue: 100,
+    min: 1,
+    max: 500,
+  );
+  final step = context.knobs.double.slider(
+    label: 'Step',
+    initialValue: 1,
+    min: 0.5,
+    max: 25,
+  );
+  final showLabel = context.knobs.boolean(
+    label: 'Show Label',
+    initialValue: true,
+  );
+
+  return Center(
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: StepSlider(
+        min: min,
+        max: max,
+        step: step,
+        label: showLabel ? 'Value' : null,
       ),
     ),
   );
 }
 
-@widgetbook.UseCase(name: 'With Custom Colors', type: StepSlider)
-Widget buildStepSliderCustomColors(BuildContext context) {
-  return Scaffold(
-    body: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Center(
-        child: StepSlider(
-          initialValue: 50,
-          step: 5,
-          activeColor: context.knobs.color(
-            label: 'Active Color',
-            initialValue: Colors.purple,
-          ),
-          inactiveColor: context.knobs.color(
-            label: 'Inactive Color',
-            initialValue: Colors.purple.shade100,
-          ),
-          thumbColor: context.knobs.color(
-            label: 'Thumb Color',
-            initialValue: Colors.deepPurple,
-          ),
-          buttonColor: context.knobs.color(
-            label: 'Button Color',
-            initialValue: Colors.purple,
-          ),
-          buttonIconColor: context.knobs.color(
-            label: 'Button Icon Color',
-          ),
-          onChanged: (value) => debugPrint('Value: $value'),
-        ),
+// ---------------------------------------------------------------------------
+// Custom colours
+// ---------------------------------------------------------------------------
+
+@widgetbook.UseCase(name: 'Custom Colours', type: StepSlider)
+Widget stepSliderCustomColours(BuildContext context) {
+  final activeColor = context.knobs.color(
+    label: 'Active Track',
+    initialValue: Colors.deepPurple,
+  );
+  final inactiveColor = context.knobs.color(
+    label: 'Inactive Track',
+    initialValue: Colors.deepPurple.shade100,
+  );
+  final thumbColor = context.knobs.color(
+    label: 'Thumb',
+    initialValue: Colors.deepPurple.shade700,
+  );
+  final buttonColor = context.knobs.color(
+    label: 'Button',
+    initialValue: Colors.deepPurple.shade200,
+  );
+  final buttonIconColor = context.knobs.color(
+    label: 'Button Icon',
+    initialValue: Colors.white,
+  );
+
+  return Center(
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: StepSlider(
+        activeColor: activeColor,
+        inactiveColor: inactiveColor,
+        thumbColor: thumbColor,
+        buttonColor: buttonColor,
+        buttonIconColor: buttonIconColor,
       ),
     ),
   );
 }
 
-@widgetbook.UseCase(name: 'Discrete Steps', type: StepSlider)
-Widget buildStepSliderDiscrete(BuildContext context) {
-  return Scaffold(
-    body: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Center(
-        child: StepSlider(
-          max: 10,
-          divisions: 10,
-          enableHapticFeedback: context.knobs.boolean(
-            label: 'Enable Haptic Feedback',
-            initialValue: true,
-          ),
-          hapticFeedbackType: HapticFeedbackType.selection,
-          onChanged: (value) => debugPrint('Step: ${value.round()}'),
-        ),
-      ),
-    ),
-  );
-}
+// ---------------------------------------------------------------------------
+// Step sizes
+// ---------------------------------------------------------------------------
 
-@widgetbook.UseCase(name: 'Decimal Precision', type: StepSlider)
-Widget buildStepSliderDecimal(BuildContext context) {
-  return Scaffold(
-    body: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Center(
-        child: StepSlider(
-          initialValue: 1,
-          min: 0.5,
-          max: 3,
-          step: 0.1,
-          divisions: 25,
-          label: 'Zoom',
-          onChanged: (value) =>
-              debugPrint('Zoom: ${value.toStringAsFixed(1)}x'),
-        ),
-      ),
-    ),
-  );
-}
-
-@widgetbook.UseCase(name: 'Multiple Sliders', type: StepSlider)
-Widget buildStepSliderMultiple(BuildContext context) {
-  return Scaffold(
-    body: Padding(
-      padding: const EdgeInsets.all(16),
+@widgetbook.UseCase(name: 'Step Sizes', type: StepSlider)
+Widget stepSliderStepSizes(BuildContext context) {
+  return const Center(
+    child: Padding(
+      padding: EdgeInsets.symmetric(horizontal: 24),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          _buildLabeledSlider(
-            label: 'Volume',
-            child: const StepSlider(
-              initialValue: 75,
-              step: 5,
-              enableHapticFeedback: true,
-            ),
+          _LabelledSlider(label: 'Step 1', child: StepSlider()),
+          SizedBox(height: 24),
+          _LabelledSlider(
+            label: 'Step 5',
+            child: StepSlider(step: 5, divisions: 20),
           ),
-          const SizedBox(height: 24),
-          _buildLabeledSlider(
-            label: 'Brightness',
-            child: const StepSlider(
-              initialValue: 50,
-              step: 10,
-              enableHapticFeedback: true,
-              hapticFeedbackType: HapticFeedbackType.medium,
-            ),
+          SizedBox(height: 24),
+          _LabelledSlider(
+            label: 'Step 10',
+            child: StepSlider(step: 10, divisions: 10),
           ),
-          const SizedBox(height: 24),
-          _buildLabeledSlider(
-            label: 'Contrast',
-            child: const StepSlider(initialValue: 50, step: 5),
-          ),
-          const SizedBox(height: 24),
-          _buildLabeledSlider(
-            label: 'Saturation',
-            child: const StepSlider(initialValue: 50, step: 5),
+          SizedBox(height: 24),
+          _LabelledSlider(
+            label: 'Step 25',
+            child: StepSlider(step: 25, divisions: 4),
           ),
         ],
       ),
@@ -163,44 +122,63 @@ Widget buildStepSliderMultiple(BuildContext context) {
   );
 }
 
-Widget _buildLabeledSlider({required String label, required Widget child}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.only(left: 48, bottom: 4),
-        child: Text(
-          label,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-        ),
-      ),
-      child,
-    ],
-  );
-}
+// ---------------------------------------------------------------------------
+// Haptic feedback
+// ---------------------------------------------------------------------------
 
-@widgetbook.UseCase(name: 'Haptic Feedback Comparison', type: StepSlider)
-Widget buildStepSliderHapticComparison(BuildContext context) {
-  return Scaffold(
-    body: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          for (final type in HapticFeedbackType.values) ...[
-            _buildLabeledSlider(
-              label: 'Haptic: ${type.name}',
-              child: StepSlider(
-                initialValue: 50,
-                step: 10,
-                enableHapticFeedback: true,
-                hapticFeedbackType: type,
-              ),
-            ),
-            const SizedBox(height: 16),
-          ],
-        ],
+const Map<String, HapticFeedbackType> _hapticOptions = {
+  'light': HapticFeedbackType.light,
+  'medium': HapticFeedbackType.medium,
+  'heavy': HapticFeedbackType.heavy,
+  'selection': HapticFeedbackType.selection,
+  'vibrate': HapticFeedbackType.vibrate,
+};
+
+@widgetbook.UseCase(name: 'Haptic Feedback', type: StepSlider)
+Widget stepSliderHaptic(BuildContext context) {
+  final typeName = context.knobs.object.dropdown<String>(
+    label: 'Haptic Type',
+    options: _hapticOptions.keys.toList(),
+    initialOption: 'light',
+  );
+  final buttonSize = context.knobs.double.slider(
+    label: 'Button Size',
+    initialValue: 36,
+    min: 24,
+    max: 64,
+  );
+
+  return Center(
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: StepSlider(
+        enableHapticFeedback: true,
+        hapticFeedbackType: _hapticOptions[typeName]!,
+        buttonSize: buttonSize,
       ),
     ),
   );
+}
+
+// ---------------------------------------------------------------------------
+// Private helper
+// ---------------------------------------------------------------------------
+
+class _LabelledSlider extends StatelessWidget {
+  const _LabelledSlider({required this.label, required this.child});
+
+  final String label;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: Theme.of(context).textTheme.bodySmall),
+        const SizedBox(height: 4),
+        child,
+      ],
+    );
+  }
 }

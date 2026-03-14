@@ -12,6 +12,10 @@ dependencies:
     path: ../../packages/adaptive_modal
   analog_clock_widget:
     path: ../../packages/analog_clock_widget
+  animated_widgets:
+    path: ../../packages/animated_widgets
+  application_setup:
+    path: ../../packages/application_setup
   edittext_popover:
     path: ../../packages/edittext_popover
   extensions:
@@ -19,6 +23,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  fpdart: ^1.2.0
   gap: ^3.0.1
   random_color_generator:
     path: ../../packages/random_color_generator
@@ -26,12 +31,17 @@ dependencies:
     path: ../../packages/scrolling_datetime_pickers
   since_when:
     path: ../../packages/since_when
-  sqlite_viewer:
-    path: ../../packages/sqlite_viewer
+  sqlite_viewer: ^1.0.0+1
   startup_package:
     path: ../../packages/startup_package
   step_slider_package:
     path: ../../packages/step_slider_package
+  tag_chip:
+    path: ../../packages/tag_chip
+  theme_manager:
+    path: ../../packages/theme_manager
+  theme_selection_widget:
+    path: ../../packages/theme_selection_widget
   widgetbook: ^3.22.0
   widgetbook_annotation: ^3.11.0
 

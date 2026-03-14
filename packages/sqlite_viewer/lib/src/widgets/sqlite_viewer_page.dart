@@ -69,6 +69,26 @@ class SqliteViewerPage extends StatelessWidget {
     this.textHandling = TextHandling.trunc,
   }) : _cubit = cubit;
 
+  /// Creates [SqliteViewerPage] with a pre-supplied [cubit] for use outside
+  /// tests — for example in a widgetbook workspace.
+  ///
+  /// The provided cubit is used directly via [BlocProvider.value] — no
+  /// internal cubit is created and [connect] is not called.
+  ///
+  /// Identical to [SqliteViewerPage.withCubit] but without the
+  /// [visibleForTesting] restriction.
+  const SqliteViewerPage.forWidgetbook({
+    required this.source,
+    required SqliteViewerCubit cubit,
+    super.key,
+    this.title = 'SQLite Viewer',
+    this.showQueryInput = true,
+    this.sidebarWidth = 280.0,
+    this.showRowNumbers = true,
+    this.nullValueDisplay = 'NULL',
+    this.textHandling = TextHandling.trunc,
+  }) : _cubit = cubit;
+
   /// Database source implementing [SqliteViewerAbstract].
   final SqliteViewerAbstract source;
 

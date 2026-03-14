@@ -49,16 +49,16 @@ void main() {
     });
 
     test('returns 0 when fully faded', () {
-      expect(particle.getOpacityAtTime(1.0), equals(0.0));
+      expect(particle.getOpacityAtTime(1), equals(0.0));
     });
 
     test('returns 0 when fadeTime is zero (startTime == 1.0)', () {
       const lateParticle = DissolveParticle(
         position: position,
         velocity: velocity,
-        startTime: 1.0,
+        startTime: 1,
       );
-      expect(lateParticle.getOpacityAtTime(1.0), equals(0.0));
+      expect(lateParticle.getOpacityAtTime(1), equals(0.0));
     });
   });
 
@@ -77,16 +77,16 @@ void main() {
     });
 
     test('returns 0 when fully shrunk', () {
-      expect(particle.getSizeAtTime(1.0), equals(0.0));
+      expect(particle.getSizeAtTime(1), equals(0.0));
     });
 
     test('returns 0 when shrinkTime is zero (startTime == 1.0)', () {
       const lateParticle = DissolveParticle(
         position: position,
         velocity: velocity,
-        startTime: 1.0,
+        startTime: 1,
       );
-      expect(lateParticle.getSizeAtTime(1.0), equals(0.0));
+      expect(lateParticle.getSizeAtTime(1), equals(0.0));
     });
   });
 }

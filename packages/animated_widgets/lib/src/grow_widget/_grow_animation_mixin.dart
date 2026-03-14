@@ -1,7 +1,5 @@
 // lib/src/grow_widget/_grow_animation_mixin.dart
 
-import 'dart:async';
-
 import 'package:flutter/widgets.dart';
 
 /// Encapsulates [AnimationController] lifecycle for a scale 0→1 effect.
@@ -32,9 +30,9 @@ mixin GrowAnimationMixin {
         if (status == AnimationStatus.completed) onComplete();
       });
     }
-
-    unawaited(_growController.forward());
   }
+
+  void startAnimation() => _growController.forward();
 
   void disposeAnimation() => _growController.dispose();
 }

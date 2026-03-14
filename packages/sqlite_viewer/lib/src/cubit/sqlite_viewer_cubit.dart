@@ -38,6 +38,14 @@ class SqliteViewerCubit extends Cubit<SqliteViewerState> {
   SqliteViewerCubit.seeded(this._source, SqliteViewerState initialState)
       : super(initialState);
 
+  /// Creates a cubit pre-seeded with [initialState] for use outside tests —
+  /// for example in a widgetbook workspace.
+  ///
+  /// Identical to [SqliteViewerCubit.seeded] but without the
+  /// [visibleForTesting] restriction.
+  SqliteViewerCubit.withState(this._source, SqliteViewerState initialState)
+      : super(initialState);
+
   final SqliteViewerAbstract _source;
 
   // ═══════════════════════════════════════════════════════════════════════════

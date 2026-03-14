@@ -6,6 +6,7 @@ analyzer:
   errors:
     avoid_redundant_argument_values: ignore
     avoid_types_on_closure_parameters: ignore
+    document_ignores: ignore
     lines_longer_than_80_chars: ignore
     omit_local_variable_types: ignore
   exclude:

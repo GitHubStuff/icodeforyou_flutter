@@ -1,5 +1,6 @@
 analyzer:
   errors:
+    avoid_redundant_argument_values: ignore
     document_ignores: ignore
     public_member_api_docs: ignore
     unused_element_parameter: ignore

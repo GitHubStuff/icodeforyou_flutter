@@ -45,6 +45,7 @@ class _GrowAndFadeWidgetViewState extends State<GrowAndFadeWidgetView>
       controller: growController,
       curve: widget.curve,
     );
+    startAnimation();
   }
 
   @override

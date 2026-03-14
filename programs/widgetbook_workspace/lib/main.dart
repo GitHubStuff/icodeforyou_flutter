@@ -1,6 +1,4 @@
 // main.dart
-
-
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
@@ -24,14 +22,41 @@ class WidgetbookApp extends StatelessWidget {
       addons: [
         // Screen sizes and viewports
         ViewportAddon([
+          // ── iPhone 13 ──────────────────────────────────────────────────────
           const ViewportData(
-            name: 'iPhone 13',
+            name: 'iPhone 13 (Portrait)',
             width: 390,
             height: 844,
             pixelRatio: 3,
             platform: TargetPlatform.iOS,
             safeAreas: EdgeInsets.only(top: 47, bottom: 34),
           ),
+          const ViewportData(
+            name: 'iPhone 13 (Landscape)',
+            width: 844,
+            height: 390,
+            pixelRatio: 3,
+            platform: TargetPlatform.iOS,
+            safeAreas: EdgeInsets.only(left: 47, right: 47, bottom: 21),
+          ),
+          // ── iPad mini 6 ────────────────────────────────────────────────────
+          const ViewportData(
+            name: 'iPad mini 6 (Portrait)',
+            width: 744,
+            height: 1133,
+            pixelRatio: 2,
+            platform: TargetPlatform.iOS,
+            safeAreas: EdgeInsets.only(top: 24, bottom: 20),
+          ),
+          const ViewportData(
+            name: 'iPad mini 6 (Landscape)',
+            width: 1133,
+            height: 744,
+            pixelRatio: 2,
+            platform: TargetPlatform.iOS,
+            safeAreas: EdgeInsets.only(left: 24, right: 24, bottom: 20),
+          ),
+          // ── Desktop ────────────────────────────────────────────────────────
           const ViewportData(
             name: 'Desktop',
             width: 1440,
@@ -40,7 +65,6 @@ class WidgetbookApp extends StatelessWidget {
             platform: TargetPlatform.macOS,
           ),
         ]),
-
         // Theme support
         ThemeAddon<ThemeData>(
           themes: [
