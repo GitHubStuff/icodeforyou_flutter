@@ -1,0 +1,48 @@
+// lib/src/settings_widget.dart
+
+import 'package:flutter/material.dart';
+import 'package:settings_widget/src/_app_settings_entry.dart';
+import 'package:settings_widget/src/_settings_breakpoint.dart';
+import 'package:settings_widget/src/_settings_direction.dart';
+import 'package:settings_widget/src/_settings_layout.dart';
+import 'package:settings_widget/src/_settings_sheet.dart';
+import 'package:settings_widget/src/_settings_transition.dart';
+
+abstract final class SettingsWidget {
+  static const double _defaultEdgeGap = 16;
+
+  static Future<void> show(
+    BuildContext context, {
+    required List<AppSettingsEntry> entries,
+    Widget title = const Text(
+      'Settings...',
+      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    ),
+    double breakpoint = kSettingsBreakpoint,
+    SettingsDirection direction = SettingsDirection.bottom,
+    double edgeGap = _defaultEdgeGap,
+  }) {
+    return showGeneralDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      barrierLabel: 'Settings',
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (_, _, _) => SettingsLayout(
+        direction: direction,
+        edgeGap: edgeGap,
+        child: SettingsSheet(
+          title: title,
+          entries: entries,
+          onDismiss: () => Navigator.of(context).pop(),
+          breakpoint: breakpoint,
+        ),
+      ),
+      transitionBuilder: (_, animation, _, child) => SettingsTransition(
+        animation: animation,
+        direction: direction,
+        child: child,
+      ),
+    );
+  }
+}

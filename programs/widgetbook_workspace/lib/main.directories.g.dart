@@ -23,6 +23,10 @@ import 'package:widgetbook_workspace/packages/random_color_generator/random_colo
     as _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecase;
 import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/scrolling_datetime_pickers.usecase.dart'
     as _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_usecase;
+import 'package:widgetbook_workspace/packages/settings_widget/settings_widget.usecase.dart'
+    as _widgetbook_workspace_packages_settings_widget_settings_widget_usecase;
+import 'package:widgetbook_workspace/packages/since_when_widgets/since_when_widgets.usecase.dart'
+    as _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase;
 import 'package:widgetbook_workspace/packages/sqlite_viewer/sqlite_viewer.usecase.dart'
     as _widgetbook_workspace_packages_sqlite_viewer_sqlite_viewer_usecase;
 import 'package:widgetbook_workspace/packages/step_slider_package/step_slider_package.usecase.dart'
@@ -162,6 +166,47 @@ final directories = <_widgetbook.WidgetbookNode>[
         builder:
             _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecase
                 .randomColorGeneratorHex,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
+    name: 'SettingsWidget',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Custom Title',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetCustomTitle,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Default',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetDefault,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Force Phone Layout',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetPhone,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Force Tablet Layout',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetTablet,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Many Entries (Scrollable)',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetScrollable,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Single Entry',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetSingleEntry,
       ),
     ],
   ),
@@ -316,6 +361,63 @@ final directories = <_widgetbook.WidgetbookNode>[
                             .dateTimePickerFieldTimeOnly,
                   ),
                 ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
+    name: 'since_when_widgets',
+    children: [
+      _widgetbook.WidgetbookFolder(
+        name: 'counted_text_field',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'CountedTextField',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Caption',
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .countedTextFieldCaption,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Custom Clear Widget',
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .countedTextFieldCustomClear,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .countedTextFieldDefault,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Hint Text',
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .countedTextFieldHintText,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Live Output',
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .countedTextFieldLiveOutput,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'RTL',
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .countedTextFieldRtl,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Truncation',
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .countedTextFieldTruncation,
               ),
             ],
           ),

@@ -1,7 +1,7 @@
 name: widgetbook_workspace
 description: "Flutter widget book"
 publish_to: 'none'
-version: 0.1.1
+version: 0.1.2
 resolution: workspace
 
 environment:
@@ -29,8 +29,12 @@ dependencies:
     path: ../../packages/random_color_generator
   scrolling_datetime_pickers:
     path: ../../packages/scrolling_datetime_pickers
+  settings_widget:
+    path: ../../packages/settings_widget
   since_when:
     path: ../../packages/since_when
+  since_when_widgets:
+    path: ../../packages/since_when_widgets
   sqlite_viewer: ^1.0.0+1
   startup_package:
     path: ../../packages/startup_package

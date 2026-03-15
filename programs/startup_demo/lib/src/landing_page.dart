@@ -11,9 +11,9 @@ class LandingPage extends StatelessWidget {
     return Scaffold(
       body: const Center(child: Text('Landing Page')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context).push(
-          MaterialPageRoute<void>(builder: (_) => const SettingsPage()),
-        ),
+        onPressed: () => Navigator.of(
+          context,
+        ).push(MaterialPageRoute<void>(builder: (_) => const SettingsPage())),
         child: const Icon(Icons.settings),
       ),
     );

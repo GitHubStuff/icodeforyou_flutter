@@ -1,0 +1,16 @@
+# icodeforyou_flutter/packages/since_when/analysis_options.yaml
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  errors:
+    avoid_redundant_argument_values: ignore
+    comment_references: ignore
+    document_ignores: ignore
+    public_member_api_docs: ignore
+  exclude:
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
+
+coverage:
+  ignore:
+    - 'lib/src/_app_settings_entry.dart'

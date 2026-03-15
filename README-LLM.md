@@ -10,7 +10,7 @@ Any Android code use Kotlin, not Android-Java
 
 Melos is used for crating an app and package mono-repo (not monolitic)
 
-Flutter should use Flutter >= 3.10.x
+Flutter should use Flutter >= 3.11.x
 
 Should use packages:
 - get_it: 9.2.1
@@ -88,12 +88,14 @@ D - Dependency Inversion Principle
 
 ## Code generation
 
-- Present each file, one at a time, not anymore than one until directed by me
+- Present each file, as a list of downloadable .dart files
 - Keep packages as tight as possible
 - - do not add un-requested features/methods
 - - use SOLID and CLEAN-CODE
-- No file (include _test.dart) files should be between 200 and 250 lines
+- No file (including _test.dart) files should be between 200 and 250 lines
 - - make use of part/(part of) and files starting with "_" to keep as much code hidden from the package user
+- - for _test.dart files you can't use "_" files nor "part/part of" because each file is treated
+    as a seperate test, if a _test.dart file > 250 lines create two(or more) complete _test.dart files
 - Packages should "hide" as much code from the user as possible.
   
 

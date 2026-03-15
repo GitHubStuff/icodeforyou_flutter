@@ -14,7 +14,9 @@ workspace:
   - packages/my_logger
   - packages/random_color_generator
   - packages/scrolling_datetime_pickers
+  - packages/settings_widget
   - packages/since_when
+  - packages/since_when_widgets
   - packages/sqlite_viewer
   - packages/startup_package
   - packages/step_slider_package
@@ -27,12 +29,14 @@ workspace:
 environment:
   sdk: ">=3.11.0 <4.0.0"
 
-
 dependency_overrides:
   test_api: 0.7.9
 
 dev_dependencies:
   melos: ^7.4.0
+
+flutter:
+  uses-material-design: true
 
 melos:
   scripts:
@@ -49,68 +53,16 @@ melos:
       packageFilters:
         dependsOn: "build_runner"
 
+    # ─── COVERAGE CLEAN ───────────────────────────────────────────────────────
+
     coverage_clean:
-      description: Clean all coverage data from workspace
+      description: Clean all coverage data from entire workspace (packages + programs)
       run: |
         rm -rf coverage/
         find . -name "coverage" -type d -not -path "./coverage" -exec rm -rf {} +
         echo "🧹 Coverage data cleaned from entire workspace"
 
-    coverage_merge:
-      description: Merge coverage reports from all workspace packages
-      run: |
-        mkdir -p coverage
-        rm -f coverage/lcov.info
-
-        coverage_files=$(find . -path "./coverage" -prune -o -name "lcov.info" -path "*/coverage/lcov.info" -print)
-
-        if [ -n "$coverage_files" ]; then
-          echo "Found coverage files:"
-          echo "$coverage_files"
-
-          for lcov_file in $coverage_files; do
-            package_path=$(echo "$lcov_file" | sed 's|^\./||' | sed 's|/coverage/lcov\.info$||')
-            package_dir=$(dirname "$package_path")
-            package_name=$(basename "$package_path")
-
-            echo "Processing coverage for $package_dir/$package_name..."
-
-            temp_file="coverage/temp_${package_dir//\//_}_${package_name}.info"
-            sed "s|SF:lib/|SF:${package_path}/lib/|g" "$lcov_file" > "$temp_file"
-
-            if [ -f coverage/lcov.info ]; then
-              lcov --add-tracefile coverage/lcov.info --add-tracefile "$temp_file" -o coverage/lcov.info
-            else
-              cp "$temp_file" coverage/lcov.info
-            fi
-
-            rm "$temp_file"
-          done
-
-          genhtml coverage/lcov.info -o coverage/html --ignore-errors source
-          echo "✅ Merged coverage report: coverage/html/index.html"
-
-          if [ -f coverage/html/index.html ]; then
-            open coverage/html/index.html
-          else
-            echo "⚠️  HTML file wasn't created"
-            lcov --summary coverage/lcov.info
-          fi
-        else
-          echo "❌ No coverage files found. Run 'melos run test_coverage' first."
-        fi
-
-    list_packages:
-      description: List all packages in workspace
-      run: |
-        echo "📦 Workspace packages:"
-        find . -name "pubspec.yaml" -not -path "./pubspec.yaml" -exec dirname {} \; | sort
-
-    test_nosql_cleanup:
-      description: Cleans up /tmp files created by NoSql package tests
-      run: |
-        echo "🛀 Clean /tmp files created by nosql_ce_box_test.dart and nosql_ce_db_test.dart"
-#        ./packages/nosql/test/nosql_cleanup
+    # ─── PACKAGES ─────────────────────────────────────────────────────────────
 
     test_package:
       description: |
@@ -142,26 +94,13 @@ melos:
 
           if grep -q "flutter:" pubspec.yaml; then
             echo "🦋 Flutter package — running flutter test"
-            flutter test
-            echo ""
-            echo "📊 Generating coverage for $PKG..."
             flutter test --coverage
           else
             echo "🎯 Dart package — running dart test"
-            dart test
-            echo ""
-            echo "📊 Generating coverage for $PKG..."
             dart test --coverage=coverage
           fi
 
           cd - > /dev/null
-
-          if [ "$PKG" = "nosql" ]; then
-            echo ""
-            echo "🛀 Running nosql cleanup..."
-            ./packages/nosql/test/nosql_cleanup
-          fi
-
           echo ""
           echo "✅ Done: $PKG"
         )
@@ -185,13 +124,6 @@ melos:
 
           for package_dir in packages/*/; do
             package_name=$(basename "$package_dir")
-
-            if [ "$package_name" = "widgetbook_workspace" ]; then
-              echo "🤡 Skipping $package_name (excluded from tests)"
-              total_packages=$((total_packages + 1))
-              ignored_packages=$((ignored_packages + 1))
-              continue
-            fi
 
             if [ -d "${package_dir}test" ]; then
               echo ""
@@ -251,11 +183,6 @@ melos:
         for package_dir in packages/*/; do
           package_name=$(basename "$package_dir")
 
-          if [ "$package_name" = "widgetbook_workspace" ]; then
-            echo "🤡 Skipping $package_name (excluded from tests)"
-            continue
-          fi
-
           if [ -d "${package_dir}test" ]; then
             echo ""
             echo "📦 Testing $package_name..."
@@ -273,25 +200,291 @@ melos:
         done
         echo "✅ Coverage generation completed for all packages!"
 
+    coverage_merge:
+      description: Merge coverage reports from all packages into coverage/html/
+      run: |
+        mkdir -p coverage
+        rm -f coverage/lcov.info
+
+        coverage_files=$(find . -path "./coverage" -prune -o -name "lcov.info" -path "*/packages/*/coverage/lcov.info" -print)
+
+        if [ -n "$coverage_files" ]; then
+          echo "Found coverage files:"
+          echo "$coverage_files"
+
+          for lcov_file in $coverage_files; do
+            package_path=$(echo "$lcov_file" | sed 's|^\./||' | sed 's|/coverage/lcov\.info$||')
+
+            echo "Processing coverage for $package_path..."
+
+            temp_file="coverage/temp_$(echo "$package_path" | tr '/' '_').info"
+            sed "s|SF:lib/|SF:${package_path}/lib/|g" "$lcov_file" > "$temp_file"
+
+            if [ -f coverage/lcov.info ]; then
+              lcov --add-tracefile coverage/lcov.info --add-tracefile "$temp_file" -o coverage/lcov.info
+            else
+              cp "$temp_file" coverage/lcov.info
+            fi
+
+            rm "$temp_file"
+          done
+
+          lcov --remove coverage/lcov.info \
+            '*/lib/src/_app_settings_entry.dart' \
+            -o coverage/lcov.info \
+            --ignore-errors unused
+
+          genhtml coverage/lcov.info -o coverage/html --ignore-errors source
+          echo "✅ Merged packages coverage report: coverage/html/index.html"
+
+          if [ -f coverage/html/index.html ]; then
+            open coverage/html/index.html
+          else
+            echo "⚠️  HTML file wasn't created"
+            lcov --summary coverage/lcov.info
+          fi
+        else
+          echo "❌ No coverage files found. Run 'melos run test_coverage' first."
+        fi
+
+    # ─── PROGRAMS ─────────────────────────────────────────────────────────────
+
+    test_program:
+      description: |
+        Run tests and coverage for a single program.
+        Usage: PRG=program_name melos test_program
+        Example: PRG=startup_demo melos test_program
+      run: |
+        (
+          if [ -z "$PRG" ]; then
+            echo "❌ PRG is not set. Usage: PRG=program_name melos test_program"
+            exit 1
+          fi
+
+          program_dir="programs/$PRG"
+
+          if [ ! -d "$program_dir" ]; then
+            echo "❌ Program '$PRG' not found at $program_dir"
+            exit 1
+          fi
+
+          if [ ! -d "${program_dir}/test" ]; then
+            echo "❌ No test directory found in $program_dir"
+            exit 1
+          fi
+
+          echo ""
+          echo "🚀 Testing $PRG..."
+          cd "$program_dir"
+          flutter test --coverage
+          cd - > /dev/null
+          echo ""
+          echo "✅ Done: $PRG"
+        )
+
+    test_programs:
+      description: |
+        Run tests in all programs sequentially (excludes widgetbook_workspace).
+        Usage: melos test_programs
+        Fail-fast: STRICT=true melos test_programs
+      run: |
+        (
+          echo "🧪 Running program tests sequentially..."
+          if [ "${STRICT}" = "true" ]; then
+            echo "⚠️  STRICT mode — stopping on first failure"
+          fi
+
+          failed_programs=""
+          total_programs=0
+          tested_programs=0
+
+          for program_dir in programs/*/; do
+            program_name=$(basename "$program_dir")
+
+            if [ -d "${program_dir}test" ]; then
+              echo ""
+              echo "🚀 Testing $program_name..."
+              cd "$program_dir"
+              total_programs=$((total_programs + 1))
+              tested_programs=$((tested_programs + 1))
+
+              if ! flutter test; then
+                echo "❌ Tests failed in $program_name"
+                cd - > /dev/null
+                if [ "${STRICT}" = "true" ]; then
+                  echo ""
+                  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                  echo "🛑 STRICT mode — stopping at $program_name"
+                  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                  exit 1
+                fi
+                if [ -z "$failed_programs" ]; then
+                  failed_programs="$program_name"
+                else
+                  failed_programs="$failed_programs, $program_name"
+                fi
+              else
+                cd - > /dev/null
+              fi
+            else
+              echo "⏭️  Skipping $program_name (no test directory)"
+              total_programs=$((total_programs + 1))
+            fi
+          done
+
+          echo ""
+          echo "✅ Test run completed!"
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "📊 SUMMARY"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "Total programs:   $total_programs"
+          echo "Tested programs:  $tested_programs"
+
+          if [ -n "$failed_programs" ]; then
+            echo "❌ FAILED: $failed_programs"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            exit 1
+          else
+            echo "✅ All program tests passed!"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          fi
+        )
+
+    test_programs_coverage:
+      description: Run tests with coverage in all programs (excludes widgetbook_workspace)
+      run: |
+        echo "🧪 Running program coverage tests..."
+        for program_dir in programs/*/; do
+          program_name=$(basename "$program_dir")
+
+          if [ -d "${program_dir}test" ]; then
+            echo ""
+            echo "🚀 Testing $program_name..."
+            cd "$program_dir"
+            flutter test --coverage
+            cd - > /dev/null
+          else
+            echo "⏭️  Skipping $program_name (no test directory)"
+          fi
+        done
+        echo "✅ Coverage generation completed for all programs!"
+
+    coverage_merge_programs:
+      description: Merge coverage reports from all programs into coverage/programs_html/
+      run: |
+        mkdir -p coverage
+        rm -f coverage/programs_lcov.info
+
+        coverage_files=$(find . -name "lcov.info" -path "*/programs/*/coverage/lcov.info")
+
+        if [ -n "$coverage_files" ]; then
+          echo "Found program coverage files:"
+          echo "$coverage_files"
+
+          for lcov_file in $coverage_files; do
+            program_path=$(echo "$lcov_file" | sed 's|^\./||' | sed 's|/coverage/lcov\.info$||')
+
+            echo "Processing coverage for $program_path..."
+
+            temp_file="coverage/temp_$(echo "$program_path" | tr '/' '_').info"
+            sed "s|SF:lib/|SF:${program_path}/lib/|g" "$lcov_file" > "$temp_file"
+
+            if [ -f coverage/programs_lcov.info ]; then
+              lcov --add-tracefile coverage/programs_lcov.info --add-tracefile "$temp_file" -o coverage/programs_lcov.info
+            else
+              cp "$temp_file" coverage/programs_lcov.info
+            fi
+
+            rm "$temp_file"
+          done
+
+          genhtml coverage/programs_lcov.info -o coverage/programs_html --ignore-errors source
+          echo "✅ Merged programs coverage report: coverage/programs_html/index.html"
+
+          if [ -f coverage/programs_html/index.html ]; then
+            open coverage/programs_html/index.html
+          else
+            echo "⚠️  HTML file wasn't created"
+            lcov --summary coverage/programs_lcov.info
+          fi
+        else
+          echo "❌ No program coverage files found. Run 'melos run test_programs_coverage' first."
+        fi
+
+    coverage_merge_all:
+      description: Merge coverage from all packages + programs into coverage/all_html/
+      run: |
+        mkdir -p coverage
+        rm -f coverage/all_lcov.info
+
+        coverage_files=$(find . -path "./coverage" -prune -o -name "lcov.info" -path "*/coverage/lcov.info" -not -path "*/widgetbook_workspace/*" -print)
+
+        if [ -n "$coverage_files" ]; then
+          echo "Found coverage files:"
+          echo "$coverage_files"
+
+          for lcov_file in $coverage_files; do
+            source_path=$(echo "$lcov_file" | sed 's|^\./||' | sed 's|/coverage/lcov\.info$||')
+
+            echo "Processing coverage for $source_path..."
+
+            temp_file="coverage/temp_$(echo "$source_path" | tr '/' '_').info"
+            sed "s|SF:lib/|SF:${source_path}/lib/|g" "$lcov_file" > "$temp_file"
+
+            if [ -f coverage/all_lcov.info ]; then
+              lcov --add-tracefile coverage/all_lcov.info --add-tracefile "$temp_file" -o coverage/all_lcov.info
+            else
+              cp "$temp_file" coverage/all_lcov.info
+            fi
+
+            rm "$temp_file"
+          done
+
+          lcov --remove coverage/all_lcov.info \
+            '*/lib/src/_app_settings_entry.dart' \
+            -o coverage/all_lcov.info \
+            --ignore-errors unused
+
+          genhtml coverage/all_lcov.info -o coverage/all_html --ignore-errors source
+          echo "✅ Merged full workspace coverage report: coverage/all_html/index.html"
+
+          if [ -f coverage/all_html/index.html ]; then
+            open coverage/all_html/index.html
+          else
+            echo "⚠️  HTML file wasn't created"
+            lcov --summary coverage/all_lcov.info
+          fi
+        else
+          echo "❌ No coverage files found. Run 'melos run test_coverage' and/or 'melos run test_programs_coverage' first."
+        fi
+
+    # ─── WIDGETBOOK ───────────────────────────────────────────────────────────
+
     widgetbook:
       description: Run widgetbook for development
       run: |
-        cd packages/widgetbook_workspace
+        cd programs/widgetbook_workspace
         flutter run -d chrome
 
     widgetbook_build:
       description: Build widgetbook components
       run: |
-        cd packages/widgetbook_workspace
+        cd programs/widgetbook_workspace
         dart run build_runner build --delete-conflicting-outputs
         echo "✅ Widgetbook build completed"
 
     widgetbook_clean:
       description: Clean widgetbook generated files
       run: |
-        cd packages/widgetbook_workspace
+        cd programs/widgetbook_workspace
         dart run build_runner clean
         echo "🧹 Widgetbook generated files cleaned"
 
-flutter:
-  uses-material-design: true
+    # ─── UTILITIES ────────────────────────────────────────────────────────────
+
+    list_packages:
+      description: List all packages and programs in workspace
+      run: |
+        echo "📦 Workspace packages:"
+        find . -name "pubspec.yaml" -not -path "./pubspec.yaml" -exec dirname {} \; | sort
