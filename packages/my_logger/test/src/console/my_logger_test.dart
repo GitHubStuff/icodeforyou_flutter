@@ -1,6 +1,6 @@
 // test/src/console/my_logger_test.dart
 
-// ignore_for_file: avoid_print
+// ignore_for_file: unnecessary_lambdas
 
 import 'dart:async';
 
@@ -372,7 +372,7 @@ void main() {
       runZoned(
         () => MyLogger.d('hello', tag: 'test', showColor: false),
         zoneSpecification: ZoneSpecification(
-          print: (_, __, ___, line) => printed.add(line),
+          print: (_, _, _, line) => printed.add(line),
         ),
       );
 
@@ -393,7 +393,7 @@ void main() {
           showColor: false,
         ),
         zoneSpecification: ZoneSpecification(
-          print: (_, __, ___, line) => printed.add(line),
+          print: (_, _, _, line) => printed.add(line),
         ),
       );
 
