@@ -14,7 +14,7 @@ class AppView extends StatefulWidget {
     required this.splashScreen,
     required this.landingPage,
     required this.transitionDuration,
-    this.transitionsBuilder = AppView.crossFade,
+    this.transitionsBuilder = crossFade,
     super.key,
   });
 
@@ -28,9 +28,8 @@ class AppView extends StatefulWidget {
     Animation<double> animation,
     Animation<double> _,
     Widget child,
-  ) {
-    return FadeTransition(opacity: animation, child: child);
-  }
+  ) =>
+      FadeTransition(opacity: animation, child: child);
 
   @override
   State<AppView> createState() => _AppViewState();

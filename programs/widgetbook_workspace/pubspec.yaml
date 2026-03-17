@@ -36,8 +36,6 @@ dependencies:
   since_when_widgets:
     path: ../../packages/since_when_widgets
   sqlite_viewer: ^1.0.0+1
-  startup_package:
-    path: ../../packages/startup_package
   step_slider_package:
     path: ../../packages/step_slider_package
   tag_chip:
@@ -55,8 +53,6 @@ dev_dependencies:
     sdk: flutter
   mockito: ^5.5.1
   very_good_analysis: ^10.2.0
-  widgetbook_generator: ^3.22.0
-
 
 flutter:
   uses-material-design: true

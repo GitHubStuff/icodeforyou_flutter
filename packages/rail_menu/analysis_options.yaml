@@ -1,0 +1,9 @@
+# packages/rail_menu/analysis_options.yaml
+
+analyzer:
+  errors:
+    avoid_redundant_argument_values: ignore
+    comment_references: ignore
+    document_ignores: ignore
+    specify_nonobvious_property_types: ignore
+include: package:very_good_analysis/analysis_options.yaml

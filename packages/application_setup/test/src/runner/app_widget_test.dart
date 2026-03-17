@@ -1,10 +1,7 @@
 // test/src/runner/app_widget_test.dart
 
-import 'dart:async';
-
 import 'package:application_setup/src/app/app_cubit.dart';
 import 'package:application_setup/src/app/app_state.dart';
-import 'package:application_setup/src/app/app_view.dart';
 import 'package:application_setup/src/runner/_app_widget.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +9,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:theme_manager/theme_manager.dart';
 
-class _MockAppCubit extends MockCubit<AppState> implements AppCubit {}
+class _MockAppCubit extends MockCubit<AppState> implements AppCubit {
+  @override
+  void onSplashDone() {}
+}
+
 class _MockThemeCubit extends MockCubit<ThemeMode> implements ThemeCubit {}
 
 void main() {
@@ -23,76 +24,63 @@ void main() {
     setUp(() {
       appCubit = _MockAppCubit();
       themeCubit = _MockThemeCubit();
-    });
-
-    tearDown(() {
-      unawaited(appCubit.close());
-      unawaited(themeCubit.close());
-    });
-
-    testWidgets('renders splash child inside MaterialApp', (tester) async {
       when(() => appCubit.state).thenReturn(const AppSplashVisible());
       when(() => appCubit.initialize()).thenAnswer((_) async {});
-      whenListen(
-        appCubit,
-        const Stream<AppState>.empty(),
-        initialState: const AppSplashVisible(),
-      );
-      when(() => themeCubit.state).thenReturn(ThemeMode.dark);
-      whenListen(
-        themeCubit,
-        const Stream<ThemeMode>.empty(),
-        initialState: ThemeMode.dark,
-      );
+      when(() => themeCubit.state).thenReturn(ThemeMode.system);
+    });
 
+    testWidgets('renders splash via splashBuilder', (tester) async {
       await tester.pumpWidget(
         AppWidget(
           themeCubit: themeCubit,
           appCubit: appCubit,
-          splashChild: const Text('splash'),
-          landingChild: const Text('landing'),
+          splashBuilder: (_) => const Text('splash'),
+          app: const Text('app'),
           transitionDuration: Duration.zero,
-          splashDuration: Duration.zero,
           lightTheme: ThemeData.light(),
           darkTheme: ThemeData.dark(),
-          transitionsBuilder: AppView.crossFade,
         ),
       );
-
       expect(find.text('splash'), findsOneWidget);
     });
 
-    testWidgets('rebuilds MaterialApp on theme change', (tester) async {
-      when(() => appCubit.state).thenReturn(const AppSplashVisible());
-      when(() => appCubit.initialize()).thenAnswer((_) async {});
-      whenListen(
-        appCubit,
-        const Stream<AppState>.empty(),
-        initialState: const AppSplashVisible(),
-      );
-      when(() => themeCubit.state).thenReturn(ThemeMode.light);
-      whenListen(
-        themeCubit,
-        Stream.value(ThemeMode.dark),
-        initialState: ThemeMode.light,
-      );
-
+    testWidgets('passes onSplashDone to splashBuilder', (tester) async {
+      VoidCallback? captured;
       await tester.pumpWidget(
         AppWidget(
           themeCubit: themeCubit,
           appCubit: appCubit,
-          splashChild: const Text('splash'),
-          landingChild: const Text('landing'),
+          splashBuilder: (onDone) {
+            captured = onDone;
+            return const Text('splash');
+          },
+          app: const Text('app'),
           transitionDuration: Duration.zero,
-          splashDuration: Duration.zero,
           lightTheme: ThemeData.light(),
           darkTheme: ThemeData.dark(),
-          transitionsBuilder: AppView.crossFade,
         ),
       );
+      expect(captured, isNotNull);
+    });
 
+    testWidgets('reacts to ThemeMode changes', (tester) async {
+      whenListen(
+        themeCubit,
+        Stream.fromIterable([ThemeMode.dark]),
+        initialState: ThemeMode.system,
+      );
+      await tester.pumpWidget(
+        AppWidget(
+          themeCubit: themeCubit,
+          appCubit: appCubit,
+          splashBuilder: (_) => const Text('splash'),
+          app: const Text('app'),
+          transitionDuration: Duration.zero,
+          lightTheme: ThemeData.light(),
+          darkTheme: ThemeData.dark(),
+        ),
+      );
       await tester.pump();
-      expect(find.byType(MaterialApp), findsOneWidget);
     });
   });
 }

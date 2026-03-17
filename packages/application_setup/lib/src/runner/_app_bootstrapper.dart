@@ -7,5 +7,5 @@ class AppBootstrapper {
 
   void ensureInitialized() => WidgetsFlutterBinding.ensureInitialized();
 
-  void run(Widget app) => runApp(app);
+  void run(Widget app) => runApp(app); // coverage:ignore-line
 }

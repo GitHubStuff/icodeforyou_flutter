@@ -1,284 +1,404 @@
 // lib/main.directories.dart
 
-import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_workspace/packages/adaptive_modal/adaptive_modal.usecase.dart'
-    as adaptive_modal;
-import 'package:widgetbook_workspace/packages/analog_clock_widget/analog_clock_widget.usecase.dart'
-    as analog_clock_widget;
-import 'package:widgetbook_workspace/packages/animated_widgets/animated_widgets.usecase.dart'
-    as animated_widgets;
-import 'package:widgetbook_workspace/packages/edittext_popover/edittext_popover.usecase.dart'
-    as edittext_popover;
-import 'package:widgetbook_workspace/packages/random_color_generator/random_color_generator.usecase.dart'
-    as random_color_generator;
-import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/scrolling_datetime_pickers.usecase.dart'
-    as scrolling_datetime_pickers;
-import 'package:widgetbook_workspace/packages/settings_widget/settings_widget.usecase.dart'
-    as settings_widget;
-import 'package:widgetbook_workspace/packages/since_when_widgets/since_when_widgets.usecase.dart'
-    as since_when_widgets;
-import 'package:widgetbook_workspace/packages/sqlite_viewer/sqlite_viewer.usecase.dart'
-    as sqlite_viewer;
-import 'package:widgetbook_workspace/packages/step_slider_package/step_slider_package.usecase.dart'
-    as step_slider_package;
-import 'package:widgetbook_workspace/packages/tag_chip/tag_chip.usecase.dart'
-    as tag_chip;
+// ignore_for_file: directives_ordering
 
-final directories = <WidgetbookNode>[
-  // ── Flat components ────────────────────────────────────────────────────────
-  WidgetbookComponent(
+import 'package:widgetbook/widgetbook.dart' as _widgetbook;
+import 'package:widgetbook_workspace/packages/adaptive_modal/adaptive_modal.usecase.dart'
+    as _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase;
+import 'package:widgetbook_workspace/packages/analog_clock_widget/analog_clock_widget.usecase.dart'
+    as _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase;
+import 'package:widgetbook_workspace/packages/animated_widgets/animated_widgets.usecase.dart'
+    as _widgetbook_workspace_packages_animated_widgets_animated_widgets_usecase;
+import 'package:widgetbook_workspace/packages/edittext_popover/edittext_popover.usecase.dart'
+    as _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase;
+import 'package:widgetbook_workspace/packages/random_color_generator/random_color_generator.usecase.dart'
+    as _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecase;
+import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/scrolling_datetime_pickers.usecase.dart'
+    as _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_usecase;
+import 'package:widgetbook_workspace/packages/settings_widget/settings_widget.usecase.dart'
+    as _widgetbook_workspace_packages_settings_widget_settings_widget_usecase;
+import 'package:widgetbook_workspace/packages/since_when_widgets/since_when_widgets.usecase.dart'
+    as _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase;
+import 'package:widgetbook_workspace/packages/sqlite_viewer/sqlite_viewer.usecase.dart'
+    as _widgetbook_workspace_packages_sqlite_viewer_sqlite_viewer_usecase;
+import 'package:widgetbook_workspace/packages/step_slider_package/step_slider_package.usecase.dart'
+    as _widgetbook_workspace_packages_step_slider_package_step_slider_package_usecase;
+import 'package:widgetbook_workspace/packages/tag_chip/tag_chip.usecase.dart'
+    as _widgetbook_workspace_packages_tag_chip_tag_chip_usecase;
+
+final directories = <_widgetbook.WidgetbookNode>[
+  // -------------------------------------------------------------------------
+  // Top-level components (alphabetical)
+  // -------------------------------------------------------------------------
+
+  _widgetbook.WidgetbookComponent(
     name: 'AdaptiveModalController',
     useCases: [
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Custom Close Icon',
-        builder: adaptive_modal.adaptiveModalCustomIcon,
+        builder:
+            _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase
+                .adaptiveModalCustomIcon,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Default',
-        builder: adaptive_modal.adaptiveModalDefault,
+        builder:
+            _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase
+                .adaptiveModalDefault,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'No Barrier',
-        builder: adaptive_modal.adaptiveModalNoBarrier,
+        builder:
+            _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase
+                .adaptiveModalNoBarrier,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Return Value',
-        builder: adaptive_modal.adaptiveModalReturnValue,
+        builder:
+            _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase
+                .adaptiveModalReturnValue,
       ),
     ],
   ),
-  WidgetbookComponent(
+
+  _widgetbook.WidgetbookComponent(
     name: 'AnalogClock',
     useCases: [
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Classic Face',
-        builder: analog_clock_widget.analogClockClassic,
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockClassic,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Default',
-        builder: analog_clock_widget.analogClockDefault,
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockDefault,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Minimal Face',
-        builder: analog_clock_widget.analogClockMinimal,
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockMinimal,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Modern Face',
-        builder: analog_clock_widget.analogClockModern,
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockModern,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Modern Hands',
-        builder: analog_clock_widget.analogClockModernHands,
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockModernHands,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'No Numbers',
-        builder: analog_clock_widget.analogClockNoNumbers,
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockNoNumbers,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'No Second Hand',
-        builder: analog_clock_widget.analogClockNoSecondHand,
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockNoSecondHand,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Sleek Hands',
-        builder: analog_clock_widget.analogClockSleekHands,
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockSleekHands,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Timezone',
-        builder: analog_clock_widget.analogClockTimezone,
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockTimezone,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Traditional Hands',
-        builder: analog_clock_widget.analogClockTraditionalHands,
+        builder:
+            _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase
+                .analogClockTraditionalHands,
       ),
     ],
   ),
-  WidgetbookComponent(
+
+  _widgetbook.WidgetbookComponent(
     name: 'EditorTextField',
     useCases: [
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'EditorTextField',
-        builder: edittext_popover.editorTextFieldUseCase,
+        builder:
+            _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase
+                .editorTextFieldUseCase,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'showEditor',
-        builder: edittext_popover.showEditorUseCase,
+        builder:
+            _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase
+                .showEditorUseCase,
       ),
     ],
   ),
-  WidgetbookComponent(
+
+  _widgetbook.WidgetbookComponent(
     name: 'RandomColorGenerator',
     useCases: [
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'contrastingTextColor',
-        builder: random_color_generator.randomColorGeneratorContrast,
+        builder:
+            _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecase
+                .randomColorGeneratorContrast,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'generate',
-        builder: random_color_generator.randomColorGeneratorGenerate,
+        builder:
+            _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecase
+                .randomColorGeneratorGenerate,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'toHex & fromHex',
-        builder: random_color_generator.randomColorGeneratorHex,
+        builder:
+            _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecase
+                .randomColorGeneratorHex,
       ),
     ],
   ),
-  WidgetbookComponent(
+
+  _widgetbook.WidgetbookComponent(
     name: 'SettingsWidget',
     useCases: [
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Custom Title',
-        builder: settings_widget.settingsWidgetCustomTitle,
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetCustomTitle,
       ),
-      WidgetbookUseCase(
-        name: 'Default',
-        builder: settings_widget.settingsWidgetDefault,
-      ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Force Phone Layout',
-        builder: settings_widget.settingsWidgetPhone,
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetPhone,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Force Tablet Layout',
-        builder: settings_widget.settingsWidgetTablet,
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetTablet,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
+        name: 'Large Edge Gap',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetLargeGap,
+      ),
+      _widgetbook.WidgetbookUseCase(
         name: 'Many Entries (Scrollable)',
-        builder: settings_widget.settingsWidgetScrollable,
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetScrollable,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
+        name: 'No Edge Gap',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetNoGap,
+      ),
+      _widgetbook.WidgetbookUseCase(
         name: 'Single Entry',
-        builder: settings_widget.settingsWidgetSingleEntry,
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetSingleEntry,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Slide from Bottom',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetDefault,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Slide from Left',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetFromLeft,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Slide from Right',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetFromRight,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Slide from Top',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetFromTop,
       ),
     ],
   ),
-  WidgetbookComponent(
+
+  _widgetbook.WidgetbookComponent(
     name: 'StepSlider',
     useCases: [
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Custom Colours',
-        builder: step_slider_package.stepSliderCustomColours,
+        builder:
+            _widgetbook_workspace_packages_step_slider_package_step_slider_package_usecase
+                .stepSliderCustomColours,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Default',
-        builder: step_slider_package.stepSliderDefault,
+        builder:
+            _widgetbook_workspace_packages_step_slider_package_step_slider_package_usecase
+                .stepSliderDefault,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Haptic Feedback',
-        builder: step_slider_package.stepSliderHaptic,
+        builder:
+            _widgetbook_workspace_packages_step_slider_package_step_slider_package_usecase
+                .stepSliderHaptic,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Step Sizes',
-        builder: step_slider_package.stepSliderStepSizes,
+        builder:
+            _widgetbook_workspace_packages_step_slider_package_step_slider_package_usecase
+                .stepSliderStepSizes,
       ),
     ],
   ),
-  WidgetbookComponent(
+
+  _widgetbook.WidgetbookComponent(
     name: 'TagChip',
     useCases: [
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'Interactive',
-        builder: tag_chip.tagChipInteractive,
+        builder: _widgetbook_workspace_packages_tag_chip_tag_chip_usecase
+            .tagChipInteractive,
       ),
-      WidgetbookUseCase(
+      _widgetbook.WidgetbookUseCase(
         name: 'States',
-        builder: tag_chip.tagChipStates,
+        builder: _widgetbook_workspace_packages_tag_chip_tag_chip_usecase
+            .tagChipStates,
       ),
     ],
   ),
-  // ── Folders ────────────────────────────────────────────────────────────────
-  WidgetbookFolder(
+
+  // -------------------------------------------------------------------------
+  // Folders (alphabetical)
+  // -------------------------------------------------------------------------
+
+  _widgetbook.WidgetbookFolder(
     name: 'animated_checkbox',
     children: [
-      WidgetbookComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'AnimatedCheckbox',
         useCases: [
-          WidgetbookUseCase(
+          _widgetbook.WidgetbookUseCase(
             name: 'Default',
-            builder: animated_widgets.animatedCheckboxDefault,
+            builder:
+                _widgetbook_workspace_packages_animated_widgets_animated_widgets_usecase
+                    .animatedCheckboxDefault,
           ),
         ],
       ),
     ],
   ),
-  WidgetbookFolder(
+
+  _widgetbook.WidgetbookFolder(
     name: 'grow_and_fade_widget',
     children: [
-      WidgetbookComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'GrowAndFadeWidgetView',
         useCases: [
-          WidgetbookUseCase(
+          _widgetbook.WidgetbookUseCase(
             name: 'Default',
-            builder: animated_widgets.growAndFadeWidgetDefault,
+            builder:
+                _widgetbook_workspace_packages_animated_widgets_animated_widgets_usecase
+                    .growAndFadeWidgetDefault,
           ),
         ],
       ),
     ],
   ),
-  WidgetbookFolder(
+
+  _widgetbook.WidgetbookFolder(
     name: 'grow_widget',
     children: [
-      WidgetbookComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'GrowWidgetView',
         useCases: [
-          WidgetbookUseCase(
+          _widgetbook.WidgetbookUseCase(
             name: 'Default',
-            builder: animated_widgets.growWidgetDefault,
+            builder:
+                _widgetbook_workspace_packages_animated_widgets_animated_widgets_usecase
+                    .growWidgetDefault,
           ),
         ],
       ),
     ],
   ),
-  WidgetbookFolder(
+
+  _widgetbook.WidgetbookFolder(
     name: 'presentation',
     children: [
-      WidgetbookFolder(
+      _widgetbook.WidgetbookFolder(
         name: 'widgets',
         children: [
-          WidgetbookComponent(
+          _widgetbook.WidgetbookComponent(
             name: 'ScrollingDatePicker',
             useCases: [
-              WidgetbookUseCase(
+              _widgetbook.WidgetbookUseCase(
                 name: 'Default',
                 builder:
-                    scrolling_datetime_pickers.scrollingDatePickerDefault,
+                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_usecase
+                        .scrollingDatePickerDefault,
               ),
-              WidgetbookUseCase(
+              _widgetbook.WidgetbookUseCase(
                 name: 'Glow Dividers',
                 builder:
-                    scrolling_datetime_pickers.scrollingDatePickerGlowDividers,
+                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_usecase
+                        .scrollingDatePickerGlowDividers,
               ),
             ],
           ),
-          WidgetbookComponent(
+          _widgetbook.WidgetbookComponent(
             name: 'ScrollingTimePicker',
             useCases: [
-              WidgetbookUseCase(
+              _widgetbook.WidgetbookUseCase(
                 name: 'Default',
                 builder:
-                    scrolling_datetime_pickers.scrollingTimePickerDefault,
+                    _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_usecase
+                        .scrollingTimePickerDefault,
               ),
             ],
           ),
-          WidgetbookFolder(
+          _widgetbook.WidgetbookFolder(
             name: 'datetime_popover',
             children: [
-              WidgetbookComponent(
+              _widgetbook.WidgetbookComponent(
                 name: 'DateTimePickerField',
                 useCases: [
-                  WidgetbookUseCase(
+                  _widgetbook.WidgetbookUseCase(
                     name: 'Date & Time',
-                    builder: scrolling_datetime_pickers
-                        .dateTimePickerFieldDateTime,
+                    builder:
+                        _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_usecase
+                            .dateTimePickerFieldDateTime,
                   ),
-                  WidgetbookUseCase(
+                  _widgetbook.WidgetbookUseCase(
                     name: 'Date Only',
-                    builder: scrolling_datetime_pickers
-                        .dateTimePickerFieldDateOnly,
+                    builder:
+                        _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_usecase
+                            .dateTimePickerFieldDateOnly,
                   ),
-                  WidgetbookUseCase(
+                  _widgetbook.WidgetbookUseCase(
                     name: 'Time Only',
-                    builder: scrolling_datetime_pickers
-                        .dateTimePickerFieldTimeOnly,
+                    builder:
+                        _widgetbook_workspace_packages_scrolling_datetime_pickers_scrolling_datetime_pickers_usecase
+                            .dateTimePickerFieldTimeOnly,
                   ),
                 ],
               ),
@@ -288,42 +408,91 @@ final directories = <WidgetbookNode>[
       ),
     ],
   ),
-  WidgetbookFolder(
+
+  _widgetbook.WidgetbookFolder(
     name: 'since_when_widgets',
     children: [
-      WidgetbookFolder(
+      _widgetbook.WidgetbookFolder(
         name: 'counted_text_field',
         children: [
-          WidgetbookComponent(
+          _widgetbook.WidgetbookComponent(
             name: 'CountedTextField',
             useCases: [
-              WidgetbookUseCase(
+              _widgetbook.WidgetbookUseCase(
                 name: 'Caption',
-                builder: since_when_widgets.countedTextFieldCaption,
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .countedTextFieldCaption,
               ),
-              WidgetbookUseCase(
+              _widgetbook.WidgetbookUseCase(
                 name: 'Custom Clear Widget',
-                builder: since_when_widgets.countedTextFieldCustomClear,
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .countedTextFieldCustomClear,
               ),
-              WidgetbookUseCase(
+              _widgetbook.WidgetbookUseCase(
                 name: 'Default',
-                builder: since_when_widgets.countedTextFieldDefault,
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .countedTextFieldDefault,
               ),
-              WidgetbookUseCase(
+              _widgetbook.WidgetbookUseCase(
                 name: 'Hint Text',
-                builder: since_when_widgets.countedTextFieldHintText,
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .countedTextFieldHintText,
               ),
-              WidgetbookUseCase(
+              _widgetbook.WidgetbookUseCase(
                 name: 'Live Output',
-                builder: since_when_widgets.countedTextFieldLiveOutput,
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .countedTextFieldLiveOutput,
               ),
-              WidgetbookUseCase(
+              _widgetbook.WidgetbookUseCase(
                 name: 'RTL',
-                builder: since_when_widgets.countedTextFieldRtl,
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .countedTextFieldRtl,
               ),
-              WidgetbookUseCase(
+              _widgetbook.WidgetbookUseCase(
                 name: 'Truncation',
-                builder: since_when_widgets.countedTextFieldTruncation,
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .countedTextFieldTruncation,
+              ),
+            ],
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookFolder(
+        name: 'tag_color_field',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'TagColorField',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Custom Refresh Widget',
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .tagColorFieldCustomRefresh,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .tagColorFieldDefault,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Live Output',
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .tagColorFieldLiveOutput,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Skip Colors',
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .tagColorFieldSkipColors,
               ),
             ],
           ),
@@ -331,35 +500,48 @@ final directories = <WidgetbookNode>[
       ),
     ],
   ),
-  WidgetbookFolder(
+
+  _widgetbook.WidgetbookFolder(
     name: 'widgets',
     children: [
-      WidgetbookComponent(
+      _widgetbook.WidgetbookComponent(
         name: 'SqliteViewerPage',
         useCases: [
-          WidgetbookUseCase(
+          _widgetbook.WidgetbookUseCase(
             name: 'Connecting',
-            builder: sqlite_viewer.sqliteViewerConnecting,
+            builder:
+                _widgetbook_workspace_packages_sqlite_viewer_sqlite_viewer_usecase
+                    .sqliteViewerConnecting,
           ),
-          WidgetbookUseCase(
+          _widgetbook.WidgetbookUseCase(
             name: 'Connection Failed',
-            builder: sqlite_viewer.sqliteViewerConnectionFailed,
+            builder:
+                _widgetbook_workspace_packages_sqlite_viewer_sqlite_viewer_usecase
+                    .sqliteViewerConnectionFailed,
           ),
-          WidgetbookUseCase(
+          _widgetbook.WidgetbookUseCase(
             name: 'Metadata Loaded',
-            builder: sqlite_viewer.sqliteViewerMetadataLoaded,
+            builder:
+                _widgetbook_workspace_packages_sqlite_viewer_sqlite_viewer_usecase
+                    .sqliteViewerMetadataLoaded,
           ),
-          WidgetbookUseCase(
+          _widgetbook.WidgetbookUseCase(
             name: 'Query Failed',
-            builder: sqlite_viewer.sqliteViewerQueryFailed,
+            builder:
+                _widgetbook_workspace_packages_sqlite_viewer_sqlite_viewer_usecase
+                    .sqliteViewerQueryFailed,
           ),
-          WidgetbookUseCase(
+          _widgetbook.WidgetbookUseCase(
             name: 'Query Result',
-            builder: sqlite_viewer.sqliteViewerQueryResult,
+            builder:
+                _widgetbook_workspace_packages_sqlite_viewer_sqlite_viewer_usecase
+                    .sqliteViewerQueryResult,
           ),
-          WidgetbookUseCase(
+          _widgetbook.WidgetbookUseCase(
             name: 'Table Detail',
-            builder: sqlite_viewer.sqliteViewerTableDetail,
+            builder:
+                _widgetbook_workspace_packages_sqlite_viewer_sqlite_viewer_usecase
+                    .sqliteViewerTableDetail,
           ),
         ],
       ),

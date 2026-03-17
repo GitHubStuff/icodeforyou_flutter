@@ -16,30 +16,27 @@ void main() {
   const _metaData = 'some meta';
   const _sequence = 0;
   const _data = 'some data';
-  const _category = 'some category';
 
   SinceWhenRecord _fullRecord() => const SinceWhenRecord(
-    id: _id,
-    createdTimeStamp: _created,
-    parentTimeStamp: _parent,
-    reviewedTimeStamp: _reviewed,
-    editedTimeStamp: _edited,
-    metaTimeStamp: _meta,
-    metaData: _metaData,
-    sequenceNumber: _sequence,
-    dataString: _data,
-    category: _category,
-  );
+        id: _id,
+        createdTimeStamp: _created,
+        parentTimeStamp: _parent,
+        reviewedTimeStamp: _reviewed,
+        editedTimeStamp: _edited,
+        metaTimeStamp: _meta,
+        metaData: _metaData,
+        sequenceNumber: _sequence,
+        data: _data,
+      );
 
   SinceWhenRecord _minimalRecord() => const SinceWhenRecord(
-    createdTimeStamp: _created,
-    reviewedTimeStamp: _reviewed,
-    editedTimeStamp: _edited,
-    metaData: _metaData,
-    sequenceNumber: _sequence,
-    dataString: _data,
-    category: _category,
-  );
+        createdTimeStamp: _created,
+        reviewedTimeStamp: _reviewed,
+        editedTimeStamp: _edited,
+        metaData: _metaData,
+        sequenceNumber: _sequence,
+        data: _data,
+      );
 
   group('SinceWhenRecord constructor', () {
     test('sets all required fields', () {
@@ -53,8 +50,7 @@ void main() {
       expect(record.metaTimeStamp, isNull);
       expect(record.metaData, _metaData);
       expect(record.sequenceNumber, _sequence);
-      expect(record.dataString, _data);
-      expect(record.category, _category);
+      expect(record.data, _data);
     });
 
     test('sets all optional fields', () {
@@ -77,8 +73,7 @@ void main() {
         'metaTimeStamp': _meta,
         'metaData': _metaData,
         'sequenceNumber': _sequence,
-        'dataString': _data,
-        'category': _category,
+        'data': _data,
       };
 
       final record = SinceWhenRecord.fromRow(row);
@@ -91,8 +86,7 @@ void main() {
       expect(record.metaTimeStamp, _meta);
       expect(record.metaData, _metaData);
       expect(record.sequenceNumber, _sequence);
-      expect(record.dataString, _data);
-      expect(record.category, _category);
+      expect(record.data, _data);
     });
 
     test('maps null optional columns', () {
@@ -105,8 +99,7 @@ void main() {
         'metaTimeStamp': null,
         'metaData': _metaData,
         'sequenceNumber': _sequence,
-        'dataString': _data,
-        'category': _category,
+        'data': _data,
       };
 
       final record = SinceWhenRecord.fromRow(row);
@@ -132,8 +125,7 @@ void main() {
       expect(row['metaTimeStamp'], _meta);
       expect(row['metaData'], _metaData);
       expect(row['sequenceNumber'], _sequence);
-      expect(row['dataString'], _data);
-      expect(row['category'], _category);
+      expect(row['data'], _data);
     });
 
     test('includes null optional fields', () {
@@ -141,6 +133,16 @@ void main() {
 
       expect(row['parentTimeStamp'], isNull);
       expect(row['metaTimeStamp'], isNull);
+    });
+
+    test('does not include category key', () {
+      final row = _fullRecord().toRow();
+      expect(row.containsKey('category'), isFalse);
+    });
+
+    test('does not include dataString key', () {
+      final row = _fullRecord().toRow();
+      expect(row.containsKey('dataString'), isFalse);
     });
   });
 
@@ -172,17 +174,14 @@ void main() {
     test('replaces required String fields', () {
       const newMeta = 'new meta';
       const newData = 'new data';
-      const newCategory = 'new category';
 
       final updated = _fullRecord().copyWith(
         metaData: newMeta,
-        dataString: newData,
-        category: newCategory,
+        data: newData,
       );
 
       expect(updated.metaData, newMeta);
-      expect(updated.dataString, newData);
-      expect(updated.category, newCategory);
+      expect(updated.data, newData);
     });
 
     test('replaces id', () {
@@ -257,7 +256,13 @@ void main() {
       expect(a, isNot(equals(b)));
     });
 
-    test('props contains all fields', () {
+    test('not equal when data differs', () {
+      final a = _fullRecord();
+      final b = _fullRecord().copyWith(data: 'different data');
+      expect(a, isNot(equals(b)));
+    });
+
+    test('props contains all fields in correct order', () {
       final record = _fullRecord();
       expect(
         record.props,
@@ -271,9 +276,13 @@ void main() {
           _metaData,
           _sequence,
           _data,
-          _category,
         ],
       );
+    });
+
+    test('props does not contain category', () {
+      final record = _fullRecord();
+      expect(record.props.length, equals(9));
     });
   });
 }

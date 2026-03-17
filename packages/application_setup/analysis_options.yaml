@@ -6,6 +6,7 @@ analyzer:
   errors:
     avoid_redundant_argument_values: ignore
     comment_references: ignore
+    document_ignores: ignore
     public_member_api_docs: ignore
   exclude:
     - '**/*.g.dart'

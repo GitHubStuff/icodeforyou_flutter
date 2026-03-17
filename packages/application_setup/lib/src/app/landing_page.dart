@@ -1,7 +1,8 @@
 // lib/src/app/landing_page.dart
 
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
+/// Wraps the caller's [app] widget as the post-splash destination.
 class LandingPage extends StatelessWidget {
   const LandingPage({
     required this.child,
@@ -11,9 +12,5 @@ class LandingPage extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: child,
-    );
-  }
+  Widget build(BuildContext context) => child;
 }

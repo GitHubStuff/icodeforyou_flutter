@@ -13,12 +13,12 @@ workspace:
   - packages/extensions
   - packages/my_logger
   - packages/random_color_generator
+  - packages/rail_menu
   - packages/scrolling_datetime_pickers
   - packages/settings_widget
   - packages/since_when
   - packages/since_when_widgets
   - packages/sqlite_viewer
-  - packages/startup_package
   - packages/step_slider_package
   - packages/tag_chip
   - packages/theme_manager

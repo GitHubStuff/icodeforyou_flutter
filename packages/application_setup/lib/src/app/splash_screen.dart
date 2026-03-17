@@ -16,7 +16,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppCubit, AppState>(
-      buildWhen: _splashOnly,
+      buildWhen: _showSpinner,
       builder: (context, state) {
         return Stack(
           fit: StackFit.expand,
@@ -29,9 +29,12 @@ class SplashScreen extends StatelessWidget {
     );
   }
 
-  static bool _splashOnly(AppState previous, AppState current) {
-    return current is AppSplashVisible || current is AppSplashWaiting;
-  }
+  /// Shows the spinner only when the splash is done but tasks are still
+  /// running.
+  static bool _showSpinner(AppState previous, AppState current) =>
+      current is AppSplashVisible ||
+      current is AppSplashWaiting ||
+      current is AppTasksComplete;
 }
 
 class _SpinnerOverlay extends StatelessWidget {

@@ -4,11 +4,7 @@ import 'package:flutter/material.dart';
 
 /// Generates random colors suitable for both light and dark themes
 /// with readable white or black text overlay.
-class RandomColorGenerator {
-  // coverage:ignore-start
-  RandomColorGenerator._();
-  // coverage:ignore-end
-
+abstract final class RandomColorGenerator {
   static final _random = Random();
 
   /// Generates a random color in the mid-luminance range.
@@ -21,32 +17,43 @@ class RandomColorGenerator {
     final hue = _random.nextDouble() * 360;
     final saturation = 0.4 + _random.nextDouble() * 0.4; // 40-80%
     final lightness = 0.35 + _random.nextDouble() * 0.3; // 35-65%
-    return HSLColor.fromAHSL(alpha / 255, hue, saturation, lightness)
-        .toColor();
+    return HSLColor.fromAHSL(alpha / 255, hue, saturation, lightness).toColor();
   }
 
   /// Returns the color as #AARRGGBB hex string.
   static String toHex(Color color) {
-    final a =
-        (color.a * 255.0).round().clamp(0, 255).toRadixString(16).padLeft(
-              2,
-              '0',
-            );
-    final r =
-        (color.r * 255.0).round().clamp(0, 255).toRadixString(16).padLeft(
-              2,
-              '0',
-            );
-    final g =
-        (color.g * 255.0).round().clamp(0, 255).toRadixString(16).padLeft(
-              2,
-              '0',
-            );
-    final b =
-        (color.b * 255.0).round().clamp(0, 255).toRadixString(16).padLeft(
-              2,
-              '0',
-            );
+    final a = (color.a * 255.0)
+        .round()
+        .clamp(0, 255)
+        .toRadixString(16)
+        .padLeft(
+          2,
+          '0',
+        );
+    final r = (color.r * 255.0)
+        .round()
+        .clamp(0, 255)
+        .toRadixString(16)
+        .padLeft(
+          2,
+          '0',
+        );
+    final g = (color.g * 255.0)
+        .round()
+        .clamp(0, 255)
+        .toRadixString(16)
+        .padLeft(
+          2,
+          '0',
+        );
+    final b = (color.b * 255.0)
+        .round()
+        .clamp(0, 255)
+        .toRadixString(16)
+        .padLeft(
+          2,
+          '0',
+        );
     return '#$a$r$g$b'.toUpperCase();
   }
 

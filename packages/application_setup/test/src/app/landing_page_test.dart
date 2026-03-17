@@ -6,16 +6,13 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('LandingPage', () {
-    testWidgets('renders child inside Scaffold', (tester) async {
+    testWidgets('renders child directly', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: LandingPage(
-            child: Text('landing'),
-          ),
+          home: LandingPage(child: Text('app')),
         ),
       );
-      expect(find.text('landing'), findsOneWidget);
-      expect(find.byType(Scaffold), findsOneWidget);
+      expect(find.text('app'), findsOneWidget);
     });
   });
 }

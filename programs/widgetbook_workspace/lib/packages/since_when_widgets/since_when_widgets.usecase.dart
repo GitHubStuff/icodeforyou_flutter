@@ -8,20 +8,18 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 part '_since_when_widgets_hosts.dart';
 
 void _noOp(String _) {}
+void _noOpInt(int _) {}
 
 Widget _sectionLabel(BuildContext context, String text) => Align(
-      alignment: Alignment.centerLeft,
-      child: Text(
-        text,
-        style: Theme.of(context)
-            .textTheme
-            .labelSmall
-            ?.copyWith(color: Colors.grey),
-      ),
-    );
+  alignment: Alignment.centerLeft,
+  child: Text(
+    text,
+    style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Colors.grey),
+  ),
+);
 
 // ---------------------------------------------------------------------------
-// Default — all knobs including caption and hint
+// CountedTextField — Default
 // ---------------------------------------------------------------------------
 
 @widgetbook.UseCase(
@@ -83,7 +81,7 @@ Widget countedTextFieldDefault(BuildContext context) {
 }
 
 // ---------------------------------------------------------------------------
-// Live Output — callback text, length, caption + hint visible
+// CountedTextField — Live Output
 // ---------------------------------------------------------------------------
 
 @widgetbook.UseCase(
@@ -117,7 +115,7 @@ Widget countedTextFieldLiveOutput(BuildContext context) {
 }
 
 // ---------------------------------------------------------------------------
-// Caption — no caption vs with caption, LTR and RTL
+// CountedTextField — Caption
 // ---------------------------------------------------------------------------
 
 @widgetbook.UseCase(
@@ -129,7 +127,7 @@ Widget countedTextFieldCaption(BuildContext context) =>
     const Center(child: _CaptionShowcase());
 
 // ---------------------------------------------------------------------------
-// Hint Text — default vs custom vs empty
+// CountedTextField — Hint Text
 // ---------------------------------------------------------------------------
 
 @widgetbook.UseCase(
@@ -141,7 +139,7 @@ Widget countedTextFieldHintText(BuildContext context) =>
     const Center(child: _HintTextShowcase());
 
 // ---------------------------------------------------------------------------
-// Custom Clear Widget — default, text, emoji, filled icon
+// CountedTextField — Custom Clear Widget
 // ---------------------------------------------------------------------------
 
 @widgetbook.UseCase(
@@ -194,7 +192,7 @@ Widget countedTextFieldCustomClear(BuildContext context) {
 }
 
 // ---------------------------------------------------------------------------
-// Truncation — maxLength 5, easy to trigger floating message
+// CountedTextField — Truncation
 // ---------------------------------------------------------------------------
 
 @widgetbook.UseCase(
@@ -206,7 +204,7 @@ Widget countedTextFieldTruncation(BuildContext context) =>
     const Center(child: _TruncationHost());
 
 // ---------------------------------------------------------------------------
-// RTL — badge and caption flip to left
+// CountedTextField — RTL
 // ---------------------------------------------------------------------------
 
 @widgetbook.UseCase(
@@ -228,6 +226,128 @@ Widget countedTextFieldRtl(BuildContext context) {
             caption: 'الاسم الأول',
             hintText: 'أدخل النص',
             textDirection: TextDirection.rtl,
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+// ---------------------------------------------------------------------------
+// TagColorField — Default
+// ---------------------------------------------------------------------------
+
+@widgetbook.UseCase(
+  name: 'Default',
+  type: TagColorField,
+  path: 'since_when_widgets/tag_color_field',
+)
+Widget tagColorFieldDefault(BuildContext context) {
+  final height = context.knobs.double.slider(
+    label: 'Height',
+    initialValue: 32,
+    min: 24,
+    max: 80,
+  );
+  final fadeMs = context.knobs.int.slider(
+    label: 'Fade Duration (ms)',
+    initialValue: 250,
+    min: 100,
+    max: 1000,
+  );
+
+  return Center(
+    child: Padding(
+      padding: const EdgeInsets.fromLTRB(32, 48, 32, 16),
+      child: TagColorField(
+        onChanged: _noOpInt,
+        height: height,
+        fadeTime: Duration(milliseconds: fadeMs),
+      ),
+    ),
+  );
+}
+
+// ---------------------------------------------------------------------------
+// TagColorField — Live Output
+// ---------------------------------------------------------------------------
+
+@widgetbook.UseCase(
+  name: 'Live Output',
+  type: TagColorField,
+  path: 'since_when_widgets/tag_color_field',
+)
+Widget tagColorFieldLiveOutput(BuildContext context) {
+  final height = context.knobs.double.slider(
+    label: 'Height',
+    initialValue: 32,
+    min: 24,
+    max: 80,
+  );
+
+  return Center(
+    child: _TagColorLiveOutputHost(height: height),
+  );
+}
+
+// ---------------------------------------------------------------------------
+// TagColorField — Skip Colors
+// ---------------------------------------------------------------------------
+
+@widgetbook.UseCase(
+  name: 'Skip Colors',
+  type: TagColorField,
+  path: 'since_when_widgets/tag_color_field',
+)
+Widget tagColorFieldSkipColors(BuildContext context) =>
+    const Center(child: _TagColorSkipHost());
+
+// ---------------------------------------------------------------------------
+// TagColorField — Custom Refresh Widget
+// ---------------------------------------------------------------------------
+
+@widgetbook.UseCase(
+  name: 'Custom Refresh Widget',
+  type: TagColorField,
+  path: 'since_when_widgets/tag_color_field',
+)
+Widget tagColorFieldCustomRefresh(BuildContext context) {
+  return Center(
+    child: Padding(
+      padding: const EdgeInsets.fromLTRB(32, 48, 32, 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _sectionLabel(context, 'Default — Icons.refresh'),
+          const SizedBox(height: 8),
+          const TagColorField(onChanged: _noOpInt),
+          const SizedBox(height: 32),
+          _sectionLabel(context, 'Autorenew icon'),
+          const SizedBox(height: 8),
+          const TagColorField(
+            onChanged: _noOpInt,
+            refresh: Icon(Icons.autorenew),
+          ),
+          const SizedBox(height: 32),
+          _sectionLabel(context, 'Text button'),
+          const SizedBox(height: 8),
+          const TagColorField(
+            onChanged: _noOpInt,
+            refresh: Text(
+              'New',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.blue,
+              ),
+            ),
+          ),
+          const SizedBox(height: 32),
+          _sectionLabel(context, 'Emoji'),
+          const SizedBox(height: 8),
+          const TagColorField(
+            onChanged: _noOpInt,
+            refresh: Text('🎲', style: TextStyle(fontSize: 18)),
           ),
         ],
       ),

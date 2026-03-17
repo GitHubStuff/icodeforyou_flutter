@@ -17,76 +17,68 @@ void main() {
   group('AppView', () {
     late _MockAppCubit cubit;
 
-    setUp(() => cubit = _MockAppCubit());
-    tearDown(() => cubit.close());
-
-    testWidgets('displays SplashScreen initially', (tester) async {
+    setUp(() {
+      cubit = _MockAppCubit();
       when(() => cubit.state).thenReturn(const AppSplashVisible());
       when(() => cubit.initialize()).thenAnswer((_) async {});
-      whenListen(
-        cubit,
-        const Stream<AppState>.empty(),
-        initialState: const AppSplashVisible(),
-      );
+    });
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: BlocProvider<AppCubit>.value(
-            value: cubit,
-            child: const AppView(
-              transitionDuration: Duration.zero,
-              splashScreen: SplashScreen(child: Text('splash')),
-              landingPage: LandingPage(child: Text('landing')),
-            ),
-          ),
+    Widget buildSubject() => MaterialApp(
+      home: BlocProvider<AppCubit>.value(
+        value: cubit,
+        child: const AppView(
+          transitionDuration: Duration.zero,
+          splashScreen: SplashScreen(child: Text('splash')),
+          landingPage: LandingPage(child: Text('app')),
         ),
-      );
+      ),
+    );
 
+    testWidgets('calls initialize on AppCubit on mount', (tester) async {
+      await tester.pumpWidget(buildSubject());
+      verify(() => cubit.initialize()).called(1);
+    });
+
+    testWidgets('shows splash screen initially', (tester) async {
+      await tester.pumpWidget(buildSubject());
       expect(find.text('splash'), findsOneWidget);
-      expect(find.text('landing'), findsNothing);
+      expect(find.text('app'), findsNothing);
     });
 
-    testWidgets('navigates to LandingPage on AppReady', (tester) async {
-      when(() => cubit.state).thenReturn(const AppSplashVisible());
-      when(() => cubit.initialize()).thenAnswer((_) async {});
+    testWidgets('navigates to landing page when AppReady emitted', (
+      tester,
+    ) async {
       whenListen(
         cubit,
-        Stream.value(const AppReady()),
+        Stream.fromIterable([const AppReady()]),
         initialState: const AppSplashVisible(),
       );
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: BlocProvider<AppCubit>.value(
-            value: cubit,
-            child: const AppView(
-              transitionDuration: Duration.zero,
-              splashScreen: SplashScreen(child: Text('splash')),
-              landingPage: LandingPage(child: Text('landing')),
-            ),
-          ),
-        ),
-      );
-
+      await tester.pumpWidget(buildSubject());
       await tester.pumpAndSettle();
-      expect(find.text('landing'), findsOneWidget);
+      expect(find.text('app'), findsOneWidget);
     });
 
-    test('crossFade returns FadeTransition', () {
-      final animation = AnimationController(
-        vsync: const TestVSync(),
-        duration: Duration.zero,
-      );
-      final result = AppView.crossFade(
-        _FakeBuildContext(),
-        animation,
-        animation,
-        const Text('child'),
-      );
-      expect(result, isA<FadeTransition>());
-      animation.dispose();
+    group('crossFade', () {
+      testWidgets('returns FadeTransition', (tester) async {
+        late Widget result;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Builder(
+              builder: (context) {
+                // ignore: join_return_with_assignment
+                result = AppView.crossFade(
+                  context,
+                  const AlwaysStoppedAnimation(1),
+                  const AlwaysStoppedAnimation(0),
+                  const Text('child'),
+                );
+                return result;
+              },
+            ),
+          ),
+        );
+        expect(result, isA<FadeTransition>());
+      });
     });
   });
 }
-
-class _FakeBuildContext extends Fake implements BuildContext {}

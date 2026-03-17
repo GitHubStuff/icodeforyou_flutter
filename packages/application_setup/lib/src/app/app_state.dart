@@ -14,8 +14,14 @@ final class AppSplashVisible extends AppState {
   const AppSplashVisible();
 }
 
+/// Splash animation is complete but startup tasks are still running.
 final class AppSplashWaiting extends AppState {
   const AppSplashWaiting();
+}
+
+/// All startup tasks are complete but splash animation has not finished.
+final class AppTasksComplete extends AppState {
+  const AppTasksComplete();
 }
 
 final class AppReady extends AppState {

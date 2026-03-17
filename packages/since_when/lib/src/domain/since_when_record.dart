@@ -14,8 +14,7 @@ class SinceWhenRecord extends Equatable {
     required this.editedTimeStamp,
     required this.metaData,
     required this.sequenceNumber,
-    required this.dataString,
-    required this.category,
+    required this.data,
     this.id,
     this.parentTimeStamp,
     this.metaTimeStamp,
@@ -31,8 +30,7 @@ class SinceWhenRecord extends Equatable {
       metaTimeStamp: row['metaTimeStamp'] as int?,
       metaData: row['metaData'] as String,
       sequenceNumber: row['sequenceNumber'] as int,
-      dataString: row['dataString'] as String,
-      category: row['category'] as String,
+      data: row['data'] as String,
     );
   }
 
@@ -61,10 +59,7 @@ class SinceWhenRecord extends Equatable {
   final int sequenceNumber;
 
   /// Primary data content.
-  final String dataString;
-
-  /// Free-form category classification.
-  final String category;
+  final String data;
 
   /// Returns a map suitable for [sqflite] insert/update operations.
   ///
@@ -78,8 +73,7 @@ class SinceWhenRecord extends Equatable {
       'metaTimeStamp': metaTimeStamp,
       'metaData': metaData,
       'sequenceNumber': sequenceNumber,
-      'dataString': dataString,
-      'category': category,
+      'data': data,
     };
   }
 
@@ -90,8 +84,7 @@ class SinceWhenRecord extends Equatable {
     int? editedTimeStamp,
     String? metaData,
     int? sequenceNumber,
-    String? dataString,
-    String? category,
+    String? data,
     Option<int>? parentTimeStamp,
     Option<int>? metaTimeStamp,
   }) {
@@ -102,8 +95,7 @@ class SinceWhenRecord extends Equatable {
       editedTimeStamp: editedTimeStamp ?? this.editedTimeStamp,
       metaData: metaData ?? this.metaData,
       sequenceNumber: sequenceNumber ?? this.sequenceNumber,
-      dataString: dataString ?? this.dataString,
-      category: category ?? this.category,
+      data: data ?? this.data,
       parentTimeStamp: parentTimeStamp == null
           ? this.parentTimeStamp
           : parentTimeStamp.toNullable(),
@@ -123,7 +115,6 @@ class SinceWhenRecord extends Equatable {
         metaTimeStamp,
         metaData,
         sequenceNumber,
-        dataString,
-        category,
+        data,
       ];
 }

@@ -24,8 +24,7 @@ abstract final class SqlStatements {
       metaTimeStamp     INTEGER,
       metaData          TEXT    NOT NULL,
       sequenceNumber    INTEGER NOT NULL DEFAULT 0,
-      dataString        TEXT    NOT NULL,
-      category          TEXT    NOT NULL
+      data              TEXT    NOT NULL
     )
   ''';
 

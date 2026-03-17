@@ -108,3 +108,15 @@ D - Dependency Inversion Principle
 - ask questions if something is not clear, or its an evolving project
 - I want questions and clarification requests before coding anything
 - don't present several options, use SOLID-principals, CLEAN-CODE, and best practices
+
+
+## Current Task
+
+- startup_demo has only 1 rail_menu
+- enhancement to rail_menu
+- have an option to limit the number of widgets on the bottom
+-- the limit must be >= 2
+-- show only limit-1 options and the 'more' icon
+-- eg if the list has 7 items and limit is 3, show the first 3 icons and the 'more' icon
+
+- make sense?

@@ -8,6 +8,8 @@ environment:
   sdk: ">=3.10.0 <4.0.0"
 
 dependencies:
+  animated_widgets:
+    path: ../../packages/animated_widgets
   application_setup:
     path: ../../packages/application_setup
   flutter:
@@ -15,6 +17,11 @@ dependencies:
   flutter_bloc: ^9.1.1
   gap: ^3.0.1
   get_it: ^9.2.1
+  go_router: ^17.1.0
+  rail_menu:
+    path: ../../packages/rail_menu
+  since_when:
+    path: ../../packages/since_when
   theme_manager:
     path: ../../packages/theme_manager
   theme_selection_widget:
@@ -23,6 +30,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  very_good_analysis: ^10.2.0
 
 flutter:
   uses-material-design: true

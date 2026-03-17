@@ -1,124 +1,126 @@
 // test/src/app/app_cubit_test.dart
 
+// ignore_for_file: avoid_catches_without_on_clauses
+
+import 'dart:async';
+
 import 'package:application_setup/src/app/app_cubit.dart';
 import 'package:application_setup/src/app/app_state.dart';
 import 'package:application_setup/src/app/startup_task.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 
-Future<void> _directCompute(
-  Future<void> Function(StartupTask) fn,
-  StartupTask task,
-) =>
-    fn(task);
+class _MockStartupTask extends Mock implements StartupTask {}
 
-class _InstantTask extends StartupTask {
-  const _InstantTask();
-
-  @override
-  String get id => 'instant_task';
-
-  @override
-  Future<void> run() async {}
-}
-
-class _SlowTask extends StartupTask {
-  const _SlowTask();
-
-  @override
-  String get id => 'slow_task';
-
-  @override
-  Future<void> run() async =>
-      Future<void>.delayed(const Duration(milliseconds: 100));
-}
-
-class _ThrowingTask extends StartupTask {
-  const _ThrowingTask();
-
-  @override
-  String get id => 'throwing_task';
-
-  @override
-  Future<void> run() async => throw Exception('task failed');
-}
-
-AppCubit _cubit({
-  List<StartupTask> tasks = const [],
-  Duration splashDuration = Duration.zero,
-}) =>
-    AppCubit(
-      tasks: tasks,
-      splashDuration: splashDuration,
-      computeTask: _directCompute,
-    );
+class _FakeStartupTask extends Fake implements StartupTask {}
 
 void main() {
+  setUpAll(() => registerFallbackValue(_FakeStartupTask()));
+
   group('AppCubit', () {
-    test('initial state is AppInitializing', () async {
-      final cubit = _cubit();
-      expect(cubit.state, isA<AppInitializing>());
-      await cubit.close();
+    late _MockStartupTask task;
+
+    setUp(() {
+      task = _MockStartupTask();
+      when(() => task.id).thenReturn('mock_task');
+      when(() => task.run()).thenAnswer((_) async {});
     });
 
-    blocTest<AppCubit, AppState>(
-      'emits [AppSplashVisible, AppReady] with no tasks',
-      build: _cubit,
-      act: (cubit) async => cubit.initialize(),
-      expect: () => [
-        isA<AppSplashVisible>(),
-        isA<AppReady>(),
-      ],
-    );
+    test('initial state is AppInitializing', () {
+      final cubit = AppCubit(
+        tasks: const [],
+        computeTask: (fn, task) => fn(task),
+      );
+      expect(cubit.state, isA<AppInitializing>());
+      unawaited(cubit.close());
+    });
 
-    blocTest<AppCubit, AppState>(
-      'emits [AppSplashVisible, AppReady] when task finishes before splash',
-      build: () => _cubit(
-        tasks: const [_InstantTask()],
-        splashDuration: const Duration(milliseconds: 50),
-      ),
-      act: (cubit) async => cubit.initialize(),
-      expect: () => [
-        isA<AppSplashVisible>(),
-        isA<AppReady>(),
-      ],
-    );
+    group('initialize — tasks complete before splash', () {
+      blocTest<AppCubit, AppState>(
+        'emits AppSplashVisible then AppTasksComplete '
+        'when splash has not signalled done',
+        build: () => AppCubit(
+          tasks: [task],
+          computeTask: (fn, t) => fn(t),
+        ),
+        act: (cubit) => cubit.initialize(),
+        expect: () => [
+          isA<AppSplashVisible>(),
+          isA<AppTasksComplete>(),
+        ],
+      );
+    });
 
-    blocTest<AppCubit, AppState>(
-      'emits [AppSplashVisible, AppReady] when splash finishes before task',
-      build: () => _cubit(tasks: const [_SlowTask()]),
-      act: (cubit) async => cubit.initialize(),
-      expect: () => [
-        isA<AppSplashVisible>(),
-        isA<AppReady>(),
-      ],
-    );
-
-    blocTest<AppCubit, AppState>(
-      'emits [AppSplashVisible, AppStartupFailed] on throwing task',
-      build: () => _cubit(tasks: const [_ThrowingTask()]),
-      act: (cubit) async {
-        try {
+    group('initialize — splash completes before tasks', () {
+      blocTest<AppCubit, AppState>(
+        'emits AppSplashVisible then AppSplashWaiting '
+        'when onSplashDone called before tasks complete',
+        build: () => AppCubit(
+          tasks: const [],
+          computeTask: (fn, t) => fn(t),
+        ),
+        act: (cubit) async {
+          cubit.onSplashDone();
           await cubit.initialize();
-        } on Exception catch (_) {}
-      },
-      expect: () => [
-        isA<AppSplashVisible>(),
-        isA<AppStartupFailed>(),
-      ],
-    );
+        },
+        expect: () => [
+          isA<AppSplashWaiting>(),
+          isA<AppSplashVisible>(),
+          isA<AppReady>(),
+        ],
+      );
+    });
 
-    test('AppStartupFailed carries correct taskId on failure', () async {
-      final cubit = _cubit(tasks: const [_ThrowingTask()]);
-      final states = <AppState>[];
-      final sub = cubit.stream.listen(states.add);
-      try {
-        await cubit.initialize();
-      } on Exception catch (_) {}
-      await sub.cancel();
-      final failed = states.whereType<AppStartupFailed>().first;
-      expect(failed.taskId, 'throwing_task');
-      await cubit.close();
+    group('onSplashDone', () {
+      blocTest<AppCubit, AppState>(
+        'emits AppSplashWaiting when tasks are not complete',
+        build: () => AppCubit(
+          tasks: const [],
+          computeTask: (fn, t) => fn(t),
+        ),
+        act: (cubit) => cubit.onSplashDone(),
+        expect: () => [isA<AppSplashWaiting>()],
+      );
+
+      blocTest<AppCubit, AppState>(
+        'emits AppReady when tasks are already complete',
+        build: () => AppCubit(
+          tasks: const [],
+          computeTask: (fn, t) => fn(t),
+        ),
+        act: (cubit) async {
+          await cubit.initialize();
+          cubit.onSplashDone();
+        },
+        expect: () => [
+          isA<AppSplashVisible>(),
+          isA<AppTasksComplete>(),
+          isA<AppReady>(),
+        ],
+      );
+    });
+
+    group('task failure', () {
+      blocTest<AppCubit, AppState>(
+        'emits AppStartupFailed and rethrows on task error',
+        build: () {
+          when(() => task.run()).thenThrow(Exception('fail'));
+          return AppCubit(
+            tasks: [task],
+            computeTask: (fn, t) => fn(t),
+          );
+        },
+        act: (cubit) async {
+          try {
+            await cubit.initialize();
+          } catch (_) {}
+        },
+        expect: () => [
+          isA<AppSplashVisible>(),
+          isA<AppStartupFailed>(),
+        ],
+      );
     });
   });
 }

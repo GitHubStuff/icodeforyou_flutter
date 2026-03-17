@@ -179,12 +179,6 @@ final directories = <_widgetbook.WidgetbookNode>[
                 .settingsWidgetCustomTitle,
       ),
       _widgetbook.WidgetbookUseCase(
-        name: 'Default',
-        builder:
-            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
-                .settingsWidgetDefault,
-      ),
-      _widgetbook.WidgetbookUseCase(
         name: 'Force Phone Layout',
         builder:
             _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
@@ -197,16 +191,52 @@ final directories = <_widgetbook.WidgetbookNode>[
                 .settingsWidgetTablet,
       ),
       _widgetbook.WidgetbookUseCase(
+        name: 'Large Edge Gap',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetLargeGap,
+      ),
+      _widgetbook.WidgetbookUseCase(
         name: 'Many Entries (Scrollable)',
         builder:
             _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
                 .settingsWidgetScrollable,
       ),
       _widgetbook.WidgetbookUseCase(
+        name: 'No Edge Gap',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetNoGap,
+      ),
+      _widgetbook.WidgetbookUseCase(
         name: 'Single Entry',
         builder:
             _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
                 .settingsWidgetSingleEntry,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Slide from Bottom',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetDefault,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Slide from Left',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetFromLeft,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Slide from Right',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetFromRight,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Slide from Top',
+        builder:
+            _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
+                .settingsWidgetFromTop,
       ),
     ],
   ),
@@ -418,6 +448,40 @@ final directories = <_widgetbook.WidgetbookNode>[
                 builder:
                     _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
                         .countedTextFieldTruncation,
+              ),
+            ],
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookFolder(
+        name: 'tag_color_field',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'TagColorField',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Custom Refresh Widget',
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .tagColorFieldCustomRefresh,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .tagColorFieldDefault,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Live Output',
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .tagColorFieldLiveOutput,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Skip Colors',
+                builder:
+                    _widgetbook_workspace_packages_since_when_widgets_since_when_widgets_usecase
+                        .tagColorFieldSkipColors,
               ),
             ],
           ),

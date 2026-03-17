@@ -7,20 +7,32 @@ import 'package:application_setup/src/app/startup_task.dart';
 class AppCubit extends AppCubitBase {
   AppCubit({
     required super.tasks,
-    required super.splashDuration,
     super.computeTask,
   });
+
+  bool _tasksComplete = false;
+  bool _splashDone = false;
+
+  @override
+  void onSplashDone() {
+    _splashDone = true;
+    if (_tasksComplete) {
+      emit(const AppReady());
+    } else {
+      emit(const AppSplashWaiting());
+    }
+  }
 
   @override
   Future<void> initialize() async {
     emit(const AppSplashVisible());
-
-    await Future.wait([
-      _runTasks(),
-      Future<void>.delayed(splashDuration),
-    ]);
-
-    emit(const AppReady());
+    await _runTasks();
+    _tasksComplete = true;
+    if (_splashDone) {
+      emit(const AppReady());
+    } else {
+      emit(const AppTasksComplete());
+    }
   }
 
   Future<void> _runTasks() async {

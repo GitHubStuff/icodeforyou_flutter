@@ -13,25 +13,25 @@ typedef ComputeTask = Future<void> Function(
 abstract class AppCubitBase extends Cubit<AppState> {
   AppCubitBase({
     required List<StartupTask> tasks,
-    required Duration splashDuration,
     ComputeTask? computeTask,
   })  : _tasks = tasks,
-        _splashDuration = splashDuration,
         _computeTask = computeTask ?? compute,
         super(const AppInitializing());
 
   final List<StartupTask> _tasks;
-  final Duration _splashDuration;
   final ComputeTask _computeTask;
 
   @protected
   List<StartupTask> get tasks => _tasks;
 
   @protected
-  Duration get splashDuration => _splashDuration;
-
-  @protected
   ComputeTask get computeTask => _computeTask;
+
+  /// Called by the splash widget when its animation completes.
+  ///
+  /// If tasks are already done, emits [AppReady].
+  /// If tasks are still running, emits [AppSplashWaiting] to show the spinner.
+  void onSplashDone();
 
   Future<void> initialize();
 }

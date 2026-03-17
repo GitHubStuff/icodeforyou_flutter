@@ -1,6 +1,7 @@
 // lib/src/runner/application_runner.dart
 
 import 'package:application_setup/src/app/app_cubit.dart';
+import 'package:application_setup/src/app/app_view.dart';
 import 'package:application_setup/src/app/startup_task.dart';
 import 'package:application_setup/src/runner/_app_bootstrapper.dart';
 import 'package:application_setup/src/runner/_app_widget.dart';
@@ -9,10 +10,9 @@ import 'package:theme_manager/theme_manager.dart';
 
 class ApplicationRunner {
   const ApplicationRunner({
-    required this.splashChild,
-    required this.landingChild,
+    required this.splashBuilder,
+    required this.app,
     this.tasks = const [],
-    this.splashDuration = const Duration(seconds: 3),
     this.transitionDuration = const Duration(milliseconds: 600),
     this.lightTheme,
     this.darkTheme,
@@ -21,10 +21,24 @@ class ApplicationRunner {
     AppBootstrapper? bootstrapper,
   }) : _bootstrapper = bootstrapper ?? const AppBootstrapper();
 
-  final Widget splashChild;
-  final Widget landingChild;
+  /// Builder that receives [onSplashDone] and returns the splash widget.
+  ///
+  /// The callback must be forwarded to the splash widget's completion
+  /// hook so the cubit knows when the splash animation has finished.
+  ///
+  /// ```dart
+  /// splashBuilder: (onComplete) => GrowAndFadeWidgetView(
+  ///   duration: const Duration(milliseconds: 1200),
+  ///   onComplete: onComplete,
+  ///   child: const FlutterLogo(size: 120),
+  /// ),
+  /// ```
+  final Widget Function(VoidCallback onSplashDone) splashBuilder;
+
+  /// The root widget displayed after startup completes.
+  final Widget app;
+
   final List<StartupTask> tasks;
-  final Duration splashDuration;
   final Duration transitionDuration;
   final ThemeData? lightTheme;
   final ThemeData? darkTheme;
@@ -36,31 +50,18 @@ class ApplicationRunner {
     _bootstrapper.ensureInitialized();
     final themeCubit = await ThemeCubit.create();
     onReady?.call(themeCubit);
-    final appCubit = AppCubit(
-      tasks: tasks,
-      splashDuration: splashDuration,
-    );
+    final appCubit = AppCubit(tasks: tasks);
     _bootstrapper.run(
       AppWidget(
         themeCubit: themeCubit,
         appCubit: appCubit,
-        splashChild: splashChild,
-        landingChild: landingChild,
+        splashBuilder: splashBuilder,
+        app: app,
         transitionDuration: transitionDuration,
-        splashDuration: splashDuration,
         lightTheme: lightTheme ?? ThemeData.light(),
         darkTheme: darkTheme ?? ThemeData.dark(),
-        transitionsBuilder: transitionsBuilder ?? defaultCrossFade,
+        transitionsBuilder: transitionsBuilder ?? AppView.crossFade,
       ),
     );
   }
-
-  @visibleForTesting
-  static Widget defaultCrossFade(
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> _,
-    Widget child,
-  ) =>
-      FadeTransition(opacity: animation, child: child);
 }
