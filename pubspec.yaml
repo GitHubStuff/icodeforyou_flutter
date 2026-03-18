@@ -7,13 +7,13 @@ workspace:
   - packages/abstractions
   - packages/adaptive_modal
   - packages/analog_clock_widget
+  - packages/animated_rail_menu
   - packages/animated_widgets
   - packages/application_setup
   - packages/edittext_popover
   - packages/extensions
   - packages/my_logger
   - packages/random_color_generator
-  - packages/rail_menu
   - packages/scrolling_datetime_pickers
   - packages/settings_widget
   - packages/since_when

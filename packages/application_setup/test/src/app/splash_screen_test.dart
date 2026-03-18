@@ -11,7 +11,30 @@ import 'package:mocktail/mocktail.dart';
 
 class _MockAppCubit extends MockCubit<AppState> implements AppCubit {}
 
+class _ConcreteSplash extends SplashScreenAbstract {
+  const _ConcreteSplash({required super.onComplete});
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: onComplete,
+        child: const Text('splash'),
+      );
+}
+
 void main() {
+  group('SplashScreenAbstract', () {
+    testWidgets('exposes onComplete and calls it when invoked', (tester) async {
+      var called = false;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: _ConcreteSplash(onComplete: () => called = true),
+        ),
+      );
+      await tester.tap(find.text('splash'));
+      expect(called, isTrue);
+    });
+  });
+
   group('SplashScreen', () {
     late _MockAppCubit cubit;
 
@@ -51,6 +74,12 @@ void main() {
 
     testWidgets('renders child without spinner on AppReady', (tester) async {
       await tester.pumpWidget(buildSubject(const AppReady()));
+      expect(find.text('splash'), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+    });
+
+    testWidgets('does not rebuild on AppInitializing', (tester) async {
+      await tester.pumpWidget(buildSubject(const AppInitializing()));
       expect(find.text('splash'), findsOneWidget);
       expect(find.byType(CircularProgressIndicator), findsNothing);
     });

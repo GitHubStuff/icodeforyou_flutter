@@ -2,6 +2,7 @@
 
 import 'package:application_setup/src/app/app_cubit.dart';
 import 'package:application_setup/src/app/app_state.dart';
+import 'package:application_setup/src/app/splash_screen.dart';
 import 'package:application_setup/src/runner/_app_widget.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,13 @@ class _MockAppCubit extends MockCubit<AppState> implements AppCubit {
 
 class _MockThemeCubit extends MockCubit<ThemeMode> implements ThemeCubit {}
 
+class _StubSplash extends SplashScreenAbstract {
+  const _StubSplash({required super.onComplete});
+
+  @override
+  Widget build(BuildContext context) => const Text('splash');
+}
+
 void main() {
   group('AppWidget', () {
     late _MockAppCubit appCubit;
@@ -29,35 +37,33 @@ void main() {
       when(() => themeCubit.state).thenReturn(ThemeMode.system);
     });
 
-    testWidgets('renders splash via splashBuilder', (tester) async {
-      await tester.pumpWidget(
+    Widget buildSubject({
+      SplashScreenAbstract Function(VoidCallback)? splashBuilder,
+    }) =>
         AppWidget(
           themeCubit: themeCubit,
           appCubit: appCubit,
-          splashBuilder: (_) => const Text('splash'),
+          splashBuilder:
+              splashBuilder ?? (onDone) => _StubSplash(onComplete: onDone),
           app: const Text('app'),
           transitionDuration: Duration.zero,
           lightTheme: ThemeData.light(),
           darkTheme: ThemeData.dark(),
-        ),
-      );
+        );
+
+    testWidgets('renders splash via splashBuilder', (tester) async {
+      await tester.pumpWidget(buildSubject());
       expect(find.text('splash'), findsOneWidget);
     });
 
     testWidgets('passes onSplashDone to splashBuilder', (tester) async {
       VoidCallback? captured;
       await tester.pumpWidget(
-        AppWidget(
-          themeCubit: themeCubit,
-          appCubit: appCubit,
+        buildSubject(
           splashBuilder: (onDone) {
             captured = onDone;
-            return const Text('splash');
+            return _StubSplash(onComplete: onDone);
           },
-          app: const Text('app'),
-          transitionDuration: Duration.zero,
-          lightTheme: ThemeData.light(),
-          darkTheme: ThemeData.dark(),
         ),
       );
       expect(captured, isNotNull);
@@ -69,18 +75,28 @@ void main() {
         Stream.fromIterable([ThemeMode.dark]),
         initialState: ThemeMode.system,
       );
+      await tester.pumpWidget(buildSubject());
+      await tester.pump();
+    });
+
+    testWidgets('uses custom transitionsBuilder when provided', (tester) async {
+      var builderCalled = false;
       await tester.pumpWidget(
         AppWidget(
           themeCubit: themeCubit,
           appCubit: appCubit,
-          splashBuilder: (_) => const Text('splash'),
+          splashBuilder: (onDone) => _StubSplash(onComplete: onDone),
           app: const Text('app'),
           transitionDuration: Duration.zero,
           lightTheme: ThemeData.light(),
           darkTheme: ThemeData.dark(),
+          transitionsBuilder: (context, animation, secondary, child) {
+            builderCalled = true;
+            return child;
+          },
         ),
       );
-      await tester.pump();
+      expect(builderCalled, isFalse);
     });
   });
 }

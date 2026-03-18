@@ -2,6 +2,7 @@
 
 import 'package:application_setup/src/app/app_cubit.dart';
 import 'package:application_setup/src/app/app_view.dart';
+import 'package:application_setup/src/app/splash_screen.dart';
 import 'package:application_setup/src/app/startup_task.dart';
 import 'package:application_setup/src/runner/_app_bootstrapper.dart';
 import 'package:application_setup/src/runner/_app_widget.dart';
@@ -21,19 +22,16 @@ class ApplicationRunner {
     AppBootstrapper? bootstrapper,
   }) : _bootstrapper = bootstrapper ?? const AppBootstrapper();
 
-  /// Builder that receives [onSplashDone] and returns the splash widget.
+  /// Builder that receives [onSplashDone] and returns a [SplashScreenAbstract].
   ///
-  /// The callback must be forwarded to the splash widget's completion
-  /// hook so the cubit knows when the splash animation has finished.
+  /// The returned widget must call [onSplashDone] when its animation
+  /// completes. Failing to do so will leave the app on the splash screen
+  /// indefinitely.
   ///
   /// ```dart
-  /// splashBuilder: (onComplete) => GrowAndFadeWidgetView(
-  ///   duration: const Duration(milliseconds: 1200),
-  ///   onComplete: onComplete,
-  ///   child: const FlutterLogo(size: 120),
-  /// ),
+  /// splashBuilder: (onComplete) => MySplash(onComplete: onComplete),
   /// ```
-  final Widget Function(VoidCallback onSplashDone) splashBuilder;
+  final SplashScreenAbstract Function(VoidCallback onSplashDone) splashBuilder;
 
   /// The root widget displayed after startup completes.
   final Widget app;

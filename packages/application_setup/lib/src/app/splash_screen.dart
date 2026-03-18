@@ -5,6 +5,29 @@ import 'package:application_setup/src/app/app_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// Abstract base for all splash screen widgets used with [ApplicationRunner].
+///
+/// Subclasses must call [onComplete] when their animation finishes so the
+/// app lifecycle can proceed. Failing to call [onComplete] will leave the
+/// app on the splash screen indefinitely.
+///
+/// ```dart
+/// class MySplash extends SplashScreenAbstract {
+///   const MySplash({required super.onComplete, super.key});
+///
+///   @override
+///   Widget build(BuildContext context) {
+///     return MyAnimatedWidget(onDone: onComplete);
+///   }
+/// }
+/// ```
+abstract class SplashScreenAbstract extends StatelessWidget {
+  const SplashScreenAbstract({required this.onComplete, super.key});
+
+  /// Must be called by the subclass when the splash animation completes.
+  final VoidCallback onComplete;
+}
+
 class SplashScreen extends StatelessWidget {
   const SplashScreen({
     required this.child,

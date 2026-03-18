@@ -28,16 +28,8 @@ class AppWidget extends StatelessWidget {
   final ThemeCubit themeCubit;
   final AppCubit appCubit;
 
-  /// Builder that receives [onSplashDone] and returns the splash widget.
-  ///
-  /// ```dart
-  /// splashBuilder: (onComplete) => GrowAndFadeWidgetView(
-  ///   duration: const Duration(milliseconds: 1200),
-  ///   onComplete: onComplete,
-  ///   child: const FlutterLogo(size: 120),
-  /// ),
-  /// ```
-  final Widget Function(VoidCallback onSplashDone) splashBuilder;
+  /// Builder that receives [onSplashDone] and returns a [SplashScreenAbstract].
+  final SplashScreenAbstract Function(VoidCallback onSplashDone) splashBuilder;
 
   /// The root widget displayed after startup completes.
   final Widget app;
