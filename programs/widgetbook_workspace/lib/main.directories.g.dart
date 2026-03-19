@@ -15,6 +15,8 @@ import 'package:widgetbook_workspace/packages/adaptive_modal/adaptive_modal.usec
     as _widgetbook_workspace_packages_adaptive_modal_adaptive_modal_usecase;
 import 'package:widgetbook_workspace/packages/analog_clock_widget/analog_clock_widget.usecase.dart'
     as _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase;
+import 'package:widgetbook_workspace/packages/animated_rail_menu/animated_rail_menu.usecase.dart'
+    as _widgetbook_workspace_packages_animated_rail_menu_animated_rail_menu_usecase;
 import 'package:widgetbook_workspace/packages/animated_widgets/animated_widgets.usecase.dart'
     as _widgetbook_workspace_packages_animated_widgets_animated_widgets_usecase;
 import 'package:widgetbook_workspace/packages/edittext_popover/edittext_popover.usecase.dart'
@@ -484,6 +486,40 @@ final directories = <_widgetbook.WidgetbookNode>[
                         .tagColorFieldSkipColors,
               ),
             ],
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
+    name: 'widget',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'RailNavigationWidget',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Haptic Feedback',
+            builder:
+                _widgetbook_workspace_packages_animated_rail_menu_animated_rail_menu_usecase
+                    .railNavigationHaptic,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Horizontal',
+            builder:
+                _widgetbook_workspace_packages_animated_rail_menu_animated_rail_menu_usecase
+                    .railNavigationHorizontal,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Overflow — More',
+            builder:
+                _widgetbook_workspace_packages_animated_rail_menu_animated_rail_menu_usecase
+                    .railNavigationOverflow,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Vertical',
+            builder:
+                _widgetbook_workspace_packages_animated_rail_menu_animated_rail_menu_usecase
+                    .railNavigationVertical,
           ),
         ],
       ),

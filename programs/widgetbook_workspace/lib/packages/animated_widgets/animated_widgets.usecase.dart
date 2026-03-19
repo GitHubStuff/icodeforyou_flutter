@@ -125,6 +125,7 @@ class _GrowHostState extends State<_GrowHost> {
           child: GrowWidgetView(
             key: ValueKey(_key),
             duration: widget.duration,
+            onComplete: () {},
             child: const FlutterLogo(size: 80),
           ),
         ),
@@ -179,6 +180,7 @@ class _GrowAndFadeHostState extends State<_GrowAndFadeHost> {
           child: GrowAndFadeWidgetView(
             key: ValueKey(_key),
             duration: widget.duration,
+            onComplete: () {},
             child: const FlutterLogo(size: 80),
           ),
         ),

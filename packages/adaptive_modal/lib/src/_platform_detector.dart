@@ -52,7 +52,7 @@ enum FormFactor {
 /// The breakpoint value of 600dp matches the Material Design guidance for the
 /// phone/tablet boundary and is consistent with [AdaptiveLayout] from the
 /// flutter_adaptive_scaffold package.
-class PlatformDetector {
+abstract final class PlatformDetector {
   /// The logical pixel width below which a device is considered a phone.
   static const double _phoneBreakpoint = 600;
 
@@ -100,7 +100,7 @@ class PlatformDetector {
 ///
 /// The [onChange] callback receives the new [FormFactor] whenever it differs
 /// from the previously observed value.
-class BreakpointObserver {
+final class BreakpointObserver {
   /// Constructor
   BreakpointObserver({required this.onChange});
 
@@ -134,7 +134,7 @@ class BreakpointObserver {
 ///
 /// Used by [_PositionResolver] when clamping the modal position to ensure
 /// the modal never overlaps system UI (notch, home indicator, status bar).
-class SafeAreaInsets {
+abstract final class SafeAreaInsets {
   /// Returns the [EdgeInsets] representing the safe area for [context].
   static EdgeInsets of(BuildContext context) => MediaQuery.paddingOf(context);
 
@@ -153,7 +153,7 @@ class SafeAreaInsets {
 ///
 /// A thin wrapper that keeps [MediaQuery] access in one place so that
 /// [_PositionResolver] and [_OverlayManager] never call [MediaQuery] directly.
-class ScreenSize {
+abstract final class ScreenSize {
   /// Returns the full logical screen [Size] for [context].
   static Size of(BuildContext context) => MediaQuery.sizeOf(context);
 
@@ -192,7 +192,7 @@ enum WindowSizeClass {
 }
 
 /// Resolves the [WindowSizeClass] for a given [BuildContext].
-class WindowSizeClassResolver {
+abstract final class WindowSizeClassResolver {
   static const double _mediumBreakpoint = 600;
   static const double _expandedBreakpoint = 840;
 

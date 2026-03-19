@@ -117,9 +117,10 @@ class _RailNavigationView extends StatelessWidget {
     );
     return LayoutBuilder(
       builder: (context, constraints) {
+        final safePadding = MediaQuery.paddingOf(context);
         final availableExtent = direction == RailDirection.horizontal
-            ? constraints.maxWidth
-            : constraints.maxHeight;
+            ? constraints.maxWidth - safePadding.left - safePadding.right
+            : constraints.maxHeight - safePadding.top - safePadding.bottom;
 
         final result = const _OverflowCalculator().calculate(
           itemCount: entries.length,

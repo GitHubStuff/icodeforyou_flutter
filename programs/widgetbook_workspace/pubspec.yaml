@@ -12,6 +12,8 @@ dependencies:
     path: ../../packages/adaptive_modal
   analog_clock_widget:
     path: ../../packages/analog_clock_widget
+  animated_rail_menu:
+    path: ../../packages/animated_rail_menu
   animated_widgets:
     path: ../../packages/animated_widgets
   application_setup:
@@ -53,6 +55,7 @@ dev_dependencies:
     sdk: flutter
   mockito: ^5.5.1
   very_good_analysis: ^10.2.0
+  widgetbook_generator: ^3.22.0
 
 flutter:
   uses-material-design: true

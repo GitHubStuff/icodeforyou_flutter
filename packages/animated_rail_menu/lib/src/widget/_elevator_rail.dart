@@ -36,6 +36,7 @@ class _ElevatorRail extends StatelessWidget {
           width: railIcon.barExtent,
           child: Column(
             mainAxisAlignment: _alignment,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ...visibleEntries.indexed.map(
                 (entry) => _RailItemTile(

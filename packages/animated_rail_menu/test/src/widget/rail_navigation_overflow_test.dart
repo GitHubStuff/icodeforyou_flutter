@@ -1,5 +1,7 @@
 // test/src/widget/rail_navigation_overflow_test.dart
 
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:animated_rail_menu/animated_rail_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -131,5 +133,90 @@ void main() {
       await _pump(tester);
       expect(find.text('Home Page'), findsOneWidget);
     });
+  });
+
+  group('_MoreInlineButton — flyout onTap', () {
+    // Forces overflow by constraining width so only the first entry fits,
+    // pushing the rest into the More flyout. Tapping the flyout item
+    // exercises the Navigator.pop + cubit.setActive path (lines 79–88).
+    Future<void> _pumpOverflow(
+      WidgetTester tester, {
+      RailTransition transition = RailTransition.crossFade,
+      RailDirection direction = RailDirection.horizontal,
+      int defaultIndex = 0,
+    }) async {
+      tester.view.physicalSize = const Size(100, 800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: RailNavigationWidget(
+            direction: direction,
+            entries: _entries,
+            transition: transition,
+            defaultIndex: defaultIndex,
+            transitionDuration: Duration.zero,
+          ),
+        ),
+      );
+      await _pump(tester);
+    }
+
+    testWidgets('tapping overflow item navigates — crossFade', (tester) async {
+      await _pumpOverflow(tester);
+
+      expect(find.text('More'), findsOneWidget);
+      await tester.tap(find.text('More'));
+      await tester.pumpAndSettle();
+
+      // At least one overflow entry label is visible in the flyout.
+      expect(
+        find.byType(ListTile),
+        findsWidgets,
+      );
+
+      // Tap the first ListTile in the popup to fire onTap (lines 79–88).
+      await tester.tap(find.byType(ListTile).first);
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets(
+      'tapping overflow item navigates — slideDirectional horizontal',
+      (tester) async {
+        await _pumpOverflow(
+          tester,
+          transition: RailTransition.slideDirectional,
+          direction: RailDirection.horizontal,
+        );
+
+        expect(find.text('More'), findsOneWidget);
+        await tester.tap(find.text('More'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ListTile), findsWidgets);
+        await tester.tap(find.byType(ListTile).first);
+        await tester.pumpAndSettle();
+      },
+    );
+
+    testWidgets(
+      'tapping overflow item navigates — slideDirectional vertical',
+      (tester) async {
+        await _pumpOverflow(
+          tester,
+          transition: RailTransition.slideDirectional,
+          direction: RailDirection.vertical,
+        );
+
+        expect(find.text('More'), findsOneWidget);
+        await tester.tap(find.text('More'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ListTile), findsWidgets);
+        await tester.tap(find.byType(ListTile).first);
+        await tester.pumpAndSettle();
+      },
+    );
   });
 }
