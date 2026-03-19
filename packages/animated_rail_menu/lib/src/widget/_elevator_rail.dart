@@ -2,6 +2,10 @@
 
 part of '_internal.dart';
 
+/// Minimum top padding applied to the elevator rail to clear device corner
+/// radius clipping. 32dp covers iPhone 17 Pro and comparable devices.
+const double _kElevatorTopMinimum = 32;
+
 /// Renders the menu bar along the left edge.
 class _ElevatorRail extends StatelessWidget {
   const _ElevatorRail({
@@ -31,7 +35,9 @@ class _ElevatorRail extends StatelessWidget {
       color: theme.backgroundColor,
       elevation: theme.elevation,
       child: SafeArea(
+        left: false,
         right: false,
+        minimum: const EdgeInsets.only(top: _kElevatorTopMinimum),
         child: SizedBox(
           width: railIcon.barExtent,
           child: Column(

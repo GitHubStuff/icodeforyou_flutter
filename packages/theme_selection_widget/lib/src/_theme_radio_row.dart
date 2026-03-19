@@ -26,7 +26,12 @@ class ThemeRadioRow extends StatelessWidget {
           children: [
             Icon(option.icon),
             const SizedBox(width: 12),
-            Expanded(child: Text(option.label)),
+            Expanded(
+              child: Text(
+                option.label,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
             Radio<ThemeMode>(value: option.mode),
           ],
         ),

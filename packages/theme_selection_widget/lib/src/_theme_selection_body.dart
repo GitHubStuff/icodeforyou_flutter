@@ -31,7 +31,7 @@ class ThemeSelectionBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(title, style: theme.textTheme.titleMedium),
+          Text(title, style: theme.textTheme.titleLarge),
           const SizedBox(height: 8),
           ...options.map(
             (option) => ThemeRadioRow(

@@ -8,6 +8,10 @@ part of '_internal.dart';
 /// based on [direction]. Owns the [RailMenuCubit] lifecycle, safe area,
 /// overflow handling, and page transition animation.
 ///
+/// Pass [RailDirection.adaptive] to resolve direction automatically from
+/// screen width and orientation — vertical on tablets (>= 600dp) and
+/// landscape phones, horizontal on portrait phones.
+///
 /// ```dart
 /// RailNavigationWidget(
 ///   entries: const [
@@ -18,7 +22,7 @@ part of '_internal.dart';
 ///       page: HomePage(),
 ///     ),
 ///   ],
-///   direction: RailDirection.horizontal,
+///   direction: RailDirection.adaptive,
 /// )
 /// ```
 class RailNavigationWidget extends StatelessWidget {
@@ -36,10 +40,21 @@ class RailNavigationWidget extends StatelessWidget {
     this.limit,
   }) : assert(limit == null || limit >= 2, 'limit must be >= 2');
 
+  /// Key applied to the [Scaffold] when horizontal layout is active.
+  @visibleForTesting
+  static const horizontalScaffoldKey = Key('rail_horizontal_scaffold');
+
+  /// Key applied to the [Scaffold] when vertical layout is active.
+  @visibleForTesting
+  static const verticalScaffoldKey = Key('rail_vertical_scaffold');
+
   /// The entries to display — each carries its icon, label, and page.
   final List<RailMenuEntry> entries;
 
   /// The axis along which the menu bar is rendered.
+  ///
+  /// Use [RailDirection.adaptive] to resolve automatically from screen
+  /// width and orientation at build time.
   final RailDirection direction;
 
   /// The index of the entry selected on first render. Defaults to 0.
@@ -108,6 +123,15 @@ class _RailNavigationView extends StatelessWidget {
   final HapticIntensity haptic;
   final int? limit;
 
+  RailDirection _resolvedDirection(BuildContext context) {
+    if (direction != RailDirection.adaptive) return direction;
+    final width = MediaQuery.sizeOf(context).width;
+    if (width >= 600) return RailDirection.vertical;
+    return MediaQuery.orientationOf(context) == Orientation.landscape
+        ? RailDirection.vertical
+        : RailDirection.horizontal;
+  }
+
   @override
   Widget build(BuildContext context) {
     assert(entries.isNotEmpty, 'entries must not be empty');
@@ -115,10 +139,11 @@ class _RailNavigationView extends StatelessWidget {
       defaultIndex >= 0 && defaultIndex < entries.length,
       'defaultIndex must be a valid entries index',
     );
+    final resolved = _resolvedDirection(context);
     return LayoutBuilder(
       builder: (context, constraints) {
         final safePadding = MediaQuery.paddingOf(context);
-        final availableExtent = direction == RailDirection.horizontal
+        final availableExtent = resolved == RailDirection.horizontal
             ? constraints.maxWidth - safePadding.left - safePadding.right
             : constraints.maxHeight - safePadding.top - safePadding.bottom;
 
@@ -134,7 +159,7 @@ class _RailNavigationView extends StatelessWidget {
             ? entries.sublist(result.visibleCount)
             : <RailMenuEntry>[];
 
-        return direction == RailDirection.horizontal
+        return resolved == RailDirection.horizontal
             ? _buildHorizontal(visibleEntries, overflowEntries)
             : _buildVertical(visibleEntries, overflowEntries);
       },
@@ -146,6 +171,7 @@ class _RailNavigationView extends StatelessWidget {
     List<RailMenuEntry> overflowEntries,
   ) {
     return Scaffold(
+      key: RailNavigationWidget.horizontalScaffoldKey,
       body: _BodySwitcher(
         entries: entries,
         transitionDuration: transitionDuration,
@@ -166,6 +192,7 @@ class _RailNavigationView extends StatelessWidget {
     List<RailMenuEntry> overflowEntries,
   ) {
     return Scaffold(
+      key: RailNavigationWidget.verticalScaffoldKey,
       body: Row(
         children: [
           _ElevatorRail(
