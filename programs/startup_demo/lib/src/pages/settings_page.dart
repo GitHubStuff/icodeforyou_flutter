@@ -10,10 +10,13 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: ThemeSelectionWidget(
-          cubit: GetIt.instance<ThemeCubitBase>(),
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: ThemeSelectionWidget(
+            cubit: GetIt.instance<ThemeCubitBase>(),
+          ),
         ),
       ),
     );

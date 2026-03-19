@@ -18,7 +18,7 @@ void main() => ApplicationRunner(
           )
           as SplashScreenAbstract,
   app: const RailNavigationWidget(
-    direction: RailDirection.vertical,
+    direction: RailDirection.adaptive,
     icon: RailIcon.phone,
     transition: RailTransition.slideDirectional,
     iconSpacing: MenuIconSpacing.collapsed,
