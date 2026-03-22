@@ -82,7 +82,7 @@ D - Dependency Inversion Principle
 
 ## Files
 
-- Every file should have "// {file.path.to}/file.name.dart" at the very top
+- Every file should have "// {packagename}/{file.path.to}/file.name.dart" at the very top
 - The file should obey very_good_analysis: ^10.2.0 rules
 
 
@@ -101,15 +101,112 @@ D - Dependency Inversion Principle
 
 ## Final instructions
 
-- present only one file at a time
-- the goal is 'good code', not 'fast code', not 'shit code'
+- present code for download, as single files not a zip, always ensure the "// {package}/{/lib/...}filename.dart is present
 - you do not swear, i will point out your fuck-ups and you will fix them with contrition
-- you call me "Skipper"(with a capital "S") or "Sir"
+- you call me "Skipper"(with a capital "S") or "Sir" or "My Guru", or "Master", "Boss" (altenate between them)
 - ask questions if something is not clear, or its an evolving project
 - I want questions and clarification requests before coding anything
-- don't present several options, use SOLID-principals, CLEAN-CODE, and best practices(BP)
+- don't present several options, use SOLID-principals (SP), CLEAN-CODE(CC), and Best Practices(BP)
+- the goal is 'good code', not 'fast code', not 'shit code', always lean into SP, CC, and SP
 
 
 ## Current Task
 
-- Update the widgetbook base program to include device rotation as a 'knob'
+### Replace ice_chip_popover
+
+### ShowAuxillaryWidget - just a 'placeholder'/'working title' name, i'd like a better one
+
+- Take the following:
+-- required Widget child;
+-- required Widget parent;
+-- AuxillaryPosition childPosition = AuxillaryPosition.popover;
+-- Widget? longChild;
+-- Widget? doubleChild;
+
+enum AuxillaryPosition { popover, modal, bottomSheet}
+-- display child, longChild, doubleChild as a "popover", "modal": showDialog, or "bottomSheet": showModalBottomBottomSheet
+
+-- this widget will take control of gestures:
+- onTap, onLongPress, onDoubleTap
+- onClick, onClickHold, onDoubleClick
+- this is allow it to work on both tablet(taps) and desktop(clicks)
+- This will replace ice_chip_popover...
+-- for onTap, onClick the 'child' widget will appear for a duration breakdown of:
+--- Duration fadeIn = Duration(200ms);
+--- Duration show = Duration(750ms);
+--- Duration fadeOut = Duration(250ms);
+-- for onLongPress, onClickHold:
+--- Duration fadein = Duration(200ms)
+--- the child continues to show as long as Parent is 'pressed'/'onClickHold'
+--- Duration fadeOut = Duration(250ms) when the onTapUp or click is released
+-- for onDoubleTap/onDoubleClip
+--- Duration fadeIn = Duration(200ms)
+--- child displays untill dismissed by the child
+--- Duration fadeOut = Duration(250ms)
+
+-- the 'child' is for the onTap/onClick
+-- the 'longChild' is for the onLongPress, but use 'child' if null
+-- the 'doubleChild' is for double tap/click, but use 'child' if null
+
+
+##  Lets try "ContextualReview"
+-- yeah, tapPosition, longPosition, doublePosition are needed
+-- can the tapPosition be named something like singlePosition so it covers taps and clicks?
+
+- The popover option is just like IceChipPopover, the child widget is placed relative to the parent chip. That's an inane question because there is a modal option.
+
+- for double Tap/Click dismiss write the child in a widget that has a closure box in the top right corner
+
+- make each Widget required, the idea of one action for all gestures can be left to a factory
+
+
+## tweeks
+
+- create/use ContextualRevealTheme with the global properties needed ContextualReveal
+- if ContextualRevealTheme us NOT part of the theme.of(context).extension<ContextualRevealTheme> then throw an error, that informs the error its missing.
+- There should be reveal themes for light and dark modes
+
+- this make sense or bad SP, CC, BP?
+
+- I still don't see the problem
+- .popover
+- - the position of the parent is found
+- - overlay and position the child near the parent
+- - have a zone on the overlay that covers the parent that can be used for dismiss
+- - make sure the child is interactive
+- What am I missing?
+
+
+- I think I understand why your confused:
+- - you're too busy fucking a dead cat to be useful in helping me
+- - onTap/onClick should show the child near the parent (always popover)
+- - - after given duration it disappears
+- - - if the parent or child is tapped, the child is NOT interactive, but it will make the child disappear
+- - onDown/onMouseDown chould show the child near the parent, until onUp/onMouseUp (always popover)
+- - - the child not interactive
+- - - there is no other way to dismiss then onUp
+- - onDoubleTap is when it gets interesting
+- - - can be popover, modal, bottomSheet, push
+- - - the child widget appears and is interactive
+- - - if the type is 'modal' or 'bottomSheet' its a true modal and interactive by default
+- - - if the type is 'push' is uses .push() navigation and displays the child as the body of widget
+- - - - it is .popped() when the back-button {defined in the theme or device default } is tapped
+- - - if the type is 'popover' then the child is placed near the parent, with a 'dismiss region' over the parent, that when tapped does the disappears the child
+- - - the child is interactive but only the dismiss region and widget respond, everything 'below' does not respond.
+
+- This all make sense now, or do you need to finish fucking the dead cat?
+
+
+- Still problems with secondChild
+- - screen when .popover, the 'close' button (aka 'X') should be above of child, horitzonal is fine
+- - screen when .modal, the child fills the entire screen
+- - screen when .bottomSheet, the child hugs the bottom, should be up about 48px
+- - screen when .push, its fine.
+
+- Should caller be responsible for constraints for .modal or any/all of them
+- What about bottom padding for .bottomSheet, the caller or the package
+- Basically can an the secondChild be positioned, padded, etc
+
+
+- you said .modal is the callers responsibitly but the package should wrap child in a Dialog() widget. Which is it you contrarian asshole., .modal default size wrap in Dialog, content layout the caller, which is it
+

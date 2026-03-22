@@ -1,4 +1,4 @@
-// lib/src/domain/since_when_record.dart
+// lib/src/records/record_since_when.dart
 
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';
@@ -7,8 +7,8 @@ import 'package:fpdart/fpdart.dart';
 ///
 /// All timestamps are milliseconds since epoch (INTEGER in SQLite).
 /// [id] is null for records that have not yet been persisted.
-class SinceWhenRecord extends Equatable {
-  const SinceWhenRecord({
+class RecordSinceWhen extends Equatable {
+  const RecordSinceWhen({
     required this.createdTimeStamp,
     required this.reviewedTimeStamp,
     required this.editedTimeStamp,
@@ -20,8 +20,8 @@ class SinceWhenRecord extends Equatable {
     this.metaTimeStamp,
   });
 
-  factory SinceWhenRecord.fromRow(Map<String, dynamic> row) {
-    return SinceWhenRecord(
+  factory RecordSinceWhen.fromRow(Map<String, dynamic> row) {
+    return RecordSinceWhen(
       id: row['id'] as int,
       createdTimeStamp: row['createdTimeStamp'] as int,
       parentTimeStamp: row['parentTimeStamp'] as int?,
@@ -77,7 +77,7 @@ class SinceWhenRecord extends Equatable {
     };
   }
 
-  SinceWhenRecord copyWith({
+  RecordSinceWhen copyWith({
     int? id,
     int? createdTimeStamp,
     int? reviewedTimeStamp,
@@ -88,7 +88,7 @@ class SinceWhenRecord extends Equatable {
     Option<int>? parentTimeStamp,
     Option<int>? metaTimeStamp,
   }) {
-    return SinceWhenRecord(
+    return RecordSinceWhen(
       id: id ?? this.id,
       createdTimeStamp: createdTimeStamp ?? this.createdTimeStamp,
       reviewedTimeStamp: reviewedTimeStamp ?? this.reviewedTimeStamp,

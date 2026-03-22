@@ -1,9 +1,9 @@
-// test/src/domain/tag_definition_test.dart
+// since_when/test/src/records/record_tag_definition_test.dart
 
 // ignore_for_file: lines_longer_than_80_chars, document_ignores, no_leading_underscores_for_local_identifiers
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:since_when/src/domain/tag_definition.dart';
+import 'package:since_when/src/records/record_tag_definition.dart';
 
 void main() {
   const _id = 1;
@@ -11,20 +11,20 @@ void main() {
   const _tagName = 'flutter';
   const _color = 0xFF2196F3;
 
-  TagDefinition _fullTag() => const TagDefinition(
+  RecordTagDefinition _fullTag() => const RecordTagDefinition(
         id: _id,
         createdTimeStamp: _created,
         tagName: _tagName,
         color: _color,
       );
 
-  TagDefinition _minimalTag() => const TagDefinition(
+  RecordTagDefinition _minimalTag() => const RecordTagDefinition(
         createdTimeStamp: _created,
         tagName: _tagName,
         color: _color,
       );
 
-  group('TagDefinition constructor', () {
+  group('RecordTagDefinition constructor', () {
     test('sets all required fields', () {
       final tag = _minimalTag();
 
@@ -40,7 +40,7 @@ void main() {
     });
   });
 
-  group('TagDefinition.fromRow', () {
+  group('RecordTagDefinition.fromRow', () {
     test('maps all columns', () {
       final row = <String, dynamic>{
         'id': _id,
@@ -49,7 +49,7 @@ void main() {
         'color': _color,
       };
 
-      final tag = TagDefinition.fromRow(row);
+      final tag = RecordTagDefinition.fromRow(row);
 
       expect(tag.id, _id);
       expect(tag.createdTimeStamp, _created);
@@ -85,21 +85,31 @@ void main() {
     });
 
     test('replaces createdTimeStamp', () {
-      const newCreated = 1800000000000;
-      final updated = _fullTag().copyWith(createdTimeStamp: newCreated);
-      expect(updated.createdTimeStamp, newCreated);
+      const newTs = 1800000000000;
+      final updated = _fullTag().copyWith(createdTimeStamp: newTs);
+      expect(updated.createdTimeStamp, newTs);
     });
 
     test('replaces tagName', () {
-      const newName = 'dart';
-      final updated = _fullTag().copyWith(tagName: newName);
-      expect(updated.tagName, newName);
+      final updated = _fullTag().copyWith(tagName: 'dart');
+      expect(updated.tagName, 'dart');
     });
 
     test('replaces color', () {
       const newColor = 0xFFFF5722;
       final updated = _fullTag().copyWith(color: newColor);
       expect(updated.color, newColor);
+    });
+
+    test('preserves tagName when only color replaced', () {
+      const newColor = 0xFFFF5722;
+      final updated = _fullTag().copyWith(color: newColor);
+      expect(updated.tagName, _tagName);
+    });
+
+    test('preserves color when only tagName replaced', () {
+      final updated = _fullTag().copyWith(tagName: 'dart');
+      expect(updated.color, _color);
     });
   });
 
@@ -132,7 +142,7 @@ void main() {
       expect(a, isNot(equals(b)));
     });
 
-    test('props contains all fields', () {
+    test('props contains all fields in correct order', () {
       final tag = _fullTag();
       expect(tag.props, [_id, _created, _tagName, _color]);
     });

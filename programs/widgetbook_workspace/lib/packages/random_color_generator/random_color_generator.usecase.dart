@@ -2,6 +2,7 @@
 
 // ignore_for_file: avoid_redundant_argument_values
 
+import 'package:extensions/color_ext/color_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:random_color_generator/random_color_generator.dart';
 import 'package:widgetbook/widgetbook.dart';
@@ -39,9 +40,9 @@ class _GenerateHostState extends State<_GenerateHost> {
   }
 
   List<Color> _generate() => List.generate(
-        widget.count,
-        (_) => RandomColorGenerator.generate(alpha: widget.alpha),
-      );
+    widget.count,
+    (_) => RandomColorGenerator.generate(alpha: widget.alpha),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +163,7 @@ class _HexRoundTripGridState extends State<_HexRoundTripGrid> {
   Widget _hexTile(Color color) {
     final hex = RandomColorGenerator.toHex(color);
     final roundTripped = RandomColorGenerator.fromHex(hex);
-    final textColor = RandomColorGenerator.contrastingTextColor(color);
+    final textColor = color.contrastingTextColor();
     final matches = color.toARGB32() == roundTripped.toARGB32();
 
     return Container(
@@ -171,9 +172,7 @@ class _HexRoundTripGridState extends State<_HexRoundTripGrid> {
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(8),
-        border: matches
-            ? null
-            : Border.all(color: Colors.red, width: 2),
+        border: matches ? null : Border.all(color: Colors.red, width: 2),
       ),
       alignment: Alignment.center,
       child: Text(
@@ -240,7 +239,7 @@ class _ContrastGridState extends State<_ContrastGrid> {
   }
 
   Widget _contrastTile(Color background) {
-    final textColor = RandomColorGenerator.contrastingTextColor(background);
+    final textColor = background.contrastingTextColor();
     final label = textColor == Colors.white ? 'White' : 'Black';
 
     return Container(

@@ -1,6 +1,31 @@
 // lib/src/pages/about_page.dart
 
+import 'package:animated_widgets/animated_widgets.dart' show ContextualReveal;
+import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:random_color_generator/random_color_generator.dart'
+    show RandomColorGenerator;
+import 'package:since_when/since_when.dart';
+import 'package:since_when_widgets/since_when_widgets.dart' show IceChip;
+
+final tag01 = RecordTagDefinition(
+  createdTimeStamp: 0x0000,
+  tagName: 'Tag 01',
+  color: RandomColorGenerator.generate().toInt(),
+);
+
+final tag02 = RecordTagDefinition(
+  createdTimeStamp: 0x0000,
+  tagName: 'Tag 02',
+  color: RandomColorGenerator.generate().toInt(),
+);
+
+final tag03 = RecordTagDefinition(
+  createdTimeStamp: 0x0000,
+  tagName: 'This is Tag3',
+  color: RandomColorGenerator.generate().toInt(),
+);
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -15,7 +40,7 @@ class AboutPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('About', style: theme.textTheme.headlineMedium),
-            const SizedBox(height: 24),
+            const Gap(24),
             Center(
               child: Container(
                 padding: const EdgeInsets.all(20),
@@ -30,7 +55,7 @@ class AboutPage extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const Gap(16),
             Center(
               child: Text('Startup Demo', style: theme.textTheme.titleLarge),
             ),
@@ -42,10 +67,66 @@ class AboutPage extends StatelessWidget {
             const _AboutRow(label: 'Navigation', value: 'animated_rail_menu'),
             const _AboutRow(label: 'State', value: 'flutter_bloc'),
             const _AboutRow(label: 'DI', value: 'get_it'),
-            const SizedBox(height: 32),
+            const Gap(4),
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                ContextualReveal(
+                  parent: IceChip.standard(tag01),
+                  longChild: IceChip.expanded(tag01),
+                  doubleChild: IceChip.expanded(tag01),
+                  doublePosition: .popover,
+                  child: IceChip.expanded(tag01),
+                ),
+                ContextualReveal(
+                  parent: IceChip.standard(tag02),
+                  longChild: IceChip.expanded(tag02),
+                  doubleChild: Column(
+                    children: [
+                      IceChip.standard(tag01),
+                      const Gap(10),
+                      IceChip.expanded(tag03),
+                    ],
+                  ),
+                  doublePosition: .modal,
+                  child: IceChip.expanded(tag01),
+                ),
+                ContextualReveal(
+                  parent: IceChip.standard(tag03),
+                  longChild: IceChip.expanded(tag03),
+                  doubleChild: IceChip.expanded(tag03),
+                  doublePosition: .bottomSheet,
+                  child: IceChip.expanded(tag03),
+                ),
+                ContextualReveal(
+                  parent: IceChip.standard(tag02),
+                  longChild: IceChip.expanded(tag02),
+                  doubleChild: IceChip.expanded(tag02),
+                  doublePosition: .push,
+                  child: IceChip.expanded(tag02),
+                ),
+                ContextualReveal(
+                  parent: const Text(
+                    "Now I'm cooking",
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      backgroundColor: Colors.pink,
+                    ),
+                  ),
+                  longChild: IceChip.expanded(tag02),
+                  doubleChild: IceChip.expanded(tag03),
+                  doublePosition: .popover,
+                  child: IceChip.expanded(tag01),
+                ),
+              ],
+            ),
+
             Center(
               child: Text(
-                '© 2025 Example Corp. All rights reserved.',
+                '© 2026 LTMM LLC, All rights reserved.',
                 style: theme.textTheme.labelSmall,
               ),
             ),

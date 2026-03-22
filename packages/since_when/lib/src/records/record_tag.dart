@@ -1,4 +1,4 @@
-// lib/src/domain/record_tag.dart
+// lib/src/records/record_tag.dart
 
 import 'package:equatable/equatable.dart';
 

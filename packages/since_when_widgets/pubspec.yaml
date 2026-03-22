@@ -8,10 +8,14 @@ environment:
   sdk: ">=3.10.0 <4.0.0"
 
 dependencies:
+  extensions:
+    path: ../extensions
   flutter:
     sdk: flutter
   random_color_generator:
     path: ../random_color_generator
+  since_when:
+    path: ../since_when
 
 dev_dependencies:
   flutter_test:

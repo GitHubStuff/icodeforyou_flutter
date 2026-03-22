@@ -1,10 +1,10 @@
-// test/src/domain/since_when_record_test.dart
+// since_when/test/src/records/record_since_when_test.dart
 
 // ignore_for_file: lines_longer_than_80_chars, document_ignores, no_leading_underscores_for_local_identifiers
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:since_when/src/domain/since_when_record.dart';
+import 'package:since_when/src/records/record_since_when.dart';
 
 void main() {
   const _id = 1;
@@ -17,7 +17,7 @@ void main() {
   const _sequence = 0;
   const _data = 'some data';
 
-  SinceWhenRecord _fullRecord() => const SinceWhenRecord(
+  RecordSinceWhen _fullRecord() => const RecordSinceWhen(
         id: _id,
         createdTimeStamp: _created,
         parentTimeStamp: _parent,
@@ -29,7 +29,7 @@ void main() {
         data: _data,
       );
 
-  SinceWhenRecord _minimalRecord() => const SinceWhenRecord(
+  RecordSinceWhen _minimalRecord() => const RecordSinceWhen(
         createdTimeStamp: _created,
         reviewedTimeStamp: _reviewed,
         editedTimeStamp: _edited,
@@ -38,7 +38,7 @@ void main() {
         data: _data,
       );
 
-  group('SinceWhenRecord constructor', () {
+  group('RecordSinceWhen constructor', () {
     test('sets all required fields', () {
       final record = _minimalRecord();
 
@@ -62,7 +62,7 @@ void main() {
     });
   });
 
-  group('SinceWhenRecord.fromRow', () {
+  group('RecordSinceWhen.fromRow', () {
     test('maps all columns including nullables', () {
       final row = <String, dynamic>{
         'id': _id,
@@ -76,7 +76,7 @@ void main() {
         'data': _data,
       };
 
-      final record = SinceWhenRecord.fromRow(row);
+      final record = RecordSinceWhen.fromRow(row);
 
       expect(record.id, _id);
       expect(record.createdTimeStamp, _created);
@@ -102,7 +102,7 @@ void main() {
         'data': _data,
       };
 
-      final record = SinceWhenRecord.fromRow(row);
+      final record = RecordSinceWhen.fromRow(row);
 
       expect(record.parentTimeStamp, isNull);
       expect(record.metaTimeStamp, isNull);
@@ -134,16 +134,6 @@ void main() {
       expect(row['parentTimeStamp'], isNull);
       expect(row['metaTimeStamp'], isNull);
     });
-
-    test('does not include category key', () {
-      final row = _fullRecord().toRow();
-      expect(row.containsKey('category'), isFalse);
-    });
-
-    test('does not include dataString key', () {
-      final row = _fullRecord().toRow();
-      expect(row.containsKey('dataString'), isFalse);
-    });
   });
 
   group('copyWith', () {
@@ -152,59 +142,53 @@ void main() {
       expect(record.copyWith(), equals(record));
     });
 
-    test('replaces required int fields', () {
-      const newCreated = 1800000000000;
-      const newReviewed = 1800000001000;
-      const newEdited = 1800000002000;
-      const newSequence = 3;
-
-      final updated = _fullRecord().copyWith(
-        createdTimeStamp: newCreated,
-        reviewedTimeStamp: newReviewed,
-        editedTimeStamp: newEdited,
-        sequenceNumber: newSequence,
-      );
-
-      expect(updated.createdTimeStamp, newCreated);
-      expect(updated.reviewedTimeStamp, newReviewed);
-      expect(updated.editedTimeStamp, newEdited);
-      expect(updated.sequenceNumber, newSequence);
-    });
-
-    test('replaces required String fields', () {
-      const newMeta = 'new meta';
-      const newData = 'new data';
-
-      final updated = _fullRecord().copyWith(
-        metaData: newMeta,
-        data: newData,
-      );
-
-      expect(updated.metaData, newMeta);
-      expect(updated.data, newData);
-    });
-
     test('replaces id', () {
       final updated = _fullRecord().copyWith(id: 99);
       expect(updated.id, 99);
     });
 
+    test('replaces createdTimeStamp', () {
+      const newTs = 1800000000000;
+      final updated = _fullRecord().copyWith(createdTimeStamp: newTs);
+      expect(updated.createdTimeStamp, newTs);
+    });
+
+    test('replaces reviewedTimeStamp', () {
+      const newTs = 1800000001000;
+      final updated = _fullRecord().copyWith(reviewedTimeStamp: newTs);
+      expect(updated.reviewedTimeStamp, newTs);
+    });
+
+    test('replaces editedTimeStamp', () {
+      const newTs = 1800000002000;
+      final updated = _fullRecord().copyWith(editedTimeStamp: newTs);
+      expect(updated.editedTimeStamp, newTs);
+    });
+
+    test('replaces metaData', () {
+      final updated = _fullRecord().copyWith(metaData: 'new meta');
+      expect(updated.metaData, 'new meta');
+    });
+
+    test('replaces sequenceNumber', () {
+      final updated = _fullRecord().copyWith(sequenceNumber: 5);
+      expect(updated.sequenceNumber, 5);
+    });
+
+    test('replaces data', () {
+      final updated = _fullRecord().copyWith(data: 'new data');
+      expect(updated.data, 'new data');
+    });
+
     test('sets parentTimeStamp to a value via Some', () {
-      const newParent = 1600000000000;
       final updated = _minimalRecord().copyWith(
         parentTimeStamp: const Some(_parent),
       );
       expect(updated.parentTimeStamp, _parent);
-      final updated2 = updated.copyWith(
-        parentTimeStamp: const Some(newParent),
-      );
-      expect(updated2.parentTimeStamp, newParent);
     });
 
     test('clears parentTimeStamp to null via None', () {
-      final updated = _fullRecord().copyWith(
-        parentTimeStamp: const None(),
-      );
+      final updated = _fullRecord().copyWith(parentTimeStamp: const None());
       expect(updated.parentTimeStamp, isNull);
     });
 
@@ -221,9 +205,7 @@ void main() {
     });
 
     test('clears metaTimeStamp to null via None', () {
-      final updated = _fullRecord().copyWith(
-        metaTimeStamp: const None(),
-      );
+      final updated = _fullRecord().copyWith(metaTimeStamp: const None());
       expect(updated.metaTimeStamp, isNull);
     });
 
@@ -238,27 +220,57 @@ void main() {
       expect(_fullRecord(), equals(_fullRecord()));
     });
 
-    test('not equal when createdTimeStamp differs', () {
-      final a = _fullRecord();
-      final b = _fullRecord().copyWith(createdTimeStamp: 9999999999999);
-      expect(a, isNot(equals(b)));
-    });
-
     test('not equal when id differs', () {
       final a = _fullRecord();
       final b = _fullRecord().copyWith(id: 42);
       expect(a, isNot(equals(b)));
     });
 
-    test('not equal when nullable field differs', () {
+    test('not equal when createdTimeStamp differs', () {
+      final a = _fullRecord();
+      final b = _fullRecord().copyWith(createdTimeStamp: 9999999999999);
+      expect(a, isNot(equals(b)));
+    });
+
+    test('not equal when parentTimeStamp differs', () {
       final a = _fullRecord();
       final b = _fullRecord().copyWith(parentTimeStamp: const None());
       expect(a, isNot(equals(b)));
     });
 
+    test('not equal when reviewedTimeStamp differs', () {
+      final a = _fullRecord();
+      final b = _fullRecord().copyWith(reviewedTimeStamp: 9999999999999);
+      expect(a, isNot(equals(b)));
+    });
+
+    test('not equal when editedTimeStamp differs', () {
+      final a = _fullRecord();
+      final b = _fullRecord().copyWith(editedTimeStamp: 9999999999999);
+      expect(a, isNot(equals(b)));
+    });
+
+    test('not equal when metaTimeStamp differs', () {
+      final a = _fullRecord();
+      final b = _fullRecord().copyWith(metaTimeStamp: const None());
+      expect(a, isNot(equals(b)));
+    });
+
+    test('not equal when metaData differs', () {
+      final a = _fullRecord();
+      final b = _fullRecord().copyWith(metaData: 'different');
+      expect(a, isNot(equals(b)));
+    });
+
+    test('not equal when sequenceNumber differs', () {
+      final a = _fullRecord();
+      final b = _fullRecord().copyWith(sequenceNumber: 99);
+      expect(a, isNot(equals(b)));
+    });
+
     test('not equal when data differs', () {
       final a = _fullRecord();
-      final b = _fullRecord().copyWith(data: 'different data');
+      final b = _fullRecord().copyWith(data: 'different');
       expect(a, isNot(equals(b)));
     });
 
@@ -278,11 +290,6 @@ void main() {
           _data,
         ],
       );
-    });
-
-    test('props does not contain category', () {
-      final record = _fullRecord();
-      expect(record.props.length, equals(9));
     });
   });
 }

@@ -1,9 +1,9 @@
-// test/src/domain/record_tag_test.dart
+// since_when/test/src/records/record_tag_test.dart
 
 // ignore_for_file: lines_longer_than_80_chars, document_ignores, no_leading_underscores_for_local_identifiers
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:since_when/src/domain/record_tag.dart';
+import 'package:since_when/src/records/record_tag.dart';
 
 void main() {
   const _id = 1;
@@ -88,6 +88,18 @@ void main() {
       final updated = _fullTag().copyWith(glossaryTimestamp: newTs);
       expect(updated.glossaryTimestamp, newTs);
     });
+
+    test('preserves recordTimestamp when only glossaryTimestamp replaced', () {
+      const newTs = 1800000001000;
+      final updated = _fullTag().copyWith(glossaryTimestamp: newTs);
+      expect(updated.recordTimestamp, _recordTs);
+    });
+
+    test('preserves glossaryTimestamp when only recordTimestamp replaced', () {
+      const newTs = 1800000000000;
+      final updated = _fullTag().copyWith(recordTimestamp: newTs);
+      expect(updated.glossaryTimestamp, _glossaryTs);
+    });
   });
 
   group('Equatable', () {
@@ -113,7 +125,7 @@ void main() {
       expect(a, isNot(equals(b)));
     });
 
-    test('props contains all fields', () {
+    test('props contains all fields in correct order', () {
       final tag = _fullTag();
       expect(tag.props, [_id, _recordTs, _glossaryTs]);
     });

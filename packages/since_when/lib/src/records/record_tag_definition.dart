@@ -1,4 +1,4 @@
-// lib/src/domain/tag_definition.dart
+// lib/src/records/record_tag_definition.dart
 
 import 'package:equatable/equatable.dart';
 
@@ -6,16 +6,16 @@ import 'package:equatable/equatable.dart';
 ///
 /// [id] is null for records that have not yet been persisted.
 /// [createdTimeStamp] is milliseconds since epoch (INTEGER in SQLite).
-class TagDefinition extends Equatable {
-  const TagDefinition({
+class RecordTagDefinition extends Equatable {
+  const RecordTagDefinition({
     required this.createdTimeStamp,
     required this.tagName,
     required this.color,
     this.id,
   });
 
-  factory TagDefinition.fromRow(Map<String, dynamic> row) {
-    return TagDefinition(
+  factory RecordTagDefinition.fromRow(Map<String, dynamic> row) {
+    return RecordTagDefinition(
       id: row['id'] as int,
       createdTimeStamp: row['createdTimeStamp'] as int,
       tagName: row['tagName'] as String,
@@ -46,13 +46,13 @@ class TagDefinition extends Equatable {
     };
   }
 
-  TagDefinition copyWith({
+  RecordTagDefinition copyWith({
     int? id,
     int? createdTimeStamp,
     String? tagName,
     int? color,
   }) {
-    return TagDefinition(
+    return RecordTagDefinition(
       id: id ?? this.id,
       createdTimeStamp: createdTimeStamp ?? this.createdTimeStamp,
       tagName: tagName ?? this.tagName,

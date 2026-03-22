@@ -26,11 +26,11 @@ void main() => ApplicationRunner(
     entries: navEntries,
   ),
   tasks: StartupTasks.all,
-  lightTheme: ThemeData.light().copyWith(
-    extensions: [RailMenuTheme.light()],
-  ),
   darkTheme: ThemeData.dark().copyWith(
-    extensions: [RailMenuTheme.dark()],
+    extensions: [RailMenuTheme.dark(), ContextualRevealTheme.dark()],
+  ),
+  lightTheme: ThemeData.light().copyWith(
+    extensions: [RailMenuTheme.light(), ContextualRevealTheme.light()],
   ),
   onReady: (themeCubit) =>
       GetIt.instance.registerSingleton<ThemeCubitBase>(themeCubit),
