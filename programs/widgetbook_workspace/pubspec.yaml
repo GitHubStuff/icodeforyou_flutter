@@ -5,47 +5,31 @@ version: 0.1.2
 resolution: workspace
 
 environment:
-  sdk: ">=3.10.0 <4.0.0"
+  sdk: ">=3.11.0 <4.0.0"
 
 dependencies:
-  adaptive_modal:
-    path: ../../packages/adaptive_modal
-  analog_clock_widget:
-    path: ../../packages/analog_clock_widget
-  animated_rail_menu:
-    path: ../../packages/animated_rail_menu
-  animated_widgets:
-    path: ../../packages/animated_widgets
-  application_setup:
-    path: ../../packages/application_setup
-  edittext_popover:
-    path: ../../packages/edittext_popover
-  extensions:
-    path: ../../packages/extensions
+  adaptive_modal: ^0.0.1
+  analog_clock_widget: 0.0.1
+  animated_rail_menu: ^0.9.0
+  animated_widgets: 0.0.1
+  application_startup: ^0.0.5
+  edittext_popover: ^0.2.0
+  extensions: ^1.0.0
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
   fpdart: ^1.2.0
   gap: ^3.0.1
-  random_color_generator:
-    path: ../../packages/random_color_generator
-  scrolling_datetime_pickers:
-    path: ../../packages/scrolling_datetime_pickers
-  settings_widget:
-    path: ../../packages/settings_widget
-  since_when:
-    path: ../../packages/since_when
-  since_when_widgets:
-    path: ../../packages/since_when_widgets
+  random_color_generator: ^1.0.0
+  scrolling_datetime_pickers: ^1.0.0
+  settings_widget: ^0.0.1
+  since_when: ^0.0.1
+  since_when_widgets: ^1.0.1+1
   sqlite_viewer: ^1.0.0+1
-  step_slider_package:
-    path: ../../packages/step_slider_package
-  tag_chip:
-    path: ../../packages/tag_chip
-  theme_manager:
-    path: ../../packages/theme_manager
-  theme_selection_widget:
-    path: ../../packages/theme_selection_widget
+  step_slider_package: ^1.0.0
+  tag_chip: ^0.0.1
+  theme_manager: ^0.0.1
+  theme_selection_widget: ^0.0.1
   widgetbook: ^3.22.0
   widgetbook_annotation: ^3.11.0
 

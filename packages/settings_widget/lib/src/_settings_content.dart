@@ -21,6 +21,11 @@ class SettingsContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final m = Chip(
+      label: Text('hi'),
+    );
+    final n = ChoiceChip(label: label, selected: selected);
+    finap o = FilterChip(label: label, onSelected: onSelected);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,

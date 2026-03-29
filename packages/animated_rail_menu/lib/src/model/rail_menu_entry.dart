@@ -2,7 +2,7 @@
 
 import 'package:flutter/widgets.dart';
 
-/// A single entry in an [AnimatedRailMenu].
+/// A single entry in an [RailMenuEntry].
 ///
 /// Combines the navigation item appearance with the page it presents.
 ///

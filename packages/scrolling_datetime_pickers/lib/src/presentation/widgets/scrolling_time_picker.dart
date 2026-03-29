@@ -16,8 +16,22 @@ import 'package:scrolling_datetime_pickers/src/presentation/cubits/time_picker/t
 part 'scrolling_time_picker_column.dart';
 part 'scrolling_time_picker_content.dart';
 
-/// Apple-style scrolling time picker widget
+/// An Apple-style infinite-scroll time picker widget.
+///
+/// Renders hour, minute, and optionally seconds columns inside a
+/// [BlocProvider]-scoped [TimePickerCubit]. The picker adapts its size to
+/// portrait and landscape orientations automatically.
 class ScrollingTimePicker extends StatelessWidget {
+  /// Creates a [ScrollingTimePicker].
+  ///
+  /// [onDateTimeChanged] is called whenever the user scrolls any column to a
+  /// new value. [initialDateTime] is normalised before being passed to
+  /// [TimePickerCubit] — only the time components are preserved; the date is
+  /// fixed to 1 January of the current year and seconds are zeroed. When
+  /// [initialDateTime] is `null` the cubit defaults to the current time.
+  ///
+  /// [dividerConfiguration] and [fadeConfiguration] fall back to their
+  /// respective default constructors when not provided.
   const ScrollingTimePicker({
     required this.onDateTimeChanged,
     super.key,
@@ -41,43 +55,74 @@ class ScrollingTimePicker extends StatelessWidget {
            dividerConfiguration ?? const DividerConfiguration(),
        fadeConfiguration = fadeConfiguration ?? const FadeConfiguration();
 
-  /// Size for portrait orientation
+  /// Preferred size of the picker in portrait orientation.
+  ///
+  /// Defaults to [DimensionConstants.defaultPortraitWidth] ×
+  /// [DimensionConstants.defaultPortraitHeight].
   final Size portraitSize;
 
-  /// Size for landscape orientation
+  /// Preferred size of the picker in landscape orientation.
+  ///
+  /// Defaults to [DimensionConstants.defaultLandscapeWidth] ×
+  /// [DimensionConstants.defaultLandscapeHeight].
   final Size landscapeSize;
 
-  /// Initial date time value
+  /// The date and time used to seed the picker's initial scroll position.
+  ///
+  /// Only the hour and minute components are used; the date is discarded and
+  /// seconds are zeroed during normalisation. When `null` the picker opens
+  /// at the current time.
   final DateTime? initialDateTime;
 
-  /// Callback when time changes
+  /// Called with the full [DateTime] whenever the selected time changes.
+  ///
+  /// The date portion of the emitted value is always 1 January of the current
+  /// year — consumers interested only in time should read the hour, minute,
+  /// and second components.
   final void Function(DateTime) onDateTimeChanged;
 
-  /// Background color of the picker
+  /// Background color of the picker drum container.
+  ///
+  /// Defaults to [StyleConstants.defaultBackgroundColor].
   final Color backgroundColor;
 
-  /// Text style for picker items
+  /// Text style applied to each item in the time scroll columns.
+  ///
+  /// When `null` the picker uses its default item style.
   final TextStyle? timeStyle;
 
-  /// Configuration for dividers
+  /// Visual configuration for the selection divider lines.
+  ///
+  /// Defaults to [DividerConfiguration] with its default constructor values.
   final DividerConfiguration dividerConfiguration;
 
-  /// Configuration for fade effects
+  /// Visual configuration for the top and bottom fade overlays.
+  ///
+  /// Defaults to [FadeConfiguration] with its default constructor values.
   final FadeConfiguration fadeConfiguration;
 
-  /// Whether to show seconds column
+  /// Whether the seconds scroll column is visible.
+  ///
+  /// Defaults to `false`. When `true` a third column is rendered alongside
+  /// the hour and minute columns.
   final bool showSeconds;
 
-  /// Whether to enable haptic feedback
+  /// Whether haptic feedback fires on scroll and item-selection events.
+  ///
+  /// Defaults to `true`.
   final bool enableHaptics;
 
-  /// Border radius for the picker container
+  /// Corner radius of the picker drum container in logical pixels.
+  ///
+  /// Defaults to `0.0` (square corners).
   final double borderRadius;
 
-  /// Normalize datetime for standalone time picker:
-  /// - If provided: use Jan 1st of current year with provided time
-  /// - If not provided: use Jan 1st of current year with current time
-  /// - Seconds: 0 (time-only picker defaults to 0 seconds)
+  /// Returns a normalised [DateTime] suitable for [TimePickerCubit].
+  ///
+  /// When [initialDateTime] is non-null its hour and minute are preserved on
+  /// 1 January of the current year with seconds zeroed. When `null` this
+  /// method returns `null`, allowing the cubit to apply its own default
+  /// (current time on 1 January of the current year).
   DateTime? _normalizeForTimePicker() {
     final now = DateTime.now();
     if (initialDateTime != null) {
@@ -89,8 +134,6 @@ class ScrollingTimePicker extends StatelessWidget {
         initialDateTime!.minute,
       );
     }
-    // Return null to let cubit use its default (Jan 1st current year + current
-    // time)
     return null;
   }
 

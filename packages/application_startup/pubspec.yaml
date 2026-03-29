@@ -1,0 +1,27 @@
+name: application_startup
+description: "A new Flutter for Application Setup"
+version: 0.0.6
+resolution: workspace
+publish_to: none
+
+environment:
+  sdk: ">=3.11.0 <4.0.0"
+
+dependencies:
+  extensions:
+    path: ../extensions
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.1.1
+  get_it: ^9.2.1
+  theme_manager: ^0.0.1
+
+dev_dependencies:
+  bloc_test: ^10.0.0
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.4
+  shared_preferences_platform_interface: ^2.4.1
+  very_good_analysis: ^10.2.0
+
+flutter:

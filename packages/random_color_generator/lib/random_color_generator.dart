@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/painting.dart';
 
+/// Generate Random Colors that work light/dark themes
 abstract final class RandomColorGenerator {
   static final _random = Random();
 

@@ -1,5 +1,7 @@
 // test/src/cubit/rail_menu_state_test.dart
 
+// ignore_for_file: document_ignores
+
 import 'package:animated_rail_menu/src/cubit/rail_menu_state.dart';
 import 'package:animated_rail_menu/src/model/rail_transition.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -52,7 +54,6 @@ void main() {
 
     test('identical instances are equal', () {
       const state = RailMenuState(activeIndex: 0);
-      // ignore: unrelated_type_equality_checks
       expect(state == state, isTrue);
     });
 

@@ -2,6 +2,7 @@
 name: icodeforyou_flutter
 publish_to: none
 description: Collection of flutter packages
+version: 8.1.5
 
 workspace:
   - packages/abstractions
@@ -9,11 +10,12 @@ workspace:
   - packages/analog_clock_widget
   - packages/animated_rail_menu
   - packages/animated_widgets
-  - packages/application_setup
+  - packages/application_startup
   - packages/edittext_popover
   - packages/extensions
   - packages/my_logger
   - packages/random_color_generator
+  - packages/platform_utils
   - packages/scrolling_datetime_pickers
   - packages/settings_widget
   - packages/since_when
@@ -33,7 +35,7 @@ dependency_overrides:
   test_api: 0.7.9
 
 dev_dependencies:
-  melos: ^7.4.0
+  melos: ^7.4.1
 
 flutter:
   uses-material-design: true

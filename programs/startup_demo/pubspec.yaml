@@ -5,17 +5,13 @@ version: 0.0.1
 resolution: workspace
 
 environment:
-  sdk: ">=3.10.0 <4.0.0"
+  sdk: ">=3.11.0 <4.0.0"
 
 dependencies:
-  animated_rail_menu:
-    path: ../../packages/animated_rail_menu
-  animated_widgets:
-    path: ../../packages/animated_widgets
-  application_setup:
-    path: ../../packages/application_setup
-  extensions:
-    path: ../../packages/extensions
+  animated_rail_menu: ^0.9.0
+  animated_widgets: ^0.0.1
+  application_startup: ^0.0.5
+  extensions: ^1.0.1
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
@@ -24,6 +20,7 @@ dependencies:
   go_router: ^17.1.0
   random_color_generator:
     path: ../../packages/random_color_generator
+  settings_widget: ^0.0.1
   since_when:
     path: ../../packages/since_when
   since_when_widgets:

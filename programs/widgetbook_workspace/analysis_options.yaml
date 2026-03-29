@@ -1,9 +1,19 @@
+include: package:very_good_analysis/analysis_options.yaml
+
 analyzer:
   errors:
     avoid_redundant_argument_values: ignore
-    document_ignores: ignore
-    public_member_api_docs: ignore
-    unused_element_parameter: ignore
+    depend_on_referenced_packages: ignore
+    omit_local_variable_types: ignore
+
   exclude:
-    - lib/main.directories.dart
-include: package:very_good_analysis/analysis_options.yaml
+    - '**/*.config.dart'
+    - '**/*.directories.dart'
+    - '**/*.freezed.dart'
+    - '**/*.g.dart'
+    - '**/*.gen.dart'
+    - '**/*.mocks.dart'
+
+linter:
+  rules:
+    # Relaxed rules if needed (none for now - keeping strict)

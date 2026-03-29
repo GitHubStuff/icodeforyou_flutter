@@ -1,4 +1,4 @@
-// lib/main.dart
+// edittext_popover/example/lib/main.dart
 import 'package:edittext_popover/edittext_popover.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +6,9 @@ void main() {
   runApp(const ExampleEditorApp());
 }
 
+/// Root application widget for the edittext_popover smoke test.
 class ExampleEditorApp extends StatelessWidget {
+  /// Creates the [ExampleEditorApp].
   const ExampleEditorApp({super.key});
 
   @override
@@ -29,7 +31,9 @@ class ExampleEditorApp extends StatelessWidget {
   }
 }
 
+/// Smoke test screen exercising both [EditorTextField] and [showEditor].
 class SmokeTestScreen extends StatefulWidget {
+  /// Creates the [SmokeTestScreen].
   const SmokeTestScreen({super.key});
 
   @override
@@ -51,10 +55,18 @@ class _SmokeTestScreenState extends State<SmokeTestScreen> {
       context: context,
       initialText: _controller.text,
     );
-
     switch (result) {
       case EditorCompleted(:final text):
         _controller.text = text;
+        setState(() => _lastResult = 'Completed: ${text.length} chars');
+      case EditorDismissed(:final text):
+        setState(() => _lastResult = 'Dismissed: ${text.length} chars');
+    }
+  }
+
+  void _onEditorResult(EditorResult result) {
+    switch (result) {
+      case EditorCompleted(:final text):
         setState(() => _lastResult = 'Completed: ${text.length} chars');
       case EditorDismissed(:final text):
         setState(() => _lastResult = 'Dismissed: ${text.length} chars');
@@ -78,18 +90,7 @@ class _SmokeTestScreenState extends State<SmokeTestScreen> {
                 labelText: 'Tap to edit',
                 border: OutlineInputBorder(),
               ),
-              onResult: (result) {
-                switch (result) {
-                  case EditorCompleted(:final text):
-                    setState(
-                      () => _lastResult = 'Completed: ${text.length} chars',
-                    );
-                  case EditorDismissed(:final text):
-                    setState(
-                      () => _lastResult = 'Dismissed: ${text.length} chars',
-                    );
-                }
-              },
+              onResult: _onEditorResult,
             ),
             const SizedBox(height: 24),
             const Text('Using showEditor directly:'),

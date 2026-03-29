@@ -20,11 +20,11 @@ class RailMenuThemeDark extends RailMenuTheme {
 
   @override
   TextStyle get labelStyle => const TextStyle(
-        fontSize: 10,
-        fontWeight: FontWeight.w500,
-        color: Color(0xFFCAC4D0),
-        overflow: TextOverflow.ellipsis,
-      );
+    fontSize: 10,
+    fontWeight: FontWeight.w500,
+    color: Color(0xFFCAC4D0),
+    overflow: TextOverflow.ellipsis,
+  );
 
   @override
   double get elevation => 2;
@@ -36,14 +36,13 @@ class RailMenuThemeDark extends RailMenuTheme {
     Color? inactiveColor,
     TextStyle? labelStyle,
     double? elevation,
-  }) =>
-      _RailMenuThemeDarkCopy(
-        backgroundColor: backgroundColor ?? this.backgroundColor,
-        activeColor: activeColor ?? this.activeColor,
-        inactiveColor: inactiveColor ?? this.inactiveColor,
-        labelStyle: labelStyle ?? this.labelStyle,
-        elevation: elevation ?? this.elevation,
-      );
+  }) => _RailMenuThemeDarkCopy(
+    backgroundColor: backgroundColor ?? this.backgroundColor,
+    activeColor: activeColor ?? this.activeColor,
+    inactiveColor: inactiveColor ?? this.inactiveColor,
+    labelStyle: labelStyle ?? this.labelStyle,
+    elevation: elevation ?? this.elevation,
+  );
 
   @override
   RailMenuTheme lerp(RailMenuTheme? other, double t) {
@@ -65,11 +64,11 @@ class _RailMenuThemeDarkCopy extends RailMenuThemeDark {
     required Color inactiveColor,
     required TextStyle labelStyle,
     required double elevation,
-  })  : _backgroundColor = backgroundColor,
-        _activeColor = activeColor,
-        _inactiveColor = inactiveColor,
-        _labelStyle = labelStyle,
-        _elevation = elevation;
+  }) : _backgroundColor = backgroundColor,
+       _activeColor = activeColor,
+       _inactiveColor = inactiveColor,
+       _labelStyle = labelStyle,
+       _elevation = elevation;
 
   final Color _backgroundColor;
   final Color _activeColor;

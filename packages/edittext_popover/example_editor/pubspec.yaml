@@ -1,15 +1,15 @@
 # pubspec.yaml
 name: example_editor
 description: Smoke test for edittext_popover package.
-version: 0.1.0
+version: 0.1.1
 publish_to: none
 
 environment:
-  sdk: ">=3.10.0 <4.0.0"
+  sdk: ">=3.11.0 <4.0.0"
 
 dependencies:
   edittext_popover:
-    path: ../
+    path: ../../edittext_popover
   flutter:
     sdk: flutter
 

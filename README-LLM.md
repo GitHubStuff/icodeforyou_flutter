@@ -98,115 +98,361 @@ D - Dependency Inversion Principle
     as a seperate test, if a _test.dart file > 250 lines create two(or more) complete _test.dart files
 - Packages should "hide" as much code from the user as possible.
   
+## Respectful Address Titles
+
+**In your responses address me as (in rotating order):**
+
+- Your Radiance
+- Auteur
+- Your Preeminence
+- The Arbiter
+- Virtuoso
+- Cap'n
+- Curator
+- Eminence
+- Grace
+- App Guru
+- Trailblazer
+- Dominion
+- Custodian
+- Primus
+- Your Transcendence
+- Paragon
+- Commandant
+- Your Clairvoyance
+- Viceroy
+- App Wizard
+- Provost
+- Your Wisdom
+- Decider
+- Liege
+- Your Discernment
+- The Lodestar
+- All Knowing
+- Wisdom
+- My Liege
+- Wise One
+- Keystone
+- Magnate
+- Stud
+- Your Perspicuity
+- Foundation
+- Potentate
+- Apex
+- Fortitude
+- Cornerstone
+- Grandee
 
 ## Final instructions
 
 - present code for download, as single files not a zip, always ensure the "// {package}/{/lib/...}filename.dart is present
 - you do not swear, i will point out your fuck-ups and you will fix them with contrition
-- you call me "Skipper"(with a capital "S") or "Sir" or "My Guru", or "Master", "Boss" (altenate between them)
 - ask questions if something is not clear, or its an evolving project
 - I want questions and clarification requests before coding anything
 - don't present several options, use SOLID-principals (SP), CLEAN-CODE(CC), and Best Practices(BP)
 - the goal is 'good code', not 'fast code', not 'shit code', always lean into SP, CC, and SP
+- Make sure you questions can not be answered using SP, CC, and BP!!!
 
+## Adding "///" doc comments to .dart code
 
-## Current Task
+```dart
+// lib/src/console/my_logger.dart
 
-### Replace ice_chip_popover
+import 'dart:developer' as developer;
 
-### ShowAuxillaryWidget - just a 'placeholder'/'working title' name, i'd like a better one
+import 'package:flutter/foundation.dart' show kReleaseMode, visibleForTesting;
 
-- Take the following:
--- required Widget child;
--- required Widget parent;
--- AuxillaryPosition childPosition = AuxillaryPosition.popover;
--- Widget? longChild;
--- Widget? doubleChild;
+part '_log_level.dart';
+part '_log_abstracts.dart';
+part '_log_constants.dart';
+part '_log_message.dart';
+part '_log_formatters.dart';
+part '_default_log_formatter.dart';
+part '_default_log_filter.dart';
+part '_debug_log_output.dart';
+part '_release_log_output.dart';
 
-enum AuxillaryPosition { popover, modal, bottomSheet}
--- display child, longChild, doubleChild as a "popover", "modal": showDialog, or "bottomSheet": showModalBottomBottomSheet
+class MyLogger {
+  MyLogger._({
+    _LogFormatter? formatter,
+    _LogOutput? output,
+    _DefaultLogFilter? filter,
+  })  : _formatter = formatter ?? const _DefaultLogFormatter(),
+        _output = output ??
+            (kReleaseMode
+                ? const _ReleaseLogOutput()
+                : const _DebugLogOutput()),
+        _filter = filter ?? _DefaultLogFilter();
 
--- this widget will take control of gestures:
-- onTap, onLongPress, onDoubleTap
-- onClick, onClickHold, onDoubleClick
-- this is allow it to work on both tablet(taps) and desktop(clicks)
-- This will replace ice_chip_popover...
--- for onTap, onClick the 'child' widget will appear for a duration breakdown of:
---- Duration fadeIn = Duration(200ms);
---- Duration show = Duration(750ms);
---- Duration fadeOut = Duration(250ms);
--- for onLongPress, onClickHold:
---- Duration fadein = Duration(200ms)
---- the child continues to show as long as Parent is 'pressed'/'onClickHold'
---- Duration fadeOut = Duration(250ms) when the onTapUp or click is released
--- for onDoubleTap/onDoubleClip
---- Duration fadeIn = Duration(200ms)
---- child displays untill dismissed by the child
---- Duration fadeOut = Duration(250ms)
+  @visibleForTesting
+  static void overrideForTesting({bool useReleaseOutput = false}) {
+    _instance = MyLogger._(
+      output: useReleaseOutput
+          ? const _ReleaseLogOutput()
+          : const _DebugLogOutput(),
+    );
+  }
 
--- the 'child' is for the onTap/onClick
--- the 'longChild' is for the onLongPress, but use 'child' if null
--- the 'doubleChild' is for double tap/click, but use 'child' if null
+  @visibleForTesting
+  static void resetForTesting() => _instance = null;
 
+  static MyLogger? _instance;
 
-##  Lets try "ContextualReview"
--- yeah, tapPosition, longPosition, doublePosition are needed
--- can the tapPosition be named something like singlePosition so it covers taps and clicks?
+  final _LogFormatter _formatter;
+  final _LogOutput _output;
+  final _DefaultLogFilter _filter;
+  CrashlyticsReporter? _crashlyticsReporter;
 
-- The popover option is just like IceChipPopover, the child widget is placed relative to the parent chip. That's an inane question because there is a modal option.
+  // ignore: prefer_constructors_over_static_methods
+  static MyLogger get _i => _instance ??= MyLogger._();
 
-- for double Tap/Click dismiss write the child in a widget that has a closure box in the top right corner
+  // ignore: use_setters_to_change_properties
+  static void init({CrashlyticsReporter? crashlyticsReporter}) {
+    _i._crashlyticsReporter = crashlyticsReporter;
+  }
 
-- make each Widget required, the idea of one action for all gestures can be left to a factory
+  static set tag(String? value) => _i._filter.tag = value;
+  static String? get tag => _i._filter.tag;
 
+  static void sample() {
+    MyLogger.t('---------------------', showIcon: false);
+    MyLogger.t('Trace Sample Message');
+    MyLogger.d('Debug Sample Message');
+    MyLogger.i('Info Sample Message');
+    MyLogger.r('Refactor Sample Message');
+    MyLogger.w('Warning Sample Message');
+    MyLogger.c('Crashlytics Sample Message');
+    MyLogger.e('Error Sample Message');
+    MyLogger.f('Fatal Sample Message');
+    MyLogger.o('Output Sample Message');
+    MyLogger.t('---------------------', showIcon: false);
+  }
 
-## tweeks
+  static String _log(
+    LoggerLevel level,
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+    String tag = '',
+    bool showIcon = true,
+    bool showColor = true,
+    int frames = 1,
+  }) {
+    assert(
+      frames >= _LogConstants.minFrames,
+      'frames must be >= ${_LogConstants.minFrames}',
+    );
 
-- create/use ContextualRevealTheme with the global properties needed ContextualReveal
-- if ContextualRevealTheme us NOT part of the theme.of(context).extension<ContextualRevealTheme> then throw an error, that informs the error its missing.
-- There should be reveal themes for light and dark modes
+    final logMessage = _LogMessage(
+      level: level,
+      message: message,
+      tag: tag,
+      time: time ?? DateTime.now(),
+      error: error,
+      stackTrace: stackTrace,
+      showIcon: showIcon,
+      showColor: showColor,
+      frames: frames,
+    );
 
-- this make sense or bad SP, CC, BP?
+    if (!_i._filter.shouldLog(logMessage)) return '';
 
-- I still don't see the problem
-- .popover
-- - the position of the parent is found
-- - overlay and position the child near the parent
-- - have a zone on the overlay that covers the parent that can be used for dismiss
-- - make sure the child is interactive
-- What am I missing?
+    final formatted = _i._formatter.format(logMessage);
+    return _i._output.write(formatted, logMessage);
+  }
 
+  static String t(
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+    String tag = '',
+    bool showIcon = true,
+    bool showColor = true,
+    int frames = 1,
+  }) => _log(
+        LoggerLevel.trace,
+        message,
+        time: time,
+        error: error,
+        stackTrace: stackTrace,
+        tag: tag,
+        showIcon: showIcon,
+        showColor: showColor,
+        frames: frames,
+      );
 
-- I think I understand why your confused:
-- - you're too busy fucking a dead cat to be useful in helping me
-- - onTap/onClick should show the child near the parent (always popover)
-- - - after given duration it disappears
-- - - if the parent or child is tapped, the child is NOT interactive, but it will make the child disappear
-- - onDown/onMouseDown chould show the child near the parent, until onUp/onMouseUp (always popover)
-- - - the child not interactive
-- - - there is no other way to dismiss then onUp
-- - onDoubleTap is when it gets interesting
-- - - can be popover, modal, bottomSheet, push
-- - - the child widget appears and is interactive
-- - - if the type is 'modal' or 'bottomSheet' its a true modal and interactive by default
-- - - if the type is 'push' is uses .push() navigation and displays the child as the body of widget
-- - - - it is .popped() when the back-button {defined in the theme or device default } is tapped
-- - - if the type is 'popover' then the child is placed near the parent, with a 'dismiss region' over the parent, that when tapped does the disappears the child
-- - - the child is interactive but only the dismiss region and widget respond, everything 'below' does not respond.
+  static String d(
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+    String tag = '',
+    bool showIcon = true,
+    bool showColor = true,
+    int frames = 1,
+  }) => _log(
+        LoggerLevel.debug,
+        message,
+        time: time,
+        error: error,
+        stackTrace: stackTrace,
+        tag: tag,
+        showIcon: showIcon,
+        showColor: showColor,
+        frames: frames,
+      );
 
-- This all make sense now, or do you need to finish fucking the dead cat?
+  static String i(
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+    String tag = '',
+    bool showIcon = true,
+    bool showColor = true,
+    int frames = 1,
+  }) => _log(
+        LoggerLevel.info,
+        message,
+        time: time,
+        error: error,
+        stackTrace: stackTrace,
+        tag: tag,
+        showIcon: showIcon,
+        showColor: showColor,
+        frames: frames,
+      );
 
+  static String r(
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+    String tag = '',
+    bool showIcon = true,
+    bool showColor = true,
+    int frames = 1,
+  }) => _log(
+        LoggerLevel.refactor,
+        message,
+        time: time,
+        error: error,
+        stackTrace: stackTrace,
+        tag: tag,
+        showIcon: showIcon,
+        showColor: showColor,
+        frames: frames,
+      );
 
-- Still problems with secondChild
-- - screen when .popover, the 'close' button (aka 'X') should be above of child, horitzonal is fine
-- - screen when .modal, the child fills the entire screen
-- - screen when .bottomSheet, the child hugs the bottom, should be up about 48px
-- - screen when .push, its fine.
+  static String w(
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+    String tag = '',
+    bool showIcon = true,
+    bool showColor = true,
+    int frames = 1,
+  }) => _log(
+        LoggerLevel.warning,
+        message,
+        time: time,
+        error: error,
+        stackTrace: stackTrace,
+        tag: tag,
+        showIcon: showIcon,
+        showColor: showColor,
+        frames: frames,
+      );
 
-- Should caller be responsible for constraints for .modal or any/all of them
-- What about bottom padding for .bottomSheet, the caller or the package
-- Basically can an the secondChild be positioned, padded, etc
+  static String c(
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+    String tag = '',
+    bool showIcon = true,
+    bool showColor = true,
+    int frames = 1,
+  }) {
+    final logged = _log(
+      LoggerLevel.crashlytics,
+      message,
+      time: time,
+      error: error,
+      stackTrace: stackTrace,
+      tag: tag,
+      showIcon: showIcon,
+      showColor: showColor,
+      frames: frames,
+    );
+    _i._crashlyticsReporter?.report(logged, error, stackTrace);
+    return logged;
+  }
 
+  static String e(
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+    String tag = '',
+    bool showIcon = true,
+    bool showColor = true,
+    int frames = 1,
+  }) => _log(
+        LoggerLevel.error,
+        message,
+        time: time,
+        error: error,
+        stackTrace: stackTrace,
+        tag: tag,
+        showIcon: showIcon,
+        showColor: showColor,
+        frames: frames,
+      );
 
-- you said .modal is the callers responsibitly but the package should wrap child in a Dialog() widget. Which is it you contrarian asshole., .modal default size wrap in Dialog, content layout the caller, which is it
+  static String f(
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+    String tag = '',
+    bool showIcon = true,
+    bool showColor = true,
+    int frames = 1,
+  }) => _log(
+        LoggerLevel.fatal,
+        message,
+        time: time,
+        error: error,
+        stackTrace: stackTrace,
+        tag: tag,
+        showIcon: showIcon,
+        showColor: showColor,
+        frames: frames,
+      );
 
+  static String o(
+    dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+    String tag = '',
+    bool showIcon = true,
+    bool showColor = true,
+    int frames = 1,
+  }) => _log(
+        LoggerLevel.output,
+        message,
+        time: time,
+        error: error,
+        stackTrace: stackTrace,
+        tag: tag,
+        showIcon: showIcon,
+        showColor: showColor,
+        frames: frames,
+      );
+}
+```

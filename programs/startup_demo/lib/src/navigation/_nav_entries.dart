@@ -2,13 +2,7 @@
 
 import 'package:animated_rail_menu/animated_rail_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:startup_demo/src/pages/about_page.dart';
-import 'package:startup_demo/src/pages/analytics_page.dart';
-import 'package:startup_demo/src/pages/help_page.dart';
-import 'package:startup_demo/src/pages/landing_page.dart';
-import 'package:startup_demo/src/pages/notifications_page.dart';
-import 'package:startup_demo/src/pages/profile_page.dart';
-import 'package:startup_demo/src/pages/settings_page.dart';
+import 'package:startup_demo/src/pages/pages.dart';
 
 const navEntries = <RailMenuEntry>[
   RailMenuEntry(
@@ -17,7 +11,24 @@ const navEntries = <RailMenuEntry>[
     label: 'Landing',
     page: LandingPage(),
   ),
-
+  RailMenuEntry(
+    icon: Icons.lightbulb_outline_sharp,
+    activeIcon: Icons.lightbulb,
+    label: 'Demo',
+    page: DemoPage(),
+  ),
+  RailMenuEntry(
+    icon: Icons.info_outline,
+    activeIcon: Icons.info,
+    label: 'About',
+    page: AboutPage(),
+  ),
+  RailMenuEntry(
+    icon: Icons.settings_outlined,
+    activeIcon: Icons.settings,
+    label: 'Settings',
+    page: SettingsPage(),
+  ),
   RailMenuEntry(
     icon: Icons.person_outline,
     activeIcon: Icons.person,
@@ -41,17 +52,5 @@ const navEntries = <RailMenuEntry>[
     activeIcon: Icons.help,
     label: 'Help',
     page: HelpPage(),
-  ),
-  RailMenuEntry(
-    icon: Icons.info_outline,
-    activeIcon: Icons.info,
-    label: 'About',
-    page: AboutPage(),
-  ),
-  RailMenuEntry(
-    icon: Icons.settings_outlined,
-    activeIcon: Icons.settings,
-    label: 'Settings',
-    page: SettingsPage(),
   ),
 ];

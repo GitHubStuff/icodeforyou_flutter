@@ -4,15 +4,14 @@ import 'package:animated_widgets/src/pulse_widget/pulse_widget.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Widget _buildSubject({required bool trigger, Duration? duration}) =>
-    WidgetsApp(
-      color: const Color(0xFF000000),
-      builder: (_, _) => PulseWidget(
-        trigger: trigger,
-        duration: duration ?? const Duration(milliseconds: 200),
-        child: const SizedBox(width: 50, height: 50),
-      ),
-    );
+Widget _buildSubject({required bool trigger, Duration? duration}) => WidgetsApp(
+  color: const Color(0xFF000000),
+  builder: (_, _) => PulseWidget(
+    trigger: trigger,
+    duration: duration ?? const Duration(milliseconds: 200),
+    child: const SizedBox(width: 50, height: 50),
+  ),
+);
 
 void main() {
   group('PulseWidget', () {

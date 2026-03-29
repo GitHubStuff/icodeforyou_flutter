@@ -1,20 +1,20 @@
-// lib/src/_editor_state.dart
+// edittext_popover/lib/src/_editor_state.dart
 // ignore_for_file: lines_longer_than_80_chars
-
+import 'package:edittext_popover/src/_editor_cubit.dart' show EditorScreenCubit;
 import 'package:flutter/foundation.dart';
 
-/// Immutable state class for EditorScreenCubit.
-/// Holds current text, line count, and character count.
-/// Provides factory constructor for initial state and copyWith for updates.
-
+/// Immutable state for [EditorScreenCubit].
 @immutable
 final class EditorState {
+  /// Creates an [EditorState] with the given [text], [lineCount],
+  /// and [characterCount].
   const EditorState({
     required this.text,
     required this.lineCount,
     required this.characterCount,
   });
 
+  /// Creates the initial [EditorState] derived from [initialText].
   factory EditorState.initial(String initialText) {
     return EditorState(
       text: initialText,
@@ -23,11 +23,21 @@ final class EditorState {
     );
   }
 
+  /// The current editor text.
   final String text;
+
+  /// The number of lines in [text].
   final int lineCount;
+
+  /// The number of characters in [text].
   final int characterCount;
 
-  EditorState copyWith({String? text, int? lineCount, int? characterCount}) {
+  /// Returns a copy of this state with the given fields replaced.
+  EditorState copyWith({
+    String? text,
+    int? lineCount,
+    int? characterCount,
+  }) {
     return EditorState(
       text: text ?? this.text,
       lineCount: lineCount ?? this.lineCount,
@@ -35,16 +45,13 @@ final class EditorState {
     );
   }
 
-  /// Calculates line count based on rules:
-  /// - First line needs at least 1 character to count
-  /// - Each \n adds a line
+  /// Calculates line count from [text].
+  ///
+  /// An empty string yields 0. Otherwise the count is 1 plus the
+  /// number of newline characters present.
   static int _calculateLineCount(String text) {
-    if (text.isEmpty) {
-      return 0;
-    }
-
-    final newlineCount = '\n'.allMatches(text).length;
-    return 1 + newlineCount;
+    if (text.isEmpty) return 0;
+    return 1 + '\n'.allMatches(text).length;
   }
 
   @override

@@ -1,11 +1,11 @@
 name: since_when
 description: "A new Flutter package project."
-version: 0.0.1
+version: 0.0.1+100
 publish_to: none
 resolution: workspace
 
 environment:
-  sdk: ">=3.10.0 <4.0.0"
+  sdk: ">=3.11.0 <4.0.0"
 
 dependencies:
   equatable: ^2.0.8

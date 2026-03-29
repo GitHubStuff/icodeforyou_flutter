@@ -1,15 +1,18 @@
-// datetime_ordering.dart
+// extensions/lib/src/datetime_ordering.dart
 
-/// Enum to represent the relation between two DateTime objects
+/// Describes the temporal relationship between two [DateTime] objects.
 enum DateTimeOrdering {
+  /// The start event occurs before the end event.
   before,
-  now,
-  after;
 
-  /// Returns the relation between startEvent and endEvent
-  /// If startEvent is before endEvent, it returns DateTimeRelation.before
-  /// If startEvent is after endEvent, it returns DateTimeRelation.after
-  /// If startEvent is the same as endEvent, it returns DateTimeRelation.now
+  /// The start event and end event occur at the same time.
+  now,
+
+  /// The start event occurs after the end event.
+  after
+  ;
+
+  /// Returns the [DateTimeOrdering] of [startEvent] relative to [endEvent].
   static DateTimeOrdering direction(DateTime startEvent, DateTime endEvent) {
     if (startEvent.isBefore(endEvent)) return DateTimeOrdering.before;
     if (startEvent.isAfter(endEvent)) return DateTimeOrdering.after;

@@ -17,8 +17,18 @@ import 'package:widgetbook_workspace/packages/analog_clock_widget/analog_clock_w
     as _widgetbook_workspace_packages_analog_clock_widget_analog_clock_widget_usecase;
 import 'package:widgetbook_workspace/packages/animated_rail_menu/animated_rail_menu.usecase.dart'
     as _widgetbook_workspace_packages_animated_rail_menu_animated_rail_menu_usecase;
-import 'package:widgetbook_workspace/packages/animated_widgets/animated_widgets.usecase.dart'
-    as _widgetbook_workspace_packages_animated_widgets_animated_widgets_usecase;
+import 'package:widgetbook_workspace/packages/animated_widgets/animated_checkbox.usecase.dart'
+    as _widgetbook_workspace_packages_animated_widgets_animated_checkbox_usecase;
+import 'package:widgetbook_workspace/packages/animated_widgets/contextual_reveal.usecase.dart'
+    as _widgetbook_workspace_packages_animated_widgets_contextual_reveal_usecase;
+import 'package:widgetbook_workspace/packages/animated_widgets/grow_and_fade_widget.usecase.dart'
+    as _widgetbook_workspace_packages_animated_widgets_grow_and_fade_widget_usecase;
+import 'package:widgetbook_workspace/packages/animated_widgets/grow_widget.usecase.dart'
+    as _widgetbook_workspace_packages_animated_widgets_grow_widget_usecase;
+import 'package:widgetbook_workspace/packages/animated_widgets/platform.usecase.dart'
+    as _widgetbook_workspace_packages_animated_widgets_platform_usecase;
+import 'package:widgetbook_workspace/packages/animated_widgets/pulse_widget.usecase.dart'
+    as _widgetbook_workspace_packages_animated_widgets_pulse_widget_usecase;
 import 'package:widgetbook_workspace/packages/edittext_popover/edittext_popover.usecase.dart'
     as _widgetbook_workspace_packages_edittext_popover_edittext_popover_usecase;
 import 'package:widgetbook_workspace/packages/random_color_generator/random_color_generator.usecase.dart'
@@ -295,8 +305,30 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Default',
             builder:
-                _widgetbook_workspace_packages_animated_widgets_animated_widgets_usecase
+                _widgetbook_workspace_packages_animated_widgets_animated_checkbox_usecase
                     .animatedCheckboxDefault,
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
+    name: 'contextual_reveal',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'ContextualReveal',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_animated_widgets_contextual_reveal_usecase
+                    .contextualRevealDefault,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Simple',
+            builder:
+                _widgetbook_workspace_packages_animated_widgets_contextual_reveal_usecase
+                    .contextualRevealSimple,
           ),
         ],
       ),
@@ -311,7 +343,7 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Default',
             builder:
-                _widgetbook_workspace_packages_animated_widgets_animated_widgets_usecase
+                _widgetbook_workspace_packages_animated_widgets_grow_and_fade_widget_usecase
                     .growAndFadeWidgetDefault,
           ),
         ],
@@ -327,8 +359,24 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Default',
             builder:
-                _widgetbook_workspace_packages_animated_widgets_animated_widgets_usecase
+                _widgetbook_workspace_packages_animated_widgets_grow_widget_usecase
                     .growWidgetDefault,
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
+    name: 'platform',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'PlatformIdentifier',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_animated_widgets_platform_usecase
+                    .platformIdentifierDefault,
           ),
         ],
       ),
@@ -395,6 +443,22 @@ final directories = <_widgetbook.WidgetbookNode>[
                 ],
               ),
             ],
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
+    name: 'pulse_widget',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'PulseWidget',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_animated_widgets_pulse_widget_usecase
+                    .pulseWidgetDefault,
           ),
         ],
       ),

@@ -2,8 +2,10 @@ import 'package:analog_clock_widget/src/analog_clock.dart'
     show ClockFaceStyle, HandStyle;
 import 'package:flutter/material.dart' show Color, immutable;
 
+/// Details about a clock is styled
 @immutable
 class ClockStyle {
+  /// Constructor
   const ClockStyle({
     this.faceColor,
     this.borderColor,
@@ -43,8 +45,10 @@ class ClockStyle {
   /// The style of the clock hands.
   final HandStyle handStyle;
 
+  /// Convience Constructory
   static const ClockStyle defaultStyle = ClockStyle();
 
+  /// For OOP copying
   ClockStyle copyWith({
     Color? faceColor,
     Color? borderColor,

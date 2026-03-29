@@ -1,25 +1,32 @@
-// lib/src/grow_widget/grow_widget_view.dart
+// animated_widgets/lib/src/grow_widget/grow_widget_view.dart
 import 'package:animated_widgets/src/grow_widget/_grow_animation_mixin.dart';
-import 'package:application_setup/application_setup.dart'
-    show SplashScreenAbstract;
 import 'package:flutter/widgets.dart';
 
 /// Scales [child] from 0.0 to 1.0 over [duration], centered in its parent.
 ///
-/// Calls [onComplete] when the animation finishes, satisfying the
-/// [SplashScreenAbstract] contract.
-class GrowWidgetView extends SplashScreenAbstract {
+/// Calls [onComplete] when the animation finishes.
+class GrowWidgetView extends StatelessWidget {
+  /// Creates a [GrowWidgetView] with the required [child], [duration],
+  /// and [onComplete] callback.
   const GrowWidgetView({
     required this.child,
     required this.duration,
-    required super.onComplete,
+    required this.onComplete,
     super.key,
     this.curve = Curves.easeOut,
   });
 
+  /// The widget to scale into view.
   final Widget child;
+
+  /// The duration of the grow animation.
   final Duration duration;
+
+  /// The curve applied to the scale animation.
   final Curve curve;
+
+  /// Called once the animation reaches 1.0 and completes.
+  final VoidCallback onComplete;
 
   @override
   Widget build(BuildContext context) {

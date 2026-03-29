@@ -1,11 +1,11 @@
-# pubspec.yaml - extensions
+# extensions/pubspec.yaml - extensions
 name: extensions
-description: "A new Flutter package project."
-version: 0.0.1
+description: "Collection of extensions on various dart types like String, int, double, Color..."
+version: 1.0.1
 resolution: workspace
 
 environment:
-  sdk: ">=3.10.0 <4.0.0"
+  sdk: ">=3.11.0 <4.0.0"
 
 dependencies:
   flutter:

@@ -244,7 +244,6 @@ void main() {
                 onPressed: () async {
                   result = await showEditor(
                     context: context,
-                    // ignore: avoid_redundant_argument_values
                     initialText: '',
                   );
                 },

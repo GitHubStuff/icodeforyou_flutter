@@ -6,6 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 abstract class ThemeCubitBase extends Cubit<ThemeMode> {
   ThemeCubitBase(super.initialState);
 
+  ThemeData get dark;
+  ThemeData get light;
+
   void toLight();
   void toDark();
   void toSystem();

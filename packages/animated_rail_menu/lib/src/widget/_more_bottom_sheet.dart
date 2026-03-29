@@ -17,7 +17,7 @@ class _MoreBottomSheet {
     required RailTransition transition,
     required RailDirection direction,
   }) {
-    showModalBottomSheet<void>(
+    unawaited(showModalBottomSheet<void>(
       context: context,
       builder: (_) => BlocProvider.value(
         value: context.read<RailMenuCubit>(),
@@ -67,6 +67,6 @@ class _MoreBottomSheet {
           ),
         ),
       ),
-    );
+    ));
   }
 }

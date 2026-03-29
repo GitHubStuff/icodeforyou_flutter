@@ -1,4 +1,4 @@
-// lib/src/editor_result.dart
+// edittext_popover/lib/src/editor_result.dart
 import 'package:flutter/foundation.dart';
 
 /// Sealed class representing the result of an editor session.
@@ -15,6 +15,7 @@ import 'package:flutter/foundation.dart';
 /// ```
 @immutable
 sealed class EditorResult {
+  /// Creates an [EditorResult] with the given [text].
   const EditorResult({required this.text});
 
   /// The text content at the time of closing.
@@ -24,6 +25,7 @@ sealed class EditorResult {
 /// User completed editing by tapping Save.
 @immutable
 final class EditorCompleted extends EditorResult {
+  /// Creates an [EditorCompleted] with the saved [text].
   const EditorCompleted({required super.text});
 
   @override
@@ -43,6 +45,7 @@ final class EditorCompleted extends EditorResult {
 /// User dismissed editing by tapping Cancel.
 @immutable
 final class EditorDismissed extends EditorResult {
+  /// Creates an [EditorDismissed] with the last known [text].
   const EditorDismissed({required super.text});
 
   @override

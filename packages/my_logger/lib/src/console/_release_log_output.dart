@@ -8,11 +8,11 @@ final class _ReleaseLogOutput implements _LogOutput {
   @override
   String write(String formattedMessage, _LogMessage message) {
     final output = message.error != null
-        // ignore: lines_longer_than_80_chars
+        // ignore: lines_longer_than_80_chars document_ignores
         ? '[${message.normalizedTag}] $formattedMessage\nError: ${message.error}'
         : '[${message.normalizedTag}] $formattedMessage';
 
-    // ignore: avoid_print
+    // ignore: avoid_print  document_ignores
     print(output);
     return output;
   }

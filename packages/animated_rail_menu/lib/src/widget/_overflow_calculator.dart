@@ -14,8 +14,8 @@ class _OverflowResult {
 
 /// Calculates how many items fit within the available extent.
 ///
-/// When [limit] is provided it caps visible items at [limit - 1] and
-/// forces the More button regardless of available space.
+/// "itemCount" is provided it caps visible items at [itemCount - 1] and
+/// forces the 'More' button regardless of available space.
 class _OverflowCalculator {
   const _OverflowCalculator();
 

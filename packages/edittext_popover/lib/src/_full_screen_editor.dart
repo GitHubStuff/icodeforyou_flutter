@@ -1,13 +1,17 @@
-// lib/src/_full_screen_editor.dart
+// edittext_popover/lib/src/_full_screen_editor.dart
 import 'package:edittext_popover/src/_constants.dart';
 import 'package:edittext_popover/src/_editor_card.dart';
 import 'package:flutter/material.dart';
 
 /// Full-screen editor layout for phones and narrow viewports.
-/// Positions the editor card below safe area and above virtual keyboard.
-/// Text field height is calculated as 70% of available vertical space.
-
+///
+/// Positions the [EditorCard] below the safe area top and above the virtual
+/// keyboard. The text field height is calculated as [kFullScreenTextFieldRatio]
+/// of the remaining vertical space after accounting for the stats bar,
+/// action buttons, and padding.
 class FullScreenEditor extends StatelessWidget {
+  /// Creates a [FullScreenEditor] with the required controller, focus, style,
+  /// action widgets, callbacks, and layout insets.
   const FullScreenEditor({
     required this.textController,
     required this.focusNode,
@@ -21,14 +25,31 @@ class FullScreenEditor extends StatelessWidget {
     super.key,
   });
 
+  /// Controls the editable text content.
   final TextEditingController textController;
+
+  /// Manages focus for the text field.
   final FocusNode focusNode;
+
+  /// The [TextStyle] applied to the editable text.
   final TextStyle textStyle;
+
+  /// Widget rendered as the save action button.
   final Widget saveWidget;
+
+  /// Widget rendered as the cancel action button.
   final Widget cancelWidget;
+
+  /// Called when the user confirms the edit.
   final VoidCallback onSave;
+
+  /// Called when the user dismisses without saving.
   final VoidCallback onCancel;
+
+  /// The current device safe area insets.
   final EdgeInsets safeArea;
+
+  /// The current keyboard view insets.
   final EdgeInsets viewInsets;
 
   @override
@@ -36,7 +57,6 @@ class FullScreenEditor extends StatelessWidget {
     final screenHeight = MediaQuery.sizeOf(context).height;
     final availableHeight =
         screenHeight - safeArea.top - safeArea.bottom - viewInsets.bottom;
-
     final textFieldHeight =
         (availableHeight - kStatsHeight - kButtonHeight - kButtonPadding * 2) *
         kFullScreenTextFieldRatio;

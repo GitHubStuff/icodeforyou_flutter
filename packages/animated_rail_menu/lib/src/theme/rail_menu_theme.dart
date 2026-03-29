@@ -4,7 +4,7 @@ import 'package:animated_rail_menu/src/theme/_rail_menu_theme_dark.dart';
 import 'package:animated_rail_menu/src/theme/_rail_menu_theme_light.dart';
 import 'package:flutter/material.dart';
 
-/// The theming contract for [AnimatedRailMenu].
+/// The theming extension for [RailMenuTheme].
 ///
 /// Register via [ThemeData.extensions] in your app:
 ///
@@ -14,11 +14,18 @@ import 'package:flutter/material.dart';
 /// )
 /// ```
 ///
-/// If no extension is registered, [AnimatedRailMenu] falls back to
+/// If no extension is registered, [RailMenuTheme] falls back to
 /// [RailMenuTheme.light()] or [RailMenuTheme.dark()] based on
 /// [Brightness].
 abstract class RailMenuTheme extends ThemeExtension<RailMenuTheme> {
+  /// Placeholder Constructor
   const RailMenuTheme();
+
+  /// Returns the default dark [RailMenuTheme].
+  factory RailMenuTheme.dark() => const RailMenuThemeDark();
+
+  /// Returns the default light [RailMenuTheme].
+  factory RailMenuTheme.light() => const RailMenuThemeLight();
 
   /// The background color of the rail or bar surface.
   Color get backgroundColor;
@@ -35,13 +42,7 @@ abstract class RailMenuTheme extends ThemeExtension<RailMenuTheme> {
   /// The elevation of the rail or bar surface.
   double get elevation;
 
-  /// Returns the default light [RailMenuTheme].
-  factory RailMenuTheme.light() => const RailMenuThemeLight();
-
-  /// Returns the default dark [RailMenuTheme].
-  factory RailMenuTheme.dark() => const RailMenuThemeDark();
-
-  /// Returns the appropriate default theme for the given [brightness].
+  /// Returns the appropriate default theme for the given device/app brightness.
   static RailMenuTheme of(BuildContext context) {
     final theme = Theme.of(context).extension<RailMenuTheme>();
     if (theme != null) return theme;

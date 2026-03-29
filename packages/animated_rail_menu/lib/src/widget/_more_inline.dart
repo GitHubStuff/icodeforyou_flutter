@@ -30,7 +30,7 @@ class _MoreInlineButton extends StatefulWidget {
 }
 
 class _MoreInlineButtonState extends State<_MoreInlineButton> {
-  final _key = GlobalKey();
+  final GlobalKey<State<StatefulWidget>> _key = GlobalKey();
 
   void _showFlyout(BuildContext context) {
     final box = _key.currentContext?.findRenderObject() as RenderBox?;
@@ -42,57 +42,61 @@ class _MoreInlineButtonState extends State<_MoreInlineButton> {
     final menuWidth = screenWidth * _kFlyoutWidthFraction;
     final left = position.dx + size.width;
 
-    showMenu<void>(
-      context: context,
-      constraints: BoxConstraints(minWidth: menuWidth, maxWidth: menuWidth),
-      position: RelativeRect.fromLTRB(
-        left,
-        position.dy,
-        screenWidth - left,
-        0,
-      ),
-      items: widget.overflowEntries.indexed.map((entry) {
-        final resolvedIndex = widget.visibleCount + entry.$1;
-        return PopupMenuItem<void>(
-          padding: EdgeInsets.zero,
-          child: BlocProvider.value(
-            value: cubit,
-            child: BlocBuilder<RailMenuCubit, RailMenuState>(
-              builder: (context, state) {
-                final isActive = state.activeIndex == resolvedIndex;
-                final theme = RailMenuTheme.of(context);
-                return ListTile(
-                  leading: Icon(
-                    isActive ? entry.$2.activeIcon : entry.$2.icon,
-                    size: widget.railIcon.iconSize,
-                    color: isActive ? theme.activeColor : theme.inactiveColor,
-                  ),
-                  title: Text(
-                    entry.$2.label,
-                    style: TextStyle(
-                      color:
-                          isActive ? theme.activeColor : theme.inactiveColor,
-                      fontWeight:
-                          isActive ? FontWeight.bold : FontWeight.normal,
+    unawaited(
+      showMenu<void>(
+        context: context,
+        constraints: BoxConstraints(minWidth: menuWidth, maxWidth: menuWidth),
+        position: RelativeRect.fromLTRB(
+          left,
+          position.dy,
+          screenWidth - left,
+          0,
+        ),
+        items: widget.overflowEntries.indexed.map((entry) {
+          final resolvedIndex = widget.visibleCount + entry.$1;
+          return PopupMenuItem<void>(
+            padding: EdgeInsets.zero,
+            child: BlocProvider.value(
+              value: cubit,
+              child: BlocBuilder<RailMenuCubit, RailMenuState>(
+                builder: (context, state) {
+                  final isActive = state.activeIndex == resolvedIndex;
+                  final theme = RailMenuTheme.of(context);
+                  return ListTile(
+                    leading: Icon(
+                      isActive ? entry.$2.activeIcon : entry.$2.icon,
+                      size: widget.railIcon.iconSize,
+                      color: isActive ? theme.activeColor : theme.inactiveColor,
                     ),
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    final resolvedTransition = widget.transition ==
-                            RailTransition.slideDirectional
-                        ? cubit.resolveDirectional(
-                            tappedIndex: resolvedIndex,
-                            direction: widget.direction,
-                          )
-                        : widget.transition;
-                    cubit.setActive(resolvedIndex, resolvedTransition);
-                  },
-                );
-              },
+                    title: Text(
+                      entry.$2.label,
+                      style: TextStyle(
+                        color: isActive
+                            ? theme.activeColor
+                            : theme.inactiveColor,
+                        fontWeight: isActive
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      final resolvedTransition =
+                          widget.transition == RailTransition.slideDirectional
+                          ? cubit.resolveDirectional(
+                              tappedIndex: resolvedIndex,
+                              direction: widget.direction,
+                            )
+                          : widget.transition;
+                      cubit.setActive(resolvedIndex, resolvedTransition);
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        );
-      }).toList(),
+          );
+        }).toList(),
+      ),
     );
   }
 

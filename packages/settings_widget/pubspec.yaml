@@ -1,11 +1,11 @@
 name: settings_widget
 description: Adaptive settings modal for Flutter apps.
-version: 0.0.1
+version: 0.0.3
 publish_to: none
 resolution: workspace
 
 environment:
-  sdk: ">=3.10.0 <4.0.0"
+  sdk: ">=3.11.0 <4.0.0"
 
 dependencies:
   flutter:

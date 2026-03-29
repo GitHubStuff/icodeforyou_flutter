@@ -1,7 +1,5 @@
 // test/src/widget/rail_navigation_overflow_test.dart
 
-// ignore_for_file: no_leading_underscores_for_local_identifiers
-
 import 'package:animated_rail_menu/animated_rail_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -139,7 +137,7 @@ void main() {
     // Forces overflow by constraining width so only the first entry fits,
     // pushing the rest into the More flyout. Tapping the flyout item
     // exercises the Navigator.pop + cubit.setActive path (lines 79–88).
-    Future<void> _pumpOverflow(
+    Future<void> futurePumpOverflow(
       WidgetTester tester, {
       RailTransition transition = RailTransition.crossFade,
       RailDirection direction = RailDirection.horizontal,
@@ -164,7 +162,7 @@ void main() {
     }
 
     testWidgets('tapping overflow item navigates — crossFade', (tester) async {
-      await _pumpOverflow(tester);
+      await futurePumpOverflow(tester);
 
       expect(find.text('More'), findsOneWidget);
       await tester.tap(find.text('More'));
@@ -184,7 +182,7 @@ void main() {
     testWidgets(
       'tapping overflow item navigates — slideDirectional horizontal',
       (tester) async {
-        await _pumpOverflow(
+        await futurePumpOverflow(
           tester,
           transition: RailTransition.slideDirectional,
           direction: RailDirection.horizontal,
@@ -203,7 +201,7 @@ void main() {
     testWidgets(
       'tapping overflow item navigates — slideDirectional vertical',
       (tester) async {
-        await _pumpOverflow(
+        await futurePumpOverflow(
           tester,
           transition: RailTransition.slideDirectional,
           direction: RailDirection.vertical,

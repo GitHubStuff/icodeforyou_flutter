@@ -20,6 +20,7 @@ import 'package:flutter/widgets.dart';
 
 /// The resolved screen-space position for the modal and which side it landed on
 class ModalPlacement {
+  /// Constructor
   const ModalPlacement({
     required this.left,
     required this.top,

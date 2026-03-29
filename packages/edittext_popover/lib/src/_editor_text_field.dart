@@ -1,12 +1,14 @@
-// lib/src/_editor_text_field.dart
+// edittext_popover/lib/src/_editor_text_field.dart
 import 'package:edittext_popover/src/_constants.dart';
 import 'package:flutter/material.dart';
 
 /// Internal text field widget for the editor overlay.
-/// Supports multiline input with expand behavior and top-aligned text.
+///
+/// Supports multiline input with expand behaviour and top-aligned text.
 /// Uses theme-derived colors for fill, border, and focus states.
-
 class EditorTextFieldWidget extends StatelessWidget {
+  /// Creates an [EditorTextFieldWidget] with the required controller,
+  /// focus node, text style, and constrained [height].
   const EditorTextFieldWidget({
     required this.controller,
     required this.focusNode,
@@ -15,15 +17,21 @@ class EditorTextFieldWidget extends StatelessWidget {
     super.key,
   });
 
+  /// Controls the text being edited.
   final TextEditingController controller;
+
+  /// Manages focus for the underlying [TextField].
   final FocusNode focusNode;
+
+  /// Base text style; [ColorScheme.onSurface] is applied as the color.
   final TextStyle textStyle;
+
+  /// Fixed height of the text field container.
   final double height;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
     return SizedBox(
       height: height,
       child: TextField(
@@ -50,6 +58,7 @@ class EditorTextFieldWidget extends StatelessWidget {
     );
   }
 
+  /// Builds an [OutlineInputBorder] with the given [color] and optional [width]
   OutlineInputBorder _buildBorder(Color color, {double width = 1}) {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(kTextFieldRadius),

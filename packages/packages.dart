@@ -1,11 +1,10 @@
 // packages/packages.dart
-library;
 
 export 'package:abstractions/abstractions.dart';
 export 'package:analog_clock_widget/analog_clock_widget.dart';
 export 'package:animated_rail_menu/animated_rail_menu.dart';
 export 'package:animated_widgets/animated_widgets.dart';
-export 'package:application_setup/application_setup.dart';
+export 'package:application_startup/application_startup.dart';
 export 'package:edittext_popover/edittext_popover.dart';
 export 'package:extensions/extensions.dart';
 export 'package:my_logger/my_logger.dart';

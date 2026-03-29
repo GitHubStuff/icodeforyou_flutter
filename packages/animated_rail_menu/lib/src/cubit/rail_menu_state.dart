@@ -1,5 +1,6 @@
 // lib/src/cubit/rail_menu_state.dart
 
+import 'package:animated_rail_menu/animated_rail_menu.dart' show RailMenuCubit;
 import 'package:animated_rail_menu/src/model/rail_transition.dart';
 import 'package:flutter/foundation.dart';
 

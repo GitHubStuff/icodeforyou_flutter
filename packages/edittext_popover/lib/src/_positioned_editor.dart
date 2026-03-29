@@ -1,13 +1,15 @@
-// lib/src/_positioned_editor.dart
+// edittext_popover/lib/src/_positioned_editor.dart
 import 'package:edittext_popover/src/_constants.dart';
 import 'package:edittext_popover/src/_editor_card.dart';
 import 'package:flutter/material.dart';
 
 /// Positioned editor layout for tablets, Mac, and Web.
-/// Calculates position relative to targetRect with screen boundary clamping.
-/// Falls back to upper-left positioning if editor would overflow screen edges.
-
+///
+/// Calculates position relative to [targetRect] with screen boundary clamping.
+/// Falls back to upper-left positioning if the editor would overflow
+/// screen edges.
 class PositionedEditor extends StatelessWidget {
+  /// Creates a [PositionedEditor] anchored to [targetRect].
   const PositionedEditor({
     required this.textController,
     required this.focusNode,
@@ -21,14 +23,32 @@ class PositionedEditor extends StatelessWidget {
     super.key,
   });
 
+  /// Controls the editable text content.
   final TextEditingController textController;
+
+  /// Manages focus for the text field.
   final FocusNode focusNode;
+
+  /// Style applied to the editor's text field.
   final TextStyle textStyle;
+
+  /// Widget rendered as the save action button.
   final Widget saveWidget;
+
+  /// Widget rendered as the cancel action button.
   final Widget cancelWidget;
+
+  /// Called when the user confirms the edit.
   final VoidCallback onSave;
+
+  /// Called when the user dismisses the editor without saving.
   final VoidCallback onCancel;
+
+  /// The screen rect of the element that triggered the editor.
+  /// Defaults to [Rect.zero] when null.
   final Rect? targetRect;
+
+  /// Current view insets, used to avoid the on-screen keyboard.
   final EdgeInsets viewInsets;
 
   @override
@@ -36,7 +56,6 @@ class PositionedEditor extends StatelessWidget {
     final screenSize = MediaQuery.sizeOf(context);
     final rect = targetRect ?? Rect.zero;
     final position = _calculatePosition(screenSize, rect);
-
     const textFieldHeight =
         kEditorHeight -
         kStatsHeight -
@@ -71,7 +90,6 @@ class PositionedEditor extends StatelessWidget {
     if (left < kEditorMargin) {
       left = kEditorMargin;
     }
-
     if (top + kEditorHeight >
         screenSize.height - viewInsets.bottom - kEditorMargin) {
       top = rect.top - kEditorHeight - kEditorGap;

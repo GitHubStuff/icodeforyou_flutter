@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:settings_widget/src/_app_settings_entry.dart';
-import 'package:settings_widget/src/_settings_breakpoint.dart';
 import 'package:settings_widget/src/_settings_direction.dart';
 import 'package:settings_widget/src/_settings_layout.dart';
 import 'package:settings_widget/src/_settings_sheet.dart';
@@ -21,9 +20,11 @@ abstract final class SettingsWidget {
     double breakpoint = kSettingsBreakpoint,
     SettingsDirection direction = SettingsDirection.bottom,
     double edgeGap = _defaultEdgeGap,
+    bool useRootNavigator = false, // ← add this
   }) {
     return showGeneralDialog<void>(
       context: context,
+      useRootNavigator: useRootNavigator, // ← thread through
       barrierDismissible: false,
       barrierLabel: 'Settings',
       barrierColor: Colors.black54,
@@ -34,7 +35,10 @@ abstract final class SettingsWidget {
         child: SettingsSheet(
           title: title,
           entries: entries,
-          onDismiss: () => Navigator.of(context).pop(),
+          onDismiss: () => Navigator.of(
+            context,
+            rootNavigator: useRootNavigator,
+          ).pop(), // ← match
           breakpoint: breakpoint,
         ),
       ),

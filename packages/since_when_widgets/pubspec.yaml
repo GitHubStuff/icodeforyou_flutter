@@ -1,21 +1,18 @@
 name: since_when_widgets
 description: A Flutter widget for displaying SQLite query results in a spreadsheet-style view.
-version: 1.0.0+1
+version: 1.0.1+1
 resolution: workspace
 publish_to: "none"
 
 environment:
-  sdk: ">=3.10.0 <4.0.0"
+  sdk: ">=3.11.0 <4.0.0"
 
 dependencies:
-  extensions:
-    path: ../extensions
+  extensions: ^1.0.1
   flutter:
     sdk: flutter
-  random_color_generator:
-    path: ../random_color_generator
-  since_when:
-    path: ../since_when
+  random_color_generator: ^1.0.0
+  since_when: 0.0.1+100
 
 dev_dependencies:
   flutter_test:

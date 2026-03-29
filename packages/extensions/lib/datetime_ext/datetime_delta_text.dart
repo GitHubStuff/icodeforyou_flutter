@@ -1,20 +1,20 @@
 // datetime_delta_text.dart
 
-// ignore_for_file: comment_references, document_ignores
+// ignore_for_file: public_member_api_docs, comment_references, document_ignores
 
 import 'package:extensions/datetime_ext/datetime_ext.dart';
 import 'package:flutter/material.dart';
 
-// ignore: lines_longer_than_80_chars
-/// A widget that displays a formatted DateTimeDelta with optional leading widget.
+/// A widget that displays a formatted DateTimeDelta with optional
+/// leading widget.
 ///
 /// This widget wraps a [Text] widget and automatically formats the provided
 /// [DateTimeDelta] using the specified format string. It supports all [Text]
 /// parameters except [data], which is derived from the formatted delta.
 class DateTimeDeltaText extends StatelessWidget {
-
   const DateTimeDeltaText({
-    required this.delta, super.key,
+    required this.delta,
+    super.key,
     this.format,
     this.leading,
     this.trailing,
@@ -32,6 +32,7 @@ class DateTimeDeltaText extends StatelessWidget {
     this.textHeightBehavior,
     this.selectionColor,
   });
+
   /// The DateTimeDelta to format and display
   final DateTimeDelta delta;
 
@@ -47,7 +48,7 @@ class DateTimeDeltaText extends StatelessWidget {
   /// If null, no trailing widget is shown
   final Widget? trailing;
 
-  // All Text widget parameters except 'data'
+  /// All [TextWidget] widget parameters except 'data'
   final TextStyle? style;
   final StrutStyle? strutStyle;
   final TextAlign? textAlign;

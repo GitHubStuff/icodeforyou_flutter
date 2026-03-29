@@ -1,4 +1,4 @@
-// lib/src/_editor_overlay.dart
+// edittext_popover/lib/src/_editor_overlay.dart
 import 'dart:async';
 
 import 'package:edittext_popover/src/_editor_cubit.dart';
@@ -9,11 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Main overlay widget that manages the editor popover lifecycle.
-/// Handles text controller, focus, and cubit initialization/disposal.
-/// Delegates to FullScreenEditor or PositionedEditor based on device type.
-/// Returns EditorCompleted or EditorDismissed via Navigator.pop.
-
+///
+/// Handles text controller, focus, and cubit initialization and disposal.
+/// Delegates to [FullScreenEditor] or [PositionedEditor] based on device type.
+/// Returns [EditorCompleted] or [EditorDismissed] via [Navigator.pop].
 class EditorOverlay extends StatefulWidget {
+  /// Creates an [EditorOverlay] with the given configuration.
   const EditorOverlay({
     required this.initialText,
     required this.textStyle,
@@ -25,12 +26,25 @@ class EditorOverlay extends StatefulWidget {
     super.key,
   });
 
+  /// The text pre-populated in the editor on open.
   final String initialText;
+
+  /// The [TextStyle] applied to the editor input.
   final TextStyle textStyle;
+
+  /// The colour of the modal barrier behind the editor.
   final Color barrierColor;
+
+  /// The widget used as the save/confirm action.
   final Widget saveWidget;
+
+  /// The widget used as the cancel/dismiss action.
   final Widget cancelWidget;
+
+  /// The screen rect of the originating widget, used to position the popover.
   final Rect? targetRect;
+
+  /// Whether to present the full-screen editor instead of the popover.
   final bool isFullScreen;
 
   @override
@@ -48,30 +62,25 @@ class _EditorOverlayState extends State<EditorOverlay> {
     _textController = TextEditingController(text: widget.initialText);
     _focusNode = FocusNode();
     _cubit = EditorScreenCubit(initialText: widget.initialText);
-
     _textController.addListener(_onTextChanged);
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNode.requestFocus();
     });
   }
 
-  void _onTextChanged() {
-    _cubit.updateText(_textController.text);
-  }
+  void _onTextChanged() => _cubit.updateText(_textController.text);
 
-  void _onSave() {
-    Navigator.of(context).pop(EditorCompleted(text: _textController.text));
-  }
+  void _onSave() =>
+      Navigator.of(context).pop(EditorCompleted(text: _textController.text));
 
-  void _onCancel() {
-    Navigator.of(context).pop(EditorDismissed(text: _textController.text));
-  }
+  void _onCancel() =>
+      Navigator.of(context).pop(EditorDismissed(text: _textController.text));
 
   @override
   void dispose() {
-    _textController..removeListener(_onTextChanged)
-    ..dispose();
+    _textController
+      ..removeListener(_onTextChanged)
+      ..dispose();
     _focusNode.dispose();
     unawaited(_cubit.close());
     super.dispose();
@@ -80,7 +89,6 @@ class _EditorOverlayState extends State<EditorOverlay> {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-
     return BlocProvider.value(
       value: _cubit,
       child: Material(
@@ -114,7 +122,6 @@ class _EditorOverlayState extends State<EditorOverlay> {
         viewInsets: mediaQuery.viewInsets,
       );
     }
-
     return PositionedEditor(
       textController: _textController,
       focusNode: _focusNode,

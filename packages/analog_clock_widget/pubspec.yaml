@@ -8,13 +8,11 @@ publish_to: none
 resolution: workspace
 
 environment:
-  sdk: ">=3.10.0 <4.0.0"
+  sdk: ">=3.11.0 <4.0.0"
 
 dependencies:
-  abstractions:
-    path: ../abstractions
-  extensions:
-    path: ../extensions
+  abstractions: ^0.1.1
+  extensions: ^1.0.1
   flutter:
     sdk: flutter
 

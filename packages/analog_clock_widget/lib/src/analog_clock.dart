@@ -89,8 +89,8 @@ class AnalogClock extends StatefulWidget {
     this.style = ClockStyle.defaultStyle,
     TimeProvider? timeProvider,
     ThemeProvider? themeProvider,
-  })  : timeProvider = timeProvider ?? SystemTimeProvider(),
-        themeProvider = themeProvider ?? flutterThemeProvider {
+  }) : timeProvider = timeProvider ?? SystemTimeProvider(),
+       themeProvider = themeProvider ?? flutterThemeProvider {
     if (radius < _ClockConstants.minimumRadius) {
       throw ArgumentError(
         'radius must be >= ${_ClockConstants.minimumRadius}px. vs: ${radius}px',

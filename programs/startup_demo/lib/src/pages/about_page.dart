@@ -74,14 +74,14 @@ class AboutPage extends StatelessWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 ContextualReveal(
-                  parent: IceChip.standard(tag01),
+                  body: IceChip.standard(tag01),
                   longChild: IceChip.expanded(tag01),
                   doubleChild: IceChip.expanded(tag01),
                   doublePosition: .popover,
-                  child: IceChip.expanded(tag01),
+                  tapChild: IceChip.expanded(tag01),
                 ),
                 ContextualReveal(
-                  parent: IceChip.standard(tag02),
+                  body: IceChip.standard(tag02),
                   longChild: IceChip.expanded(tag02),
                   doubleChild: Column(
                     children: [
@@ -91,24 +91,24 @@ class AboutPage extends StatelessWidget {
                     ],
                   ),
                   doublePosition: .modal,
-                  child: IceChip.expanded(tag01),
+                  tapChild: IceChip.expanded(tag01),
                 ),
                 ContextualReveal(
-                  parent: IceChip.standard(tag03),
+                  body: IceChip.standard(tag03),
                   longChild: IceChip.expanded(tag03),
                   doubleChild: IceChip.expanded(tag03),
                   doublePosition: .bottomSheet,
-                  child: IceChip.expanded(tag03),
+                  tapChild: IceChip.expanded(tag03),
                 ),
                 ContextualReveal(
-                  parent: IceChip.standard(tag02),
+                  body: IceChip.standard(tag02),
                   longChild: IceChip.expanded(tag02),
                   doubleChild: IceChip.expanded(tag02),
                   doublePosition: .push,
-                  child: IceChip.expanded(tag02),
+                  tapChild: IceChip.expanded(tag02),
                 ),
                 ContextualReveal(
-                  parent: const Text(
+                  body: const Text(
                     "Now I'm cooking",
                     style: TextStyle(
                       fontSize: 32,
@@ -119,7 +119,7 @@ class AboutPage extends StatelessWidget {
                   longChild: IceChip.expanded(tag02),
                   doubleChild: IceChip.expanded(tag03),
                   doublePosition: .popover,
-                  child: IceChip.expanded(tag01),
+                  tapChild: IceChip.expanded(tag01),
                 ),
               ],
             ),

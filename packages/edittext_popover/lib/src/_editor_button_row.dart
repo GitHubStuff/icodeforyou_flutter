@@ -1,13 +1,14 @@
-// lib/src/_editor_button_row.dart
+// edittext_popover/lib/src/_editor_button_row.dart
 import 'package:edittext_popover/src/_constants.dart';
 import 'package:flutter/material.dart';
 
-/// Provides the button row widget for the editor overlay.
-/// Contains Save and Cancel buttons using Material Design rounded
-/// FilledButtons.
-/// Colors are derived from the app's ColorScheme for automatic theme support.
-
+/// The Save/Cancel button row for the editor overlay.
+///
+/// Colors are derived from the ambient [ColorScheme] for automatic 
+/// theme support.
 class EditorButtonRow extends StatelessWidget {
+  /// Creates an [EditorButtonRow] with the given save and cancel widgets 
+  /// and callbacks.
   const EditorButtonRow({
     required this.saveWidget,
     required this.cancelWidget,
@@ -16,15 +17,21 @@ class EditorButtonRow extends StatelessWidget {
     super.key,
   });
 
+  /// The widget displayed inside the Save button.
   final Widget saveWidget;
+
+  /// The widget displayed inside the Cancel button.
   final Widget cancelWidget;
+
+  /// Called when the Save button is pressed.
   final VoidCallback onSave;
+
+  /// Called when the Cancel button is pressed.
   final VoidCallback onCancel;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
     return SizedBox(
       height: kButtonHeight,
       child: Row(

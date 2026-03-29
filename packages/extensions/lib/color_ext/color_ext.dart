@@ -1,7 +1,7 @@
 // extensions/lib/src/color_extension.dart
-
 import 'package:flutter/painting.dart';
 
+/// Extensions on [Color] providing equality, contrast, and integer conversion.
 extension ColorExtension on Color {
   /// Compares two colors by ARGB value.
   bool equals(Color other) =>
@@ -13,7 +13,7 @@ extension ColorExtension on Color {
       ? const Color(0xFF000000)
       : const Color(0xFFFFFFFF);
 
-        /// Returns the color as a 32-bit ARGB integer.
+  /// Returns the color as a 32-bit ARGB integer.
   int toInt() =>
       ((a * 255).round() << 24) |
       ((r * 255).round() << 16) |

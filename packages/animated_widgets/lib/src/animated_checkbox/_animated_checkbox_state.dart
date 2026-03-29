@@ -1,6 +1,6 @@
 // lib/src/animated_checkbox/_animated_checkbox_state.dart
 
-part of 'animated_checkbox.dart';
+part of 'animated_checkbox_impl.dart';
 
 class _AnimatedCheckboxState extends State<AnimatedCheckbox>
     with TickerProviderStateMixin {

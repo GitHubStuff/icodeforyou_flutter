@@ -2,9 +2,16 @@
 
 import 'package:flutter/material.dart';
 
-/// Configuration for picker divider appearance
+@immutable
+/// Immutable configuration for picker divider appearance.
 class DividerConfiguration {
-
+  /// Creates a [DividerConfiguration] with fully customisable divider styling.
+  ///
+  /// All parameters are optional and fall back to sensible defaults. The
+  /// [transparency] must be between `0.0` (fully transparent) and `1.0`
+  /// (fully opaque). The [thickness] must be greater than `0.0`. The
+  /// [indent], [endIndent], [blurRadius], and [spreadRadius] must each be
+  /// non-negative.
   const DividerConfiguration({
     this.color = const Color(0xFFE0E0E0),
     this.transparency = 1.0,
@@ -14,22 +21,28 @@ class DividerConfiguration {
     this.blurStyle,
     this.blurRadius = 0.0,
     this.spreadRadius = 0.0,
-  })  : assert(transparency >= 0.0 && transparency <= 1.0,
-            'Transparency must be between 0.0 and 1.0'),
-        assert(thickness > 0.0, 'Thickness must be greater than 0'),
-        assert(indent >= 0.0, 'Indent must be non-negative'),
-        assert(endIndent >= 0.0, 'EndIndent must be non-negative'),
-        assert(blurRadius >= 0.0, 'Blur radius must be non-negative'),
-        assert(spreadRadius >= 0.0, 'Spread radius must be non-negative');
+  }) : assert(
+         transparency >= 0.0 && transparency <= 1.0,
+         'Transparency must be between 0.0 and 1.0',
+       ),
+       assert(thickness > 0.0, 'Thickness must be greater than 0'),
+       assert(indent >= 0.0, 'Indent must be non-negative'),
+       assert(endIndent >= 0.0, 'EndIndent must be non-negative'),
+       assert(blurRadius >= 0.0, 'Blur radius must be non-negative'),
+       assert(spreadRadius >= 0.0, 'Spread radius must be non-negative');
 
-  /// Default configuration with sensible defaults
+  /// Creates a [DividerConfiguration] using the default values for all fields.
+  ///
+  /// Equivalent to calling the default constructor with no arguments.
   factory DividerConfiguration.defaultConfig() {
-    return const DividerConfiguration(
-      
-    );
+    return const DividerConfiguration();
   }
 
-  /// Configuration with subtle glow effect
+  /// Creates a [DividerConfiguration] with a subtle outer glow effect.
+  ///
+  /// Applies [BlurStyle.outer] with a [blurRadius] of `2.0` and a
+  /// [spreadRadius] of `1.0`. The [color], [transparency], and [thickness]
+  /// can be overridden; all other fields use their defaults.
   factory DividerConfiguration.withGlow({
     Color color = const Color(0xFFE0E0E0),
     double transparency = 1.0,
@@ -45,7 +58,11 @@ class DividerConfiguration {
     );
   }
 
-  /// Configuration with blur effect
+  /// Creates a [DividerConfiguration] with a soft blur effect.
+  ///
+  /// Applies a [blurRadius] of `4.0` using the supplied [blurStyle], which
+  /// defaults to [BlurStyle.normal]. The [color], [transparency], and
+  /// [thickness] can be overridden; [spreadRadius] defaults to `0.0`.
   factory DividerConfiguration.withBlur({
     Color color = const Color(0xFFE0E0E0),
     double transparency = 0.8,
@@ -60,38 +77,70 @@ class DividerConfiguration {
       blurRadius: 4,
     );
   }
-  /// Color of the divider lines
+
+  /// Base color of the divider line.
+  ///
+  /// The actual rendered color is [effectiveColor], which applies
+  /// [transparency] on top of this value.
   final Color color;
 
-  /// Transparency of dividers (0.0 to 1.0)
+  /// Opacity of the divider, from `0.0` (invisible) to `1.0` (fully opaque).
+  ///
+  /// Applied to [color] via [effectiveColor]. Must satisfy
+  /// `0.0 <= transparency <= 1.0`.
   final double transparency;
 
-  /// Thickness of divider lines
+  /// Stroke thickness of the divider line in logical pixels.
+  ///
+  /// Must be greater than `0.0`.
   final double thickness;
 
-  /// Horizontal padding from left edge
+  /// Inset from the leading edge of the divider in logical pixels.
+  ///
+  /// Must be non-negative.
   final double indent;
 
-  /// Horizontal padding from right edge
+  /// Inset from the trailing edge of the divider in logical pixels.
+  ///
+  /// Must be non-negative.
   final double endIndent;
 
-  /// Blur style for divider effect
+  /// The [BlurStyle] used when rendering a blur or glow effect.
+  ///
+  /// When `null`, no blur or glow is applied regardless of [blurRadius] and
+  /// [spreadRadius]. See [hasEffect].
   final BlurStyle? blurStyle;
 
-  /// Blur radius for divider effect
+  /// Sigma radius of the blur applied to the divider, in logical pixels.
+  ///
+  /// Only has a visible effect when [blurStyle] is non-null. Must be
+  /// non-negative.
   final double blurRadius;
 
-  /// Spread radius for glow effect
+  /// Radius by which the divider's shadow spreads before blurring.
+  ///
+  /// Only has a visible effect when [blurStyle] is non-null. Must be
+  /// non-negative.
   final double spreadRadius;
 
-  /// Get the actual color with transparency applied
+  /// The resolved color with [transparency] baked in as an alpha value.
+  ///
+  /// Computed as `color.withAlpha((transparency * 255).round())`. Use this
+  /// value when painting the divider rather than [color] directly.
   Color get effectiveColor => color.withAlpha((transparency * 255).round());
 
-  /// Whether divider has any blur or glow effect
+  /// Whether this configuration will render a blur or glow effect.
+  ///
+  /// Returns `true` only when [blurStyle] is non-null and at least one of
+  /// [blurRadius] or [spreadRadius] is greater than `0.0`.
   bool get hasEffect =>
       blurStyle != null && (blurRadius > 0 || spreadRadius > 0);
 
-  /// Create a copy with optional new values
+  /// Returns a copy of this configuration with the given fields replaced.
+  ///
+  /// Fields not provided retain their current values. Note that passing
+  /// `null` for [blurStyle] will clear any existing blur or glow effect,
+  /// which also causes [hasEffect] to return `false`.
   DividerConfiguration copyWith({
     Color? color,
     double? transparency,

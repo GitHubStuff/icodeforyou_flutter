@@ -101,6 +101,7 @@ mixin PickerTransformMixin {
   double calculateItemOpacity(
     double itemOffset,
     double viewportHeight,
+    // ignore: avoid_positional_boolean_parameters document_ignores
     bool fadeEnabled,
     double fadeDistance,
   ) {

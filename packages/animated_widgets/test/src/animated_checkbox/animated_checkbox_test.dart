@@ -1,7 +1,5 @@
 // test/animated_checkbox_test.dart
 
-// ignore_for_file: avoid_positional_boolean_parameters
-
 import 'package:animated_widgets/animated_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

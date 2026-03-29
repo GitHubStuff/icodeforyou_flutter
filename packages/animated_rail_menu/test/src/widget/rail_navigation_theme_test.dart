@@ -32,7 +32,8 @@ Future<void> _pump(WidgetTester tester) async {
   await tester.pump();
 }
 
-Widget _build({ThemeData? theme, RailIcon icon = RailIcon.phone}) => MaterialApp(
+Widget _build({ThemeData? theme, RailIcon icon = RailIcon.phone}) =>
+    MaterialApp(
       theme: theme,
       home: RailNavigationWidget(
         direction: RailDirection.horizontal,
@@ -62,8 +63,9 @@ void main() {
       expect(find.text('Home Page'), findsOneWidget);
     });
 
-    testWidgets('falls back to light theme on light brightness',
-        (tester) async {
+    testWidgets('falls back to light theme on light brightness', (
+      tester,
+    ) async {
       await tester.pumpWidget(_build(theme: ThemeData.light()));
       await _pump(tester);
       expect(find.text('Home Page'), findsOneWidget);

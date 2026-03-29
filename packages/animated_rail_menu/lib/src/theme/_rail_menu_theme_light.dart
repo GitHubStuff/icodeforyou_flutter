@@ -19,11 +19,11 @@ class RailMenuThemeLight extends RailMenuTheme {
 
   @override
   TextStyle get labelStyle => const TextStyle(
-        fontSize: 10,
-        fontWeight: FontWeight.w500,
-        color: Color(0xFF49454F),
-        overflow: TextOverflow.ellipsis,
-      );
+    fontSize: 10,
+    fontWeight: FontWeight.w500,
+    color: Color(0xFF49454F),
+    overflow: TextOverflow.ellipsis,
+  );
 
   @override
   double get elevation => 2;
@@ -35,14 +35,13 @@ class RailMenuThemeLight extends RailMenuTheme {
     Color? inactiveColor,
     TextStyle? labelStyle,
     double? elevation,
-  }) =>
-      _RailMenuThemeLightCopy(
-        backgroundColor: backgroundColor ?? this.backgroundColor,
-        activeColor: activeColor ?? this.activeColor,
-        inactiveColor: inactiveColor ?? this.inactiveColor,
-        labelStyle: labelStyle ?? this.labelStyle,
-        elevation: elevation ?? this.elevation,
-      );
+  }) => _RailMenuThemeLightCopy(
+    backgroundColor: backgroundColor ?? this.backgroundColor,
+    activeColor: activeColor ?? this.activeColor,
+    inactiveColor: inactiveColor ?? this.inactiveColor,
+    labelStyle: labelStyle ?? this.labelStyle,
+    elevation: elevation ?? this.elevation,
+  );
 
   @override
   RailMenuTheme lerp(RailMenuTheme? other, double t) {
@@ -64,11 +63,11 @@ class _RailMenuThemeLightCopy extends RailMenuThemeLight {
     required Color inactiveColor,
     required TextStyle labelStyle,
     required double elevation,
-  })  : _backgroundColor = backgroundColor,
-        _activeColor = activeColor,
-        _inactiveColor = inactiveColor,
-        _labelStyle = labelStyle,
-        _elevation = elevation;
+  }) : _backgroundColor = backgroundColor,
+       _activeColor = activeColor,
+       _inactiveColor = inactiveColor,
+       _labelStyle = labelStyle,
+       _elevation = elevation;
 
   final Color _backgroundColor;
   final Color _activeColor;
@@ -92,4 +91,5 @@ class _RailMenuThemeLightCopy extends RailMenuThemeLight {
   double get elevation => _elevation;
 }
 
+/// required for animation on [RailMenuTheme]
 double? lerpDouble(double a, double b, double t) => a + (b - a) * t;

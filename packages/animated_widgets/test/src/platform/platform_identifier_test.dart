@@ -1,7 +1,5 @@
 // test/platform_identifier_test.dart
 
-// ignore_for_file: cascade_invocations
-
 import 'package:animated_widgets/animated_widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 

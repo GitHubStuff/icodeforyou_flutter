@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 /// Paints the checkmark draw and dissolve effects.
 class CheckmarkPainter extends CustomPainter {
+  /// Constructor that extends [CustomPainter]
   const CheckmarkPainter({
     required double progress,
     required Color strokeColor,
@@ -15,14 +16,14 @@ class CheckmarkPainter extends CustomPainter {
     required Offset startOffset,
     required Offset midOffset,
     required Offset finishOffset,
-  })  : _progress = progress,
-        _strokeColor = strokeColor,
-        _isDraw = isDraw,
-        _particles = particles,
-        _width = width,
-        _startOffset = startOffset,
-        _midOffset = midOffset,
-        _finishOffset = finishOffset;
+  }) : _progress = progress,
+       _strokeColor = strokeColor,
+       _isDraw = isDraw,
+       _particles = particles,
+       _width = width,
+       _startOffset = startOffset,
+       _midOffset = midOffset,
+       _finishOffset = finishOffset;
 
   final double _progress;
   final Color _strokeColor;
@@ -70,8 +71,7 @@ class CheckmarkPainter extends CustomPainter {
 
       final position = particle.getPositionAtTime(_progress);
       final size = particle.getSizeAtTime(_progress);
-      final radius =
-          (strokeWidth * 0.4 * size).clamp(0.8, strokeWidth * 0.6);
+      final radius = (strokeWidth * 0.4 * size).clamp(0.8, strokeWidth * 0.6);
 
       paint.color = _strokeColor.withValues(alpha: opacity);
       canvas.drawCircle(position, radius, paint);
@@ -86,15 +86,20 @@ class CheckmarkPainter extends CustomPainter {
 
     if (currentLength <= segments.firstLength) {
       final t = currentLength / segments.firstLength;
-      final point =
-          Offset.lerp(segments.points.start, segments.points.middle, t)!;
+      final point = Offset.lerp(
+        segments.points.start,
+        segments.points.middle,
+        t,
+      )!;
       path.lineTo(point.dx, point.dy);
     } else {
       path.lineTo(segments.points.middle.dx, segments.points.middle.dy);
-      final t =
-          (currentLength - segments.firstLength) / segments.secondLength;
-      final point =
-          Offset.lerp(segments.points.middle, segments.points.finish, t)!;
+      final t = (currentLength - segments.firstLength) / segments.secondLength;
+      final point = Offset.lerp(
+        segments.points.middle,
+        segments.points.finish,
+        t,
+      )!;
       path.lineTo(point.dx, point.dy);
     }
 

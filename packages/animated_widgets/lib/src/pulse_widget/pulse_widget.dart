@@ -1,11 +1,11 @@
-// lib/src/pulse_widget/pulse_widget.dart
-
+// animated_widgets/lib/src/pulse_widget/pulse_widget.dart
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 
 /// Applies a scale-bounce animation to [child] when [trigger] changes to true.
 class PulseWidget extends StatefulWidget {
+  /// Creates a [PulseWidget] that pulses [child] when [trigger] becomes true.
   const PulseWidget({
     required this.trigger,
     required this.child,
@@ -13,8 +13,13 @@ class PulseWidget extends StatefulWidget {
     super.key,
   });
 
+  /// When this flips to true the pulse animation fires.
   final bool trigger;
+
+  /// The duration of the scale-bounce cycle.
   final Duration duration;
+
+  /// The widget to animate.
   final Widget child;
 
   @override

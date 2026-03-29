@@ -4,8 +4,7 @@ import 'package:extensions/extensions.dart'
     show ColorExtension, IntExt, StringExt;
 import 'package:flutter/material.dart';
 import 'package:since_when/since_when.dart' show RecordTagDefinition;
-import 'package:since_when_widgets/src/icechips/ice_chip_padding.dart'
-    show IceChipPadding;
+import 'package:since_when_widgets/since_when_widgets.dart' show IceChipPadding;
 
 part '_size_config.dart';
 

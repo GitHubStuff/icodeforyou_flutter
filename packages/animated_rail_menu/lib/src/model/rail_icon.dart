@@ -1,5 +1,7 @@
 // lib/src/model/rail_icon.dart
 
+import 'package:animated_rail_menu/src/widget/_internal.dart' show RailNavigationWidget;
+
 /// Defines the fixed sizing contract for items in a [RailNavigationWidget].
 ///
 /// Choose the value that matches your target device class.

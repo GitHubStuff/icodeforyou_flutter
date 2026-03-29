@@ -8,8 +8,18 @@ import 'package:widgetbook_workspace/packages/analog_clock_widget/analog_clock_w
     as analog_clock_widget;
 import 'package:widgetbook_workspace/packages/animated_rail_menu/animated_rail_menu.usecase.dart'
     as animated_rail_menu;
-import 'package:widgetbook_workspace/packages/animated_widgets/animated_widgets.usecase.dart'
-    as animated_widgets;
+import 'package:widgetbook_workspace/packages/animated_widgets/animated_checkbox.usecase.dart'
+    as animated_checkbox;
+import 'package:widgetbook_workspace/packages/animated_widgets/contextual_reveal.usecase.dart'
+    as contextual_reveal;
+import 'package:widgetbook_workspace/packages/animated_widgets/grow_and_fade_widget.usecase.dart'
+    as grow_and_fade_widget;
+import 'package:widgetbook_workspace/packages/animated_widgets/grow_widget.usecase.dart'
+    as grow_widget;
+import 'package:widgetbook_workspace/packages/animated_widgets/platform.usecase.dart'
+    as platform;
+import 'package:widgetbook_workspace/packages/animated_widgets/pulse_widget.usecase.dart'
+    as pulse_widget;
 import 'package:widgetbook_workspace/packages/edittext_popover/edittext_popover.usecase.dart'
     as edittext_popover;
 import 'package:widgetbook_workspace/packages/random_color_generator/random_color_generator.usecase.dart'
@@ -153,7 +163,25 @@ final directories = <WidgetbookNode>[
             useCases: [
               WidgetbookUseCase(
                 name: 'Default',
-                builder: animated_widgets.animatedCheckboxDefault,
+                builder: animated_checkbox.animatedCheckboxDefault,
+              ),
+            ],
+          ),
+        ],
+      ),
+      WidgetbookFolder(
+        name: 'contextual_reveal',
+        children: [
+          WidgetbookComponent(
+            name: 'ContextualReveal',
+            useCases: [
+              WidgetbookUseCase(
+                name: 'Default',
+                builder: contextual_reveal.contextualRevealDefault,
+              ),
+              WidgetbookUseCase(
+                name: 'Simple',
+                builder: contextual_reveal.contextualRevealSimple,
               ),
             ],
           ),
@@ -167,7 +195,7 @@ final directories = <WidgetbookNode>[
             useCases: [
               WidgetbookUseCase(
                 name: 'Default',
-                builder: animated_widgets.growAndFadeWidgetDefault,
+                builder: grow_and_fade_widget.growAndFadeWidgetDefault,
               ),
             ],
           ),
@@ -181,7 +209,35 @@ final directories = <WidgetbookNode>[
             useCases: [
               WidgetbookUseCase(
                 name: 'Default',
-                builder: animated_widgets.growWidgetDefault,
+                builder: grow_widget.growWidgetDefault,
+              ),
+            ],
+          ),
+        ],
+      ),
+      WidgetbookFolder(
+        name: 'platform',
+        children: [
+          WidgetbookComponent(
+            name: 'PlatformIdentifier',
+            useCases: [
+              WidgetbookUseCase(
+                name: 'Default',
+                builder: platform.platformIdentifierDefault,
+              ),
+            ],
+          ),
+        ],
+      ),
+      WidgetbookFolder(
+        name: 'pulse_widget',
+        children: [
+          WidgetbookComponent(
+            name: 'PulseWidget',
+            useCases: [
+              WidgetbookUseCase(
+                name: 'Default',
+                builder: pulse_widget.pulseWidgetDefault,
               ),
             ],
           ),

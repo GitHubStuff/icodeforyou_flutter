@@ -4,6 +4,7 @@
 
 import 'package:extensions/datetime_ext/datetime_delta.dart' show DateTimeDelta;
 
+/// Extensions on DateTimeDeleta for [format]
 extension DateTimeDeltaFormat on DateTimeDelta {
   /// Default pattern:
   /// years (2-digit, only if >0), months (only if >0 or higher shown,
@@ -18,7 +19,6 @@ extension DateTimeDeltaFormat on DateTimeDelta {
 }
 
 class _DateTimeDeltaFormatter {
-
   _DateTimeDeltaFormatter(this._delta)
     : _values = {
         'Y': _delta.years ?? 0,
@@ -67,7 +67,6 @@ class _DateTimeDeltaFormatter {
 }
 
 class _FormatParser {
-
   _FormatParser(this._format);
   final String _format;
   int _index = 0;
@@ -201,7 +200,6 @@ class _FormatParser {
 }
 
 class _SegmentRenderer {
-
   _SegmentRenderer(this._values, this._unitsOrder);
   final Map<String, int> _values;
   final List<String> _unitsOrder;
@@ -256,7 +254,6 @@ class _SegmentRenderer {
 }
 
 class _FormatSegment {
-
   const _FormatSegment._({
     required this.isLiteral,
     required this.content,
@@ -316,7 +313,6 @@ class _FormatSegment {
 }
 
 class _UnitParse {
-
   const _UnitParse({
     required this.prefix,
     required this.symbol,

@@ -1,6 +1,6 @@
 // test/random_color_generator_test.dart
 
-// ignore_for_file: lines_longer_than_80_chars, prefer_int_literals
+// ignore_for_file:
 
 import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -119,12 +119,22 @@ void main() {
     });
 
     test('returns true at lightness lower boundary', () {
-      final color = const HSLColor.fromAHSL(1.0, 90.0, 0.6, _kMinLightness).toColor();
+      final color = const HSLColor.fromAHSL(
+        1.0,
+        90.0,
+        0.6,
+        _kMinLightness,
+      ).toColor();
       expect(RandomColorGenerator.isGenerated(color: color), isTrue);
     });
 
     test('returns true at lightness upper boundary', () {
-      final color = const HSLColor.fromAHSL(1.0, 90.0, 0.6, _kMaxLightness).toColor();
+      final color = const HSLColor.fromAHSL(
+        1.0,
+        90.0,
+        0.6,
+        _kMaxLightness,
+      ).toColor();
       expect(RandomColorGenerator.isGenerated(color: color), isTrue);
     });
 

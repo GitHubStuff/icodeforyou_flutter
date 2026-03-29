@@ -1,12 +1,13 @@
-// lib/src/string_ext.dart
-
+// extensions/lib/src/string_ext.dart
 import 'package:flutter/painting.dart';
 
 const _kDefaultFontSize = 14.0;
 const _kDefaultMaxLines = 1;
 
+/// Extensions on [String] for layout measurement and date parsing.
 extension StringExt on String {
-  /// The number pixels (height/width) needed to render a string
+  /// Returns the pixel width and height required to render this string
+  /// with the given [fontWeight], [fontSize], [maxLines], and [textDirection].
   ({double width, double height}) renderSize({
     FontWeight fontWeight = FontWeight.normal,
     double fontSize = _kDefaultFontSize,
@@ -28,7 +29,8 @@ extension StringExt on String {
     return (width: painter.width, height: painter.height);
   }
 
-  /// Converts string to microseconds since epoch with error handling
+  /// Parses this string as an ISO 8601 date and returns microseconds since
+  /// epoch, or `null` if the string is not a valid date format.
   int? toMicrosecondsOrNull() {
     try {
       return DateTime.parse(this).microsecondsSinceEpoch;

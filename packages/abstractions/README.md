@@ -135,7 +135,7 @@ With `ExtendedStatefulWidget`, observer registration, cleanup, and common callba
 ## Requirements
 
 - Flutter SDK
-- Dart SDK >=3.10.0 <4.0.0
+- Dart SDK >=3.11.0 <4.0.0
 
 ## License
 

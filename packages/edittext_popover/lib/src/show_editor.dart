@@ -1,4 +1,4 @@
-// lib/src/show_editor.dart
+// edittext_popover/lib/src/show_editor.dart
 import 'dart:io';
 
 import 'package:edittext_popover/src/_constants.dart';
@@ -25,17 +25,14 @@ Future<EditorResult> showEditor({
 }) async {
   final checker = platformChecker ?? const PlatformChecker();
   final isFullScreen = checker.shouldUseFullScreen(context);
-
   final effectiveTextStyle =
       textStyle ??
       const TextStyle(
         fontSize: kDefaultTextSize,
         fontFamily: '.SF UI Text',
       );
-
   final effectiveBarrierColor =
       barrierColor ?? Colors.black.withValues(alpha: kBarrierOpacity);
-
   final effectiveSaveWidget =
       saveWidget ??
       const Text(
@@ -45,7 +42,6 @@ Future<EditorResult> showEditor({
           fontWeight: FontWeight.w600,
         ),
       );
-
   final effectiveCancelWidget =
       cancelWidget ??
       const Text(
@@ -55,11 +51,9 @@ Future<EditorResult> showEditor({
           fontWeight: FontWeight.w600,
         ),
       );
-
   final result = await Navigator.of(context).push<EditorResult>(
     PageRouteBuilder<EditorResult>(
       opaque: false,
-      // ignore: avoid_redundant_argument_values
       barrierDismissible: false,
       pageBuilder: (context, animation, secondaryAnimation) {
         return EditorOverlay(
@@ -73,40 +67,42 @@ Future<EditorResult> showEditor({
         );
       },
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeTransition(
-          opacity: animation,
-          child: child,
-        );
+        return FadeTransition(opacity: animation, child: child);
       },
       transitionDuration: const Duration(milliseconds: 200),
     ),
   );
-
   return result ?? EditorDismissed(text: initialText);
 }
 
-/// Checks platform to determine editor display mode.
+/// Determines the editor display mode based on the current platform and
+/// screen size.
 @visibleForTesting
 class PlatformChecker {
+  /// Creates a [PlatformChecker].
   const PlatformChecker();
 
+  /// The screen width threshold below which the full-screen editor is
+  /// used on web.
   static const double phoneBreakpoint = 600;
 
+  /// Whether the app is running on the web.
   bool get isWeb => kIsWeb;
 
+  /// Whether the app is running on a mobile platform (iOS or Android).
   bool get isMobile => Platform.isIOS || Platform.isAndroid;
 
+  /// Returns `true` if the editor should display full-screen for the
+  /// given [context].
   bool shouldUseFullScreen(BuildContext context) {
     if (isWeb) {
       final size = MediaQuery.sizeOf(context);
       return size.width < phoneBreakpoint;
     }
-
     if (isMobile) {
       final size = MediaQuery.sizeOf(context);
       return size.shortestSide < phoneBreakpoint;
     }
-
     return false;
   }
 }

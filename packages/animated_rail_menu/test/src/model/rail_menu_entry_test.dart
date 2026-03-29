@@ -20,11 +20,11 @@ void main() {
     });
 
     test('runtime instantiation hits constructor', () {
-      final entry = RailMenuEntry(
+      const entry = RailMenuEntry(
         icon: Icons.settings_outlined,
         activeIcon: Icons.settings,
         label: 'Settings',
-        page: const SizedBox.shrink(),
+        page: SizedBox.shrink(),
       );
       expect(entry.label, 'Settings');
     });

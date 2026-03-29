@@ -1,16 +1,14 @@
-// lib/src/editor_text_field.dart
+// edittext_popover/lib/src/editor_text_field.dart
 import 'package:edittext_popover/src/editor_result.dart';
 import 'package:edittext_popover/src/show_editor.dart';
 import 'package:flutter/material.dart';
 
-/// A convenience widget that wraps a TextField and automatically shows
-/// the editor popover when tapped.
+/// A read-only [TextField] that opens a popover editor on tap.
 ///
-/// The [controller] text is passed to the editor as initial content.
-/// When the editor is saved, the controller text is updated.
-/// When dismissed, the original text is preserved.
-
+/// Wraps a [TextEditingController] and delegates editing to [showEditor],
+/// updating the controller text on a successful [EditorCompleted] result.
 class EditorTextField extends StatefulWidget {
+  /// Creates an [EditorTextField].
   const EditorTextField({
     required this.controller,
     this.decoration,
@@ -23,13 +21,28 @@ class EditorTextField extends StatefulWidget {
     super.key,
   });
 
+  /// Controls the text displayed in the field.
   final TextEditingController controller;
+
+  /// Decoration applied to the underlying [TextField].
   final InputDecoration? decoration;
+
+  /// Text style applied to the underlying [TextField].
   final TextStyle? style;
+
+  /// Text style used inside the popover editor.
   final TextStyle? editorTextStyle;
+
+  /// Barrier color behind the popover editor.
   final Color? editorBarrierColor;
+
+  /// Widget used as the save action in the popover editor.
   final Widget? editorSaveWidget;
+
+  /// Widget used as the cancel action in the popover editor.
   final Widget? editorCancelWidget;
+
+  /// Called with the [EditorResult] when the popover editor closes.
   final void Function(EditorResult result)? onResult;
 
   @override
@@ -67,7 +80,6 @@ class _EditorTextFieldState extends State<EditorTextField> {
     if (result is EditorCompleted) {
       widget.controller.text = result.text;
     }
-
     widget.onResult?.call(result);
   }
 
@@ -82,7 +94,6 @@ class _EditorTextFieldState extends State<EditorTextField> {
           decoration: widget.decoration,
           style: widget.style,
           readOnly: true,
-          // ignore: avoid_redundant_argument_values
           maxLines: 1,
         ),
       ),

@@ -49,7 +49,7 @@ void main() {
       'setActive does not emit when index is already active',
       build: RailMenuCubit.new,
       act: (cubit) => cubit.setActive(0, RailTransition.slideLeft),
-      expect: () => [],
+      expect: () => <RailMenuState>[],
     );
 
     group('resolveDirectional — horizontal', () {
