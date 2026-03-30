@@ -1,15 +1,19 @@
+// packages/application_startup/newsrc/register_services_manager
+// ignore_for_file: public_member_api_docs
+
 import 'dart:async' show FutureOr, unawaited;
 
+import 'package:application_startup/newsrc/common.dart';
 import 'package:application_startup/newsrc/startup_task_abstract.dart'
-    show AsyncTaskRunMode, BlocProviderRequest, StartupTask;
+    show StartupTask;
 import 'package:application_startup/newsrc/task_manager_abstract.dart';
 import 'package:extensions/iterable_ext/iterable_ext.dart' show IterableExt;
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocBase, BlocProvider;
 import 'package:get_it/get_it.dart' show GetIt, WaitingTimeOutException;
 import 'package:theme_manager/theme_manager.dart' show ThemeCubitBase;
 
-class StartTaskManager extends StartTaskManagerAbstract {
-  StartTaskManager(ListOfTaskType tasks)
+class RegisterServicesManager extends RegisterServicesManagerAbstract {
+  RegisterServicesManager(ListOfTaskType tasks)
     : _tasksList = ListOfTaskType.unmodifiable(tasks) {
     if (tasks.isEmpty) return;
     validateTasks(tasks);

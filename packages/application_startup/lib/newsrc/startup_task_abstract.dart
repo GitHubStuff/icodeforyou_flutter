@@ -2,15 +2,11 @@
 
 import 'dart:async' show FutureOr;
 
+import 'package:application_startup/newsrc/common.dart' show AsyncTaskRunMode;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocBase, BlocProvider;
 import 'package:get_it/get_it.dart' show GetIt, WaitingTimeOutException;
 import 'package:meta/meta.dart';
-
-/// async, root, sync
-enum BlocProviderRequest { all, async, root, sync }
-
-enum AsyncTaskRunMode { async, root, sync }
 
 abstract class StartupTask<T extends BlocBase<Object?>> {
   const StartupTask();
