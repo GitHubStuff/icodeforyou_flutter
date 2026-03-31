@@ -14,6 +14,8 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^9.1.1
   get_it: ^9.2.1
+  my_logger:
+    path: ../my_logger
   theme_manager: ^0.0.1
 
 dev_dependencies:

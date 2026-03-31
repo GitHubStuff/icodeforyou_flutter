@@ -5,19 +5,22 @@ import 'package:flutter/material.dart';
 
 /// Holds all configuration values for the splash screen displayed
 /// during application startup.
-class SplashScreenConfiguration {
+final class SplashScreenConfiguration {
   /// Creates a [SplashScreenConfiguration] with the required splash and
-  /// transition settings, and an optional [spinnerWidget].
+  /// transition settings, and an optional [splashScreen].
   const SplashScreenConfiguration({
-    required this.splashWidget,
+    required this.splashScreen,
     required this.splashDuration,
     required this.transition,
     required this.transitionDuration,
-    this.spinnerWidget,
+    required this.homeScreen,
   });
 
+  /// Root when the splash screen is done.
+  final Widget homeScreen;
+
   /// Full-screen body shown during startup.
-  final Widget splashWidget;
+  final Widget splashScreen;
 
   /// Minimum time the splash is visible.
   final Duration splashDuration;
@@ -30,10 +33,4 @@ class SplashScreenConfiguration {
 
   /// Duration of the splash-to-home transition animation.
   final Duration transitionDuration;
-
-  /// Widget overlaid on [splashWidget] while startup tasks are still running
-  /// after [splashDuration] has elapsed.
-  ///
-  /// Defaults to a centred [CircularProgressIndicator] when null.
-  final Widget? spinnerWidget;
 }

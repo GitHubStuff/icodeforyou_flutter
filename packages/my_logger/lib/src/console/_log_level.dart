@@ -45,10 +45,10 @@ enum LoggerLevel {
   fatal(8000, '☠️ ', _brightRed, false),
 
   /// Structured output intended for downstream consumers.
-  output(9000, '💡 ', _brightCyan, true)
+  output(9000, '💡 ', _brightCyan, true),
   ;
 
-  /// Creates a [LoggerLevel] with the given [value], [icon], [color], 
+  /// Creates a [LoggerLevel] with the given [value], [icon], [color],
   /// and [fat] flag.
   // ignore: avoid_positional_boolean_parameters
   const LoggerLevel(this.value, this.icon, this.color, this.fat);

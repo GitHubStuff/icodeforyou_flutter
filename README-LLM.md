@@ -153,306 +153,69 @@ D - Dependency Inversion Principle
 - the goal is 'good code', not 'fast code', not 'shit code', always lean into SP, CC, and SP
 - Make sure you questions can not be answered using SP, CC, and BP!!!
 
-## Adding "///" doc comments to .dart code
+## New Widget
 
+I want a widget called 'StartupDisplayWidget' that takes
+this class:
 ```dart
-// lib/src/console/my_logger.dart
+// application_startup/lib/src/app/splash_screen_configuration.dart
+import 'package:application_startup/src/app/splash_transitions.dart'
+    show SplashTransitions;
+import 'package:flutter/material.dart';
 
-import 'dart:developer' as developer;
+/// Holds all configuration values for the splash screen displayed
+/// during application startup.
+final class SplashScreenConfiguration {
+  /// Creates a [SplashScreenConfiguration] with the required splash and
+  /// transition settings, and an optional [splashScreen].
+  const SplashScreenConfiguration({
+    required this.splashScreen,
+    required this.splashDuration,
+    required this.transition,
+    required this.transitionDuration,
+    required this.homeScreen,
+  });
 
-import 'package:flutter/foundation.dart' show kReleaseMode, visibleForTesting;
+  /// The new root when splash screen is done
+  final Widget homeScreen;
 
-part '_log_level.dart';
-part '_log_abstracts.dart';
-part '_log_constants.dart';
-part '_log_message.dart';
-part '_log_formatters.dart';
-part '_default_log_formatter.dart';
-part '_default_log_filter.dart';
-part '_debug_log_output.dart';
-part '_release_log_output.dart';
+  /// Full-screen body shown during startup.
+  final Widget splashScreen;
 
-class MyLogger {
-  MyLogger._({
-    _LogFormatter? formatter,
-    _LogOutput? output,
-    _DefaultLogFilter? filter,
-  })  : _formatter = formatter ?? const _DefaultLogFormatter(),
-        _output = output ??
-            (kReleaseMode
-                ? const _ReleaseLogOutput()
-                : const _DebugLogOutput()),
-        _filter = filter ?? _DefaultLogFilter();
+  /// Minimum time the splash is visible.
+  final Duration splashDuration;
 
-  @visibleForTesting
-  static void overrideForTesting({bool useReleaseOutput = false}) {
-    _instance = MyLogger._(
-      output: useReleaseOutput
-          ? const _ReleaseLogOutput()
-          : const _DebugLogOutput(),
-    );
-  }
+  /// Transition used when navigating from splash to the home screen.
+  ///
+  /// Use any [RouteTransitionsBuilder] — the package ships convenience
+  /// builders on [SplashTransitions].
+  final RouteTransitionsBuilder transition;
 
-  @visibleForTesting
-  static void resetForTesting() => _instance = null;
-
-  static MyLogger? _instance;
-
-  final _LogFormatter _formatter;
-  final _LogOutput _output;
-  final _DefaultLogFilter _filter;
-  CrashlyticsReporter? _crashlyticsReporter;
-
-  // ignore: prefer_constructors_over_static_methods
-  static MyLogger get _i => _instance ??= MyLogger._();
-
-  // ignore: use_setters_to_change_properties
-  static void init({CrashlyticsReporter? crashlyticsReporter}) {
-    _i._crashlyticsReporter = crashlyticsReporter;
-  }
-
-  static set tag(String? value) => _i._filter.tag = value;
-  static String? get tag => _i._filter.tag;
-
-  static void sample() {
-    MyLogger.t('---------------------', showIcon: false);
-    MyLogger.t('Trace Sample Message');
-    MyLogger.d('Debug Sample Message');
-    MyLogger.i('Info Sample Message');
-    MyLogger.r('Refactor Sample Message');
-    MyLogger.w('Warning Sample Message');
-    MyLogger.c('Crashlytics Sample Message');
-    MyLogger.e('Error Sample Message');
-    MyLogger.f('Fatal Sample Message');
-    MyLogger.o('Output Sample Message');
-    MyLogger.t('---------------------', showIcon: false);
-  }
-
-  static String _log(
-    LoggerLevel level,
-    dynamic message, {
-    DateTime? time,
-    Object? error,
-    StackTrace? stackTrace,
-    String tag = '',
-    bool showIcon = true,
-    bool showColor = true,
-    int frames = 1,
-  }) {
-    assert(
-      frames >= _LogConstants.minFrames,
-      'frames must be >= ${_LogConstants.minFrames}',
-    );
-
-    final logMessage = _LogMessage(
-      level: level,
-      message: message,
-      tag: tag,
-      time: time ?? DateTime.now(),
-      error: error,
-      stackTrace: stackTrace,
-      showIcon: showIcon,
-      showColor: showColor,
-      frames: frames,
-    );
-
-    if (!_i._filter.shouldLog(logMessage)) return '';
-
-    final formatted = _i._formatter.format(logMessage);
-    return _i._output.write(formatted, logMessage);
-  }
-
-  static String t(
-    dynamic message, {
-    DateTime? time,
-    Object? error,
-    StackTrace? stackTrace,
-    String tag = '',
-    bool showIcon = true,
-    bool showColor = true,
-    int frames = 1,
-  }) => _log(
-        LoggerLevel.trace,
-        message,
-        time: time,
-        error: error,
-        stackTrace: stackTrace,
-        tag: tag,
-        showIcon: showIcon,
-        showColor: showColor,
-        frames: frames,
-      );
-
-  static String d(
-    dynamic message, {
-    DateTime? time,
-    Object? error,
-    StackTrace? stackTrace,
-    String tag = '',
-    bool showIcon = true,
-    bool showColor = true,
-    int frames = 1,
-  }) => _log(
-        LoggerLevel.debug,
-        message,
-        time: time,
-        error: error,
-        stackTrace: stackTrace,
-        tag: tag,
-        showIcon: showIcon,
-        showColor: showColor,
-        frames: frames,
-      );
-
-  static String i(
-    dynamic message, {
-    DateTime? time,
-    Object? error,
-    StackTrace? stackTrace,
-    String tag = '',
-    bool showIcon = true,
-    bool showColor = true,
-    int frames = 1,
-  }) => _log(
-        LoggerLevel.info,
-        message,
-        time: time,
-        error: error,
-        stackTrace: stackTrace,
-        tag: tag,
-        showIcon: showIcon,
-        showColor: showColor,
-        frames: frames,
-      );
-
-  static String r(
-    dynamic message, {
-    DateTime? time,
-    Object? error,
-    StackTrace? stackTrace,
-    String tag = '',
-    bool showIcon = true,
-    bool showColor = true,
-    int frames = 1,
-  }) => _log(
-        LoggerLevel.refactor,
-        message,
-        time: time,
-        error: error,
-        stackTrace: stackTrace,
-        tag: tag,
-        showIcon: showIcon,
-        showColor: showColor,
-        frames: frames,
-      );
-
-  static String w(
-    dynamic message, {
-    DateTime? time,
-    Object? error,
-    StackTrace? stackTrace,
-    String tag = '',
-    bool showIcon = true,
-    bool showColor = true,
-    int frames = 1,
-  }) => _log(
-        LoggerLevel.warning,
-        message,
-        time: time,
-        error: error,
-        stackTrace: stackTrace,
-        tag: tag,
-        showIcon: showIcon,
-        showColor: showColor,
-        frames: frames,
-      );
-
-  static String c(
-    dynamic message, {
-    DateTime? time,
-    Object? error,
-    StackTrace? stackTrace,
-    String tag = '',
-    bool showIcon = true,
-    bool showColor = true,
-    int frames = 1,
-  }) {
-    final logged = _log(
-      LoggerLevel.crashlytics,
-      message,
-      time: time,
-      error: error,
-      stackTrace: stackTrace,
-      tag: tag,
-      showIcon: showIcon,
-      showColor: showColor,
-      frames: frames,
-    );
-    _i._crashlyticsReporter?.report(logged, error, stackTrace);
-    return logged;
-  }
-
-  static String e(
-    dynamic message, {
-    DateTime? time,
-    Object? error,
-    StackTrace? stackTrace,
-    String tag = '',
-    bool showIcon = true,
-    bool showColor = true,
-    int frames = 1,
-  }) => _log(
-        LoggerLevel.error,
-        message,
-        time: time,
-        error: error,
-        stackTrace: stackTrace,
-        tag: tag,
-        showIcon: showIcon,
-        showColor: showColor,
-        frames: frames,
-      );
-
-  static String f(
-    dynamic message, {
-    DateTime? time,
-    Object? error,
-    StackTrace? stackTrace,
-    String tag = '',
-    bool showIcon = true,
-    bool showColor = true,
-    int frames = 1,
-  }) => _log(
-        LoggerLevel.fatal,
-        message,
-        time: time,
-        error: error,
-        stackTrace: stackTrace,
-        tag: tag,
-        showIcon: showIcon,
-        showColor: showColor,
-        frames: frames,
-      );
-
-  static String o(
-    dynamic message, {
-    DateTime? time,
-    Object? error,
-    StackTrace? stackTrace,
-    String tag = '',
-    bool showIcon = true,
-    bool showColor = true,
-    int frames = 1,
-  }) => _log(
-        LoggerLevel.output,
-        message,
-        time: time,
-        error: error,
-        stackTrace: stackTrace,
-        tag: tag,
-        showIcon: showIcon,
-        showColor: showColor,
-        frames: frames,
-      );
+  /// Duration of the splash-to-home transition animation.
+  final Duration transitionDuration;
 }
 ```
+
+as a parameter....
+The widget listens to this cubit:
+abstract class RegisterSericesManagerCubit
+    extends Cubit<AsyncTakeManagerState> {
+  RegisterSericesManagerCubit({
+    required RegisterServicesManagerAbstract manager,
+  }) : _manager = manager,
+       super(AsyncTakeManagerState.starting);
+
+  final RegisterServicesManagerAbstract _manager;
+
+  FutureOr<void> runRootTasks();
+}
+
+if the state is .loading or .starting I want to show the splash-screen
+
+if the state is .done I want to transition from splash-screen to home-screen
+
+I want to transition from splash-screen to home-screen, AND I want the
+the home-screen to become the new root screen for navigation
+The splash screen will never been scene again.
+
+

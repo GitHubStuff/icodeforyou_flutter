@@ -1,5 +1,5 @@
 // application_startup/lib/src/app/app_cubit_base.dart
-import 'package:application_startup/src/app/splash_screen_configuration.dart';
+import 'package:application_startup/newsrc/widgets/splash_screen_configuration.dart';
 import 'package:application_startup/src/cubit/app_state.dart';
 import 'package:application_startup/src/tasks/startup_task.dart';
 import 'package:flutter/foundation.dart';

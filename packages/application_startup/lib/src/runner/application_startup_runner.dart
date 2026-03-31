@@ -10,7 +10,7 @@ import 'package:application_startup/src/runner/_app_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart' show GetIt;
 import 'package:theme_manager/theme_manager.dart'
-    show ThemeCubit, ThemeCubitBase;
+    show DefaultThemeCubit, ThemeCubitBase;
 
 /// Orchestrates application startup, wiring together theming, splash
 /// configuration, and ordered [StartupTask] execution before handing
@@ -19,7 +19,7 @@ class ApplicationStartupRunner {
   /// Creates an [ApplicationStartupRunner].
   ///
   /// [bootstrapper] defaults to [AppBootstrapper] if not provided.
-  /// [createFunc] defaults to [ThemeCubit.create] if not provided.
+  /// [createFunc] defaults to [DefaultThemeCubit.create] if not provided.
   const ApplicationStartupRunner({
     required this.splashConfig,
     required this.homeScreen,
@@ -47,14 +47,14 @@ class ApplicationStartupRunner {
 
   final AppBootstrapper _bootstrapper;
 
-  /// Optional factory for [ThemeCubitBase]; defaults to [ThemeCubit.create].
+  /// Optional factory for [ThemeCubitBase]; defaults to [DefaultThemeCubit.create].
   final FutureOr<ThemeCubitBase> Function()? createFunc;
 
   /// Initialises Flutter bindings, resolves theming, registers the
   /// [ThemeCubitBase] singleton, and runs the application.
   Future<void> run() async {
     _bootstrapper.ensureInitialized();
-    final cubit = await (createFunc ?? ThemeCubit.create)();
+    final cubit = await (createFunc ?? DefaultThemeCubit.create)();
     GetIt.I.registerSingleton<ThemeCubitBase>(cubit);
     final appCubit = AppCubit(tasks: tasks);
     _bootstrapper.run(
