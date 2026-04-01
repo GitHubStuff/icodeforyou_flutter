@@ -4,7 +4,7 @@
 
 import 'package:application_startup/newsrc/widgets/splash_screen_configuration.dart'
     show SplashScreenConfiguration;
-import 'package:application_startup/newsrc/startup_task/base_service_item.dart'
+import 'package:application_startup/newsrc/service_item/base_service_item.dart'
     show BaseServiceItem;
 import 'package:application_startup/newsrc/widgets/startup_display_widget.dart'
     show StartupDisplayWidget;

@@ -11,5 +11,5 @@ abstract class BaseServicesProvider {
     Future<T> Function() factory, {
     required String serviceName,
   });
-  T get<T extends Object>({required String serviceName});
+  T get<T extends Object>({required String serviceItem});
 }

@@ -1,11 +1,11 @@
 // ignore_for_file: public_member_api_docs
 
-import 'package:application_startup/newsrc/startup_task/base_service_item.dart'
+import 'package:application_startup/newsrc/service_item/base_service_item.dart'
     show BaseServiceItem;
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocBase, BlocProvider;
 
 typedef StartupTaskType = BlocBase<Object?>;
-typedef ListOfTaskType = List<BaseServiceItem<StartupTaskType>>;
+typedef ListOfServiceItems = List<BaseServiceItem<StartupTaskType>>;
 typedef ListOfBlocProviders = List<BlocProvider<BlocBase<Object?>>>;
 
 /// all, async, root, sync

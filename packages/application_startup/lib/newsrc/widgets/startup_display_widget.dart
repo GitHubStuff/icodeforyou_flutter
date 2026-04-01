@@ -6,8 +6,8 @@ import 'dart:async' show Timer, unawaited;
 
 import 'package:application_startup/newsrc/common.dart'
     show AsyncTakeManagerState;
-import 'package:application_startup/newsrc/task_manager/cubit/resigister_services_cubit.dart'
-    show RegisterSericesManagerCubit;
+import 'package:application_startup/newsrc/services_registrar/base_services_registrar.dart'
+    show BaseServicesRegistrar;
 import 'package:application_startup/newsrc/widgets/splash_screen_configuration.dart'
     show SplashScreenConfiguration;
 import 'package:flutter/material.dart';
@@ -79,7 +79,7 @@ class _StartupDisplayWidgetState extends State<StartupDisplayWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<RegisterSericesManagerCubit, AsyncTakeManagerState>(
+    return BlocListener<BaseServicesRegistrar, AsyncTakeManagerState>(
       listener: (context, state) {
         if (state == AsyncTakeManagerState.done) _onCubitDone();
       },

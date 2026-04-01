@@ -4,9 +4,9 @@ import 'dart:async' show FutureOr;
 
 import 'package:application_startup/newsrc/common.dart';
 
-abstract class RegisterServicesCubitAbstract {
-  FutureOr<void> registerTasks(ListOfTaskType tasks);
+abstract class BaseServiceItemRegistry {
+  FutureOr<void> registerTasks(ListOfServiceItems tasks);
   ListOfBlocProviders getblocProviders({required BlocProviderRequest forType});
-  ListOfTaskType getTasksOf({required BlocProviderRequest type});
-  void validateTasks(ListOfTaskType tasks);
+  ListOfServiceItems getTasksOf({required BlocProviderRequest type});
+  void validateTasks(ListOfServiceItems tasks);
 }

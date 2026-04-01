@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs
 
-import 'package:application_startup/newsrc/services/base_services_provider.dart'
+import 'package:application_startup/newsrc/service_provider/base_service_provider.dart'
     show BaseServicesProvider;
 import 'package:get_it/get_it.dart' show GetIt;
 

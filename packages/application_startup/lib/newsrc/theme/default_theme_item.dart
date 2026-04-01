@@ -3,17 +3,15 @@
 import 'dart:async';
 
 import 'package:application_startup/newsrc/common.dart';
-import 'package:application_startup/newsrc/startup_task/base_service_item.dart';
+import 'package:application_startup/newsrc/service_item/base_service_item.dart';
 import 'package:flutter/material.dart' show ThemeData;
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocBase;
 import 'package:theme_manager/theme_manager.dart';
 
-class DefaultThemeTask extends BaseServiceItem {
-  DefaultThemeTask({
+class DefaultThemeItem extends BaseServiceItem {
+  DefaultThemeItem({
     required this.darkTheme,
     required this.lightTheme,
-    required super.serviceDispatcher,
-    required super.registrar,
   });
 
   final ThemeData darkTheme;

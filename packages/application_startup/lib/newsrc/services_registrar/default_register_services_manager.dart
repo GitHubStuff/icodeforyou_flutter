@@ -4,22 +4,22 @@
 import 'dart:async' show FutureOr, unawaited;
 
 import 'package:application_startup/newsrc/common.dart';
-import 'package:application_startup/newsrc/startup_task/base_service_item.dart'
+import 'package:application_startup/newsrc/service_item/base_service_item.dart'
     show BaseServiceItem;
-import 'package:application_startup/newsrc/task_manager/register_service_manager_abstract.dart';
+import 'package:application_startup/newsrc/services_manager/register_services_cubit_abstract.dart';
 import 'package:extensions/iterable_ext/iterable_ext.dart' show IterableExt;
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocBase, BlocProvider;
 import 'package:get_it/get_it.dart' show GetIt;
 import 'package:theme_manager/theme_manager.dart' show ThemeCubitBase;
 
-class DefaultRegisterServicesManager extends RegisterServicesCubitAbstract {
-  DefaultRegisterServicesManager(ListOfTaskType tasks)
-    : _tasksList = ListOfTaskType.unmodifiable(tasks) {
+class DefaultRegisterServicesManager extends BaseRegisteredServicesManager {
+  DefaultRegisterServicesManager(ListOfServiceItems tasks)
+    : _tasksList = ListOfServiceItems.unmodifiable(tasks) {
     if (tasks.isEmpty) return;
     validateTasks(tasks);
   }
 
-  final ListOfTaskType _tasksList;
+  final ListOfServiceItems _tasksList;
 
   // ── Public ────────────────────────────────────────────────────────────────
 
@@ -40,21 +40,21 @@ class DefaultRegisterServicesManager extends RegisterServicesCubitAbstract {
   }
 
   @override
-  FutureOr<void> registerTasks(ListOfTaskType tasks) async {
+  FutureOr<void> registerTasks(ListOfServiceItems tasks) async {
     for (final BaseServiceItem<dynamic> task in tasks) {
       if (!GetIt.I.isRegistered(instanceName: task.name)) {
         switch (task.startupTaskRunMode) {
           case .async:
-            unawaited(task.run(tasks));
+            unawaited(task.registerUsing(tasks));
           case .sync || .root:
-            await task.run(tasks);
+            await task.registerUsing(tasks);
         }
       }
     }
   }
 
   @override
-  ListOfTaskType getTasksOf({required BlocProviderRequest type}) {
+  ListOfServiceItems getTasksOf({required BlocProviderRequest type}) {
     switch (type) {
       case .all:
         return _tasksList;
@@ -68,7 +68,7 @@ class DefaultRegisterServicesManager extends RegisterServicesCubitAbstract {
   }
 
   @override
-  void validateTasks(ListOfTaskType tasks) {
+  void validateTasks(ListOfServiceItems tasks) {
     _checkUnknownDependency(tasks);
     tasks.checkForCycles(
       idOf: (task) => task.name,
@@ -79,7 +79,7 @@ class DefaultRegisterServicesManager extends RegisterServicesCubitAbstract {
 
   // ── Private ───────────────────────────────────────────────────────────────
 
-  void _checkUnknownDependency(ListOfTaskType tasks) {
+  void _checkUnknownDependency(ListOfServiceItems tasks) {
     final names = _loadTaskNames(tasks);
     for (final task in tasks) {
       for (final String dependency in task.dependencies) {
@@ -92,7 +92,7 @@ class DefaultRegisterServicesManager extends RegisterServicesCubitAbstract {
     }
   }
 
-  void _checkForThemeCubit(ListOfTaskType tasks) {
+  void _checkForThemeCubit(ListOfServiceItems tasks) {
     for (final BaseServiceItem<dynamic> task in tasks) {
       if (task.isFor<ThemeCubitBase>()) return;
     }
@@ -101,7 +101,7 @@ class DefaultRegisterServicesManager extends RegisterServicesCubitAbstract {
     );
   }
 
-  Set<String> _loadTaskNames(ListOfTaskType tasks) {
+  Set<String> _loadTaskNames(ListOfServiceItems tasks) {
     final Set<String> names = {};
     for (final BaseServiceItem<dynamic> task in tasks) {
       if (!names.add(task.name)) {
@@ -111,6 +111,8 @@ class DefaultRegisterServicesManager extends RegisterServicesCubitAbstract {
     return names;
   }
 
-  ListOfTaskType _subTasks(ListOfTaskType tasks, AsyncTaskRunMode runType) =>
-      tasks.where((task) => task.startupTaskRunMode == runType).toList();
+  ListOfServiceItems _subTasks(
+    ListOfServiceItems tasks,
+    AsyncTaskRunMode runType,
+  ) => tasks.where((task) => task.startupTaskRunMode == runType).toList();
 }
