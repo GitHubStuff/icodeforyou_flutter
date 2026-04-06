@@ -12,7 +12,7 @@ typedef ListOfBlocProviders = List<BlocProvider<BlocBase<Object?>>>;
 enum BlocProviderRequest { all, async, root, sync }
 
 /// modes: async, root, sync
-enum AsyncTaskRunMode { async, root, sync }
+enum AsyncTaskRunMode { onDemand, root }
 
 /// alreadyRegistered, ready, registering
 enum AsyncTaskRunState {

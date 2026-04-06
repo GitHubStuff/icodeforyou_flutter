@@ -1,4 +1,4 @@
-// lib/src/records/record_tag_definition.dart
+// ignore_for_file: public_member_api_docs
 
 import 'package:equatable/equatable.dart';
 

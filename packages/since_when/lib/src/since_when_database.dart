@@ -1,6 +1,4 @@
-// lib/src/since_when_database.dart
-
-// ignore_for_file: document_ignores
+// ignore_for_file: public_member_api_docs, document_ignores
 
 import 'dart:io';
 
@@ -13,16 +11,17 @@ import 'package:sqflite/sqflite.dart';
 
 part '_since_when_failure.dart';
 
-typedef _OpenOrCreate = Future<DatabaseInitResult> Function({
-  required String dbName,
-  required String dbPath,
-});
+typedef _OpenOrCreate =
+    Future<DatabaseInitResult> Function({
+      required String dbName,
+      required String dbPath,
+    });
 
 /// A SQLite database instance for the since_when package.
 ///
 /// File-based:
 /// ```dart
-/// final result = 
+/// final result =
 ///      await SinceWhenDatabase.open(access: DatabaseAccess.automatic);
 /// final db = result.getOrElse((f) => throw Exception(f));
 /// ```
@@ -35,8 +34,8 @@ class SinceWhenDatabase {
   SinceWhenDatabase._({
     required Database db,
     required String fullPath,
-  })  : _db = db,
-        _fullPath = fullPath;
+  }) : _db = db,
+       _fullPath = fullPath;
 
   final Database _db;
   final String _fullPath;
@@ -55,7 +54,7 @@ class SinceWhenDatabase {
       _openOrCreate = DatabaseInitializer.openOrCreateDatabase;
 
   bool get isOpen => _db.isOpen;
-  bool get isInMemory => _fullPath == kInMemoryPath;
+  bool get isInMemory => _fullPath == Konstants.kInMemoryPath;
   String get fullPath => _fullPath;
 
   /// Opens or creates a file-based database.
@@ -65,8 +64,8 @@ class SinceWhenDatabase {
   /// - [DatabaseAccess.open]      — fails if the file does not exist.
   /// - [DatabaseAccess.automatic] — creates if absent, opens if present.
   static Future<Either<SinceWhenFailure, SinceWhenDatabase>> open({
-    String dbName = kDefaultDatabaseName,
-    String dbPath = kDefaultDatabasePath,
+    String dbName = Konstants.kDefaultDatabaseName,
+    String dbPath = Konstants.kDefaultDatabasePath,
     DatabaseAccess access = DatabaseAccess.automatic,
   }) async {
     final nameFailure = _validateName(dbName);
@@ -96,7 +95,7 @@ class SinceWhenDatabase {
     final result = await DatabaseInitializer.openInMemoryDatabase();
     return SinceWhenDatabase._(
       db: result.database,
-      fullPath: kInMemoryPath,
+      fullPath: Konstants.kInMemoryPath,
     );
   }
 

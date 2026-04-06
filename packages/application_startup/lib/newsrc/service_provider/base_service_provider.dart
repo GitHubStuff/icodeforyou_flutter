@@ -1,15 +1,22 @@
 // ignore_for_file: public_member_api_docs
 
-abstract class BaseServicesProvider {
-  bool isRegistered({required String serviceName});
-  bool isReady({required String serviceName});
-  Future<void> isReadyAsync({
-    required String instanceName,
-    required Duration timeout,
+import 'package:application_startup/newsrc/service_item/service_items.dart';
+
+abstract class BaseServiceProvider<T extends Object> {
+  String get name;
+  Future<bool> isReadyAsync<SRV>(
+    String name, {
+    Duration? timeout,
   });
-  void registerSingletonAsync<T extends Object>(
-    Future<T> Function() factory, {
-    required String serviceName,
-  });
-  T get<T extends Object>({required String serviceItem});
+  bool isReadySync<SRV>(String name);
+  SRV getService<SRV>(String name);
+  void registerLazySingletonAsync<SRV>(
+    String name,
+    Future<SRV> Function() function,
+  );
+  void registerLazySingletonSync<SRV>(
+    String name,
+    Future<SRV> Function() function,
+  );
+  void registerSingleton({required BaseServiceItem serviceItem});
 }

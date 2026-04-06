@@ -1,5 +1,7 @@
-// lib/src/constants/database_constants.dart
+// ignore_for_file: public_member_api_docs
 
-const String kInMemoryPath = ':memory:';
-const String kDefaultDatabaseName = 'since_when.sqlite';
-const String kDefaultDatabasePath = 'db';
+class Konstants {
+  static const String kInMemoryPath = ':memory:';
+  static const String kDefaultDatabaseName = 'since_when.sqlite';
+  static const String kDefaultDatabasePath = 'db';
+}

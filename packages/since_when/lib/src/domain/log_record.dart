@@ -1,4 +1,5 @@
-// lib/src/domain/log_record.dart
+
+// ignore_for_file: public_member_api_docs
 
 import 'package:equatable/equatable.dart';
 import 'package:fpdart/fpdart.dart';

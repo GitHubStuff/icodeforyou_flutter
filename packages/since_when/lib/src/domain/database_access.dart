@@ -1,4 +1,4 @@
-// lib/src/domain/database_access.dart
+// ignore_for_file: public_member_api_docs
 
 /// Controls how [SinceWhenDatabase] behaves when opening a database file.
 ///

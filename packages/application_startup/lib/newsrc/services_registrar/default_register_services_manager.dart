@@ -6,7 +6,6 @@ import 'dart:async' show FutureOr, unawaited;
 import 'package:application_startup/newsrc/common.dart';
 import 'package:application_startup/newsrc/service_item/base_service_item.dart'
     show BaseServiceItem;
-import 'package:application_startup/newsrc/services_manager/register_services_cubit_abstract.dart';
 import 'package:extensions/iterable_ext/iterable_ext.dart' show IterableExt;
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocBase, BlocProvider;
 import 'package:get_it/get_it.dart' show GetIt;

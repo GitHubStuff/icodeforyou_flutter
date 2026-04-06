@@ -1,4 +1,4 @@
-// lib/src/database/_database_initializer.dart
+// ignore_for_file: public_member_api_docs
 
 import 'dart:io';
 
@@ -6,7 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-part '../sql/_sql_statements.dart';
+part '../sql/table_statements.dart';
 
 class DatabaseInitResult {
   const DatabaseInitResult({
@@ -80,24 +80,24 @@ abstract final class DatabaseInitializer {
   }
 
   static Future<void> _createTables(Database db, int version) async {
-    await db.execute(SqlStatements._createTableSinceWhen);
-    await db.execute(SqlStatements._createIndexCreatedTimeStamp);
-    await db.execute(SqlStatements._createIndexParentTimeStamp);
+    await db.execute(TableStatements._createTableSinceWhen);
+    await db.execute(TableStatements._createIndexCreatedTimeStamp);
+    await db.execute(TableStatements._createIndexParentTimeStamp);
 
-    await db.execute(SqlStatements._createTableTagGlossary);
-    await db.execute(SqlStatements._createIndexTagName);
-    await db.execute(SqlStatements._createIndexGlossaryTimestamp);
+    await db.execute(TableStatements._createTableTagGlossary);
+    await db.execute(TableStatements._createIndexTagName);
+    await db.execute(TableStatements._createIndexGlossaryTimestamp);
 
-    await db.execute(SqlStatements._createTableTags);
-    await db.execute(SqlStatements._createIndexTagsRecordTimestamp);
-    await db.execute(SqlStatements._createIndexTagsGlossaryTimestamp);
+    await db.execute(TableStatements._createTableTags);
+    await db.execute(TableStatements._createIndexTagsRecordTimestamp);
+    await db.execute(TableStatements._createIndexTagsGlossaryTimestamp);
 
-    await db.execute(SqlStatements._createTableLog);
-    await db.execute(SqlStatements._createIndexLogTimeStamp);
-    await db.execute(SqlStatements._createIndexLogAction);
+    await db.execute(TableStatements._createTableLog);
+    await db.execute(TableStatements._createIndexLogTimeStamp);
+    await db.execute(TableStatements._createIndexLogAction);
   }
 
   static Future<void> _onOpen(Database db) async {
-    await db.execute(SqlStatements._enableForeignKeys);
+    await db.execute(TableStatements._enableForeignKeys);
   }
 }

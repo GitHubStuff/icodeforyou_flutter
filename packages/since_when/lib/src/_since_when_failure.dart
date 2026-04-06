@@ -1,4 +1,4 @@
-// lib/src/_since_when_failure.dart
+// ignore_for_file: public_member_api_docs
 
 part of 'since_when_database.dart';
 

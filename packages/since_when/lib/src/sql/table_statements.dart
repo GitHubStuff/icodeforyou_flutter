@@ -1,8 +1,8 @@
-// lib/src/sql/_sql_statements.dart
+// ignore_for_file: public_member_api_docs
 
 part of '../database/_database_initializer.dart';
 
-abstract final class SqlStatements {
+abstract final class TableStatements {
   // ─── Table names (public — needed by operation files) ──────────────────────
   static const String tableSinceWhen = 'since_when';
   static const String tableTagGlossary = 'since_when_tag_glossary';
@@ -18,11 +18,10 @@ abstract final class SqlStatements {
     CREATE TABLE IF NOT EXISTS $tableSinceWhen (
       id                INTEGER PRIMARY KEY AUTOINCREMENT,
       createdTimeStamp  INTEGER NOT NULL UNIQUE,
-      parentTimeStamp   INTEGER,
       reviewedTimeStamp INTEGER NOT NULL,
       editedTimeStamp   INTEGER NOT NULL,
-      metaTimeStamp     INTEGER,
-      metaData          TEXT    NOT NULL,
+      parentTimeStamp   INTEGER,
+      metaData          TEXT,
       sequenceNumber    INTEGER NOT NULL DEFAULT 0,
       data              TEXT    NOT NULL
     )
@@ -34,7 +33,7 @@ abstract final class SqlStatements {
       id               INTEGER PRIMARY KEY AUTOINCREMENT,
       createdTimeStamp INTEGER NOT NULL UNIQUE,
       tagName          TEXT    NOT NULL UNIQUE CHECK(tagName != ''),
-      color            INTEGER NOT NULL
+      color            INTEGER NOT NULL UNIQUE
     )
   ''';
 
