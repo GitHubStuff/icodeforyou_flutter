@@ -1,4 +1,4 @@
-// lib/src/pages/settings_page.dart
+// ignore_for_file: public_member_api_docs
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';

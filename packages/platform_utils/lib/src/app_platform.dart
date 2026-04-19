@@ -1,4 +1,4 @@
-// {package}/lib/src/app_platform.dart
+// ignore_for_file: public_member_api_docs
 
 import 'package:flutter/foundation.dart'
     show TargetPlatform, defaultTargetPlatform, kIsWeb;
@@ -12,23 +12,26 @@ enum AppPlatform {
   /// The Android mobile operating system.
   android,
 
+  /// Google's Fuchsia operating system.
+  fuchsia,
+
   /// Apple's iOS mobile operating system.
   iOS,
-
-  /// Apple's macOS desktop operating system.
-  macOS,
-
-  /// Microsoft Windows desktop operating system.
-  windows,
 
   /// The Linux desktop operating system.
   linux,
 
-  /// Google's Fuchsia operating system.
-  fuchsia,
+  /// Apple's macOS desktop operating system.
+  macOS,
+
+  /// If tablets ever have their own operating system (iPadOS?).
+  tablet,
 
   /// Any browser-based web deployment target.
-  web
+  web,
+
+  /// Microsoft Windows desktop operating system.
+  windows,
   ;
 
   static AppPlatform? _platformOverride;
@@ -46,11 +49,11 @@ enum AppPlatform {
     if (kIsWeb) return AppPlatform.web;
     return switch (defaultTargetPlatform) {
       TargetPlatform.android => AppPlatform.android,
+      TargetPlatform.fuchsia => AppPlatform.fuchsia,
       TargetPlatform.iOS => AppPlatform.iOS,
+      TargetPlatform.linux => AppPlatform.linux,
       TargetPlatform.macOS => AppPlatform.macOS,
       TargetPlatform.windows => AppPlatform.windows,
-      TargetPlatform.linux => AppPlatform.linux,
-      TargetPlatform.fuchsia => AppPlatform.fuchsia,
     };
   }
 
@@ -74,4 +77,26 @@ enum AppPlatform {
       'in release builds',
     );
   }
+
+  bool get isMobile => switch (this) {
+    AppPlatform.android => true,
+    AppPlatform.fuchsia => throw UnimplementedError('"fuchsia" is not defined'),
+    AppPlatform.iOS => true,
+    AppPlatform.linux => false,
+    AppPlatform.macOS => false,
+    AppPlatform.tablet => false,
+    AppPlatform.web => false,
+    AppPlatform.windows => false,
+  };
+
+  bool get isDesktop => switch (this) {
+    AppPlatform.android => false,
+    AppPlatform.fuchsia => throw UnimplementedError('"fuchsia" is not defined'),
+    AppPlatform.iOS => false,
+    AppPlatform.linux => true,
+    AppPlatform.macOS => true,
+    AppPlatform.tablet => false,
+    AppPlatform.web => false,
+    AppPlatform.windows => true,
+  };
 }

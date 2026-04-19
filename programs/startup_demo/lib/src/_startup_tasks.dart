@@ -1,30 +1,53 @@
-// lib/src/_startup_tasks.dart
+// ignore_for_file: public_member_api_docs
+
+import 'dart:async';
 
 import 'package:application_startup/application_startup.dart';
+import 'package:application_startup/src/errors.dart' show ServiceItemTimeout;
 import 'package:flutter/services.dart';
-import 'package:get_it/get_it.dart';
 import 'package:since_when/since_when.dart';
 
 class StartupTasks {
   const StartupTasks._();
 
-  static List<StartupTask> get all => [
-    _SinceWhenTask(RootIsolateToken.instance!),
-  ];
+  // static List<BaseServiceItem> get all => [
+  //   //SinceWhenServiceItem(RootIsolateToken.instance!),
+  // ];
 }
 
-class _SinceWhenTask extends StartupTask {
-  _SinceWhenTask(this._token);
+/*
+class SinceWhenServiceClass implements ServiceClass {
+  SinceWhenServiceClass(this.db);
+  final SinceWhenDatabase db;
+}
+
+class SinceWhenServiceItem extends BaseServiceItem<SinceWhenServiceClass> {
+  @override
+  final name = 'since_when';
+  final RootIsolateToken _token = RootIsolateToken.instance!;
 
   @override
-  String get id => 'since_when';
-  final RootIsolateToken _token;
+  final ServiceRegisterType registerType = .lazySingletonAsync;
 
   @override
-  Future<void> run() async {
+  final Duration timeout = BaseServiceLocator.defaultDuration;
+
+  @override
+  ServiceItemStatus status = .waiting;
+
+  @override
+  Future<SinceWhenServiceClass> Function() get factory => () async {
     BackgroundIsolateBinaryMessenger.ensureInitialized(_token);
-    final result = await SinceWhenDatabase.open();
-    final db = result.getOrElse((failure) => throw Exception(failure));
-    GetIt.instance.registerSingleton<SinceWhenDatabase>(db);
-  }
+    try {
+      final result = await SinceWhenDatabase.open().timeout(timeout);
+      final db = result.getOrElse((failure) => throw Exception(failure));
+      return SinceWhenServiceClass(db);
+    } on TimeoutException {
+      throw ServiceItemTimeout(name, timeout);
+    }
+  };
+
+  @override
+  final List<String> dependencies = ['ThemeService','ChuckleService'];
 }
+*/

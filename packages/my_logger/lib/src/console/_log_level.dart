@@ -21,7 +21,7 @@ enum LoggerLevel {
   all(0, '', _grey, false),
 
   /// Fine-grained diagnostic tracing.
-  trace(1000, '🔎 ', _grey, true),
+  trace(1000, '🧭 ', _grey, true),
 
   /// Developer-facing debug information.
   debug(2000, '🐞 ', _cyan, true),

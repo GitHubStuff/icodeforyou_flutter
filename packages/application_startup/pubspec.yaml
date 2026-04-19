@@ -16,6 +16,8 @@ dependencies:
   get_it: ^9.2.1
   my_logger:
     path: ../my_logger
+  platform_utils:
+    path: ../platform_utils
   theme_manager: ^0.0.1
 
 dev_dependencies:

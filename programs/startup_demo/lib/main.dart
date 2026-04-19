@@ -2,12 +2,32 @@
 
 import 'package:animated_rail_menu/animated_rail_menu.dart';
 import 'package:animated_widgets/animated_widgets.dart';
-import 'package:application_startup/application_startup.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider;
+import 'package:service_locator/service_locator.dart';
 import 'package:startup_demo/src/_startup_tasks.dart' show StartupTasks;
+import 'package:startup_demo/src/cubit_demo.dart' show CubitDemo;
 import 'package:startup_demo/src/navigation/_nav_entries.dart';
+import 'package:startup_demo/src/pages/landing_page.dart';
 
-void main() => ApplicationStartupRunner(
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final cubit = SetUp.serviceLocatorSetup();
+
+  runApp(
+    BlocProvider.value(
+      value: cubit,
+      child: const MaterialApp(
+        home: CubitDemo(),
+      ),
+    ),
+  );
+}
+
+/*
+
+ApplicationStartupRunner(
   splashConfig: _splashConfig,
   homeScreen: _homeyScreen,
   tasks: StartupTasks.all,
@@ -45,3 +65,4 @@ const _homeyScreen = RailNavigationWidget(
   transitionDuration: Duration(milliseconds: 750),
   entries: navEntries,
 );
+*/

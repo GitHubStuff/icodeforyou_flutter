@@ -1,4 +1,4 @@
-// lib/src/_settings_content.dart
+// ignore_for_file: public_member_api_docs
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -21,11 +21,11 @@ class SettingsContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final m = Chip(
-      label: Text('hi'),
-    );
-    final n = ChoiceChip(label: label, selected: selected);
-    finap o = FilterChip(label: label, onSelected: onSelected);
+    // final m = Chip(
+    //   label: Text('hi'),
+    // );
+    // final n = ChoiceChip(label: label, selected: selected);
+    // finap o = FilterChip(label: label, onSelected: onSelected);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,

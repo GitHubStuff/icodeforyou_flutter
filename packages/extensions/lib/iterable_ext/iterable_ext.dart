@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs
+
 extension IterableExt<T> on Iterable<T> {
   void checkForCycles({
     required String Function(T item) idOf,

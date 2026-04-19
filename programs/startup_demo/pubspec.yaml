@@ -18,9 +18,12 @@ dependencies:
   gap: ^3.0.1
   get_it: ^9.2.1
   go_router: ^17.1.0
+  my_logger:
+    path: ../../packages/my_logger
   random_color_generator:
     path: ../../packages/random_color_generator
-  settings_widget: ^0.0.1
+  service_locator:
+    path: ../../packages/service_locator
   since_when:
     path: ../../packages/since_when
   since_when_widgets:

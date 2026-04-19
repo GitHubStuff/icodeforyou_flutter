@@ -1,4 +1,4 @@
-// lib/src/counted_text_field/counted_text_field.dart
+// ignore_for_file: public_member_api_docs
 
 import 'package:flutter/material.dart';
 

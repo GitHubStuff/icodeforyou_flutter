@@ -6,7 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-part '../sql/table_statements.dart';
+part '../sql_tables/table_statements.dart';
 
 class DatabaseInitResult {
   const DatabaseInitResult({

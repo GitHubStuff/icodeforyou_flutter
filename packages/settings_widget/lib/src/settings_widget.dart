@@ -1,4 +1,4 @@
-// lib/src/settings_widget.dart
+// ignore_for_file: public_member_api_docs
 
 import 'package:flutter/material.dart';
 import 'package:settings_widget/src/_app_settings_entry.dart';
@@ -6,6 +6,8 @@ import 'package:settings_widget/src/_settings_direction.dart';
 import 'package:settings_widget/src/_settings_layout.dart';
 import 'package:settings_widget/src/_settings_sheet.dart';
 import 'package:settings_widget/src/_settings_transition.dart';
+
+const double kSettingsBreakpoint = 100;
 
 abstract final class SettingsWidget {
   static const double _defaultEdgeGap = 16;
