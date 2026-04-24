@@ -22,16 +22,16 @@ dependencies:
     path: ../../packages/my_logger
   random_color_generator:
     path: ../../packages/random_color_generator
-  services_locator:
-    path: ../../packages/services_locator
+  service_locator:
+    path: ../../packages/service_locator
   since_when:
     path: ../../packages/since_when
   since_when_widgets:
     path: ../../packages/since_when_widgets
   theme_manager:
     path: ../../packages/theme_manager
-  theme_selection_widget:
-    path: ../../packages/theme_selection_widget
+  theme_widget:
+    path: ../../packages/theme_widget
 
 dev_dependencies:
   flutter_test:

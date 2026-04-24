@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:theme_selection_widget/src/_theme_option.dart';
+import '../../lib/src/theme_option.dart';
 
 void main() {
   group('ThemeOption', () {

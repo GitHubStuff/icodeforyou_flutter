@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:theme_selection_widget/theme_selection_widget.dart';
+import 'package:theme_manager/theme_manager.dart' show ThemeCubitBase;
+import 'package:theme_widget/theme_widget.dart' show ThemeWidget;
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -14,7 +15,7 @@ class SettingsPage extends StatelessWidget {
         alignment: Alignment.topLeft,
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: ThemeSelectionWidget(
+          child: ThemeWidget(
             cubit: GetIt.instance<ThemeCubitBase>(),
           ),
         ),

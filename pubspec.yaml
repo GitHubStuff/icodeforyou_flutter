@@ -2,7 +2,7 @@
 name: icodeforyou_flutter
 publish_to: none
 description: Collection of flutter packages
-version: 8.1.5
+version: 8.2.0
 
 workspace:
   - packages/abstractions
@@ -24,7 +24,7 @@ workspace:
   - packages/step_slider_package
   - packages/tag_chip
   - packages/theme_manager
-  - packages/theme_selection_widget
+  - packages/theme_widget
   - programs/startup_demo
   - programs/widgetbook_workspace
 

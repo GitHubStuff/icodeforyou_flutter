@@ -1,4 +1,4 @@
-// test/src/theme_selection_widget_test.dart
+// test/src/theme_widget_test.dart
 
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
@@ -7,10 +7,9 @@ import 'dart:async' show StreamController;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:theme_selection_widget/src/_theme_selection_body.dart';
-import 'package:theme_selection_widget/src/theme_selection_widget.dart';
-import 'package:theme_selection_widget/theme_selection_widget.dart'
-    show ThemeCubitBase;
+import '../../lib/src/theme_selection_body.dart';
+import '../../lib/src/theme_widget.dart';
+import '../../lib/theme_widget.dart' show ThemeCubitBase;
 
 class _MockThemeCubit extends Mock implements ThemeCubitBase {}
 
@@ -30,7 +29,7 @@ void main() {
     when(() => cubit.state).thenReturn(state);
     return MaterialApp(
       home: Scaffold(
-        body: ThemeSelectionWidget(cubit: cubit),
+        body: ThemeWidget(cubit: cubit),
       ),
     );
   }
@@ -51,7 +50,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ThemeSelectionWidget(cubit: cubit, title: 'Appearance'),
+            body: ThemeWidget(cubit: cubit, title: 'Appearance'),
           ),
         ),
       );
@@ -84,7 +83,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ThemeSelectionWidget(cubit: cubit),
+            body: ThemeWidget(cubit: cubit),
           ),
         ),
       );

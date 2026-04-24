@@ -3,6 +3,7 @@ include: ../analysis_options.yaml
 analyzer:
   errors:
     avoid_positional_boolean_parameters: ignore
+    avoid_relative_lib_imports: ignore
     cascade_invocations: ignore
     document_ignores: ignore
     lines_longer_than_80_chars: ignore

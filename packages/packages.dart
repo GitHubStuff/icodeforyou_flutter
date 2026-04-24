@@ -17,4 +17,4 @@ export 'package:sqlite_viewer/sqlite_viewer.dart';
 export 'package:step_slider_package/step_slider_package.dart';
 export 'package:tag_chip/tag_chip.dart';
 export 'package:theme_manager/theme_manager.dart';
-export 'package:theme_selection_widget/theme_selection_widget.dart';
+export 'package:theme_widget/theme_widget.dart';
