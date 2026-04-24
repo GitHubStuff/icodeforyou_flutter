@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show BackgroundIsolateBinaryMessenger;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_logger/my_logger.dart' show MyLogger;
-import 'package:services_locator/services_locator.dart'
+import 'package:service_locator/services_locator.dart'
     show
         GetItServiceLocator,
         LazyAsyncServiceDescriptor,
