@@ -22,8 +22,8 @@ dependencies:
     path: ../../packages/my_logger
   random_color_generator:
     path: ../../packages/random_color_generator
-  service_locator:
-    path: ../../packages/service_locator
+  services_locator:
+    path: ../../packages/services_locator
   since_when:
     path: ../../packages/since_when
   since_when_widgets:

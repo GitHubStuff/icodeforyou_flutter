@@ -1,19 +1,24 @@
 // lib/main.dart
 
+// ignore_for_file: public_member_api_docs
+
 import 'package:animated_rail_menu/animated_rail_menu.dart';
 import 'package:animated_widgets/animated_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider;
-import 'package:service_locator/service_locator.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider, Cubit;
 import 'package:startup_demo/src/_startup_tasks.dart' show StartupTasks;
 import 'package:startup_demo/src/cubit_demo.dart' show CubitDemo;
 import 'package:startup_demo/src/navigation/_nav_entries.dart';
 import 'package:startup_demo/src/pages/landing_page.dart';
 
+class ServicesLocator extends Cubit<int> {
+  ServicesLocator() : super(3);
+}
+
+final cubit = ServicesLocator();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  final cubit = SetUp.serviceLocatorSetup();
 
   runApp(
     BlocProvider.value(
