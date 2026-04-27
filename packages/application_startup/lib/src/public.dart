@@ -2,5 +2,3 @@
 
 export '/src/cubit/cubit.dart';
 export '/src/errors.dart';
-
-abstract interface class ServiceClass {}

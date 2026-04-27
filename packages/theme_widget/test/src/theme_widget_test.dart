@@ -7,11 +7,12 @@ import 'dart:async' show StreamController;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import '../../lib/src/theme_selection_body.dart';
-import '../../lib/src/theme_widget.dart';
-import '../../lib/theme_widget.dart' show ThemeCubitBase;
+import 'package:theme_manager/theme_manager.dart';
+import 'package:theme_widget/src/theme_selection_body.dart'
+    show ThemeSelectionBody;
+import 'package:theme_widget/theme_widget.dart' show ThemeWidget;
 
-class _MockThemeCubit extends Mock implements ThemeCubitBase {}
+class _MockThemeCubit extends Mock implements MaterialThemeCubit {}
 
 void main() {
   late _MockThemeCubit cubit;
@@ -19,14 +20,14 @@ void main() {
   setUp(() {
     cubit = _MockThemeCubit();
     when(() => cubit.stream).thenAnswer((_) => const Stream.empty());
-    when(() => cubit.state).thenReturn(ThemeMode.system);
+    when(() => cubit.state.mode).thenReturn(ThemeMode.system);
     when(cubit.toLight).thenReturn(null);
     when(cubit.toDark).thenReturn(null);
     when(cubit.toSystem).thenReturn(null);
   });
 
   Widget _buildSubject({ThemeMode state = ThemeMode.system}) {
-    when(() => cubit.state).thenReturn(state);
+    when(() => cubit.state.mode).thenReturn(state);
     return MaterialApp(
       home: Scaffold(
         body: ThemeWidget(cubit: cubit),
@@ -46,7 +47,7 @@ void main() {
     });
 
     testWidgets('passes custom title to body', (tester) async {
-      when(() => cubit.state).thenReturn(ThemeMode.dark);
+      when(() => cubit.state.mode).thenReturn(ThemeMode.dark);
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -76,9 +77,9 @@ void main() {
     });
 
     testWidgets('rebuilds when cubit emits new state', (tester) async {
-      final controller = StreamController<ThemeMode>();
+      final controller = StreamController<MaterialThemeState>();
       when(() => cubit.stream).thenAnswer((_) => controller.stream);
-      when(() => cubit.state).thenReturn(ThemeMode.system);
+      when(() => cubit.state.mode).thenReturn(ThemeMode.system);
 
       await tester.pumpWidget(
         MaterialApp(
@@ -88,8 +89,8 @@ void main() {
         ),
       );
 
-      when(() => cubit.state).thenReturn(ThemeMode.dark);
-      controller.add(ThemeMode.dark);
+      when(() => cubit.state.mode).thenReturn(ThemeMode.dark);
+      controller.add(cubit.state);
       await tester.pump();
 
       final body = tester.widget<ThemeSelectionBody>(

@@ -1,12 +1,5 @@
 // ignore_for_file: public_member_api_docs
 
-import 'dart:async';
-
-import 'package:application_startup/application_startup.dart';
-import 'package:application_startup/src/errors.dart' show ServiceItemTimeout;
-import 'package:flutter/services.dart';
-import 'package:since_when/since_when.dart';
-
 class StartupTasks {
   const StartupTasks._();
 

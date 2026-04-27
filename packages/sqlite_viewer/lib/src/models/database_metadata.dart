@@ -10,7 +10,7 @@ import 'package:equatable/equatable.dart';
 /// Example:
 /// ```dart
 /// final metadata = DatabaseMetadata(
-///   fullPath: '/data/user/0/com.example/databases/app.db',
+///   fullPath: '/data/user/0/com.icodeforyou/databases/app.db',
 ///   sqliteVersion: '3.39.0',
 ///   databaseSize: 524288,
 ///   tables: ['users', 'posts', 'comments'],

@@ -15,11 +15,14 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+
   gap: ^3.0.1
   get_it: ^9.2.1
   go_router: ^17.1.0
   my_logger:
     path: ../../packages/my_logger
+  overlay_host:
+    path: ../../packages/overlay_host
   random_color_generator:
     path: ../../packages/random_color_generator
   service_locator:
@@ -28,8 +31,12 @@ dependencies:
     path: ../../packages/since_when
   since_when_widgets:
     path: ../../packages/since_when_widgets
+  statusbar:
+    path: ../../plugins/statusbar
   theme_manager:
     path: ../../packages/theme_manager
+  theme_service:
+    path: ../../packages/theme_service
   theme_widget:
     path: ../../packages/theme_widget
 

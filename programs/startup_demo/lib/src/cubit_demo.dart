@@ -13,10 +13,9 @@ import 'package:service_locator/service_locator.dart'
         LazyAsyncServiceDescriptor,
         ServiceClass,
         ServiceItemTimeout,
-        ServiceLocatorRegistry,
-        SyncServiceDescriptor;
+        ServiceLocatorRegistry;
 import 'package:since_when/since_when.dart' show SinceWhenDatabase;
-import 'package:startup_demo/main.dart' show ServicesLocator;
+import 'package:theme_service/theme_service.dart';
 
 const TextStyle style = TextStyle(fontSize: 28, fontWeight: FontWeight.bold);
 
@@ -29,7 +28,7 @@ class CubitDemo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<ServicesLocator>().state;
+    final state = context.watch<ThemeService>();
     return Scaffold(
       body: Center(
         child: Column(
@@ -48,12 +47,9 @@ class CubitDemo extends StatelessWidget {
   }
 
   Future<void> _onTap() async {
-    final td = ThemeDescriptor();
     const ds = SinceWhenDescriptor();
     MyLogger.d(ds);
-    _sl
-      ..stage(td)
-      ..stage(ds);
+    _sl.stage(ds);
 
     MyLogger.d(_sl);
 
@@ -97,24 +93,4 @@ class SinceWhenDescriptor
       throw ServiceItemTimeout(name, timeout);
     }
   };
-}
-
-class ThemeService implements ServiceClass {
-  ThemeService() {
-    MyLogger.t('Created $runtimeType');
-  }
-
-  String getMe() => 'GotMe';
-}
-
-class ThemeDescriptor extends SyncServiceDescriptor<ThemeService> {
-  ThemeDescriptor() {
-    MyLogger.t('Created $runtimeType');
-  }
-
-  @override
-  String get name => 'Theme';
-
-  @override
-  ThemeService Function() get builder => ThemeService.new;
 }

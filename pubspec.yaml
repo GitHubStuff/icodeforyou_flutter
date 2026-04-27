@@ -2,7 +2,7 @@
 name: icodeforyou_flutter
 publish_to: none
 description: Collection of flutter packages
-version: 8.2.0
+version: 9.0.0
 
 workspace:
   - packages/abstractions
@@ -14,6 +14,7 @@ workspace:
   - packages/edittext_popover
   - packages/extensions
   - packages/my_logger
+  - packages/overlay_host
   - packages/random_color_generator
   - packages/platform_utils
   - packages/scrolling_datetime_pickers
@@ -24,7 +25,9 @@ workspace:
   - packages/step_slider_package
   - packages/tag_chip
   - packages/theme_manager
+  - packages/theme_service
   - packages/theme_widget
+  - plugins/statusbar
   - programs/startup_demo
   - programs/widgetbook_workspace
 
@@ -249,6 +252,169 @@ melos:
           echo "❌ No coverage files found. Run 'melos run test_coverage' first."
         fi
 
+    # ─── PLUGINS ─────────────────────────────────────────────────────────────
+    test_plugin:
+      description: |
+        Run tests and coverage for a single plugin.
+        Usage: PRG=program_name melos test_plugin
+        Example: PRG=startup_demo melos test_plugin
+      run: |
+        (
+          if [ -z "$PRG" ]; then
+            echo "❌ PRG is not set. Usage: PRG=program_name melos test_program"
+            exit 1
+          fi
+
+          plugin_dir="plugins/$PRG"
+
+          if [ ! -d "$plugin_dir" ]; then
+            echo "❌ Plugin '$PRG' not found at $plugin_dir"
+            exit 1
+          fi
+
+          if [ ! -d "${plugin_dir}/test" ]; then
+            echo "❌ No test directory found in $plugin_dir"
+            exit 1
+          fi
+
+          echo ""
+          echo "🚀 Testing $PRG..."
+          cd "$plugin_dir"
+          flutter test --coverage
+          cd - > /dev/null
+          echo ""
+          echo "✅ Done: $PRG"
+        )
+
+    test_plugins:
+      description: |
+        Run tests in all plugins sequentially (excludes widgetbook_workspace).
+        Usage: melos test_plugins
+        Fail-fast: STRICT=true melos test_plugins
+      run: |
+        (
+          echo "🧪 Running plugin tests sequentially..."
+          if [ "${STRICT}" = "true" ]; then
+            echo "⚠️  STRICT mode — stopping on first failure"
+          fi
+
+          failed_plugins=""
+          total_plugins=0
+          tested_plugins=0
+
+          for plugin_dir in plugins/*/; do
+            plugin_name=$(basename "$plugin_dir")
+
+            if [ -d "${plugin_dir}test" ]; then
+              echo ""
+              echo "🚀 Testing $plugin_name..."
+              cd "$plugin_dir"
+              total_plugins=$((total_plugins + 1))
+              tested_plugins=$((tested_plugins + 1))
+
+              if ! flutter test; then
+                echo "❌ Tests failed in $plugin_name"
+                cd - > /dev/null
+                if [ "${STRICT}" = "true" ]; then
+                  echo ""
+                  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                  echo "🛑 STRICT mode — stopping at $plugin_name"
+                  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                  exit 1
+                fi
+                if [ -z "$failed_plugins" ]; then
+                  failed_plugins="$plugin_name"
+                else
+                  failed_plugins="$failed_plugins, $plugin_name"
+                fi
+              else
+                cd - > /dev/null
+              fi
+            else
+              echo "⏭️  Skipping $plugin_name (no test directory)"
+              total_plugins=$((total_plugins + 1))
+            fi
+          done
+
+          echo ""
+          echo "✅ Test run completed!"
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "📊 SUMMARY"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "Total plugins:   $total_plugins"
+          echo "Tested plugins:  $tested_plugins"
+
+          if [ -n "$failed_plugins" ]; then
+            echo "❌ FAILED: $failed_plugins"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            exit 1
+          else
+            echo "✅ All plugins tests passed!"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          fi
+        )
+
+    test_plugin_coverage:
+      description: Run tests with coverage in all plugins (excludes widgetbook_workspace)
+      run: |
+        echo "🧪 Running plugin coverage tests..."
+        for plugin_dir in plugins/*/; do
+          plugin_name=$(basename "$plugin_dir")
+
+          if [ -d "${plugin_dir}test" ]; then
+            echo ""
+            echo "🚀 Testing $plugin_name..."
+            cd "$plugin_dir"
+            flutter test --coverage
+            cd - > /dev/null
+          else
+            echo "⏭️  Skipping $plugin_name (no test directory)"
+          fi
+        done
+        echo "✅ Coverage generation completed for all programs!"
+
+    coverage_merge_plugins:
+      description: Merge coverage reports from all plugins into coverage/programs_html/
+      run: |
+        mkdir -p coverage
+        rm -f coverage/plugins_lcov.info
+
+        coverage_files=$(find . -name "lcov.info" -path "*/plugins/*/coverage/lcov.info")
+
+        if [ -n "$coverage_files" ]; then
+          echo "Found plugin coverage files:"
+          echo "$coverage_files"
+
+          for lcov_file in $coverage_files; do
+            plugin_path=$(echo "$lcov_file" | sed 's|^\./||' | sed 's|/coverage/lcov\.info$||')
+
+            echo "Processing coverage for $plugin_path..."
+
+            temp_file="coverage/temp_$(echo "$plugin_path" | tr '/' '_').info"
+            sed "s|SF:lib/|SF:${plugin_path}/lib/|g" "$lcov_file" > "$temp_file"
+
+            if [ -f coverage/plugins_lcov.info ]; then
+              lcov --add-tracefile coverage/plugins_lcov.info --add-tracefile "$temp_file" -o coverage/plugins_lcov.info
+            else
+              cp "$temp_file" coverage/plugins_lcov.info
+            fi
+
+            rm "$temp_file"
+          done
+
+          genhtml coverage/plugins_lcov.info -o coverage/plugins_html --ignore-errors source
+          echo "✅ Merged plugins coverage report: coverage/plugins_html/index.html"
+
+          if [ -f coverage/plugins_html/index.html ]; then
+            open coverage/plugins_html/index.html
+          else
+            echo "⚠️  HTML file wasn't created"
+            lcov --summary coverage/plugins_lcov.info
+          fi
+        else
+          echo "❌ No plugin coverage files found. Run 'melos run test_programs_coverage' first."
+        fi
     # ─── PROGRAMS ─────────────────────────────────────────────────────────────
 
     test_program:
@@ -413,9 +579,10 @@ melos:
         else
           echo "❌ No program coverage files found. Run 'melos run test_programs_coverage' first."
         fi
+    # ─── COVERAGE ─────────────────────────────────────────────────────────────
 
     coverage_merge_all:
-      description: Merge coverage from all packages + programs into coverage/all_html/
+      description: Merge coverage from all packages + plugins + programs into coverage/all_html/
       run: |
         mkdir -p coverage
         rm -f coverage/all_lcov.info

@@ -14,6 +14,8 @@
 //   - Updated `_StateRecorder` for the extended `ReportServiceState`
 //     signature (now carries optional `error` / `stackTrace`).
 
+// ignore_for_file: cascade_invocations
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:service_locator/src/locator_status.dart' show LocatorStatus;
 import 'package:service_locator/src/service_descriptor/service_descriptor.dart'
@@ -24,7 +26,7 @@ import 'package:service_locator/src/service_descriptor/service_descriptor.dart'
         SyncServiceDescriptor;
 import 'package:service_locator/src/service_locator/service_locator.dart'
     show ReportServiceState, ServiceLocator;
-import 'package:service_locator/src/service_locator_registry/service_registration.dart'
+import 'package:service_locator/src/service_registry/service_registration.dart'
     show ServiceRegistration;
 
 // ---------------------------------------------------------------------------
@@ -62,7 +64,8 @@ class _DefaultSyncAuthDescriptor extends SyncServiceDescriptor<_AuthService> {
   String get name => 'auth-sync';
 
   @override
-  _AuthService Function() get builder => () => _FakeAuth('sync');
+  _AuthService Function() get builder =>
+      () => _FakeAuth('sync');
 }
 
 /// Sync descriptor that overrides every default.
@@ -79,7 +82,8 @@ class _CustomSyncAuthDescriptor extends SyncServiceDescriptor<_AuthService> {
   Duration get timeout => const Duration(seconds: 10);
 
   @override
-  _AuthService Function() get builder => () => _FakeAuth('sync-custom');
+  _AuthService Function() get builder =>
+      () => _FakeAuth('sync-custom');
 }
 
 /// Lazy async descriptor that accepts every default.
@@ -96,8 +100,7 @@ class _DefaultLazyAuthDescriptor
 }
 
 /// Lazy async descriptor that overrides every default.
-class _CustomLazyLogDescriptor
-    extends LazyAsyncServiceDescriptor<_LogService> {
+class _CustomLazyLogDescriptor extends LazyAsyncServiceDescriptor<_LogService> {
   const _CustomLazyLogDescriptor();
 
   @override
@@ -110,7 +113,8 @@ class _CustomLazyLogDescriptor
   Duration get timeout => const Duration(seconds: 5);
 
   @override
-  Future<_LogService> Function() get builder => () async => _FakeLog();
+  Future<_LogService> Function() get builder =>
+      () async => _FakeLog();
 }
 
 // ---------------------------------------------------------------------------
@@ -132,8 +136,7 @@ class _CountingSyncDescriptor extends SyncServiceDescriptor<_AuthService> {
   };
 }
 
-class _CountingLazyDescriptor
-    extends LazyAsyncServiceDescriptor<_AuthService> {
+class _CountingLazyDescriptor extends LazyAsyncServiceDescriptor<_AuthService> {
   _CountingLazyDescriptor({required this.onBuild});
 
   final void Function() onBuild;
@@ -151,6 +154,17 @@ class _CountingLazyDescriptor
 // ---------------------------------------------------------------------------
 // Recording fake locator
 // ---------------------------------------------------------------------------
+
+class _AsyncCall {
+  _AsyncCall({
+    required this.type,
+    required this.name,
+    required this.builder,
+  });
+  final Type type;
+  final String name;
+  final Object builder; // Future<SRV> Function()
+}
 
 class _SyncCall {
   _SyncCall({required this.type, required this.name, required this.instance});
@@ -173,8 +187,26 @@ class _LazyCall {
 }
 
 class _RecordingLocator implements ServiceLocator {
-  final List<_SyncCall> syncCalls = [];
+  final List<_AsyncCall> asyncCalls = [];
   final List<_LazyCall> lazyCalls = [];
+  final List<_SyncCall> syncCalls = [];
+
+  @override
+  Future<SRV> registerServiceAsync<SRV extends ServiceClass>({
+    required String name,
+    required Future<SRV> Function() builder,
+  }) async {
+    {
+      asyncCalls.add(
+        _AsyncCall(
+          type: SRV,
+          name: name,
+          builder: builder,
+        ),
+      );
+    }
+    return builder();
+  }
 
   @override
   SRV registerServiceSync<SRV extends ServiceClass>({
@@ -381,8 +413,8 @@ void main() {
         // ServiceDescriptor<ServiceClass> reference must still produce
         // a ServiceRegistration<ConcreteType>, not ServiceRegistration
         // <ServiceClass>. The subtype check validates the reified type.
-        final ServiceDescriptor<ServiceClass> widened =
-            const _DefaultSyncAuthDescriptor();
+        const ServiceDescriptor<ServiceClass> widened =
+            _DefaultSyncAuthDescriptor();
         final registration = widened.toRegistration();
 
         expect(registration, isA<ServiceRegistration<_AuthService>>());
@@ -391,7 +423,8 @@ void main() {
           isNot(
             isA<ServiceRegistration<_LogService>>(),
           ),
-          reason: 'reified type must be the concrete subclass binding, '
+          reason:
+              'reified type must be the concrete subclass binding, '
               'not a sibling service type',
         );
       },
@@ -483,22 +516,24 @@ void main() {
       expect(buildCount, 0);
     });
 
-    test('forwards the builder reference so the locator can run it later',
-        () async {
-      var buildCount = 0;
-      final descriptor = _CountingLazyDescriptor(
-        onBuild: () => buildCount++,
-      );
+    test(
+      'forwards the builder reference so the locator can run it later',
+      () async {
+        var buildCount = 0;
+        final descriptor = _CountingLazyDescriptor(
+          onBuild: () => buildCount++,
+        );
 
-      descriptor.registerWith(locator, serviceState: recorder.call);
+        descriptor.registerWith(locator, serviceState: recorder.call);
 
-      final forwardedBuilder =
-          locator.lazyCalls.single.builder as Future<_AuthService> Function();
-      final built = await forwardedBuilder();
+        final forwardedBuilder =
+            locator.lazyCalls.single.builder as Future<_AuthService> Function();
+        final built = await forwardedBuilder();
 
-      expect(buildCount, 1);
-      expect(built, isA<_FakeAuth>());
-    });
+        expect(buildCount, 1);
+        expect(built, isA<_FakeAuth>());
+      },
+    );
 
     test('forwards the serviceState callback verbatim', () {
       const descriptor = _DefaultLazyAuthDescriptor();

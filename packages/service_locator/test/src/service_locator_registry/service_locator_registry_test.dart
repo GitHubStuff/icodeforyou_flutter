@@ -27,7 +27,7 @@ import 'package:service_locator/src/service_descriptor/service_descriptor.dart'
     show LazyAsyncServiceDescriptor, ServiceClass, SyncServiceDescriptor;
 import 'package:service_locator/src/service_locator/service_locator.dart'
     show ReportServiceState, ServiceLocator;
-import 'package:service_locator/src/service_locator_registry/service_locator_registry.dart'
+import 'package:service_locator/src/service_registry/service_registry.dart'
     show ServiceLocatorRegistry;
 
 // ---------------------------------------------------------------------------
@@ -182,6 +182,8 @@ typedef _FullReportState =
 class _FakeLocator implements ServiceLocator {
   final Map<String, Object> _instances = {};
 
+  final Map<String, _FullReportState> asyncCallbacks = {};
+
   /// Captured state callbacks per registered lazy-async name. Tests drive
   /// transitions by invoking `lazyCallbacks[name]!(status, instance: ...)`
   /// or `lazyCallbacks[name]!(status, error: ..., stackTrace: ...)`.
@@ -192,6 +194,28 @@ class _FakeLocator implements ServiceLocator {
   /// through [lazyCallbacks] (see the wrapper installed in
   /// [registerServiceLazyAsync]).
   final Map<String, Completer<Object>> _pendingGets = {};
+
+  @override
+  Future<SRV> registerServiceAsync<SRV extends ServiceClass>({
+    required String name,
+    required Future<SRV> Function() builder,
+  }) {
+    asyncCallbacks[name] =
+        (
+          LocatorStatus state, {
+          ServiceClass? instance,
+          Object? error,
+          StackTrace? stackTrace,
+        }) {
+          if (state == LocatorStatus.ready && instance != null) {
+            _instances[name] = instance;
+            _completePending(name, instance);
+          } else if (state == LocatorStatus.failed && error != null) {
+            _failPending(name, error, stackTrace);
+          }
+        };
+    return builder();
+  }
 
   @override
   SRV registerServiceSync<SRV extends ServiceClass>({

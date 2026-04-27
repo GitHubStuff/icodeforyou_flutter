@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:theme_manager/theme_manager.dart' show ThemeCubitBase;
+import 'package:service_locator/service_locator.dart' show ServiceRegistry;
+import 'package:theme_service/theme_service.dart' show ThemeService;
 import 'package:theme_widget/theme_widget.dart' show ThemeWidget;
 
 class SettingsPage extends StatelessWidget {
@@ -16,7 +16,8 @@ class SettingsPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: ThemeWidget(
-            cubit: GetIt.instance<ThemeCubitBase>(),
+            cubit: ServiceRegistry.R.getSync<ThemeService>('Theme').themeCubit,
+            //cubit: GetIt.instance<ThemeCubitBase>(),
           ),
         ),
       ),

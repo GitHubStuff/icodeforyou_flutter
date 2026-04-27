@@ -11,6 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  my_logger:
+    path: ../my_logger
   shared_preferences: ^2.5.4
   
 dev_dependencies:

@@ -59,13 +59,12 @@ class _FakeLog implements _LogService {
 // assert on transition sequence and on payload content (instance for
 // ready, error + stackTrace for failed).
 
-typedef _Event =
-    ({
-      LocatorStatus status,
-      ServiceClass? instance,
-      Object? error,
-      StackTrace? stackTrace,
-    });
+typedef _Event = ({
+  LocatorStatus status,
+  ServiceClass? instance,
+  Object? error,
+  StackTrace? stackTrace,
+});
 
 class _StateRecorder {
   final List<_Event> events = [];

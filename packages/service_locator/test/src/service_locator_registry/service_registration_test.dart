@@ -11,7 +11,7 @@ import 'package:service_locator/src/errors.dart' show ServiceStartupFailed;
 import 'package:service_locator/src/locator_status.dart' show LocatorStatus;
 import 'package:service_locator/src/service_descriptor/service_descriptor.dart'
     show ServiceClass, SyncServiceDescriptor;
-import 'package:service_locator/src/service_locator_registry/service_registration.dart'
+import 'package:service_locator/src/service_registry/service_registration.dart'
     show ServiceRegistration;
 
 // ---------------------------------------------------------------------------
@@ -121,14 +121,14 @@ void main() {
   group('markReady', () {
     test('transitions status to ready', () {
       final reg = _fresh();
-      reg.markReady(const _FakeWidget());
+      reg.markReadyXXX(const _FakeWidget());
       expect(reg.status, LocatorStatus.ready);
     });
 
     test('stores the instance', () {
       final reg = _fresh();
       const widget = _FakeWidget('ready');
-      reg.markReady(widget);
+      reg.markReadyXXX(widget);
       expect(reg.instance, same(widget));
     });
 
@@ -139,7 +139,7 @@ void main() {
       // is never observed by any other test.
       final reg = _fresh()
         ..markFailed(Exception('boom'), StackTrace.current)
-        ..markReady(const _FakeWidget('recovered'));
+        ..markReadyXXX(const _FakeWidget('recovered'));
 
       expect(reg.error, isNull);
       expect(reg.stackTrace, isNull);
@@ -148,7 +148,7 @@ void main() {
     });
 
     test('isReady is true; other flags are false', () {
-      final reg = _fresh()..markReady(const _FakeWidget());
+      final reg = _fresh()..markReadyXXX(const _FakeWidget());
       expect(reg.isReady, isTrue);
       expect(reg.isStaged, isFalse);
       expect(reg.isStarting, isFalse);
@@ -227,7 +227,7 @@ void main() {
     });
 
     test('throws StateError when status is ready', () {
-      final reg = _fresh()..markReady(const _FakeWidget());
+      final reg = _fresh()..markReadyXXX(const _FakeWidget());
       expect(reg.asStartupFailed, throwsStateError);
     });
   });
@@ -245,7 +245,7 @@ void main() {
     test('ready registration: appends ✓ marker', () {
       final out = (_fresh(
         name: 'done',
-      )..markReady(const _FakeWidget())).toString();
+      )..markReadyXXX(const _FakeWidget())).toString();
       expect(out, 'done [ready] ✓');
     });
 
@@ -263,7 +263,7 @@ void main() {
       // clear the prior instance. Covers the case where both `if` arms
       // in toString evaluate true.
       final reg = _fresh(name: 'mixed')
-        ..markReady(const _FakeWidget())
+        ..markReadyXXX(const _FakeWidget())
         ..markFailed(Exception('late-boom'), StackTrace.current);
 
       final out = reg.toString();
@@ -284,7 +284,7 @@ void main() {
     test('all four flags report correctly for each status', () {
       final staged = _fresh();
       final starting = _fresh()..markStarting(Future<void>.value());
-      final ready = _fresh()..markReady(const _FakeWidget());
+      final ready = _fresh()..markReadyXXX(const _FakeWidget());
       final failed = _fresh()
         ..markFailed(Exception('boom'), StackTrace.current);
 

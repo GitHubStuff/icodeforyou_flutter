@@ -6,7 +6,9 @@
 
 import 'dart:async' show TimeoutException;
 
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
+import 'package:my_logger/my_logger.dart' show MyLogger;
 import 'package:service_locator/src/errors.dart'
     show
         DuplicateServiceEntry,
@@ -18,6 +20,8 @@ import 'package:service_locator/src/service_descriptor/service_descriptor.dart'
     show ServiceClass;
 import 'package:service_locator/src/service_locator/service_locator.dart'
     show ReportServiceState, ServiceLocator;
+import 'package:service_locator/src/service_registry/service_registration.dart'
+    show ServiceRegistration;
 
 /// [ServiceLocator] adapter backed by the `get_it` package.
 ///
@@ -79,15 +83,15 @@ class GetItServiceLocator implements ServiceLocator {
     // rather than [Exception] — get_it's contract for "not ready".
     try {
       return _getIt.get<SRV>(instanceName: name);
+
+      /// Allowed here because it is a limitation of GetIt
       // ignore: avoid_catching_errors
     } on Error {
       // Lazy-async not yet materialized. Fall through.
     }
 
     try {
-      return await _getIt
-          .getAsync<SRV>(instanceName: name)
-          .timeout(timeout);
+      return await _getIt.getAsync<SRV>(instanceName: name).timeout(timeout);
     } on TimeoutException {
       // Translate Dart's async timeout into the locator-abstraction's own
       // [ServiceItemTimeout]. get_it's `getAsync` doesn't accept a timeout
@@ -136,6 +140,28 @@ class GetItServiceLocator implements ServiceLocator {
   // REGISTER
   // ---------------------------------------------------------------------------
 
+  @override
+  Future<SRV> registerServiceAsync<SRV extends ServiceClass>({
+    required String name,
+    required Future<SRV> Function() builder,
+  }) async {
+    if (_getIt.isRegistered<SRV>(instanceName: name)) {
+      throw DuplicateServiceEntry(name);
+    }
+    _getIt.registerSingletonAsync(
+      builder,
+      instanceName: name,
+    );
+    try {
+      await _getIt.isReady<SRV>(instanceName: name);
+      //
+      // ignore: avoid_catches_without_on_clauses
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return getServiceSync<SRV>(name: name);
+  }
+
   /// Registers a lazy-async service under [name].
   ///
   /// Wires [builder] through [_runReportingBuilder] so a builder throw
@@ -146,6 +172,8 @@ class GetItServiceLocator implements ServiceLocator {
   ///
   /// Throws [DuplicateServiceEntry] if [name] is already registered
   /// under [SRV].
+  ///
+
   @override
   void registerServiceLazyAsync<SRV extends ServiceClass>({
     required String name,
@@ -192,6 +220,7 @@ class GetItServiceLocator implements ServiceLocator {
     // ready-machinery, and [getServiceAsync] compensates with its
     // try-`get`-first strategy. See get_it issue #210 for a related
     // race the simpler path also avoids.
+    MyLogger.d('SRV: $SRV name: $name');
     return _getIt.registerSingleton<SRV>(instance, instanceName: name);
   }
 
@@ -239,6 +268,7 @@ class GetItServiceLocator implements ServiceLocator {
   SRV _getOrThrowNotReady<SRV extends ServiceClass>(String name) {
     try {
       return _getIt.get<SRV>(instanceName: name);
+      // permitted as it is a limitation of GetIt
       // ignore: avoid_catching_errors
     } on Error {
       // GetIt throws an Error (not Exception) when a singleton is not yet

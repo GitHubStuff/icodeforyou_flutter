@@ -2,7 +2,9 @@
     <application
         android:label="startup_demo"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@drawable/empty_splash_icon">
+        <!-- @drawable/empty_splash_icon prevents Android from using the normal
+             launcher icon during the splash handoff.-->
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -63,13 +63,12 @@ class _FakeLog implements _LogService {
 // assert not just on transition sequence but on payload content (instance
 // on ready, error + stackTrace on failed).
 
-typedef _Event =
-    ({
-      LocatorStatus status,
-      ServiceClass? instance,
-      Object? error,
-      StackTrace? stackTrace,
-    });
+typedef _Event = ({
+  LocatorStatus status,
+  ServiceClass? instance,
+  Object? error,
+  StackTrace? stackTrace,
+});
 
 class _StateRecorder {
   final List<_Event> events = [];
@@ -364,40 +363,42 @@ void main() {
   // ---------------------------------------------------------------------------
 
   group('registerServiceLazyAsync — failures', () {
-    test('getServiceAsync throws ServiceItemTimeout when builder stalls',
-        () async {
-      // A lazy-async builder that never completes must surface as
-      // [ServiceItemTimeout] rather than leaking get_it's internal error
-      // types or hanging the caller. The adapter materializes the builder
-      // via `getAsync` and applies a Dart-level `.timeout()` at the Future
-      // layer; the resulting `TimeoutException` is translated into
-      // `ServiceItemTimeout`.
-      //
-      // `notReadyYet` / `waitedBy` are checked as present (non-null) but
-      // not required to be populated — the Dart-level `TimeoutException`
-      // doesn't carry diagnostic data, so those fields come through as
-      // their empty defaults on this path. The sibling
-      // `WaitingTimeOutException` branch in the adapter is marked
-      // `coverage:ignore` because get_it's current `getAsync` doesn't
-      // surface that exception type; see the adapter's inline notes.
-      locator.registerServiceLazyAsync<_AuthService>(
-        name: _authName,
-        builder: () => Completer<_AuthService>().future,
-        serviceState: _StateRecorder().call,
-      );
-
-      await expectLater(
-        locator.getServiceAsync<_AuthService>(
+    test(
+      'getServiceAsync throws ServiceItemTimeout when builder stalls',
+      () async {
+        // A lazy-async builder that never completes must surface as
+        // [ServiceItemTimeout] rather than leaking get_it's internal error
+        // types or hanging the caller. The adapter materializes the builder
+        // via `getAsync` and applies a Dart-level `.timeout()` at the Future
+        // layer; the resulting `TimeoutException` is translated into
+        // `ServiceItemTimeout`.
+        //
+        // `notReadyYet` / `waitedBy` are checked as present (non-null) but
+        // not required to be populated — the Dart-level `TimeoutException`
+        // doesn't carry diagnostic data, so those fields come through as
+        // their empty defaults on this path. The sibling
+        // `WaitingTimeOutException` branch in the adapter is marked
+        // `coverage:ignore` because get_it's current `getAsync` doesn't
+        // surface that exception type; see the adapter's inline notes.
+        locator.registerServiceLazyAsync<_AuthService>(
           name: _authName,
-          timeout: _shortTimeout,
-        ),
-        throwsA(
-          isA<ServiceItemTimeout>()
-              .having((e) => e.notReadyYet, 'notReadyYet', isNotNull)
-              .having((e) => e.waitedBy, 'waitedBy', isNotNull),
-        ),
-      );
-    });
+          builder: () => Completer<_AuthService>().future,
+          serviceState: _StateRecorder().call,
+        );
+
+        await expectLater(
+          locator.getServiceAsync<_AuthService>(
+            name: _authName,
+            timeout: _shortTimeout,
+          ),
+          throwsA(
+            isA<ServiceItemTimeout>()
+                .having((e) => e.notReadyYet, 'notReadyYet', isNotNull)
+                .having((e) => e.waitedBy, 'waitedBy', isNotNull),
+          ),
+        );
+      },
+    );
 
     test('failing builder reports failed with error and stackTrace', () async {
       // Exercises [_runReportingBuilder]'s catch branch. The wrapper must

@@ -1,20 +1,21 @@
 // theme_widget/lib/src/theme_widget.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocBuilder;
-import 'package:theme_manager/theme_manager.dart' show ThemeCubitBase;
+import 'package:theme_manager/theme_manager.dart'
+    show MaterialThemeCubit, MaterialThemeState;
 import 'package:theme_widget/src/theme_option.dart' show ThemeOption;
 import 'package:theme_widget/src/theme_selection_body.dart'
     show ThemeSelectionBody;
 
-/// A drop-in theme picker widget that binds a [ThemeCubitBase] to a
+/// A drop-in theme picker widget that binds a [MaterialThemeCubit] to a
 /// titled, bordered panel of selectable [ThemeMode] options.
 ///
 /// Serves as the public entry point of the `theme_widget` package,
-/// wiring a [ThemeCubitBase] from the `theme_manager` package to a
+/// wiring a [MaterialThemeCubit] from the `theme_manager` package to a
 /// [ThemeSelectionBody] via [BlocBuilder]. Rebuilds automatically when
 /// the cubit emits a new [ThemeMode], and delegates user selections back
-/// to the cubit through its [ThemeCubitBase.toLight], [ThemeCubitBase.toDark],
-/// and [ThemeCubitBase.toSystem] methods.
+/// to the cubit through its [MaterialThemeCubit.toLight],
+/// [MaterialThemeCubit.toDark], and [MaterialThemeCubit.toSystem] methods.
 ///
 /// Presents three fixed options in order — system, dark, light — with
 /// customizable icons and labels for each. All presentation parameters
@@ -56,7 +57,7 @@ class ThemeWidget extends StatelessWidget {
   /// panel's presentation and default to standard Material icons and
   /// English labels.
   ///
-  /// * [cubit] — the [ThemeCubitBase] that holds the current [ThemeMode]
+  /// * [cubit] — the [MaterialThemeCubit] that holds the current [ThemeMode]
   ///   and receives selection changes.
   /// * [title] — the heading rendered above the option list. Defaults to
   ///   `'Theme'`.
@@ -85,9 +86,9 @@ class ThemeWidget extends StatelessWidget {
   /// The cubit that holds the current [ThemeMode] and applies changes.
   ///
   /// [BlocBuilder] subscribes to this cubit to drive rebuilds, and user
-  /// selections are dispatched to its [ThemeCubitBase.toLight],
-  /// [ThemeCubitBase.toDark], and [ThemeCubitBase.toSystem] methods.
-  final ThemeCubitBase cubit;
+  /// selections are dispatched to its [MaterialThemeCubit.toLight],
+  /// [MaterialThemeCubit.toDark], and [MaterialThemeCubit.toSystem] methods.
+  final MaterialThemeCubit cubit;
 
   /// The heading text rendered above the option list.
   final String title;
@@ -122,9 +123,9 @@ class ThemeWidget extends StatelessWidget {
 
   /// Dispatches the selected [mode] to the appropriate [cubit] method.
   ///
-  /// Routes [ThemeMode.light] to [ThemeCubitBase.toLight],
-  /// [ThemeMode.dark] to [ThemeCubitBase.toDark], and [ThemeMode.system]
-  /// to [ThemeCubitBase.toSystem].
+  /// Routes [ThemeMode.light] to [MaterialThemeCubit.toLight],
+  /// [ThemeMode.dark] to [MaterialThemeCubit.toDark], and [ThemeMode.system]
+  /// to [MaterialThemeCubit.toSystem].
   void _onChanged(ThemeMode mode) {
     switch (mode) {
       case ThemeMode.light:
@@ -138,12 +139,12 @@ class ThemeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubitBase, ThemeMode>(
+    return BlocBuilder<MaterialThemeCubit, MaterialThemeState>(
       bloc: cubit,
       builder: (context, current) => ThemeSelectionBody(
         title: title,
         options: _options,
-        current: current,
+        current: current.mode,
         onChanged: _onChanged,
       ),
     );

@@ -1,0 +1,29 @@
+name: theme_service
+description: "Allows for theme control to be used in a service"
+version: 0.0.1
+resolution: workspace
+publish_to: "none"
+
+environment:
+  sdk: ">=3.11.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.1.1
+  overlay_host:
+    path: ../../packages/overlay_host
+  service_locator:
+    path: ../../packages/service_locator
+  theme_manager: 
+    path: ../../packages/theme_manager
+  theme_widget:
+    path: ../../packages/theme_widget
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.2.0
+
+flutter:
+  uses-material-design: true

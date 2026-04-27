@@ -7,6 +7,8 @@
 
 import 'package:service_locator/service_locator.dart' show ServiceClass;
 import 'package:service_locator/src/locator_status.dart' show LocatorStatus;
+import 'package:service_locator/src/service_registry/service_registration.dart'
+    show ServiceRegistration;
 
 /// Callback invoked by a [ServiceLocator] to report lifecycle state
 /// transitions for a registered service.
@@ -87,6 +89,23 @@ abstract interface class ServiceLocator {
   SRV getServiceSync<SRV extends ServiceClass>({required String name});
 
   //+ REGISTER
+
+  /// Registers a service async under [name]
+  ///
+  /// [builder] is run immediately on registering.
+  ///
+  /// [serviceState] is the lifecycle callback the registry supplies so
+  /// it can track status transitions. Implementations must invoke
+  /// [serviceState] synchronously with [LocatorStatus.starting] during
+  /// this method, then again with [LocatorStatus.ready] or
+  /// [LocatorStatus.failed] once the builder settles.
+  ///
+  /// Throws `DuplicateServiceEntry` if the same `(SRV, name)` pair is
+  /// already registered.
+  Future<SRV> registerServiceAsync<SRV extends ServiceClass>({
+    required String name,
+    required Future<SRV> Function() builder,
+  });
 
   /// Registers a lazy-async service under [name].
   ///

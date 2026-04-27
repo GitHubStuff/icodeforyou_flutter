@@ -6,10 +6,15 @@
 // [LazyAsyncServiceDescriptor] (builder-on-first-access) — cover every
 // registration mode the locator supports.
 
+// ignore_for_file: public_member_api_docs
+
+import 'dart:async' show FutureOr;
+
+import 'package:service_locator/src/errors.dart' show BadServiceClass;
 import 'package:service_locator/src/locator_status.dart' show LocatorStatus;
 import 'package:service_locator/src/service_locator/service_locator.dart'
     show ReportServiceState, ServiceLocator;
-import 'package:service_locator/src/service_locator_registry/service_registration.dart'
+import 'package:service_locator/src/service_registry/service_registration.dart'
     show ServiceRegistration;
 
 /// Marker interface every service contract must implement.
@@ -20,7 +25,13 @@ import 'package:service_locator/src/service_locator_registry/service_registratio
 /// or transitively. The marker carries no members — it exists to give
 /// generics like [ServiceLocator.getServiceSync] a compile-time handle
 /// on "something registered here" without falling back to `dynamic`.
-abstract interface class ServiceClass {}
+abstract interface class ServiceClass {
+  static void checkGeneric<SRV extends ServiceClass>(String name) {
+    if (SRV == ServiceClass || SRV == dynamic || SRV == Object) {
+      throw BadServiceClass(name);
+    }
+  }
+}
 
 /// Sealed base describing how a service is registered with a
 /// [ServiceLocator].
@@ -107,8 +118,7 @@ sealed class ServiceDescriptor<SRV extends ServiceClass> {
   /// `is ServiceRegistration<ConcreteType>` check inside
   /// `registrationFor`. Dispatching through this method instead binds
   /// `SRV` at the concrete subclass level, where it is known exactly.
-  ServiceRegistration<SRV> toRegistration() =>
-      ServiceRegistration<SRV>(this);
+  ServiceRegistration<SRV> toRegistration() => ServiceRegistration<SRV>(this);
 
   /// Registers this descriptor's service with [locator], reporting
   /// lifecycle transitions through [serviceState].
@@ -119,7 +129,7 @@ sealed class ServiceDescriptor<SRV extends ServiceClass> {
   /// `ready` before returning; [LazyAsyncServiceDescriptor] hands the
   /// builder off and lets the locator drive transitions from first
   /// `getServiceAsync`.
-  void registerWith(
+  FutureOr<void> registerWith(
     ServiceLocator locator, {
     required ReportServiceState serviceState,
   });
@@ -130,6 +140,25 @@ sealed class ServiceDescriptor<SRV extends ServiceClass> {
   String toString() =>
       'ServiceDescriptor(name: "$name", deps: $dependencies, '
       'timeout: ${timeout.inSeconds}s)';
+}
+
+abstract class AsyncServiceDescriptor<SRV extends ServiceClass>
+    extends ServiceDescriptor<SRV> {
+  const AsyncServiceDescriptor();
+
+  Future<SRV> Function() get builder;
+
+  @override
+  Future<void> registerWith(
+    ServiceLocator locator, {
+    required ReportServiceState serviceState,
+  }) async {
+    final instance = await locator.registerServiceAsync<SRV>(
+      name: name,
+      builder: builder,
+    );
+    serviceState(.ready, instance: instance);
+  }
 }
 
 /// Descriptor for services whose builder runs eagerly and synchronously
@@ -168,7 +197,7 @@ abstract class SyncServiceDescriptor<SRV extends ServiceClass>
   }) {
     final instance = builder();
     locator.registerServiceSync<SRV>(name: name, instance: instance);
-    serviceState(LocatorStatus.ready, instance: instance);
+    serviceState(.ready, instance: instance);
   }
 }
 

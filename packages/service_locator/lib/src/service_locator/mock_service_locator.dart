@@ -146,6 +146,7 @@ class MockServiceLocator implements ServiceLocator {
     required String name,
     required Duration timeout,
   }) async {
+    
     final entry = _assertRegistered<SRV>(name);
 
     switch (entry) {
@@ -194,6 +195,19 @@ class MockServiceLocator implements ServiceLocator {
   // ---------------------------------------------------------------------------
   // REGISTER
   // ---------------------------------------------------------------------------
+
+  @override
+  Future<SRV> registerServiceAsync<SRV extends ServiceClass>({
+    required String name,
+    required Future<SRV> Function() builder,
+  }) {
+    final key = _keyOf<SRV>(name);
+    if (_entries.containsKey(key)) throw DuplicateServiceEntry(name);
+
+    final instance = builder();
+    _entries[key] = _SyncEntry(instance: instance);
+    return instance;
+  }
 
   /// Registers a lazy-async service under [name].
   ///

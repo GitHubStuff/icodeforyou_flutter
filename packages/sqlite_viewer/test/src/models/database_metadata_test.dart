@@ -6,14 +6,17 @@ import 'package:sqlite_viewer/sqlite_viewer.dart';
 void main() {
   group('DatabaseMetadata', () {
     const testMetadata = DatabaseMetadata(
-      fullPath: '/data/user/0/com.example/databases/app.db',
+      fullPath: '/data/user/0/com.icodeforyou/databases/app.db',
       sqliteVersion: '3.39.0',
       databaseSize: 524288,
       tables: ['users', 'posts', 'comments'],
     );
 
     test('creates instance with required fields', () {
-      expect(testMetadata.fullPath, '/data/user/0/com.example/databases/app.db');
+      expect(
+        testMetadata.fullPath,
+        '/data/user/0/com.icodeforyou/databases/app.db',
+      );
       expect(testMetadata.sqliteVersion, '3.39.0');
       expect(testMetadata.databaseSize, 524288);
       expect(testMetadata.tables, ['users', 'posts', 'comments']);
@@ -205,7 +208,7 @@ void main() {
     group('props', () {
       test('contains all fields', () {
         expect(testMetadata.props, [
-          '/data/user/0/com.example/databases/app.db',
+          '/data/user/0/com.icodeforyou/databases/app.db',
           '3.39.0',
           524288,
           ['users', 'posts', 'comments'],

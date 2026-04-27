@@ -82,6 +82,9 @@ class RailNavigationWidget extends StatelessWidget {
   final int? limit;
 
   @override
+  void init() {}
+
+  @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => RailMenuCubit(defaultIndex: defaultIndex),
