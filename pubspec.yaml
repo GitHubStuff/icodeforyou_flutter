@@ -14,7 +14,6 @@ workspace:
   - packages/edittext_popover
   - packages/extensions
   - packages/my_logger
-  - packages/overlay_host
   - packages/random_color_generator
   - packages/platform_utils
   - packages/scrolling_datetime_pickers
@@ -27,7 +26,7 @@ workspace:
   - packages/theme_manager
   - packages/theme_service
   - packages/theme_widget
-  - plugins/statusbar
+  - plugins/status_bar_chameleon
   - programs/startup_demo
   - programs/widgetbook_workspace
 

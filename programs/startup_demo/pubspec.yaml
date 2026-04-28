@@ -21,8 +21,6 @@ dependencies:
   go_router: ^17.1.0
   my_logger:
     path: ../../packages/my_logger
-  overlay_host:
-    path: ../../packages/overlay_host
   random_color_generator:
     path: ../../packages/random_color_generator
   service_locator:
@@ -31,8 +29,8 @@ dependencies:
     path: ../../packages/since_when
   since_when_widgets:
     path: ../../packages/since_when_widgets
-  statusbar:
-    path: ../../plugins/statusbar
+  status_bar_chameleon:
+    path: ../../plugins/status_bar_chameleon
   theme_manager:
     path: ../../packages/theme_manager
   theme_service:

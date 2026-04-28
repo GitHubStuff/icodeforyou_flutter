@@ -10,13 +10,14 @@ import 'package:animated_rail_menu/animated_rail_menu.dart'
         RailIcon,
         RailNavigationWidget,
         RailTransition;
+import 'package:animated_widgets/animated_widgets.dart'
+    show AnimatedOverlayCubit;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:overlay_host/overlay_host.dart'
-    show AnimatedOverlayCubit, OverlayHostCubit;
 import 'package:service_locator/service_locator.dart' show ServiceRegistry;
 import 'package:startup_demo/src/navigation/_nav_entries.dart';
-import 'package:statusbar/statusbar.dart' show StatusBar;
+import 'package:status_bar_chameleon/status_bar_chameleon.dart'
+    show StatusBarChameleon;
 import 'package:theme_manager/theme_manager.dart' show MaterialThemeCubit;
 import 'package:theme_service/material_widget.dart' show MaterialWidget;
 import 'package:theme_service/theme_service.dart'
@@ -25,9 +26,7 @@ import 'package:theme_service/theme_service.dart'
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  //if (defaultTargetPlatform == TargetPlatform.iOS) {
-  await StatusBar.setStatusBarHidden(hidden: true);
-  //}
+  await StatusBarChameleon.setStatusBarHidden(hidden: true);
 
   ServiceRegistry.R.stage(ThemeDescriptor(name: 'Theme'));
   await ServiceRegistry.R.register('Theme');
@@ -42,9 +41,6 @@ final providers = MultiBlocProvider(
     ),
     BlocProvider<AnimatedOverlayCubit>(
       create: (_) => AnimatedOverlayCubit(),
-    ),
-    BlocProvider<OverlayHostCubit>(
-      create: (_) => OverlayHostCubit(),
     ),
   ],
   child: const MaterialWidget(_homeScreen),

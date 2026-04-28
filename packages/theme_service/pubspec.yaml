@@ -8,11 +8,11 @@ environment:
   sdk: ">=3.11.0 <4.0.0"
 
 dependencies:
+  animated_widgets:
+    path: ../../packages/animated_widgets
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
-  overlay_host:
-    path: ../../packages/overlay_host
   service_locator:
     path: ../../packages/service_locator
   theme_manager: 

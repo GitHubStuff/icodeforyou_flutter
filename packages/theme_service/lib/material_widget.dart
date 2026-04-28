@@ -1,7 +1,7 @@
+import 'package:animated_widgets/animated_widgets.dart'
+    show AnimatedOverlayCubit, AnimatedOverlay;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:overlay_host/overlay_host.dart'
-    show OverlayHost, OverlayHostCubit, AnimatedOverlay;
 import 'package:theme_manager/theme_manager.dart'
     show MaterialThemeCubit, MaterialThemeState;
 
@@ -20,15 +20,15 @@ class MaterialWidget extends StatelessWidget {
           home: homeWidget,
           debugShowCheckedModeBanner: true,
           builder: (context, child) {
-            context.read<OverlayHostCubit>().showOverlay(
+            context.read<AnimatedOverlayCubit>().showOverlay(
               CircularProgressIndicator(),
             );
             Future<void>.delayed(Duration(seconds: 3), () {
               if (context.mounted) {
-                context.read<OverlayHostCubit>().removeOverlay();
+                context.read<AnimatedOverlayCubit>().removeOverlay();
               }
             });
-            return AnimatedOverlay(child: OverlayHost(child: child));
+            return AnimatedOverlay(child: child);
           },
         );
       },

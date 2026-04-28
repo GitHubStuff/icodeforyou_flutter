@@ -1,1 +1,1 @@
-export 'package:statusbar/src/statusbar.dart';
+export 'package:status_bar_chameleon/status_bar_chameleon.dart';

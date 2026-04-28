@@ -1,6 +1,6 @@
 // test/src/animated_checkbox/_dissolve_particle_test.dart
 
-import 'package:animated_widgets/src/animated_checkbox/_dissolve_particle.dart';
+import 'package:animated_widgets/src/animated_checkbox/src/_dissolve_particle.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

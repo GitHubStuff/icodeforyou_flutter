@@ -1,1 +1,7 @@
-export 'src/src.dart';
+export 'src/src.dart'
+    show
+        ContextualPosition,
+        ContextualReveal,
+        ContextualRevealDark,
+        ContextualRevealLight,
+        ContextualRevealTheme;

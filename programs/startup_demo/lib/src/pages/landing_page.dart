@@ -1,10 +1,9 @@
 // ignore_for_file: public_member_api_docs
 
-import 'package:animated_widgets/animated_widgets.dart' show GrowWidgetView;
+import 'package:animated_widgets/animated_widgets.dart'
+    show AnimatedOverlayCubit, GrowWidgetView;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show ReadContext;
-import 'package:overlay_host/overlay_host.dart' show AnimatedOverlayCubit;
-import 'package:statusbar/statusbar.dart' show StatusBar;
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -23,7 +22,9 @@ class LandingPage extends StatelessWidget {
                 final cubit = context.read<AnimatedOverlayCubit>();
                 final widget = GrowWidgetView(
                   duration: const Duration(milliseconds: 3000),
-                  onComplete: cubit.fadeOverlay,
+                  onComplete: () => cubit.fadeOverlay(
+                    duration: const Duration(milliseconds: 500),
+                  ),
                   child: const FlutterLogo(size: 300),
                 );
 
