@@ -15,6 +15,7 @@ workspace:
   - packages/extensions
   - packages/my_logger
   - packages/random_color_generator
+  - packages/remind_me
   - packages/platform_utils
   - packages/scrolling_datetime_pickers
   - packages/settings_widget

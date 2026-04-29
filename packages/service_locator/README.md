@@ -55,7 +55,7 @@ types so test assertions hold against production behavior.
 
 ### Prerequisites
 
-- Dart SDK `>=3.11.0 <4.0.0`
+- Dart SDK `>=3.22.0 <4.0.0`
 - Flutter (the package depends on `flutter_bloc` and `flutter_test`)
 
 ### Installation

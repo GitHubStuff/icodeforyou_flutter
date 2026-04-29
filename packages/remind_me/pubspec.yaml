@@ -1,6 +1,8 @@
-name: adaptive_modal
-description: "A new Flutter package project."
+name: remind_me
+description: "Package to handle scheduling local notifications"
 version: 0.0.1
+publish_to: none
+homepage:
 resolution: workspace
 
 environment:
@@ -9,6 +11,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_local_notifications: ^21.0.0
+  flutter_timezone: ^5.0.2
+  permission_handler: ^12.0.1
+  timezone: ^0.11.0
+
 
 dev_dependencies:
   flutter_test:
