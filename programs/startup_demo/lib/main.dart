@@ -14,6 +14,7 @@ import 'package:animated_widgets/animated_widgets.dart'
     show AnimatedOverlayCubit;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:remind_me/remind_me.dart' show RemindMe;
 import 'package:service_locator/service_locator.dart' show ServiceRegistry;
 import 'package:startup_demo/src/navigation/_nav_entries.dart';
 import 'package:status_bar_chameleon/status_bar_chameleon.dart'
@@ -26,8 +27,12 @@ import 'package:theme_service/theme_service.dart'
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await RemindMe.instance.init();
+  await RemindMe.instance.requestPermissions();
+  // Hide the bar with time/battery so the splash screen is on a black page
   await StatusBarChameleon.setStatusBarHidden(hidden: true);
 
+  // Lets the user set the brightness to dark, light, system
   ServiceRegistry.R.stage(ThemeDescriptor(name: 'Theme'));
   await ServiceRegistry.R.register('Theme');
 

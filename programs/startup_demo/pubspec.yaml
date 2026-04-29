@@ -23,6 +23,8 @@ dependencies:
     path: ../../packages/my_logger
   random_color_generator:
     path: ../../packages/random_color_generator
+  remind_me:
+    path: ../../packages/remind_me
   service_locator:
     path: ../../packages/service_locator
   since_when:

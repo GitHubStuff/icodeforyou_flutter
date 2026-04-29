@@ -4,6 +4,7 @@ import 'package:animated_widgets/animated_widgets.dart'
     show AnimatedOverlayCubit, GrowWidgetView;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show ReadContext;
+import 'package:remind_me/remind_me.dart' show RemindMe;
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -17,6 +18,46 @@ class LandingPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            ElevatedButton(
+              onPressed: () async {
+                final canSchedule = await RemindMe.instance
+                    .canScheduleExactAlarms();
+                if (!context.mounted) return;
+                if (!canSchedule) {
+                  final userAgreed = await showDialog<bool>(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: const Text('Permission needed'),
+                      content: const Text(
+                        'To remind you at the exact time you set, this app '
+                        'needs permission to schedule alarms. '
+                        'Tap "Open settings" and enable "Alarms & reminders".',
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx, false),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx, true),
+                          child: const Text('Open settings'),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (userAgreed != true) return;
+                  await RemindMe.instance.requestExactAlarmsPermission();
+                  return;
+                }
+
+                await RemindMe.instance.scheduleInMinutes(
+                  title: 'Reminder',
+                  body: '1-minute test reminder.',
+                  duration: const Duration(minutes: 1),
+                );
+              },
+              child: const Text('Remind me in 1 min'),
+            ),
             ElevatedButton(
               onPressed: () async {
                 final cubit = context.read<AnimatedOverlayCubit>();
