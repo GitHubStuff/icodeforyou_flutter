@@ -1,0 +1,101 @@
+# ───────── Flutter / Dart Package ─────────
+.dart_tool/
+.packages
+.pub/
+build/
+pubspec_overrides.yaml
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+
+# Generated files
+*.g.dart
+*.freezed.dart
+*.config.dart
+*.gr.dart
+*.chopper.dart
+*.mocks.dart
+
+# ───────── Example App (if present) ─────────
+example/.dart_tool/
+example/.packages
+example/.pub/
+example/build/
+example/pubspec.lock
+example/.flutter-plugins
+example/.flutter-plugins-dependencies
+example/.metadata
+example/flutter_*.yaml
+
+# Example app platform folders
+example/ios/Pods/
+example/ios/.symlinks/
+example/ios/Flutter/.generated/
+example/ios/Runner.xcworkspace/xcuserdata/
+example/ios/DerivedData/
+example/ios/Runner/GoogleService-Info.plist
+example/ios/*.xcuserstate
+
+example/android/.gradle/
+example/android/local.properties
+example/android/key.properties
+example/android/build/
+example/android/app/google-services.json
+
+example/macos/Flutter/ephemeral/
+example/linux/Flutter/ephemeral/
+example/windows/Flutter/ephemeral/
+example/web/build/
+
+# ───────── FVM ─────────
+.fvm/
+
+# ───────── IDEs ─────────
+.idea/
+.vscode/
+.fleet/
+*.iml
+*.ipr
+*.iws
+*.code-workspace
+.history/
+
+# ───────── Testing & Coverage ─────────
+coverage/
+lcov.info
+test_driver/
+integration_test/screenshots/
+**/.test_coverage.dart
+
+# ───────── Documentation ─────────
+doc/api/
+
+# ───────── Package Publishing ─────────
+.pub-cache/
+
+# ───────── Secrets & Config ─────────
+.env
+.env.local
+.env.*.local
+
+# ───────── System Files ─────────
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*.swo
+*~
+*.bak
+
+# ───────── Version Control ─────────
+*.orig
+
+# ───────── CI/CD ─────────
+*.out
+*.err
+
+# ───────── Package-Specific ─────────
+# Uncomment if you don't want to track these
+# CHANGELOG.md.backup
+# pubspec.yaml.backup

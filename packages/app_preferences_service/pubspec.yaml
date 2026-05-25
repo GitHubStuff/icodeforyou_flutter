@@ -1,0 +1,23 @@
+name: app_preferences_service
+description: "Service-locator handle and descriptor for app_preferences."
+version: 1.0.0
+resolution: workspace
+publish_to: "none"
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  app_preferences: ^1.0.0
+  flutter:
+    sdk: flutter
+  service_locator: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  shared_preferences_platform_interface: ^2.4.0
+  very_good_analysis: ^10.2.0
+
+flutter:
+  uses-material-design: true

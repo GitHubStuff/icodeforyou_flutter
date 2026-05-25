@@ -1,0 +1,26 @@
+# animated_widgets/pubspec.yaml
+
+name: animated_widgets
+description: A collection of animated Flutter widgets including grow, grow+fade, and animated checkbox effects.
+version: 1.0.0
+resolution: workspace
+publish_to: none
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  equatable: ^2.0.8
+  flutter:
+    sdk: flutter
+  slider_directional: ^1.0.0
+  widget_themes: ^1.0.0
+
+dev_dependencies:
+  bloc_test: ^10.0.0
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.2.0
+
+flutter:
+  uses-material-design: true

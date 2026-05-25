@@ -1,0 +1,26 @@
+name: since_when_widgets
+description: Reusable widgets for apps backed by the since_when_framework data layer.
+version: 1.0.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  animated_widgets: ^1.0.0
+  equatable: ^2.0.8
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.1.1
+  ice_chips: ^1.0.0
+  random_color_generator: ^1.0.0
+
+dev_dependencies:
+  bloc_test: ^10.0.0
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.2.0
+
+flutter:
+  uses-material-design: true

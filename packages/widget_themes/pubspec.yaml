@@ -1,0 +1,24 @@
+name: widget_themes
+description: "Collection of themes to reduce parameters"
+version: 1.0.0
+resolution: workspace
+publish_to: "none"
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  equatable: ^2.0.8
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.1.1
+  theme_manager: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.4
+  very_good_analysis: ^10.2.0
+
+flutter:
+  uses-material-design: true

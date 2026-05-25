@@ -1,0 +1,46 @@
+name: widgetbook_workspace
+description: "Flutter widget book"
+publish_to: 'none'
+version: 1.0.0
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  adaptive_modal: ^1.0.0
+  analog_clock_widget: ^1.0.0
+  animated_rail_menu: ^1.0.0
+  animated_widgets: ^1.0.0
+  edittext_popover: ^1.0.0
+  extensions: ^1.0.0
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.1.1
+  fpdart: ^1.2.0
+  gap: ^3.0.1
+  ice_chips: ^1.0.0
+  infinite_scroll_picking: ^1.0.0
+  infinite_scroll_picking_settings: ^1.0.0
+  random_color_generator: ^1.0.0
+  scrolling_datetime_pickers: ^1.0.0
+  settings_widget: ^1.0.0
+  since_when_widgets: ^1.0.0
+  slider_directional: ^1.0.0
+  slider_stepper: ^1.0.0
+  sqlite_viewer: ^1.0.0
+  theme_manager: ^1.0.0
+  theme_widget: ^1.0.0
+  widgetbook: ^3.23.0
+  widgetbook_annotation: ^3.11.0
+
+dev_dependencies:
+  build_runner: ^2.7.0   # dart run build_runner build --delete-conflicting-outputs
+  flutter_test:
+    sdk: flutter
+  mockito: ^5.6.4
+  very_good_analysis: ^10.2.0
+  widgetbook_generator: ^3.23.0
+
+flutter:
+  uses-material-design: true

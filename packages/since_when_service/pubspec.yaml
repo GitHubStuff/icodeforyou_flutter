@@ -1,0 +1,24 @@
+# packages/since_when_service/pubspec.yaml
+name: since_when_service
+description: Service-locator integration for the since_when_framework database layer — owns a DatabaseLifecycleCubit and exposes the live handle.
+version: 1.0.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.1.1
+  service_locator: ^1.0.0
+  since_when_framework: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.2.0
+
+flutter:
+  uses-material-design: true

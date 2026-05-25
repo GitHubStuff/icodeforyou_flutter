@@ -1,0 +1,187 @@
+# pubspec.yaml icodeforyou_flutter
+name: icodeforyou_flutter
+publish_to: none
+description: Collection of flutter packages
+version: 9.2.1
+
+workspace:
+  - packages/abstractions
+  - packages/adaptive_modal
+  - packages/analog_clock_widget
+  - packages/animated_rail_menu
+  - packages/animated_widgets
+  - packages/app_preferences
+  - packages/app_preferences_service
+  - packages/biometric_gate_service
+  - packages/biometric_gate_service_local
+  - packages/custom_widgets
+  - packages/edittext_popover
+  - packages/extensions
+  - packages/ice_chips
+  - packages/ice_chips_service
+  - packages/infinite_scroll_picking
+  - packages/infinite_scroll_picking/example
+  - packages/infinite_scroll_picking_settings
+  - packages/my_logger
+  - packages/platform_utils
+  - packages/position_popover
+  - packages/random_color_generator
+  - packages/remind_me
+  - packages/scrolling_datetime_pickers
+  - packages/service_locator
+  - packages/settings_widget
+  - packages/since_when_framework
+  - packages/since_when_service
+  - packages/since_when_widgets
+  - packages/slider_directional
+  - packages/slider_stepper
+  - packages/sqlite_viewer
+  - packages/theme_manager
+  - packages/theme_widget
+  - packages/widget_themes
+  - plugins/status_bar_chameleon
+  - plugins/status_bar_chameleon/example
+  - programs/creature_comforts
+  - programs/creature_comforts_service
+  - programs/startup_demo
+  - programs/widgetbook_workspace
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dev_dependencies:
+  melos: ^7.7.0
+
+flutter:
+  uses-material-design: true
+
+melos:
+  scripts:
+    analyze:
+      run: dart analyze .
+
+    analyze_all:
+      description: Analyze all packages
+      exec: dart analyze .
+
+    build:
+      description: Run build_runner in packages that need it
+      exec: dart run build_runner build --delete-conflicting-outputs
+      packageFilters:
+        dependsOn: "build_runner"
+
+    # ─── COVERAGE CLEAN ───────────────────────────────────────────────────────
+
+    coverage_clean:
+      description: Clean all coverage data from entire workspace
+      run: ./melos_tool/melos_test.zsh coverage_clean
+
+    # ─── PACKAGES ─────────────────────────────────────────────────────────────
+
+    test_package:
+      description: |
+        Run tests and coverage for a single package.
+        Usage: PKG=package_name melos test_package
+        Example: PKG=since_when melos test_package
+      run: ./melos_tool/melos_test.zsh test_one packages "$PKG"
+
+    test_all:
+      description: |
+        Run tests in all packages sequentially to avoid Flutter lock conflicts.
+        Usage: melos test_all
+        Fail-fast: STRICT=true melos test_all
+      run: ./melos_tool/melos_test.zsh test_all packages
+
+    test_coverage:
+      description: Run tests with coverage in all packages (auto-detects Flutter vs Dart)
+      run: ./melos_tool/melos_test.zsh test_coverage packages
+
+    coverage_merge:
+      description: Merge coverage reports from all packages into coverage/html/
+      run: ./melos_tool/melos_test.zsh coverage_merge packages
+
+    # ─── PLUGINS ─────────────────────────────────────────────────────────────
+
+    test_plugin:
+      description: |
+        Run tests and coverage for a single plugin.
+        Usage: PRG=plugin_name melos test_plugin
+        Example: PRG=status_bar_chameleon melos test_plugin
+      run: ./melos_tool/melos_test.zsh test_one plugins "$PRG"
+
+    test_plugins:
+      description: |
+        Run tests in all plugins sequentially.
+        Usage: melos test_plugins
+        Fail-fast: STRICT=true melos test_plugins
+      run: ./melos_tool/melos_test.zsh test_all plugins
+
+    test_plugin_coverage:
+      description: Run tests with coverage in all plugins
+      run: ./melos_tool/melos_test.zsh test_coverage plugins
+
+    coverage_merge_plugins:
+      description: Merge coverage reports from all plugins into coverage/plugins_html/
+      run: ./melos_tool/melos_test.zsh coverage_merge plugins
+
+    # ─── PROGRAMS ─────────────────────────────────────────────────────────────
+
+    test_program:
+      description: |
+        Run tests and coverage for a single program.
+        Usage: PRG=program_name melos test_program
+        Example: PRG=startup_demo melos test_program
+      run: ./melos_tool/melos_test.zsh test_one programs "$PRG"
+
+    test_programs:
+      description: |
+        Run tests in all programs sequentially (excludes widgetbook_workspace).
+        Usage: melos test_programs
+        Fail-fast: STRICT=true melos test_programs
+      run: ./melos_tool/melos_test.zsh test_all programs
+
+    test_programs_coverage:
+      description: Run tests with coverage in all programs (excludes widgetbook_workspace)
+      run: ./melos_tool/melos_test.zsh test_coverage programs
+
+    coverage_merge_programs:
+      description: Merge coverage reports from all programs into coverage/programs_html/
+      run: ./melos_tool/melos_test.zsh coverage_merge programs
+
+    # ─── COVERAGE ─────────────────────────────────────────────────────────────
+
+    coverage_merge_all:
+      description: Merge coverage from all packages + plugins + programs into coverage/all_html/
+      run: ./melos_tool/melos_test.zsh coverage_merge_all
+
+    # ─── WIDGETBOOK ───────────────────────────────────────────────────────────
+
+    widgetbook:
+      description: Run widgetbook for development
+      run: |
+        cd programs/widgetbook_workspace
+        flutter run -d chrome
+
+    widgetbook_build:
+      description: Build widgetbook components
+      run: |
+        cd programs/widgetbook_workspace
+        dart run build_runner build --delete-conflicting-outputs
+        echo "✅ Widgetbook build completed"
+
+    widgetbook_clean:
+      description: Clean widgetbook generated files
+      run: |
+        cd programs/widgetbook_workspace
+        dart run build_runner clean
+        echo "🧹 Widgetbook generated files cleaned"
+
+    # ─── UTILITIES ────────────────────────────────────────────────────────────
+
+    list_packages:
+      description: List all packages and programs in workspace
+      run: |
+        echo "📦 Workspace packages:"
+        find . -name "pubspec.yaml" -not -path "./pubspec.yaml" -exec dirname {} \; | sort
+dependencies:
+  widget_themes: ^1.0.0

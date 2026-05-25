@@ -1,0 +1,23 @@
+name: custom_widgets
+description: A collection of custom widgets I use often
+version: 1.0.0
+resolution: workspace
+publish_to: none
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  equatable: ^2.0.8
+  flutter:
+    sdk: flutter
+  flutter_bloc: 9.1.1
+
+dev_dependencies:
+  bloc_test: ^10.0.0
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.2.0
+
+flutter:
+  uses-material-design: true

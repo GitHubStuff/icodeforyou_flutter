@@ -1,0 +1,24 @@
+name: slider_stepper
+description: Adaptive settings modal for Flutter apps.
+version: 1.0.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  extensions: ^1.0.0
+  flutter:
+    sdk: flutter
+  gap: ^3.0.1
+  slider_directional: ^1.0.0
+  widget_themes: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.2.0
+
+flutter:
+  uses-material-design: true

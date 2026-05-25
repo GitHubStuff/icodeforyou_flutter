@@ -1,0 +1,26 @@
+name: app_preferences
+description: "Preferences abstraction with multiple backend implementations."
+version: 1.0.0
+resolution: workspace
+publish_to: "none"
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  hive_ce: ^2.19.3
+  hive_ce_flutter: ^2.3.4
+  path: ^1.9.1
+  path_provider: ^2.1.5
+  shared_preferences: ^2.5.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.5
+  very_good_analysis: ^10.2.0
+
+flutter:
+  uses-material-design: true

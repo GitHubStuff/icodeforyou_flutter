@@ -1,0 +1,21 @@
+name: platform_utils
+description: "A new Flutter package project."
+version: 1.0.0
+publish_to: none
+homepage:
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+ 
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.2.0
+
+flutter:
+  uses-material-design: true

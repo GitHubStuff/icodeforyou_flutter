@@ -1,0 +1,25 @@
+# pubspec.yaml analog_clock_widget
+# Minimal dependencies for abstractions packagename: analog_clock_widget
+
+name: analog_clock_widget
+description: "Package to handle all abstract classes"
+version: 1.0.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  abstractions: ^1.0.0
+  extensions: ^1.0.0
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.2.0
+
+flutter:
+  uses-material-design: true
