@@ -79,3 +79,19 @@ git push origin --delete feature/my-new-thing  # delete remote branch (if not au
 ```
 
 Many repos have "auto-delete head branches" enabled on the remote, in which case the remote branch is gone after merge and you only need the local cleanup.
+
+## 5 - Resetting a repo
+
+Deleteding the hidden ```.git``` file at the root of the repo
+
+```zsh
+rm -rf .git
+
+git init
+git add -A
+git commit -m "Initial commit"
+
+git remote add origin https://github.com/GitHubStuff/icodeforyou_flutter.git
+git branch -M main
+git push -f origin main
+```
