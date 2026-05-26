@@ -10,10 +10,10 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
+  custom_widgets: ^1.0.0
   equatable: ^2.0.8
   flutter:
     sdk: flutter
-  slider_directional: ^1.0.0
   widget_themes: ^1.0.0
 
 dev_dependencies:

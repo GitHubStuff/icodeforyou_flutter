@@ -13,8 +13,7 @@ dependencies:
   app_preferences: ^1.0.0
   app_preferences_service: ^1.0.0
   custom_widgets: ^1.0.0
-  edittext_popover: ^1.0.0
-  extensions: ^1.0.3
+  extensions: ^1.0.4
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1

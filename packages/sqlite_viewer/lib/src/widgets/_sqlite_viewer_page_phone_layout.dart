@@ -85,27 +85,53 @@ class _PhoneLayoutState extends State<_PhoneLayout> {
     return switch (state) {
       ViewerDisconnected() => const _DisconnectedView(),
       ViewerConnecting() => const _LoadingView(message: 'Connecting...'),
-      ViewerConnectionFailed(:final failure) =>
-        _ErrorView(message: failure.message),
-      MetadataLoading(:final metadata) =>
-        _buildConnectedBody(context, state, metadata),
-      MetadataLoaded(:final metadata) =>
-        _buildConnectedBody(context, state, metadata),
-      MetadataLoadFailed(:final metadata) => metadata != null
-          ? _buildConnectedBody(context, state, metadata)
-          : const _DisconnectedView(),
-      TableDetailLoading(:final metadata) =>
-        _buildConnectedBody(context, state, metadata),
-      TableDetailLoaded(:final metadata) =>
-        _buildConnectedBody(context, state, metadata),
-      TableDetailLoadFailed(:final metadata) =>
-        _buildConnectedBody(context, state, metadata),
-      QueryExecuting(:final metadata) =>
-        _buildConnectedBody(context, state, metadata),
-      QueryResultLoaded(:final metadata) =>
-        _buildConnectedBody(context, state, metadata),
-      QueryFailed(:final metadata) =>
-        _buildConnectedBody(context, state, metadata),
+      ViewerConnectionFailed(:final failure) => _ErrorView(
+        message: failure.message,
+      ),
+      MetadataLoading(:final metadata) => _buildConnectedBody(
+        context,
+        state,
+        metadata,
+      ),
+      MetadataLoaded(:final metadata) => _buildConnectedBody(
+        context,
+        state,
+        metadata,
+      ),
+      MetadataLoadFailed(:final metadata) =>
+        metadata != null
+            ? _buildConnectedBody(context, state, metadata)
+            : const _DisconnectedView(),
+      TableDetailLoading(:final metadata) => _buildConnectedBody(
+        context,
+        state,
+        metadata,
+      ),
+      TableDetailLoaded(:final metadata) => _buildConnectedBody(
+        context,
+        state,
+        metadata,
+      ),
+      TableDetailLoadFailed(:final metadata) => _buildConnectedBody(
+        context,
+        state,
+        metadata,
+      ),
+      QueryExecuting(:final metadata) => _buildConnectedBody(
+        context,
+        state,
+        metadata,
+      ),
+      QueryResultLoaded(:final metadata) => _buildConnectedBody(
+        context,
+        state,
+        metadata,
+      ),
+      QueryFailed(:final metadata) => _buildConnectedBody(
+        context,
+        state,
+        metadata,
+      ),
     };
   }
 
@@ -155,8 +181,8 @@ class _PhoneLayoutState extends State<_PhoneLayout> {
   Widget _buildDataTab(BuildContext context, SqliteViewerState state) {
     return switch (state) {
       TableDetailLoading(:final tableName) => _LoadingView(
-          message: 'Loading $tableName...',
-        ),
+        message: 'Loading $tableName...',
+      ),
       TableDetailLoaded(
         :final tableName,
         :final columns,
@@ -184,21 +210,21 @@ class _PhoneLayoutState extends State<_PhoneLayout> {
           textHandling: widget.textHandling,
         ),
       TableDetailLoadFailed(:final tableName, :final failure) => _ErrorView(
-          message: 'Failed to load $tableName: ${failure.message}',
-          onRetry: () {
-            unawaited(
-              context.read<SqliteViewerCubit>().selectTable(tableName),
-            );
-          },
-        ),
+        message: 'Failed to load $tableName: ${failure.message}',
+        onRetry: () {
+          unawaited(
+            context.read<SqliteViewerCubit>().selectTable(tableName),
+          );
+        },
+      ),
       QueryResultLoaded(:final query, :final columns, :final rows) =>
         _buildQueryResult(context, query, columns, rows),
       QueryFailed(:final query, :final failure) => _ErrorView(
-          message: 'Query failed: ${failure.message}',
-          onRetry: () {
-            unawaited(context.read<SqliteViewerCubit>().executeQuery(query));
-          },
-        ),
+        message: 'Query failed: ${failure.message}',
+        onRetry: () {
+          unawaited(context.read<SqliteViewerCubit>().executeQuery(query));
+        },
+      ),
       _ => const _EmptyDataView(),
     };
   }
@@ -236,14 +262,15 @@ class _PhoneLayoutState extends State<_PhoneLayout> {
         Expanded(
           child: _buildDataTab(context, state),
         ),
-        SqliteViewerQueryInput(
-          onExecute: (sql) {
-            unawaited(context.read<SqliteViewerCubit>().executeQuery(sql));
-            setState(() => _currentIndex = 1);
-          },
-          isExecuting: isExecuting,
-          initialQuery: lastQuery,
-        ),
+        const SqlCommand(),
+        // SqliteViewerQueryInput(
+        //   onExecute: (sql) {
+        //     unawaited(context.read<SqliteViewerCubit>().executeQuery(sql));
+        //     setState(() => _currentIndex = 1);
+        //   },
+        //   isExecuting: isExecuting,
+        //   initialQuery: lastQuery,
+        // ),
       ],
     );
   }

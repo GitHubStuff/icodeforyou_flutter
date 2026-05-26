@@ -2,6 +2,7 @@
 
 library;
 
+import 'package:extensions/placement/placement.dart';
 import 'package:flutter/material.dart';
 
 part 'src/popover_position.dart';

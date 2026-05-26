@@ -1,7 +1,7 @@
 # extensions/pubspec.yaml - extensions
 name: extensions
 description: "Collection of extensions on various dart types like String, int, double, Color..."
-version: 1.0.3
+version: 1.0.4
 resolution: workspace
 
 environment:

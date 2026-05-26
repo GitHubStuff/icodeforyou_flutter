@@ -15,7 +15,6 @@ workspace:
   - packages/biometric_gate_service
   - packages/biometric_gate_service_local
   - packages/custom_widgets
-  - packages/edittext_popover
   - packages/extensions
   - packages/ice_chips
   - packages/ice_chips_service
@@ -33,8 +32,6 @@ workspace:
   - packages/since_when_framework
   - packages/since_when_service
   - packages/since_when_widgets
-  - packages/slider_directional
-  - packages/slider_stepper
   - packages/sqlite_viewer
   - packages/theme_manager
   - packages/theme_widget

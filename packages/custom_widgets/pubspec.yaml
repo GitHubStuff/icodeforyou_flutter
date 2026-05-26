@@ -9,9 +9,11 @@ environment:
 
 dependencies:
   equatable: ^2.0.8
+  extensions: ^1.0.4
   flutter:
     sdk: flutter
   flutter_bloc: 9.1.1
+  platform_utils: ^1.0.0
 
 dev_dependencies:
   bloc_test: ^10.0.0

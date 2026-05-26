@@ -2,9 +2,6 @@
 
 part of 'package:position_popover/position_popover.dart';
 
-/// The side of the anchor a [PositionPopover] prefers to occupy.
-enum _AnchorSide { left, right, top, bottom, center }
-
 /// Describes where a [PositionPopover] should sit.
 ///
 /// Either anchored to a target widget (via its [GlobalKey]) on a preferred
@@ -13,7 +10,7 @@ enum _AnchorSide { left, right, top, bottom, center }
 /// falls back to centering.
 class PopoverPosition {
   const PopoverPosition._({
-    required this._side,
+    required this._placement,
     this._anchorKey,
   });
 
@@ -21,7 +18,7 @@ class PopoverPosition {
   ///
   /// Fallback chain: left → below → above → center.
   factory PopoverPosition.left(GlobalKey anchorKey) => PopoverPosition._(
-    side: _AnchorSide.left,
+    placement: .left,
     anchorKey: anchorKey,
   );
 
@@ -29,7 +26,7 @@ class PopoverPosition {
   ///
   /// Fallback chain: right → below → above → center.
   factory PopoverPosition.right(GlobalKey anchorKey) => PopoverPosition._(
-    side: _AnchorSide.right,
+    placement: .right,
     anchorKey: anchorKey,
   );
 
@@ -37,7 +34,7 @@ class PopoverPosition {
   ///
   /// Fallback chain: above → below → center.
   factory PopoverPosition.above(GlobalKey anchorKey) => PopoverPosition._(
-    side: _AnchorSide.top,
+    placement: .top,
     anchorKey: anchorKey,
   );
 
@@ -45,50 +42,32 @@ class PopoverPosition {
   ///
   /// Fallback chain: below → above → center.
   factory PopoverPosition.below(GlobalKey anchorKey) => PopoverPosition._(
-    side: _AnchorSide.bottom,
+    placement: .bottom,
     anchorKey: anchorKey,
   );
 
   /// Center the popover on the screen, ignoring any anchor.
   factory PopoverPosition.center() => const PopoverPosition._(
-    side: _AnchorSide.center,
+    placement: .center,
   );
 
-  final _AnchorSide _side;
+  final Placement _placement;
   final GlobalKey? _anchorKey;
 
   /// Ordered sides to try; the first whose rect fits inside the safe area
-  /// wins. Always terminates in [_AnchorSide.center].
-  List<_AnchorSide> get _fallbackChain {
-    switch (_side) {
-      case _AnchorSide.left:
-        return const [
-          _AnchorSide.left,
-          _AnchorSide.bottom,
-          _AnchorSide.top,
-          _AnchorSide.center,
-        ];
-      case _AnchorSide.right:
-        return const [
-          _AnchorSide.right,
-          _AnchorSide.bottom,
-          _AnchorSide.top,
-          _AnchorSide.center,
-        ];
-      case _AnchorSide.top:
-        return const [
-          _AnchorSide.top,
-          _AnchorSide.bottom,
-          _AnchorSide.center,
-        ];
-      case _AnchorSide.bottom:
-        return const [
-          _AnchorSide.bottom,
-          _AnchorSide.top,
-          _AnchorSide.center,
-        ];
-      case _AnchorSide.center:
-        return const [_AnchorSide.center];
+  /// wins. Always terminates in [Placement.center].
+  List<Placement> get _fallbackChain {
+    switch (_placement) {
+      case .left:
+        return const [.left, .bottom, .top, .center];
+      case .right:
+        return const [.right, .bottom, .top, .center];
+      case .top:
+        return const [.top, .bottom, .center];
+      case .bottom:
+        return const [.bottom, .top, .center];
+      case .center:
+        return const [.center];
     }
   }
 

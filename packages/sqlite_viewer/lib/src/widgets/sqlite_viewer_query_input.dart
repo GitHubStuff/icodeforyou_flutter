@@ -1,6 +1,5 @@
 // packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_query_input.dart
-
-import 'package:edittext_popover/edittext_popover.dart';
+/*
 import 'package:flutter/material.dart';
 
 import 'package:sqlite_viewer/src/utils/query_validator.dart';
@@ -351,3 +350,4 @@ class _SqliteViewerQueryInputState extends State<SqliteViewerQueryInput> {
     );
   }
 }
+*/

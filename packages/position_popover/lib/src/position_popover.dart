@@ -95,7 +95,7 @@ class _PositionPopoverLayer extends StatelessWidget {
         spec.childSize ?? Size(safeArea.width * 0.8, safeArea.height * 0.5);
 
     Rect? anchorRect;
-    if (position._side != _AnchorSide.center) {
+    if (position._placement != Placement.center) {
       anchorRect = position._anchorRect();
 
       final anchorVisible = anchorRect != null && anchorRect.overlaps(safeArea);
@@ -144,7 +144,7 @@ class _PopoverLayoutDelegate extends SingleChildLayoutDelegate {
     required this.maxSize,
   });
 
-  final List<_AnchorSide> chain;
+  final List<Placement> chain;
   final Rect? anchor;
   final Rect bounds;
   final Size maxSize;
@@ -171,12 +171,12 @@ class _PopoverLayoutDelegate extends SingleChildLayoutDelegate {
     return _centerRect(childSize).topLeft;
   }
 
-  Rect _rectForSide(_AnchorSide side, Size size) {
+  Rect _rectForSide(Placement placement, Size size) {
     final anchorRect = anchor;
     if (anchorRect == null) return _centerRect(size);
 
-    switch (side) {
-      case _AnchorSide.left:
+    switch (placement) {
+      case .left:
         final top = _clamp(
           anchorRect.center.dy - size.height / 2,
           bounds.top,
@@ -188,14 +188,14 @@ class _PopoverLayoutDelegate extends SingleChildLayoutDelegate {
           size.width,
           size.height,
         );
-      case _AnchorSide.right:
+      case .right:
         final top = _clamp(
           anchorRect.center.dy - size.height / 2,
           bounds.top,
           bounds.bottom - size.height,
         );
         return Rect.fromLTWH(anchorRect.right, top, size.width, size.height);
-      case _AnchorSide.top:
+      case .top:
         final left = _clamp(
           anchorRect.center.dx - size.width / 2,
           bounds.left,
@@ -207,14 +207,14 @@ class _PopoverLayoutDelegate extends SingleChildLayoutDelegate {
           size.width,
           size.height,
         );
-      case _AnchorSide.bottom:
+      case .bottom:
         final left = _clamp(
           anchorRect.center.dx - size.width / 2,
           bounds.left,
           bounds.right - size.width,
         );
         return Rect.fromLTWH(left, anchorRect.bottom, size.width, size.height);
-      case _AnchorSide.center:
+      case .center:
         return _centerRect(size);
     }
   }

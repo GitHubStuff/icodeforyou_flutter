@@ -1,8 +1,8 @@
-// ignore_for_file: public_member_api_docs
-
+// packages/extensions/lib/haptics/haptic_intensity.dart
 import 'dart:async' show unawaited;
 
 import 'package:flutter/services.dart' show HapticFeedback;
+import 'package:flutter/widgets.dart' show ValueChanged, VoidCallback;
 
 /// The type of haptic feedback to trigger on button press.
 enum HapticIntensity {
@@ -22,9 +22,9 @@ enum HapticIntensity {
   vibrate,
 
   /// No vibration
-  none
-  ;
+  none;
 
+  /// Triggers the haptic feedback for this intensity level.
   void trigger() {
     switch (this) {
       case .light:
@@ -40,5 +40,31 @@ enum HapticIntensity {
       case .none:
         return;
     }
+  }
+
+  /// Wraps [callback] so this haptic fires immediately before it.
+  ///
+  /// Returns `null` when [callback] is `null`, preserving the
+  /// disabled state of the button.
+  VoidCallback? wrap(VoidCallback? callback) {
+    if (callback == null) {
+      return null;
+    }
+    return () {
+      trigger();
+      callback();
+    };
+  }
+
+  /// Like [wrap] but for callbacks that take a value, e.g.
+  /// `SegmentedButton.onSelectionChanged`.
+  ValueChanged<T>? wrapValue<T>(ValueChanged<T>? callback) {
+    if (callback == null) {
+      return null;
+    }
+    return (value) {
+      trigger();
+      callback(value);
+    };
   }
 }

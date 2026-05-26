@@ -78,7 +78,7 @@ class SqlWidget01 extends StatelessWidget {
   );
 
   @override
-  Widget build(BuildContext context) => SqlTextField(
+  Widget build(BuildContext context) => ExpandingTextField(
     controller: _textEditingController,
     onChanged: (txt) {
       debugPrint('1- $txt');
@@ -94,7 +94,7 @@ class SqlWidget02 extends StatelessWidget {
   );
 
   @override
-  Widget build(BuildContext context) => SqlTextField(
+  Widget build(BuildContext context) => ExpandingTextField(
     controller: _textEditingController,
     onChanged: (txt) {
       debugPrint('2- $txt');
@@ -110,7 +110,7 @@ class SqlWidget03 extends StatelessWidget {
   );
 
   @override
-  Widget build(BuildContext context) => SqlTextField(
+  Widget build(BuildContext context) => ExpandingTextField(
     controller: _textEditingController,
     onChanged: (txt) {
       debugPrint('3- $txt');
@@ -128,7 +128,7 @@ class SqlWidget04 extends StatelessWidget {
   );
 
   @override
-  Widget build(BuildContext context) => SqlTextField(
+  Widget build(BuildContext context) => ExpandingTextField(
     controller: _textEditingController,
     onChanged: (txt) {
       debugPrint('3- $txt');
@@ -148,7 +148,7 @@ class AboveWidget extends StatelessWidget {
       position: PopoverPosition.above(leftKey),
       child: ColoredBox(
         color: Colors.grey,
-        child: StepperCrossfade(
+        child: CrossFadeWidgets(
           duration: const Duration(milliseconds: 500),
           onIndexChanged: (indx) {
             debugPrint('Index $indx');

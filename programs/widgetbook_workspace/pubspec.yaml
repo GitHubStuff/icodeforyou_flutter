@@ -12,7 +12,7 @@ dependencies:
   analog_clock_widget: ^1.0.0
   animated_rail_menu: ^1.0.0
   animated_widgets: ^1.0.0
-  edittext_popover: ^1.0.0
+  custom_widgets: ^1.0.0
   extensions: ^1.0.0
   flutter:
     sdk: flutter
@@ -26,8 +26,6 @@ dependencies:
   scrolling_datetime_pickers: ^1.0.0
   settings_widget: ^1.0.0
   since_when_widgets: ^1.0.0
-  slider_directional: ^1.0.0
-  slider_stepper: ^1.0.0
   sqlite_viewer: ^1.0.0
   theme_manager: ^1.0.0
   theme_widget: ^1.0.0

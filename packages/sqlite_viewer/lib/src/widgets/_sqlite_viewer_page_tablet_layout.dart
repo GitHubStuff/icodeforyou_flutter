@@ -82,18 +82,19 @@ class _TabletLayout extends StatelessWidget {
           child: Column(
             children: [
               Expanded(child: _buildMainContent(context, state)),
-              if (showQueryInput)
-                SqliteViewerQueryInput(
-                  onExecute: (sql) {
-                    unawaited(
-                      context.read<SqliteViewerCubit>().executeQuery(sql),
-                    );
-                  },
-                  isExecuting: state is QueryExecuting,
-                  initialQuery: _getLastQuery(state),
-                  maxLines: 3,
-                  minLines: 2,
-                ),
+              if (showQueryInput) const SqlCommand(),
+              //if (showQueryInput)
+                // SqliteViewerQueryInput(
+                //   onExecute: (sql) {
+                //     unawaited(
+                //       context.read<SqliteViewerCubit>().executeQuery(sql),
+                //     );
+                //   },
+                //   isExecuting: state is QueryExecuting,
+                //   initialQuery: _getLastQuery(state),
+                //   maxLines: 3,
+                //   minLines: 2,
+                //),
             ],
           ),
         ),

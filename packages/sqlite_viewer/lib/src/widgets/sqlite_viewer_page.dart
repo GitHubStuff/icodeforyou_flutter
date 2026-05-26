@@ -12,8 +12,8 @@ import 'package:sqlite_viewer/src/cubit/sqlite_viewer_state.dart';
 import 'package:sqlite_viewer/src/models/database_metadata.dart';
 import 'package:sqlite_viewer/src/models/text_handling.dart';
 import 'package:sqlite_viewer/src/widgets/display_query_widget.dart';
+import 'package:sqlite_viewer/src/widgets/sql_command.dart' show SqlCommand;
 import 'package:sqlite_viewer/src/widgets/sqlite_viewer_metadata_panel.dart';
-import 'package:sqlite_viewer/src/widgets/sqlite_viewer_query_input.dart';
 import 'package:sqlite_viewer/src/widgets/sqlite_viewer_table_detail.dart';
 
 part '_sqlite_viewer_page_helper_views.dart';

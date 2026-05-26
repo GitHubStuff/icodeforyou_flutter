@@ -40,6 +40,7 @@ export 'src/models/text_handling.dart';
 
 // Widgets
 export 'src/widgets/display_query_widget.dart';
+export 'src/widgets/sql_command.dart';
 export 'src/widgets/sqlite_viewer_metadata_panel.dart';
 export 'src/widgets/sqlite_viewer_page.dart';
 export 'src/widgets/sqlite_viewer_query_input.dart';

@@ -2,9 +2,9 @@
 
 // ignore_for_file: public_member_api_docs
 
-import 'package:edittext_popover/edittext_popover.dart' show EditorTextField;
 import 'package:flutter/material.dart';
 import 'package:since_when_framework/database.dart' show DatabaseHandle;
+import 'package:sqlite_viewer/sqlite_viewer.dart' show SqlCommand;
 import 'package:startup_demo/src/pages/database_page/sql_pad/sql_result.dart';
 
 /// SQL pad — only visible when the database is `DatabaseReady`.
@@ -128,16 +128,17 @@ class _SqlPadState extends State<SqlPad> {
               style: theme.textTheme.bodySmall,
             ),
             const SizedBox(height: 12),
-            EditorTextField(
-              controller: _sqlController,
-              style: const TextStyle(fontFamily: 'monospace'),
-              editorTextStyle: const TextStyle(fontFamily: 'monospace'),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                isDense: true,
-                hintText: 'Tap to edit SQL…',
-              ),
-            ),
+            const SqlCommand(),
+            // EditorTextField(
+            //   controller: _sqlController,
+            //   style: const TextStyle(fontFamily: 'monospace'),
+            //   editorTextStyle: const TextStyle(fontFamily: 'monospace'),
+            //   decoration: const InputDecoration(
+            //     border: OutlineInputBorder(),
+            //     isDense: true,
+            //     hintText: 'Tap to edit SQL…',
+            //   ),
+            // ),
             const SizedBox(height: 12),
             Wrap(
               spacing: 8,

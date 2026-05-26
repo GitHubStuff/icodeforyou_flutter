@@ -8,12 +8,13 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
-  edittext_popover: ^1.0.0
+  custom_widgets: ^1.0.0
   equatable: ^2.0.8
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
   fpdart: ^1.2.0
+  position_popover: ^1.0.0
   sqflite: ^2.4.2+1
 
 dev_dependencies:
