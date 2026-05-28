@@ -14,6 +14,7 @@ dependencies:
     sdk: flutter
   flutter_bloc: 9.1.1
   platform_utils: ^1.0.0
+  status_bar_chameleon: ^1.0.0
 
 dev_dependencies:
   bloc_test: ^10.0.0

@@ -2,10 +2,13 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:custom_widgets/custom_widgets.dart'
-    show ExpandingTextField, SaveCancelBar, UniformCluster;
+    show
+        ButtonPair,
+        ExpandingTextField,
+        PopoverHandle,
+        PositionPopover,
+        UniformCluster;
 import 'package:flutter/material.dart';
-import 'package:position_popover/position_popover.dart'
-    show PopoverHandle, PositionPopover;
 
 const TextStyle _style = TextStyle(
   fontSize: 18,
@@ -62,11 +65,11 @@ class SqlCommand extends StatelessWidget {
   }
 
   Widget _bar() {
-    return SaveCancelBar(
-      onCancel: () {
+    return ButtonPair(
+      onSecondary: () {
         _popoverHandle?.dismiss();
       },
-      onSave: () {
+      onPrimary: () {
         _popoverHandle?.dismiss();
       },
     );

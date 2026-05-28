@@ -23,3 +23,4 @@ export 'src/length_colored_border_field/color_point_ramp.dart'
 export 'src/length_colored_border_field/length_colored_border_field.dart'
     show LengthColoredBorderField;
 export 'src/pulse_widget/pulse_widget.dart' show PulseWidget;
+export 'src/splash_widget/splash_widget.dart' show SplashWidget;

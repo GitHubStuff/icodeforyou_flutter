@@ -17,7 +17,6 @@ export 'package:infinite_scroll_picking/infinite_scroll_picking.dart';
 export 'package:infinite_scroll_picking_settings/infinite_scroll_picking_settings.dart';
 export 'package:my_logger/my_logger.dart';
 export 'package:platform_utils/platform_utils.dart';
-export 'package:position_popover/position_popover.dart';
 export 'package:random_color_generator/random_color_generator.dart';
 export 'package:remind_me/remind_me.dart';
 export 'package:scrolling_datetime_pickers/scrolling_datetime_pickers.dart';

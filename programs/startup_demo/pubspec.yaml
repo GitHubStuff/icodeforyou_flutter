@@ -22,7 +22,6 @@ dependencies:
   go_router: ^17.1.0
   ice_chips: ^1.0.0
   my_logger: ^1.0.0
-  position_popover: ^1.0.0
   random_color_generator: ^1.0.0
   remind_me: ^1.0.0
   service_locator: ^1.0.0

@@ -7,7 +7,7 @@ import 'package:ice_chips/ice_chips.dart' show IceChipsTray, IceChipsTrayCubit, 
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
-import '_sample_chips.dart';
+import 'sample_chips.dart';
 
 @widgetbook.UseCase(
   name: 'Default',

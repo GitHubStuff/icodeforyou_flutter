@@ -27,21 +27,6 @@ abstract class ExtendedStatefulWidget<T extends StatefulWidget> extends State<T>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {}
 
-  /*
-Ensures Updated Data: This method guarantees that the MediaQuery.of(context)
-reflects the latest device metrics before calling the refresh method on your
-MediaQueryCubit.
-
-Avoids Overlap: Even though addPostFrameCallback is called each time 
-didChangeMetrics is invoked, the callback itself is only run once per frame. 
-This approach doesn't lead to callbacks stacking up because each is only
-executed after the metrics have changed and the frame has been processed.
-
-Performance: This method is efficient and commonly used in Flutter applications
-for handling updates based on screen metrics or orientation changes. It does not
-significantly affect performance as it only schedules a single callback to run
-after the current frame.
-*/
   @mustCallSuper
   @override
   void didChangeMetrics() {

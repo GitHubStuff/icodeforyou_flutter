@@ -26,6 +26,7 @@ dependencies:
   scrolling_datetime_pickers: ^1.0.0
   settings_widget: ^1.0.0
   since_when_widgets: ^1.0.0
+  status_bar_chameleon: ^1.0.0
   sqlite_viewer: ^1.0.0
   theme_manager: ^1.0.0
   theme_widget: ^1.0.0

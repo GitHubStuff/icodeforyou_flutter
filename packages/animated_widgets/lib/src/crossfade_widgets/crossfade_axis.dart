@@ -8,9 +8,4 @@ enum CrossFadeAxis {
 
   /// Forward steps move left; min sits on the right.
   right;
-
-  // SliderOrientation get _sliderDirection => switch (this) {
-  //   CrossFadeAxis.left => SliderOrientation.left,
-  //   CrossFadeAxis.right => SliderOrientation.right,
-  // };
 }

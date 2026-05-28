@@ -8,7 +8,6 @@ import 'package:extensions/extensions.dart' show ColorExtension;
 import 'package:extensions/widget_ext/widget_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart' show Gap;
-import 'package:position_popover/position_popover.dart';
 import 'package:startup_demo/src/pages/analytics_page/scrollable_content_widget.dart';
 
 const TextStyle _buttonStyle = TextStyle(color: Colors.green, fontSize: 24);

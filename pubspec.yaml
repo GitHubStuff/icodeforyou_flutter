@@ -23,7 +23,6 @@ workspace:
   - packages/infinite_scroll_picking_settings
   - packages/my_logger
   - packages/platform_utils
-  - packages/position_popover
   - packages/random_color_generator
   - packages/remind_me
   - packages/scrolling_datetime_pickers

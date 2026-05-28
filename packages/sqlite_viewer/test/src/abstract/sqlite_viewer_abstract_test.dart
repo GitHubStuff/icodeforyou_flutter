@@ -1,238 +1,195 @@
 // test/src/abstract/sqlite_viewer_abstract_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:sqlite_viewer/sqlite_viewer.dart';
 
 import '../../helpers/mock_sqlite_viewer_source.dart';
 
 void main() {
   group('SqliteViewerAbstract', () {
-    // Tests that the abstract class contract is properly implemented
-    // by using the mock implementation
+    test('MockSqliteViewerSource implements the interface', () {
+      final source = MockSqliteViewerSource();
+      expect(source, isA<SqliteViewerAbstract>());
+    });
 
-    late MockSqliteViewerSource source;
-
-    setUp(() {
-      source = MockSqliteViewerSource(
-        fullPath: '/data/test.db',
-        sqliteVersion: '3.40.0',
-        databaseSize: 2048,
-        tableNames: ['users', 'products'],
-        rowCounts: {'users': 50, 'products': 100},
-        columnNamesMap: {
-          'users': ['id', 'name'],
-          'products': ['id', 'title', 'price'],
-        },
-        pragmaResults: {
-          'users_tableInfo': [
-            {'cid': 0, 'name': 'id', 'type': 'INTEGER'},
-          ],
-        },
-        selectResults: {
-          'SELECT 1': [
-            {'1': 1},
-          ],
-        },
+    test('returns Right with fullPath on success', () async {
+      final source = MockSqliteViewerSource(fullPath: '/db/test.db');
+      final result = await source.getFullPath();
+      expect(result, isA<Right<SqliteViewerFailure, String>>());
+      expect(
+        result.match((_) => '', (p) => p),
+        '/db/test.db',
       );
     });
 
-    group('getFullPath', () {
-      test('returns Right with path on success', () async {
-        final result = await source.getFullPath();
-
-        expect(result.isRight(), isTrue);
-        expect(result.getOrElse((_) => ''), '/data/test.db');
-      });
-
-      test('returns Left with failure on error', () async {
-        source.getFullPathFailure = const ViewerDatabaseNotOpen();
-
-        final result = await source.getFullPath();
-
-        expect(result.isLeft(), isTrue);
-        result.match(
-          (failure) => expect(failure, const ViewerDatabaseNotOpen()),
-          (_) => fail('Should be Left'),
-        );
-      });
+    test('returns Left when getFullPathFailure is set', () async {
+      final source = MockSqliteViewerSource()
+        ..getFullPathFailure = const ViewerDatabaseNotOpen();
+      final result = await source.getFullPath();
+      expect(result, isA<Left<SqliteViewerFailure, String>>());
     });
 
-    group('getSqliteVersion', () {
-      test('returns Right with version on success', () async {
-        final result = await source.getSqliteVersion();
-
-        expect(result.isRight(), isTrue);
-        expect(result.getOrElse((_) => ''), '3.40.0');
-      });
-
-      test('returns Left with failure on error', () async {
-        source.getSqliteVersionFailure =
-            const ViewerMetadataFailed('version', 'error');
-
-        final result = await source.getSqliteVersion();
-
-        expect(result.isLeft(), isTrue);
-      });
+    test('returns Right with sqliteVersion on success', () async {
+      final source = MockSqliteViewerSource(sqliteVersion: '3.42.0');
+      final result = await source.getSqliteVersion();
+      expect(result.match((_) => '', (v) => v), '3.42.0');
     });
 
-    group('getDatabaseSize', () {
-      test('returns Right with size on success', () async {
-        final result = await source.getDatabaseSize();
-
-        expect(result.isRight(), isTrue);
-        expect(result.getOrElse((_) => 0), 2048);
-      });
-
-      test('returns Left with failure on error', () async {
-        source.getDatabaseSizeFailure =
-            const ViewerMetadataFailed('size', 'error');
-
-        final result = await source.getDatabaseSize();
-
-        expect(result.isLeft(), isTrue);
-      });
+    test('returns Left when getSqliteVersionFailure is set', () async {
+      final source = MockSqliteViewerSource()
+        ..getSqliteVersionFailure =
+            const ViewerMetadataFailed('version', 'boom');
+      final result = await source.getSqliteVersion();
+      expect(result.isLeft(), isTrue);
     });
 
-    group('getTableNames', () {
-      test('returns Right with table names on success', () async {
-        final result = await source.getTableNames();
-
-        expect(result.isRight(), isTrue);
-        expect(result.getOrElse((_) => []), ['users', 'products']);
-      });
-
-      test('returns Left with failure on error', () async {
-        source.getTableNamesFailure =
-            const ViewerMetadataFailed('tables', 'error');
-
-        final result = await source.getTableNames();
-
-        expect(result.isLeft(), isTrue);
-      });
+    test('returns Right with databaseSize on success', () async {
+      final source = MockSqliteViewerSource(databaseSize: 8192);
+      final result = await source.getDatabaseSize();
+      expect(result.match((_) => 0, (s) => s), 8192);
     });
 
-    group('getRowCount', () {
-      test('returns Right with count on success', () async {
-        final result = await source.getRowCount('users');
-
-        expect(result.isRight(), isTrue);
-        expect(result.getOrElse((_) => 0), 50);
-      });
-
-      test('returns Left with TableNotFound for unknown table', () async {
-        final result = await source.getRowCount('unknown');
-
-        expect(result.isLeft(), isTrue);
-        result.match(
-          (failure) => expect(failure, isA<ViewerTableNotFound>()),
-          (_) => fail('Should be Left'),
-        );
-      });
-
-      test('returns Left with failure on error', () async {
-        source.getRowCountFailure =
-            const ViewerQueryFailed('COUNT', 'error');
-
-        final result = await source.getRowCount('users');
-
-        expect(result.isLeft(), isTrue);
-      });
+    test('returns Left when getDatabaseSizeFailure is set', () async {
+      final source = MockSqliteViewerSource()
+        ..getDatabaseSizeFailure = const ViewerMetadataFailed('size', 'boom');
+      final result = await source.getDatabaseSize();
+      expect(result.isLeft(), isTrue);
     });
 
-    group('getColumnNames', () {
-      test('returns Right with column names on success', () async {
-        final result = await source.getColumnNames('users');
-
-        expect(result.isRight(), isTrue);
-        expect(result.getOrElse((_) => []), ['id', 'name']);
-      });
-
-      test('returns Left with TableNotFound for unknown table', () async {
-        final result = await source.getColumnNames('unknown');
-
-        expect(result.isLeft(), isTrue);
-        result.match(
-          (failure) => expect(failure, isA<ViewerTableNotFound>()),
-          (_) => fail('Should be Left'),
-        );
-      });
-
-      test('returns Left with failure on error', () async {
-        source.getColumnNamesFailure = const ViewerTableNotFound('users');
-
-        final result = await source.getColumnNames('users');
-
-        expect(result.isLeft(), isTrue);
-      });
+    test('returns Right with tableNames on success', () async {
+      final source = MockSqliteViewerSource(tableNames: const ['a', 'b']);
+      final result = await source.getTableNames();
+      expect(result.match((_) => <String>[], (t) => t), ['a', 'b']);
     });
 
-    group('getPragma', () {
-      test('returns Right with pragma results on success', () async {
-        final result = await source.getPragma(
-          tableName: 'users',
-          key: PragmaKey.tableInfo,
-        );
-
-        expect(result.isRight(), isTrue);
-        final data = result.getOrElse((_) => []);
-        expect(data.length, 1);
-        expect(data.first['name'], 'id');
-      });
-
-      test('returns empty list for unknown pragma key', () async {
-        final result = await source.getPragma(
-          tableName: 'users',
-          key: PragmaKey.indexList,
-        );
-
-        expect(result.isRight(), isTrue);
-        expect(result.getOrElse((_) => [{'x': 1}]), isEmpty);
-      });
-
-      test('returns Left with failure on error', () async {
-        source.getPragmaFailure =
-            const ViewerPragmaFailed('users', 'table_info', 'error');
-
-        final result = await source.getPragma(
-          tableName: 'users',
-          key: PragmaKey.tableInfo,
-        );
-
-        expect(result.isLeft(), isTrue);
-      });
+    test('returns Left when getTableNamesFailure is set', () async {
+      final source = MockSqliteViewerSource()
+        ..getTableNamesFailure = const ViewerMetadataFailed('tables', 'boom');
+      final result = await source.getTableNames();
+      expect(result.isLeft(), isTrue);
     });
 
-    group('executeSelect', () {
-      test('returns Right with results on success', () async {
-        final result = await source.executeSelect('SELECT 1');
-
-        expect(result.isRight(), isTrue);
-        final data = result.getOrElse((_) => []);
-        expect(data.length, 1);
-        expect(data.first['1'], 1);
-      });
-
-      test('returns empty list for unknown query', () async {
-        final result = await source.executeSelect('SELECT * FROM unknown');
-
-        expect(result.isRight(), isTrue);
-        expect(result.getOrElse((_) => [{'x': 1}]), isEmpty);
-      });
-
-      test('returns Left with failure on error', () async {
-        source.executeSelectFailure =
-            const ViewerQueryFailed('SELECT', 'error');
-
-        final result = await source.executeSelect('SELECT 1');
-
-        expect(result.isLeft(), isTrue);
-      });
+    test('returns Right with rowCount when table exists', () async {
+      final source = MockSqliteViewerSource(rowCounts: const {'users': 7});
+      final result = await source.getRowCount('users');
+      expect(result.match((_) => 0, (c) => c), 7);
     });
 
-    group('type checks', () {
-      test('MockSqliteViewerSource implements SqliteViewerAbstract', () {
-        expect(source, isA<SqliteViewerAbstract>());
-      });
+    test('returns Left ViewerTableNotFound for unknown table', () async {
+      final source = MockSqliteViewerSource(rowCounts: const {'users': 7});
+      final result = await source.getRowCount('missing');
+      expect(result.isLeft(), isTrue);
+      result.match(
+        (f) => expect(f, isA<ViewerTableNotFound>()),
+        (_) => fail('expected Left'),
+      );
+    });
+
+    test('returns Left when getRowCountFailure is set', () async {
+      final source = MockSqliteViewerSource()
+        ..getRowCountFailure = const ViewerQueryFailed('q', 'err');
+      final result = await source.getRowCount('users');
+      expect(result.isLeft(), isTrue);
+    });
+
+    test('returns Right with columnNames when table exists', () async {
+      final source = MockSqliteViewerSource(
+        columnNamesMap: const {
+          'users': ['id', 'name'],
+        },
+      );
+      final result = await source.getColumnNames('users');
+      expect(result.match((_) => <String>[], (c) => c), ['id', 'name']);
+    });
+
+    test('returns Left ViewerTableNotFound for unknown table columns',
+        () async {
+      final source = MockSqliteViewerSource(
+        columnNamesMap: const {
+          'users': ['id'],
+        },
+      );
+      final result = await source.getColumnNames('missing');
+      expect(result.isLeft(), isTrue);
+      result.match(
+        (f) => expect(f, isA<ViewerTableNotFound>()),
+        (_) => fail('expected Left'),
+      );
+    });
+
+    test('returns Left when getColumnNamesFailure is set', () async {
+      final source = MockSqliteViewerSource()
+        ..getColumnNamesFailure = const ViewerPragmaFailed('t', 'k', 'err');
+      final result = await source.getColumnNames('users');
+      expect(result.isLeft(), isTrue);
+    });
+
+    test('returns Right with pragma when keyed entry exists', () async {
+      final source = MockSqliteViewerSource(
+        pragmaResults: const {
+          'users_tableInfo': [
+            {'cid': 0},
+          ],
+        },
+      );
+      final result = await source.getPragma(
+        tableName: 'users',
+        key: PragmaKey.tableInfo,
+      );
+      expect(
+        result.match((_) => <Map<String, Object?>>[], (r) => r),
+        isNotEmpty,
+      );
+    });
+
+    test('returns Right with empty list when pragma keyed entry missing',
+        () async {
+      final source = MockSqliteViewerSource();
+      final result = await source.getPragma(
+        tableName: 'users',
+        key: PragmaKey.foreignKeyList,
+      );
+      expect(result.match((_) => <Map<String, Object?>>[], (r) => r), isEmpty);
+    });
+
+    test('returns Left when getPragmaFailure is set', () async {
+      final source = MockSqliteViewerSource()
+        ..getPragmaFailure = const ViewerPragmaFailed('t', 'k', 'err');
+      final result = await source.getPragma(
+        tableName: 'users',
+        key: PragmaKey.tableInfo,
+      );
+      expect(result.isLeft(), isTrue);
+    });
+
+    test('returns Right rows for executeSelect on known query', () async {
+      const sql = 'SELECT * FROM users';
+      final source = MockSqliteViewerSource(
+        selectResults: const {
+          sql: [
+            {'id': 1},
+          ],
+        },
+      );
+      final result = await source.executeSelect(sql);
+      expect(
+        result.match((_) => <Map<String, Object?>>[], (r) => r),
+        isNotEmpty,
+      );
+    });
+
+    test('returns Right with empty list for unknown query', () async {
+      final source = MockSqliteViewerSource();
+      final result = await source.executeSelect('SELECT * FROM unknown');
+      expect(result.match((_) => <Map<String, Object?>>[], (r) => r), isEmpty);
+    });
+
+    test('returns Left when executeSelectFailure is set', () async {
+      final source = MockSqliteViewerSource()
+        ..executeSelectFailure = const ViewerQueryFailed('q', 'err');
+      final result = await source.executeSelect('SELECT 1');
+      expect(result.isLeft(), isTrue);
     });
   });
 }

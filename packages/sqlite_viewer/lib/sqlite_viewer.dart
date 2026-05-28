@@ -39,9 +39,9 @@ export 'src/models/pragma_key.dart';
 export 'src/models/text_handling.dart';
 
 // Widgets
-export 'src/widgets/display_query_widget.dart';
+export 'src/widgets/display_query_widget/display_query_widget.dart';
 export 'src/widgets/sql_command.dart';
-export 'src/widgets/sqlite_viewer_metadata_panel.dart';
-export 'src/widgets/sqlite_viewer_page.dart';
+export 'src/widgets/sqlite_viewer_metadata_panel/sqlite_viewer_metadata_panel.dart';
+export 'src/widgets/sqlite_viewer_page/sqlite_viewer_page.dart';
 export 'src/widgets/sqlite_viewer_query_input.dart';
-export 'src/widgets/sqlite_viewer_table_detail.dart';
+export 'src/widgets/sqlite_viewer_table_detail/sqlite_viewer_table_detail.dart';
