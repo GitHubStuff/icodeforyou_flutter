@@ -22,13 +22,14 @@ dependencies:
   go_router: ^17.1.0
   ice_chips: ^1.0.0
   my_logger: ^1.0.0
+  platform_utils: ^1.0.0
   random_color_generator: ^1.0.0
   remind_me: ^1.0.0
   service_locator: ^1.0.0
   since_when_service: ^1.0.0
   since_when_widgets: ^1.0.0
   sqlite_viewer: ^1.0.0
-  status_bar_chameleon: ^1.0.0
+  status_bar_chameleon: ^1.0.1
   theme_manager: ^1.0.0
   theme_widget: ^1.0.0
 

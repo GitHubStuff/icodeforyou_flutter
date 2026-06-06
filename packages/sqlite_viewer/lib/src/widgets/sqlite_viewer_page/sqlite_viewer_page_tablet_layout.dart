@@ -92,7 +92,11 @@ class _TabletLayout extends StatelessWidget {
               //     );
               //   },
               //   isExecuting: state is QueryExecuting,
-              //   initialQuery: _getLastQuery(state),
+              //   initialQuery: switch (state) {
+              //     QueryResultLoaded(:final query) => query,
+              //     QueryFailed(:final query) => query,
+              //     _ => null,
+              //   },
               //   maxLines: 3,
               //   minLines: 2,
               //),
@@ -184,14 +188,6 @@ class _TabletLayout extends StatelessWidget {
       TableDetailLoading(:final tableName) => tableName,
       TableDetailLoaded(:final tableName) => tableName,
       TableDetailLoadFailed(:final tableName) => tableName,
-      _ => null,
-    };
-  }
-
-  String? _getLastQuery(SqliteViewerState state) {
-    return switch (state) {
-      QueryResultLoaded(:final query) => query,
-      QueryFailed(:final query) => query,
       _ => null,
     };
   }

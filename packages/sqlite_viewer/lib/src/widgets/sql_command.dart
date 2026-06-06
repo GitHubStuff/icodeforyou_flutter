@@ -1,13 +1,10 @@
 // packages/sqlite_viewer/lib/src/widgets/sql_command.dart
 // ignore_for_file: public_member_api_docs
 
+import 'package:animated_widgets/animated_widgets.dart'
+    show AnimatedBarrier, PopoverHandle;
 import 'package:custom_widgets/custom_widgets.dart'
-    show
-        ButtonPair,
-        ExpandingTextField,
-        PopoverHandle,
-        PositionPopover,
-        UniformCluster;
+    show ButtonPair, ExpandingTextField, UniformCluster;
 import 'package:flutter/material.dart';
 
 const TextStyle _style = TextStyle(
@@ -25,7 +22,7 @@ class SqlCommand extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        _popoverHandle = PositionPopover(
+        _popoverHandle = AnimatedBarrier(
           barrierDismissible: false,
           child: _editor(context),
         ).show(context);

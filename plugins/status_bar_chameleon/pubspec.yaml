@@ -1,6 +1,6 @@
 name: status_bar_chameleon
 description: "Plugin to show/hide the status bar on iOS/Android"
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/githubstuff/icodeforyou_package
 resolution: workspace
 

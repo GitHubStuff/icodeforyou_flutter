@@ -1,5 +1,6 @@
 // startup_demo/lib/main.dart
 // ignore_for_file: public_member_api_docs
+import 'dart:async';
 
 import 'package:animated_rail_menu/animated_rail_menu.dart'
     show
@@ -9,9 +10,10 @@ import 'package:animated_rail_menu/animated_rail_menu.dart'
         RailIcon,
         RailTransition;
 import 'package:animated_widgets/animated_widgets.dart'
-    show AnimatedOverlayCubit;
+    show PulseConfig, PulseSequence, SplashConfig, SplashCubit, SplashFlow;
 import 'package:app_preferences_service/app_preferences_service.dart'
     show AppPreferencesDescriptor;
+import 'package:custom_widgets/custom_widgets.dart' show SizedSpinner;
 import 'package:extensions/haptics/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +27,29 @@ import 'package:status_bar_chameleon/status_bar_chameleon.dart'
 import 'package:theme_manager/theme_manager.dart'
     show MaterialThemeCubit, MaterialWidget, ThemeDescriptor, ThemeService;
 
+/// A task that succeeds after [delay].
+Future<void> succeedsAfter(Duration delay) async {
+  await Future<void>.delayed(delay);
+}
+
+/// A task that throws [error] after [delay].
+Future<void> failsAfter(
+  Duration delay, {
+  Object error = 'task failed',
+}) async {
+  await Future<void>.delayed(delay);
+  throw error;
+}
+
+/// A task that never completes. Useful for forcing the timeout path.
+Future<void> neverCompletes() {
+  return Completer<void>().future;
+}
+
+/// A task that completes synchronously (already-done future).
+Future<void> alreadyDone() async {}
+
+//+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await RemindMe.instance.init();
@@ -62,12 +87,47 @@ final providers = MultiBlocProvider(
     BlocProvider<MaterialThemeCubit>.value(
       value: ServiceRegistry.R.getSync<ThemeService>('Theme').themeCubit,
     ),
-    BlocProvider<AnimatedOverlayCubit>(
-      create: (_) => AnimatedOverlayCubit(),
+    BlocProvider.value(
+      value: SplashCubit(
+        splashConfig: const SplashConfig(
+          crossfadeDuration: Duration(milliseconds: 250),
+        ),
+      ),
     ),
   ],
-  child: const MaterialWidget(_homeScreen),
+  child: MaterialWidget(splashWidget),
 );
+
+Widget get splashWidget {
+  return SplashFlow(
+    splashWidget: pulse,
+    intermediateWidget: const SizedSpinner(size: 60),
+    landingPage: _homeScreen,
+    tasks: [
+      succeedsAfter(const Duration(seconds: 7)),
+      succeedsAfter(const Duration(seconds: 3)),
+      //failsAfter(const Duration(seconds: 5)),
+      //neverCompletes(),
+    ],
+  );
+  // unawaited(StatusBarChameleon.setStatusBarHidden(hidden: false));
+  // return const FullScreenColor();
+}
+
+Widget get pulse {
+  return const PulseSequence(
+    config: PulseConfig(
+      pulseRestScale: 1,
+      pulsePeakScale: 1.9,
+      pulseStartScale: 0.15,
+      // growDuration: Duration(milliseconds: 500),
+      // holdDuration: Duration(seconds: 1),
+      // shrinkDuration: Duration(milliseconds: 750),
+      // shrinkCurve: Curves.easeOut,
+    ),
+    child: FlutterLogo(size: 200),
+  );
+}
 
 const _homeScreen = AnimatedRailMenu(
   entries: navEntries,

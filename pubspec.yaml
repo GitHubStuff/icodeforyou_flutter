@@ -6,7 +6,6 @@ version: 9.2.1
 
 workspace:
   - packages/abstractions
-  - packages/adaptive_modal
   - packages/analog_clock_widget
   - packages/animated_rail_menu
   - packages/animated_widgets
@@ -36,7 +35,6 @@ workspace:
   - packages/theme_widget
   - packages/widget_themes
   - plugins/status_bar_chameleon
-  - plugins/status_bar_chameleon/example
   - programs/creature_comforts
   - programs/creature_comforts_service
   - programs/startup_demo

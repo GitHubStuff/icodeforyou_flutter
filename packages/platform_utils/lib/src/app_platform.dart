@@ -100,3 +100,31 @@ enum AppPlatform {
     AppPlatform.windows => true,
   };
 }
+
+enum PlatformVender {
+  apple,
+  google,
+  microsoft,
+  other;
+
+  static PlatformVender current() {
+    final platform = AppPlatform.current();
+    switch (platform) {
+      case AppPlatform.android:
+      case AppPlatform.fuchsia:
+        return .google;
+
+      case AppPlatform.iOS:
+      case AppPlatform.macOS:
+        return .apple;
+
+      case AppPlatform.linux:
+      case AppPlatform.tablet:
+      case AppPlatform.web:
+        return .other;
+
+      case AppPlatform.windows:
+        return .microsoft;
+    }
+  }
+}

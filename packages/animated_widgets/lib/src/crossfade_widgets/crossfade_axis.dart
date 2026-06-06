@@ -1,5 +1,3 @@
-
-part of 'crossfade_widgets.dart';
 // packages/animated_widgets/lib/src/stepper_crossfade/stepper_axis.dart
 /// Which horizontal end of the stepper is "forward".
 enum CrossFadeAxis {

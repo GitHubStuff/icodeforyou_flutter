@@ -4,7 +4,6 @@
 import 'package:animated_rail_menu/animated_rail_menu.dart'
     show AnimatedRailMenuEntry;
 import 'package:flutter/material.dart';
-import 'package:startup_demo/src/pages/fader_page.dart' show FaderPage;
 import 'package:startup_demo/src/pages/pages.dart';
 
 const navEntries = <AnimatedRailMenuEntry>[
@@ -13,6 +12,12 @@ const navEntries = <AnimatedRailMenuEntry>[
     activeIcon: Icons.home,
     label: 'Landing',
     page: LandingPage(),
+  ),
+  AnimatedRailMenuEntry(
+    icon: Icons.widgets_outlined,
+    activeIcon: Icons.widgets,
+    label: 'Widgets',
+    page: WidgetsPage(),
   ),
   AnimatedRailMenuEntry(
     icon: Icons.lightbulb_outline_sharp,

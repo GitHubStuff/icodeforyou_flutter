@@ -5,10 +5,10 @@ import 'package:animated_widgets/src/contextual_reveal/src/contextual_position.d
 import 'package:animated_widgets/src/contextual_reveal/src/theme/contextual_reveal_theme.dart';
 import 'package:flutter/material.dart';
 
-part '_contextual_reveal_state.dart';
-part '_dismiss_wrapper.dart';
-part '_popover_overlay.dart';
-part '_push_route.dart';
+part 'contextual_reveal_state.dart';
+part 'dismiss_wrapper.dart';
+part 'popover_overlay.dart';
+part 'push_route.dart';
 
 /// A widget that reveals contextual child widgets in response to
 /// tap, long-press, and double-tap gestures.

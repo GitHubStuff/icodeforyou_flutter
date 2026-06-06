@@ -7,9 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:widget_themes/widget_themes.dart' show CrossFadeTheme;
 
+import 'crossfade_axis.dart';
 import 'crossfade_widgets_cubit.dart' show CrossFadeWidgetsCubit;
-
-part 'crossfade_axis.dart';
 
 class CrossFadeWidgets extends StatelessWidget {
   const CrossFadeWidgets({

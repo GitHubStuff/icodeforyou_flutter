@@ -37,6 +37,15 @@ class MockSqliteViewerSource implements SqliteViewerAbstract {
   SqliteViewerFailure? getPragmaFailure;
   SqliteViewerFailure? executeSelectFailure;
 
+  /// Per-[PragmaKey] failure injection.
+  ///
+  /// Lets a single PRAGMA call fail while the others succeed — required to
+  /// reach the `indexList` and `foreignKeyList` failure branches in
+  /// `SqliteViewerCubit.selectTable`, which a global [getPragmaFailure] can
+  /// never hit because `tableInfo` is queried first and returns early.
+  Map<PragmaKey, SqliteViewerFailure> pragmaKeyFailures =
+      const <PragmaKey, SqliteViewerFailure>{};
+
   @override
   Future<Either<SqliteViewerFailure, String>> getFullPath() async {
     if (getFullPathFailure != null) {
@@ -102,6 +111,10 @@ class MockSqliteViewerSource implements SqliteViewerAbstract {
   }) async {
     if (getPragmaFailure != null) {
       return Left(getPragmaFailure!);
+    }
+    final keyFailure = pragmaKeyFailures[key];
+    if (keyFailure != null) {
+      return Left(keyFailure);
     }
     final keyStr = '${tableName}_${key.name}';
     return Right(pragmaResults[keyStr] ?? []);

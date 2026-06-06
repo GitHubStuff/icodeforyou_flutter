@@ -8,10 +8,10 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
-  adaptive_modal: ^1.0.0
   analog_clock_widget: ^1.0.0
   animated_rail_menu: ^1.0.0
   animated_widgets: ^1.0.0
+  app_preferences: ^1.0.0
   custom_widgets: ^1.0.0
   extensions: ^1.0.0
   flutter:
@@ -23,8 +23,10 @@ dependencies:
   infinite_scroll_picking: ^1.0.0
   infinite_scroll_picking_settings: ^1.0.0
   random_color_generator: ^1.0.0
+  remind_me: ^1.0.0
   scrolling_datetime_pickers: ^1.0.0
   settings_widget: ^1.0.0
+  since_when_framework: ^1.0.0
   since_when_widgets: ^1.0.0
   status_bar_chameleon: ^1.0.0
   sqlite_viewer: ^1.0.0

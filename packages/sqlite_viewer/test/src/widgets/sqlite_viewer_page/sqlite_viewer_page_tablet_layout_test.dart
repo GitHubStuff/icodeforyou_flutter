@@ -135,6 +135,43 @@ void main() {
       await cubit.close();
     });
 
+    testWidgets(
+      'tapping refresh in SqliteViewerTableDetail dispatches selectTable',
+      (tester) async {
+        final source = createTestMockSource();
+        final cubit = SqliteViewerCubit.seeded(
+          source,
+          const TableDetailLoaded(
+            metadata: testMetadata,
+            tableName: 'users',
+            columns: ['id'],
+            tableInfo: [],
+            indexList: [],
+            foreignKeys: [],
+            rows: [
+              {'id': 1},
+            ],
+            rowCount: 1,
+          ),
+        );
+        await pumpTablet(tester, source: source, cubit: cubit);
+
+        // The table-detail widget renders directly in the main content on
+        // tablet. Its own refresh action uses tooltip 'Refresh table data'
+        // — distinct from the sidebar panel's 'Refresh metadata'.
+        final refreshButton = find.byTooltip('Refresh table data');
+        expect(refreshButton, findsOneWidget);
+
+        // Tapping invokes the onRefresh closure, which dispatches
+        // selectTable(tableName) and drops the main content into a
+        // perpetual loading spinner — pump a single frame, don't settle.
+        await tester.tap(refreshButton);
+        await tester.pump();
+
+        await cubit.close();
+      },
+    );
+
     testWidgets('renders ErrorView for TableDetailLoadFailed', (tester) async {
       final source = createTestMockSource();
       final cubit = SqliteViewerCubit.seeded(

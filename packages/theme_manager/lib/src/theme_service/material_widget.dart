@@ -1,7 +1,7 @@
 // packages/theme_manager/lib/src/theme_service/material_widget.dart
 // ignore_for_file: public_member_api_docs
 import 'package:animated_widgets/animated_widgets.dart'
-    show AnimatedOverlay, AnimatedOverlayCubit;
+    show HideMobileStatusBar;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:theme_manager/theme_manager.dart'
@@ -27,17 +27,6 @@ class MaterialWidget extends StatelessWidget {
           themeMode: themeMode.mode,
           home: homeWidget,
           debugShowCheckedModeBanner: true,
-          builder: (context, child) {
-            context.read<AnimatedOverlayCubit>().showOverlay(
-              const CircularProgressIndicator(),
-            );
-            Future<void>.delayed(const Duration(milliseconds: 950), () {
-              if (context.mounted) {
-                context.read<AnimatedOverlayCubit>().removeOverlay();
-              }
-            });
-            return AnimatedOverlay(child: child);
-          },
         );
       },
     );

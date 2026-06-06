@@ -25,6 +25,8 @@ programs/startup_demo/ios/Runner/Info.plist
 Add this inside the top-level `<dict>`:
 
 ```xml
+<key>UIRequiresFullScreen</key>
+<true/>
 <key>UIViewControllerBasedStatusBarAppearance</key>
 <true/>
 ```
@@ -35,6 +37,8 @@ Example placement:
 <key>UIApplicationSupportsIndirectInputEvents</key>
 <true/>
 
+<key>UIRequiresFullScreen</key>
+<true/>
 <key>UIViewControllerBasedStatusBarAppearance</key>
 <true/>
 

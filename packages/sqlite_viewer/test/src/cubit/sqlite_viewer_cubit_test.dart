@@ -338,6 +338,64 @@ void main() {
         ),
       ],
     );
+
+    blocTest<SqliteViewerCubit, SqliteViewerState>(
+      'emits TableDetailLoadFailed when indexList pragma fails',
+      build: () {
+        // tableInfo succeeds, indexList fails — exercises the indexList
+        // Left branch that a global getPragmaFailure can never reach.
+        final source = createTestMockSource()
+          ..pragmaKeyFailures = const {
+            PragmaKey.indexList:
+                ViewerPragmaFailed('users', 'indexList', 'boom'),
+          };
+        return SqliteViewerCubit.seeded(
+          source,
+          const MetadataLoaded(metadata: testMetadata),
+        );
+      },
+      act: (cubit) => cubit.selectTable('users'),
+      expect: () => [
+        const TableDetailLoading(
+          metadata: testMetadata,
+          tableName: 'users',
+        ),
+        const TableDetailLoadFailed(
+          metadata: testMetadata,
+          tableName: 'users',
+          failure: ViewerPragmaFailed('users', 'indexList', 'boom'),
+        ),
+      ],
+    );
+
+    blocTest<SqliteViewerCubit, SqliteViewerState>(
+      'emits TableDetailLoadFailed when foreignKeyList pragma fails',
+      build: () {
+        // tableInfo and indexList succeed, foreignKeyList fails —
+        // exercises the foreignKeyList Left branch.
+        final source = createTestMockSource()
+          ..pragmaKeyFailures = const {
+            PragmaKey.foreignKeyList:
+                ViewerPragmaFailed('users', 'foreignKeyList', 'boom'),
+          };
+        return SqliteViewerCubit.seeded(
+          source,
+          const MetadataLoaded(metadata: testMetadata),
+        );
+      },
+      act: (cubit) => cubit.selectTable('users'),
+      expect: () => [
+        const TableDetailLoading(
+          metadata: testMetadata,
+          tableName: 'users',
+        ),
+        const TableDetailLoadFailed(
+          metadata: testMetadata,
+          tableName: 'users',
+          failure: ViewerPragmaFailed('users', 'foreignKeyList', 'boom'),
+        ),
+      ],
+    );
   });
 
   group('executeQuery', () {
@@ -480,17 +538,17 @@ void main() {
     // Indirect coverage of the switch arms — exercise each by sending
     // an action that hits _getCurrentMetadata from that state.
     for (final entry in <String, SqliteViewerState>{
-      'MetadataLoading': MetadataLoading(metadata: testMetadata),
-      'MetadataLoaded': MetadataLoaded(metadata: testMetadata),
-      'MetadataLoadFailed': MetadataLoadFailed(
+      'MetadataLoading': const MetadataLoading(metadata: testMetadata),
+      'MetadataLoaded': const MetadataLoaded(metadata: testMetadata),
+      'MetadataLoadFailed': const MetadataLoadFailed(
         failure: ViewerDatabaseNotOpen(),
         metadata: testMetadata,
       ),
-      'TableDetailLoading': TableDetailLoading(
+      'TableDetailLoading': const TableDetailLoading(
         metadata: testMetadata,
         tableName: 'users',
       ),
-      'TableDetailLoaded': TableDetailLoaded(
+      'TableDetailLoaded': const TableDetailLoaded(
         metadata: testMetadata,
         tableName: 'users',
         columns: [],
@@ -500,22 +558,22 @@ void main() {
         rows: [],
         rowCount: 0,
       ),
-      'TableDetailLoadFailed': TableDetailLoadFailed(
+      'TableDetailLoadFailed': const TableDetailLoadFailed(
         metadata: testMetadata,
         tableName: 'users',
         failure: ViewerDatabaseNotOpen(),
       ),
-      'QueryExecuting': QueryExecuting(
+      'QueryExecuting': const QueryExecuting(
         metadata: testMetadata,
         query: 'SELECT 1',
       ),
-      'QueryResultLoaded': QueryResultLoaded(
+      'QueryResultLoaded': const QueryResultLoaded(
         metadata: testMetadata,
         query: 'SELECT 1',
         columns: [],
         rows: [],
       ),
-      'QueryFailed': QueryFailed(
+      'QueryFailed': const QueryFailed(
         metadata: testMetadata,
         query: 'SELECT 1',
         failure: ViewerDatabaseNotOpen(),

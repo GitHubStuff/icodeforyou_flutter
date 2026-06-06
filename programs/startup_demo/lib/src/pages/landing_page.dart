@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:animated_widgets/animated_widgets.dart'
-    show AnimatedOverlayCubit, GrowWidgetView;
+    show  GrowWidgetView;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show ReadContext;
 import 'package:remind_me/remind_me.dart' show RemindMe;
@@ -57,21 +57,6 @@ class LandingPage extends StatelessWidget {
                 );
               },
               child: const Text('Remind me in 1 min'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final cubit = context.read<AnimatedOverlayCubit>();
-                final widget = GrowWidgetView(
-                  duration: const Duration(milliseconds: 3000),
-                  onComplete: () => cubit.fadeOverlay(
-                    duration: const Duration(milliseconds: 500),
-                  ),
-                  child: const FlutterLogo(size: 300),
-                );
-
-                cubit.showOverlay(widget);
-              },
-              child: Text('PRESS ME', style: theme.textTheme.headlineMedium),
             ),
             Text('Welcome', style: theme.textTheme.headlineMedium),
             const SizedBox(height: 8),

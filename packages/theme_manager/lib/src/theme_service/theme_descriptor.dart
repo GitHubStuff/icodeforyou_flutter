@@ -8,7 +8,6 @@ import 'package:app_preferences/app_preferences.dart'
     show AbstractPreferencesInterface;
 import 'package:app_preferences_service/app_preferences_service.dart'
     show AppPreferences;
-import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter/material.dart';
 import 'package:my_logger/my_logger.dart' show MyLogger;
 import 'package:service_locator/service_locator.dart'

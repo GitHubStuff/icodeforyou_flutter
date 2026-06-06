@@ -1,7 +1,6 @@
 // packages/packages.dart
 
 export 'package:abstractions/abstractions.dart';
-export 'package:adaptive_modal/adaptive_modal.dart';
 export 'package:analog_clock_widget/analog_clock_widget.dart';
 export 'package:animated_rail_menu/animated_rail_menu.dart';
 export 'package:animated_widgets/animated_widgets.dart';

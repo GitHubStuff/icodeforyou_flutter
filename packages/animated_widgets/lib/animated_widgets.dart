@@ -1,8 +1,8 @@
-// animated_widgets/lib/animated_widgets.dart
+// packages/animated_widgets/lib/animated_widgets.dart
 
-export 'src/animated_checkbox/animated_checkbox.dart' show AnimatedCheckbox;
-export 'src/animated_overlay/animated_overlay.dart'
-    show AnimatedOverlay, AnimatedOverlayCubit, AnimatedOverlayState;
+export 'src/animated_barrier/animated_barrier.dart';
+export 'src/animated_checkbox/src/animated_checkbox.dart' show AnimatedCheckbox;
+export 'src/combination_animation/combination_animation.dart';
 export 'src/contextual_reveal/contextual_reveal.dart'
     show
         ContextualPosition,
@@ -10,6 +10,7 @@ export 'src/contextual_reveal/contextual_reveal.dart'
         ContextualRevealDark,
         ContextualRevealLight,
         ContextualRevealTheme;
+export 'src/crossfade_widgets/crossfade_axis.dart' show CrossFadeAxis;
 export 'src/crossfade_widgets/crossfade_widgets.dart' show CrossFadeWidgets;
 export 'src/crossfade_widgets/crossfade_widgets_cubit.dart'
     show CrossFadeWidgetsCubit;
@@ -22,5 +23,6 @@ export 'src/length_colored_border_field/color_point_ramp.dart'
     show ColorPointRamp;
 export 'src/length_colored_border_field/length_colored_border_field.dart'
     show LengthColoredBorderField;
-export 'src/pulse_widget/pulse_widget.dart' show PulseWidget;
-export 'src/splash_widget/splash_widget.dart' show SplashWidget;
+export 'src/pulse_widget/pulse_widget.dart';
+export 'src/splash_widget/splash_widget.dart';
+export 'src/timed_widget/timed_widget.dart' show TimedWidget;

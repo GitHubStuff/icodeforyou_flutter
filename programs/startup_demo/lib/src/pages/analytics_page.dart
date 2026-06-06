@@ -55,7 +55,7 @@ class AboveSQLWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ElevatedButton(
     key: leftKey,
-    onPressed: () => PositionPopover(
+    onPressed: () => AnimatedBarrier(
       position: PopoverPosition.above(leftKey),
       child: ColoredBox(
         color: Colors.deepPurpleAccent.withAlphaValue(0.9),
@@ -143,7 +143,7 @@ class AboveWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ElevatedButton(
     key: leftKey,
-    onPressed: () => PositionPopover(
+    onPressed: () => AnimatedBarrier(
       position: PopoverPosition.above(leftKey),
       child: ColoredBox(
         color: Colors.grey,
@@ -176,7 +176,7 @@ class BelowWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ElevatedButton(
     key: leftKey,
-    onPressed: () => PositionPopover(
+    onPressed: () => AnimatedBarrier(
       position: PopoverPosition.below(leftKey),
       child: const Text('Below Side', style: _popoverStyle),
     ).show(context),
@@ -191,7 +191,7 @@ class CenterWidget extends StatelessWidget {
   const CenterWidget({super.key});
   @override
   Widget build(BuildContext context) => ElevatedButton(
-    onPressed: () => PositionPopover(
+    onPressed: () => AnimatedBarrier(
       barrierColor: Colors.deepPurple.withAlphaValue(0.3),
       child: const Padding(
         padding: EdgeInsets.all(8),
@@ -216,7 +216,7 @@ class LeftWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ElevatedButton(
     key: leftKey,
-    onPressed: () => PositionPopover(
+    onPressed: () => AnimatedBarrier(
       position: PopoverPosition.left(leftKey),
       child: const Text('Left Side', style: _popoverStyle),
     ).show(context),
@@ -235,7 +235,7 @@ class RightWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ElevatedButton(
     key: rightKey,
-    onPressed: () => PositionPopover(
+    onPressed: () => AnimatedBarrier(
       position: PopoverPosition.right(rightKey),
       child: const Text('Right Side', style: _popoverStyle),
     ).show(context),
@@ -254,7 +254,7 @@ class RightBigWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ElevatedButton(
     key: rightKey,
-    onPressed: () => PositionPopover(
+    onPressed: () => AnimatedBarrier(
       position: PopoverPosition.right(rightKey),
       child: const ScrollableContentWidget(
         size: Size(300, 400),
