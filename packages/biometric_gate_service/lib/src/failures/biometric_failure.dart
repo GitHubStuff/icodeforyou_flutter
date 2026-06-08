@@ -1,5 +1,5 @@
 // packages/biometric_gate_service/lib/src/failures/biometric_failure.dart
-// ignore_for_file: public_member_api_docs, comment_references
+// ignore_for_file: no_runtimetype_tostring, public_member_api_docs, comment_references
 
 import 'package:meta/meta.dart';
 

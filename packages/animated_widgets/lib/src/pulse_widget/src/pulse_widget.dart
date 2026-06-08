@@ -1,86 +1,86 @@
-// animated_widgets/lib/src/pulse_widget/pulse_widget.dart
-// ignore_for_file: public_member_api_docs
+// ignore_for_file: always_use_package_imports, public_member_api_docs
 
-import 'dart:async';
+import 'package:animated_widgets/animated_widgets.dart'
+    show AnimationTween, CombinationAnimationStep, CombinationAnimationX;
+import 'package:flutter/material.dart';
 
-import 'package:flutter/widgets.dart';
+import 'pulse_config.dart' show PulseConfig;
 
-/// Applies a scale-bounce animation to [child] when [trigger] changes to true.
-@deprecated
+/// Pulses [child] through a hold → grow → shrink scale sequence.
+///
+/// [PulseWidget] is layout-transparent: it occupies exactly the space its
+/// [child] would have occupied (modulo the scale transform during the pulse)
+/// and imposes no alignment of its own. Parents are responsible for
+/// positioning.
+///
+/// The [Key] passed via [key] is used only to identify this widget in its
+/// parent's child list, per standard Flutter conventions. The internal
+/// animation identity is owned by [PulseWidget] itself and is independent
+/// of [key]; callers may pass any key (or none) without affecting animation
+/// behavior.
 class PulseWidget extends StatefulWidget {
-  /// Creates a [PulseWidget] that pulses [child] when [trigger] becomes true.
   const PulseWidget({
-    required this.trigger,
     required this.child,
-    this.duration = const Duration(milliseconds: 250),
-    this.startPct = 0.75,
-    this.middlePct = 1.25,
-    this.finishPct = 1,
     super.key,
+    this.config = const PulseConfig(),
   });
 
-  final double startPct;
-  final double middlePct;
-  final double finishPct;
-
-  /// When this flips to true the pulse animation fires.
-  final bool trigger;
-
-  /// The duration of the scale-bounce cycle.
-  final Duration duration;
-
-  /// The widget to animate.
   final Widget child;
+  final PulseConfig config;
 
   @override
   State<PulseWidget> createState() => _PulseWidgetState();
 }
 
-//+
-class _PulseWidgetState extends State<PulseWidget>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-  late final Animation<double> _scale;
+class _PulseWidgetState extends State<PulseWidget> {
+  /// Stable identity for the animation, tied to this [State] instance.
+  ///
+  /// Created once in [initState] so the animation's identity does not change
+  /// across rebuilds and is not influenced by whatever [Key] the parent
+  /// passes to [PulseWidget].
+  late final Key _animationKey;
+
+  late final PulseConfig config;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
+    _animationKey = UniqueKey();
+    config = widget.config;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child.combinationAnimationSequenced(
+      key: _animationKey,
+      [
+        // Hold at rest so the starting size is visible before motion.
+        CombinationAnimationStep(
+          scale: AnimationTween(
+            start: config.pulseStartScale,
+            finish: config.pulseRestScale,
+          ),
+          duration: config.holdDuration,
+        ),
+        // Grow to peak.
+        CombinationAnimationStep(
+          scale: AnimationTween(
+            start: config.pulseRestScale,
+            finish: config.pulsePeakScale,
+          ),
+          duration: config.growDuration,
+          curve: config.growCurve,
+        ),
+        // Return to rest.
+        CombinationAnimationStep(
+          scale: AnimationTween(
+            start: config.pulsePeakScale,
+            finish: config.pulseRestScale,
+          ),
+          duration: config.shrinkDuration,
+          curve: config.shrinkCurve,
+        ),
+      ],
     );
-    _scale =
-        TweenSequence<double>([
-          TweenSequenceItem(
-            tween: Tween(begin: widget.startPct, end: widget.middlePct),
-            weight: 50,
-          ),
-          TweenSequenceItem(
-            tween: Tween(begin: widget.middlePct, end: widget.finishPct),
-            weight: 50,
-          ),
-        ]).animate(
-          CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-        );
   }
-
-  @override
-  void didUpdateWidget(PulseWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.trigger && !oldWidget.trigger) {
-      unawaited(_controller.forward(from: 0));
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => ScaleTransition(
-    scale: _scale,
-    child: widget.child,
-  );
 }

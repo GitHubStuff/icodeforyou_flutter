@@ -1,5 +1,5 @@
 // packages/custom_widgets/lib/src/uninherited_text/uninherited_text.dart
-// ignore_for_file: public_member_api_docs
+// ignore_for_file: comment_references, public_member_api_docs
 
 import 'package:flutter/material.dart';
 

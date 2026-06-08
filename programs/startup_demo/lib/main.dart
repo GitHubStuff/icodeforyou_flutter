@@ -10,7 +10,7 @@ import 'package:animated_rail_menu/animated_rail_menu.dart'
         RailIcon,
         RailTransition;
 import 'package:animated_widgets/animated_widgets.dart'
-    show PulseConfig, PulseSequence, SplashConfig, SplashCubit, SplashFlow;
+    show PulseConfig, PulseWidget, SplashConfig, SplashCubit, SplashFlow;
 import 'package:app_preferences_service/app_preferences_service.dart'
     show AppPreferencesDescriptor;
 import 'package:custom_widgets/custom_widgets.dart' show SizedSpinner;
@@ -115,7 +115,7 @@ Widget get splashWidget {
 }
 
 Widget get pulse {
-  return const PulseSequence(
+  return const PulseWidget(
     config: PulseConfig(
       pulseRestScale: 1,
       pulsePeakScale: 1.9,

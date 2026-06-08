@@ -1,3 +1,4 @@
+# packages/biometric_gate_service/pubspec.yaml
 name: biometric_gate_service
 description: Backend-agnostic interface for biometric-gated secure storage.
 version: 1.0.0

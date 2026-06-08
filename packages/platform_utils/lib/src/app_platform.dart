@@ -101,13 +101,13 @@ enum AppPlatform {
   };
 }
 
-enum PlatformVender {
+enum PlatformVendor {
   apple,
   google,
   microsoft,
   other;
 
-  static PlatformVender current() {
+  static PlatformVendor current() {
     final platform = AppPlatform.current();
     switch (platform) {
       case AppPlatform.android:

@@ -11,7 +11,6 @@ import 'package:animated_widgets/animated_widgets.dart'
         CombinationAnimationX,
         PopoverHandle,
         PulseConfig,
-        PulseSequence,
         TimedWidget;
 import 'package:flutter/material.dart';
 import 'package:status_bar_chameleon/status_bar_chameleon.dart'

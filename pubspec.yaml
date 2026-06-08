@@ -12,7 +12,6 @@ workspace:
   - packages/app_preferences
   - packages/app_preferences_service
   - packages/biometric_gate_service
-  - packages/biometric_gate_service_local
   - packages/custom_widgets
   - packages/extensions
   - packages/ice_chips
@@ -35,7 +34,6 @@ workspace:
   - packages/theme_widget
   - packages/widget_themes
   - plugins/status_bar_chameleon
-  - programs/creature_comforts
   - programs/creature_comforts_service
   - programs/startup_demo
   - programs/widgetbook_workspace

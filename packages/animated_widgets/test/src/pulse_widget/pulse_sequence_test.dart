@@ -3,17 +3,17 @@ import 'package:animated_widgets/animated_widgets.dart'
     show AnimationTween, CombinationAnimationStep;
 import 'package:animated_widgets/src/combination_animation/widgets/combination_animation_sequenced.dart'
     show CombinationAnimationSequenced;
-import 'package:animated_widgets/src/pulse_widget/src/pulse_sequence.dart'
-    show PulseSequence;
+import 'package:animated_widgets/src/pulse_widget/src/pulse_widget.dart'
+    show PulseWidget;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const _childKey = Key('pulse_child');
 
 Widget _subject({required Widget child}) => Directionality(
-      textDirection: TextDirection.ltr,
-      child: PulseSequence(child: child),
-    );
+  textDirection: TextDirection.ltr,
+  child: PulseWidget(child: child),
+);
 
 CombinationAnimationSequenced _sequenced(WidgetTester tester) =>
     tester.widget<CombinationAnimationSequenced>(
@@ -47,7 +47,9 @@ void main() {
     ) async {
       await tester.pumpWidget(_subject(child: const SizedBox()));
 
-      final config = tester.widget<PulseSequence>(find.byType(PulseSequence)).config;
+      final config = tester
+          .widget<PulseWidget>(find.byType(PulseWidget))
+          .config;
 
       final expected = <CombinationAnimationStep>[
         // Hold at rest.
