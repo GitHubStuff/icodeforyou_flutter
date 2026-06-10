@@ -1,7 +1,10 @@
 // packages/creature_comforts_service/lib/src/last_fed_service.dart
-import 'failures/last_fed_failure.dart';
+// ignore_for_file: always_use_package_imports
+
 import 'package:fpdart/fpdart.dart';
 import 'package:service_locator/service_locator.dart';
+
+import 'failures/last_fed_failure.dart';
 
 /// Read and update the single shared "last fed" timestamp.
 ///

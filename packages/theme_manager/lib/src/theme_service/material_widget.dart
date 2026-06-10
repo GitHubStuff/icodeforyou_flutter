@@ -1,7 +1,5 @@
 // packages/theme_manager/lib/src/theme_service/material_widget.dart
 // ignore_for_file: public_member_api_docs
-import 'package:animated_widgets/animated_widgets.dart'
-    show HideMobileStatusBar;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:theme_manager/theme_manager.dart'
@@ -9,9 +7,14 @@ import 'package:theme_manager/theme_manager.dart'
 import 'package:widget_themes/widget_themes.dart' show CrossFadeTheme;
 
 class MaterialWidget extends StatelessWidget {
-  const MaterialWidget(this.homeWidget, {super.key});
+  const MaterialWidget(
+    this.homeWidget, {
+    this.showDebugBanner = true,
+    super.key,
+  });
 
   final Widget homeWidget;
+  final bool showDebugBanner;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +29,7 @@ class MaterialWidget extends StatelessWidget {
           ),
           themeMode: themeMode.mode,
           home: homeWidget,
-          debugShowCheckedModeBanner: true,
+          debugShowCheckedModeBanner: showDebugBanner,
         );
       },
     );

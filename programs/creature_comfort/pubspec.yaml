@@ -1,0 +1,55 @@
+name: creature_comfort
+description: Shared "last fed" tracker for the household.
+version: 1.0.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  animated_rail_menu: ^1.0.1                    # Internal: widget
+  animated_widgets: ^1.0.0
+  app_preferences: ^1.0.0                       # Internal: infrastructure
+  app_preferences_service: ^1.0.0               # Internal: infrastructure
+  biometric_gate_service: ^1.0.0                # Internal: service interface
+  bloc: ^9.2.0                                  # State management
+  cloud_firestore: ^6.5.0                       # Firebase
+  creature_comforts_service: ^1.0.0             # Internal: service (interface + Firestore impl)
+  custom_widgets: ^1.0.0
+  equatable: ^2.0.8
+  extensions: ^1.0.0                            # Internal: shared atoms (HapticIntensity)
+  firebase_auth: ^6.5.2                         # Firebase
+  firebase_core: ^4.10.0                        # Firebase
+  flutter:                                      # Flutter SDK
+    sdk: flutter
+  flutter_bloc: ^9.1.1                          # State management
+  flutter_launcher_icons: ^0.14.4               # Generate Icons
+  fpdart: ^1.2.0                                # Functional core
+  freezed_annotation: ^3.1.0
+  gap: ^3.0.1
+  json_annotation: ^4.12.0
+  meta: ^1.17.0                                 # Functional core
+  remind_me: ^1.0.0                             # Internal: infrastructure
+  scrolling_datetime_pickers: ^1.0.0            # Internal: widget
+  service_locator: ^1.0.0                       # Internal: infrastructure
+  settings_widget: ^1.0.0                       # Internal: widget
+  theme_manager: ^1.0.0                         # Internal: theme (cubit + descriptor)
+  theme_widget: ^1.0.0                          # Internal: theme
+
+dev_dependencies:
+  bloc_test: ^10.0.0                            # Test
+  build_runner: ^2.15.0
+  fake_cloud_firestore: ^4.1.0+1                # Test: Firebase fakes
+  firebase_auth_mocks: ^0.15.2                  # Test: Firebase fakes
+  flutter_test:                                 # Flutter test SDK
+    sdk: flutter
+  freezed: ^3.2.5
+  json_serializable: ^6.14.0
+  mocktail: ^1.0.5                              # Test: mocking
+  very_good_analysis: ^10.2.0                   # Lint
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/

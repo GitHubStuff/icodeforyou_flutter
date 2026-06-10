@@ -34,6 +34,7 @@ workspace:
   - packages/theme_widget
   - packages/widget_themes
   - plugins/status_bar_chameleon
+  - programs/creature_comfort
   - programs/creature_comforts_service
   - programs/startup_demo
   - programs/widgetbook_workspace
