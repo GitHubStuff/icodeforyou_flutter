@@ -29,6 +29,7 @@ dependencies:
   freezed_annotation: ^3.1.0
   gap: ^3.0.1
   json_annotation: ^4.12.0
+  material_symbols_icons: ^4.2928.1
   meta: ^1.17.0                                 # Functional core
   remind_me: ^1.0.0                             # Internal: infrastructure
   scrolling_datetime_pickers: ^1.0.0            # Internal: widget

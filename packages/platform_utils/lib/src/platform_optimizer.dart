@@ -1,12 +1,12 @@
 // ignore_for_file: public_member_api_docs
 
-import 'package:flutter/widgets.dart' show BuildContext, View;
+import 'package:flutter/widgets.dart' show Axis, BuildContext, View;
 import 'package:platform_utils/platform_utils.dart' show AppPlatform;
 import 'package:platform_utils/src/frame_refresh.dart' show FrameRefreshRate;
 
 class PlatformOptimizer {
-  PlatformOptimizer({AppPlatform? platform}) : _platform = platform;
-
+  PlatformOptimizer({this._platform});
+  
   final AppPlatform? _platform;
   Duration? _cachedFrameRate;
 

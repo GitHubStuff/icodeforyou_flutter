@@ -10,8 +10,8 @@ import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit({FirebaseAuth? auth})
-      : _auth = auth ?? FirebaseAuth.instance,
-        super(const AuthInitial()) {
+    : _auth = auth ?? FirebaseAuth.instance,
+      super(const AuthInitial()) {
     _subscription = _auth.authStateChanges().listen(_emitForUser);
   }
 

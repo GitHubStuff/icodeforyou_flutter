@@ -75,7 +75,8 @@ class InfiniteScrollPickerConfig<T, K> {
 
   /// Multiplier used to seed the initial wheel offset for infinite scrolling.
   ///
-  /// The actual seed is `items.length * _infiniteWrapMultiplier + startingIndex`,
+  /// The actual seed is:
+  ///       `items.length * _infiniteWrapMultiplier + startingIndex`,
   /// which guarantees the seed is always congruent to [startingIndex]
   /// modulo `items.length` — independent of list size. The multiplier is
   /// chosen large enough that no realistic user will ever scroll out of the

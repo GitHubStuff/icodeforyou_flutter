@@ -31,9 +31,8 @@ import 'settings_state/settings_state.dart';
 class SettingsCubit extends Cubit<SettingsState> {
   SettingsCubit({
     required SettingsHolder holder,
-    required SettingsRepository repository,
+    required this._repository,
   }) : _holder = holder,
-       _repository = repository,
        super(SettingsState.loaded(settings: holder.value));
 
   final SettingsHolder _holder;

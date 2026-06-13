@@ -19,6 +19,7 @@ import 'package:custom_widgets/custom_widgets.dart' show SizedSpinner;
 import 'package:extensions/haptics/haptic_intensity.dart' show HapticIntensity;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:service_locator/service_locator.dart' show ServiceRegistry;
 import 'package:theme_manager/theme_manager.dart'
@@ -28,6 +29,13 @@ import 'src/nav_entries.dart' show navEntries;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -63,7 +71,7 @@ Widget get splashWidget {
   return SplashFlow(
     splashWidget: pulse,
     intermediateWidget: const SizedSpinner(size: 60),
-    landingPage: _homeScreen,
+    landingPage: _animatedRailMenu,
     tasks: const [],
   );
   // unawaited(StatusBarChameleon.setStatusBarHidden(hidden: false));
@@ -85,12 +93,12 @@ Widget get pulse {
   );
 }
 
-const _homeScreen = AnimatedRailMenu(
+final _animatedRailMenu = AnimatedRailMenu(
   entries: navEntries,
   direction: RailDirection.adaptive,
   icon: RailIcon.phone,
   transition: RailTransition.crossFade,
-  transitionDuration: Duration(milliseconds: 700),
+  transitionDuration: const Duration(milliseconds: 700),
   iconSpacing: MenuIconSpacing.collapsed,
   haptic: HapticIntensity.medium,
   limit: null,

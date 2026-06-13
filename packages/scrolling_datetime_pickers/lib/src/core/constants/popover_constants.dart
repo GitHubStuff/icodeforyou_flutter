@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 /// Default values for DateTimePickerPopover styling and animation.
 class PopoverConstants {
   // Animation durations
-  static const Duration crossfadeDuration = Duration(milliseconds: 250);
+  static const Duration crossfadeDuration = Duration(milliseconds: 550);
   static const Curve crossfadeCurve = Curves.linear;
-  static const Duration popoverFadeDuration = Duration(milliseconds: 100);
+  static const Duration popoverFadeDuration = Duration(milliseconds: 450);
   static const Curve popoverFadeCurve = Curves.linear;
 
   // Barrier

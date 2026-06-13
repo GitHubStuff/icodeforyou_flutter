@@ -42,7 +42,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyBiZvdZfaV9P2XdXzkVGvpv2nIEZPPeBBg',
-    appId: '1:765154562260:web:6f980f2802477716fb6b41',
+    appId: '1:765154562260:web:4d1e4c3fd0d24f15fb6b41',
     messagingSenderId: '765154562260',
     projectId: 'creature-comforts-a5aaa',
     authDomain: 'creature-comforts-a5aaa.firebaseapp.com',
@@ -59,25 +59,25 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAV-dsRlCdeYTi4YY-AEQhgwAYa02qiZkY',
-    appId: '1:765154562260:ios:5ec6f4c6b8a572d8fb6b41',
+    appId: '1:765154562260:ios:899edb5a62e53f82fb6b41',
     messagingSenderId: '765154562260',
     projectId: 'creature-comforts-a5aaa',
     storageBucket: 'creature-comforts-a5aaa.firebasestorage.app',
-    iosBundleId: 'com.icodeforyou.creatureComforts',
+    iosBundleId: 'com.icodeforyou.creatureComfort',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyAV-dsRlCdeYTi4YY-AEQhgwAYa02qiZkY',
-    appId: '1:765154562260:ios:5ec6f4c6b8a572d8fb6b41',
+    appId: '1:765154562260:ios:899edb5a62e53f82fb6b41',
     messagingSenderId: '765154562260',
     projectId: 'creature-comforts-a5aaa',
     storageBucket: 'creature-comforts-a5aaa.firebasestorage.app',
-    iosBundleId: 'com.icodeforyou.creatureComforts',
+    iosBundleId: 'com.icodeforyou.creatureComfort',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyBiZvdZfaV9P2XdXzkVGvpv2nIEZPPeBBg',
-    appId: '1:765154562260:web:4d1e4c3fd0d24f15fb6b41',
+    appId: '1:765154562260:web:4315b2659aa2d467fb6b41',
     messagingSenderId: '765154562260',
     projectId: 'creature-comforts-a5aaa',
     authDomain: 'creature-comforts-a5aaa.firebaseapp.com',

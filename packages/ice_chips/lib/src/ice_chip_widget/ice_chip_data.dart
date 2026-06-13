@@ -1,6 +1,6 @@
 // packages/ice_chips_tray/lib/src/ice_chip_data.dart
 // ignore_for_file: comment_references, public_member_api_docs
-
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart' show immutable;
 
 /// Data Transfer Object for a single chip in an [IceChipsTray].
@@ -12,7 +12,7 @@ import 'package:flutter/foundation.dart' show immutable;
 /// Callers are responsible for translating their domain types into
 /// [IceChipData] instances before passing them to the tray.
 @immutable
-class IceChipData {
+class IceChipData extends Equatable {
   const IceChipData({
     required this.id,
     required this.label,
@@ -42,15 +42,7 @@ class IceChipData {
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is IceChipData &&
-          other.id == id &&
-          other.label == label &&
-          other.colorInt == colorInt;
-
-  @override
-  int get hashCode => Object.hash(id, label, colorInt);
+  List<Object?> get props => [id, label, colorInt];
 
   @override
   String toString() =>

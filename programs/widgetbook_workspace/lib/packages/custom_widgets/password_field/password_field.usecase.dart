@@ -1,10 +1,11 @@
-// programs/widgetbook_workspace/lib/package/password_field/password_field.usecase.dart
+// programs/widgetbook_workspace/lib/packages/custom_widgets/password_field/password_field.usecase.dart
 
 // ignore_for_file: public_member_api_docs
 
 import 'package:custom_widgets/custom_widgets.dart' show PasswordField;
 import 'package:extensions/haptics/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
+import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 const double _kMaxFieldWidth = 360;
@@ -33,7 +34,10 @@ Widget passwordFieldPlaygroundUseCase(BuildContext context) {
   );
 }
 
-@widgetbook.UseCase(name: 'Long Value (wraps when revealed)', type: PasswordField)
+@widgetbook.UseCase(
+  name: 'Long Value (wraps when revealed)',
+  type: PasswordField,
+)
 Widget passwordFieldLongValueUseCase(BuildContext context) {
   return const _PasswordFieldHost(
     passwordLabel: _kLabelInitial,
@@ -63,8 +67,9 @@ class _PasswordFieldHost extends StatefulWidget {
 }
 
 class _PasswordFieldHostState extends State<_PasswordFieldHost> {
-  late final TextEditingController _controller =
-      TextEditingController(text: widget.initialText);
+  late final TextEditingController _controller = TextEditingController(
+    text: widget.initialText,
+  );
 
   @override
   void dispose() {

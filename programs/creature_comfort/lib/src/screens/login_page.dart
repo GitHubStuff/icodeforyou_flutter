@@ -90,7 +90,7 @@ class _LoginViewState extends State<_LoginView> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(_kPagePadding),
         child: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {

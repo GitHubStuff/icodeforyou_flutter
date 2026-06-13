@@ -3,15 +3,13 @@ import 'dart:ui';
 
 /// Represents a single particle in the dissolve animation.
 class DissolveParticle {
-  /// Creates a [DissolveParticle] with the given [position], [velocity],
-  /// and [startTime] within the normalised animation timeline (0.0–1.0).
+  /// Creates a [DissolveParticle] with the given [position], [_velocity],
+  /// and [_startTime] within the normalised animation timeline (0.0–1.0).
   const DissolveParticle({
     required Offset position,
-    required Offset velocity,
-    required double startTime,
-  }) : _initialPosition = position,
-       _velocity = velocity,
-       _startTime = startTime;
+    required this._velocity,
+    required this._startTime,
+  }) : _initialPosition = position;
 
   final Offset _initialPosition;
   final Offset _velocity;

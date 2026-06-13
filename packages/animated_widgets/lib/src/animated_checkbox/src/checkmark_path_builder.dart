@@ -6,14 +6,11 @@ import 'dart:ui';
 class CheckmarkPathBuilder {
   /// Constructor
   const CheckmarkPathBuilder({
-    required double width,
-    required Offset startOffset,
-    required Offset midOffset,
-    required Offset finishOffset,
-  }) : _width = width,
-       _startOffset = startOffset,
-       _midOffset = midOffset,
-       _finishOffset = finishOffset;
+    required this._width,
+    required this._startOffset,
+    required this._midOffset,
+    required this._finishOffset,
+  });
 
   final double _width;
   final Offset _startOffset;

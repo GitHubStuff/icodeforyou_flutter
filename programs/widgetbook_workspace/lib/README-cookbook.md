@@ -8,9 +8,9 @@ After running `melos build`, the generated `main.directories.g.dart` will be alp
 
 ```zsh
 cd programs/widgetbook_workspace
-dart run build_runner build --delete-conflicting-outputs
+dart run build_runner build
 ```
-5
+
 ## Step 2 — send to Claude
 
 Upload or paste `lib/main.directories.g.dart` to Claude with this exact prompt:

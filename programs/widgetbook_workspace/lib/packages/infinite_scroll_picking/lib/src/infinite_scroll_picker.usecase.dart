@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:infinite_scroll_picking/infinite_scroll_picking.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(name: 'Default', type: InfiniteScrollPicker)
 Widget infiniteScrollPickerUseCase(BuildContext context) {
@@ -48,8 +47,26 @@ Widget infiniteScrollPickerUseCase(BuildContext context) {
 enum _Dataset {
   fruit('Fruit', ['🍎', '🍌', '🍇', '🍊', '🍉', '🍓', '🍑', '🥝', '🥭', '🍍']),
   numbers('Numbers 0–19', [
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-    '10', '11', '12', '13', '14', '15', '16', '17', '18', '19',
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+    '19',
   ]),
   weekdays('Weekdays', ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
 
@@ -127,8 +144,7 @@ class _PickerShowcaseState extends State<_PickerShowcase> {
                 item,
                 style: TextStyle(
                   fontSize: 22,
-                  fontWeight:
-                      isSelected ? FontWeight.bold : FontWeight.normal,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
             ),

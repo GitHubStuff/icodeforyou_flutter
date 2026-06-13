@@ -1,3 +1,5 @@
+// ignore_for_file: comment_references
+
 import 'package:app_preferences/app_preferences.dart'
     show AbstractPreferencesInterface;
 import 'package:flutter/material.dart';
@@ -9,7 +11,6 @@ import 'package:theme_manager/src/theme_mode/theme_persistence_abstract.dart'
 /// [SharedPreferencesWithCache]-backed implementation of
 /// [ThemePersistenceAbstract].
 ///
-// ignore: comment_references
 /// Stores the selected [ThemeMode] as its [Enum.name] under a namespaced
 /// key so it can be restored across app launches. The cache is scoped to
 /// only the theme key via an allow-list, keeping reads fast and avoiding
@@ -35,7 +36,6 @@ class ThemePersistence extends ThemePersistenceAbstract {
   final AbstractPreferencesInterface _prefs;
 
   ///
-  // ignore: comment_references
   /// Storage key under which the [ThemeMode.name] is persisted.
   ///
   /// The trailing numeric suffix namespaces the key to avoid collisions
@@ -57,7 +57,6 @@ class ThemePersistence extends ThemePersistenceAbstract {
   /// Returns the persisted [ThemeMode], defaulting to [ThemeMode.dark].
   ///
   /// Reads the stored string via the cached preferences handle and matches
-  // ignore: comment_references
   /// it against [ThemeMode.values] by [Enum.name]. If no value is present
   /// or the stored value does not correspond to a known mode (for example,
   /// after an enum rename), [ThemeMode.dark] is returned.
@@ -74,7 +73,6 @@ class ThemePersistence extends ThemePersistenceAbstract {
   }
 
   ///
-  // ignore: comment_references
   /// Persists [mode] by writing its [Enum.name] under [_key].
   ///
   /// The returned [Future] completes once the value has been written to

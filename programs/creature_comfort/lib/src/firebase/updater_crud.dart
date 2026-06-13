@@ -10,7 +10,11 @@ const String _kEmailField = 'email';
 const String _kNameField = 'name';
 const String _kTimestampField = 'timestamp';
 
-/// Write access to the shared beacon document `shared/updater`.
+/// The latest change beacon from `shared/updater`: who changed something
+/// last, and when.
+typedef UpdaterBeacon = ({String email, String name, int timestamp});
+
+/// Read/write access to the shared beacon document `shared/updater`.
 ///
 /// Each write overwrites the beacon with whoever changed something last,
 /// so every client listening to this document is pushed the new values.
@@ -35,5 +39,21 @@ class UpdaterCrud {
       _kNameField: name,
       _kTimestampField: timestamp,
     });
+  }
+
+  /// A live stream of the beacon. Emits on every change to
+  /// `shared/updater`, and `null` when the document does not exist.
+  Stream<UpdaterBeacon?> watch() => _doc.snapshots().map(_toBeacon);
+
+  UpdaterBeacon? _toBeacon(DocumentSnapshot<Json> snapshot) {
+    final data = snapshot.data();
+    if (data == null) {
+      return null;
+    }
+    return (
+      email: data[_kEmailField] as String? ?? '',
+      name: data[_kNameField] as String? ?? '',
+      timestamp: data[_kTimestampField] as int? ?? 0,
+    );
   }
 }
