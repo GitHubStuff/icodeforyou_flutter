@@ -1,19 +1,2 @@
-include: package:very_good_analysis/analysis_options.yaml
-
-analyzer:
-  errors:
-    avoid_redundant_argument_values: ignore
-    depend_on_referenced_packages: ignore
-    omit_local_variable_types: ignore
-
-  exclude:
-    - '**/*.config.dart'
-    - '**/*.directories.dart'
-    - '**/*.freezed.dart'
-    - '**/*.g.dart'
-    - '**/*.gen.dart'
-    - '**/*.mocks.dart'
-
-linter:
-  rules:
-    # Relaxed rules if needed (none for now - keeping strict)
+# packages/extensions/analysis_options.yaml
+include: package:icodeforyou_lints/analysis_options.yaml

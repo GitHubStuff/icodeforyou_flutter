@@ -3,15 +3,17 @@
 
 import 'package:animated_rail_menu/animated_rail_menu.dart'
     show AnimatedRailMenuEntry;
-import 'package:creature_comfort/src/screens/login_page.dart' show LoginPage;
-import 'package:creature_comfort/src/screens/orientation_page.dart';
-import 'package:creature_comfort/src/screens/subscriptions_page.dart';
-import 'package:creature_comfort/src/screens/widgets_page.dart'
-    show WidgetsPage;
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-import 'screens/home_page.dart' show HomePage;
+import 'screens/_screens.dart'
+    show
+        HomePage,
+        LoginPage,
+        OrientationPage,
+        SettingsPage,
+        SubscriptionsPage,
+        WidgetsPage;
 
 final navEntries = <AnimatedRailMenuEntry>[
   const AnimatedRailMenuEntry(
@@ -19,6 +21,12 @@ final navEntries = <AnimatedRailMenuEntry>[
     activeIcon: Icons.home,
     label: 'Home',
     page: HomePage(),
+  ),
+  const AnimatedRailMenuEntry(
+    icon: Icons.settings_outlined,
+    activeIcon: Icons.settings,
+    label: 'Settings',
+    page: SettingsPage(),
   ),
   const AnimatedRailMenuEntry(
     icon: Icons.login_outlined,

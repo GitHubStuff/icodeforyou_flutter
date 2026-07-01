@@ -6,9 +6,9 @@ import 'package:custom_widgets/src/directional_slider/slider/directional_control
 import 'package:custom_widgets/src/directional_slider/slider/directional_slider.dart'
     show DirectionalSlider;
 
-import 'package:extensions/haptics/haptic_intensity.dart' show HapticIntensity;
+import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
-import 'package:widget_themes/widget_themes.dart' show CrossFadeTheme;
+import 'package:theme_manager/theme_manager.dart' show CrossFadeTheme;
 
 import 'step_button.dart';
 

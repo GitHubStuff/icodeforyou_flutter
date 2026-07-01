@@ -1,11 +1,12 @@
-// extensions.dart
+// packages/extensions/lib/extensions.dart
 
-export 'package:extensions/color_ext/color_ext.dart';
-export 'package:extensions/color_ext/nullable_color_converter.dart';
-export 'package:extensions/datetime_ext/datetime_ext.dart';
-export 'package:extensions/haptics/haptic_intensity.dart';
-export 'package:extensions/int_ext/int_ext.dart';
-export 'package:extensions/iterable_ext/iterable_ext.dart';
-export 'package:extensions/placement/placement.dart';
-export 'package:extensions/string_ext/string_ext.dart';
-export 'package:extensions/widget_ext/widget_ext.dart';
+export 'package:extensions/color/color_ext.dart' show ColorExt;
+export 'package:extensions/datetime/datetime_ext.dart';
+export 'package:extensions/duration/duration_ext.dart' show DurationExt;
+export 'package:extensions/enum/src/haptic_intensity.dart';
+export 'package:extensions/int/int_ext.dart';
+export 'package:extensions/iterable/iterable_ext.dart';
+export 'package:extensions/json/nullable_color_converter.dart'
+    show NullableColorConverter;
+export 'package:extensions/string/string_ext.dart';
+export 'package:extensions/widget/widget_ext.dart';

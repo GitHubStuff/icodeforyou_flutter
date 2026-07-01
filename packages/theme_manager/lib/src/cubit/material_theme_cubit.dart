@@ -1,15 +1,15 @@
 //
-// ignore_for_file: public_member_api_docs
+// ignore_for_file: always_use_package_imports, public_member_api_docs
 
 import 'dart:async' show unawaited;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:theme_manager/src/cubit/material_theme.dart' show MaterialTheme;
-import 'package:theme_manager/src/cubit/material_theme_state.dart'
-    show MaterialThemeState;
-import 'package:theme_manager/src/theme_mode/theme_persistence_abstract.dart'
+
+import '../persistence/theme_persistence_abstract.dart'
     show ThemePersistenceAbstract;
+import '../themes/material_theme.dart' show MaterialTheme;
+import 'material_theme_state.dart' show MaterialThemeState;
 
 class MaterialThemeCubit extends Cubit<MaterialThemeState> {
   MaterialThemeCubit({

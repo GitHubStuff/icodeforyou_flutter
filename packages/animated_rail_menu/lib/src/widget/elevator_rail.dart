@@ -34,8 +34,14 @@ class _ElevatorRail extends StatelessWidget {
     return Material(
       color: theme.backgroundColor,
       elevation: theme.elevation,
+      // The rail sits on the leading edge, so it must honor the leading
+      // (left) inset: in landscape with the dynamic island/notch on the left,
+      // the system reports a non-zero left inset and the items would otherwise
+      // render beneath the cutout. SafeArea pushes the icon column clear while
+      // the Material above fills the inset region, so the bar color extends
+      // under the cutout with no visual gap. `right` stays disabled because the
+      // trailing edge is interior — adjacent to the body, which owns its inset.
       child: SafeArea(
-        left: false,
         right: false,
         minimum: const EdgeInsets.only(top: _kElevatorTopMinimum),
         child: SizedBox(

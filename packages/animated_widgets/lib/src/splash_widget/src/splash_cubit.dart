@@ -1,5 +1,5 @@
 // packages/animated_widgets/lib/src/splash_widget/src/splash_cubit.dart
-// ignore_for_file: public_member_api_docs, always_use_package_imports, comment_references
+// ignore_for_file: always_use_package_imports
 
 import 'dart:async';
 
@@ -18,13 +18,16 @@ import 'splash_state.dart';
 /// [BackgroundTaskFailed]) it will not emit again; further internal callbacks
 /// are no-ops.
 final class SplashCubit extends Cubit<SplashState> {
-  /// Creates a cubit in the [SplashShowing] state. Call [start] from the
-  /// presenting widget's `initState` to begin the splash timer and begin
-  /// awaiting the background tasks.
+  /// Creates a cubit in the [SplashShowing] state.
+  ///
+  /// Call [start] from the presenting widget's `initState` to begin the
+  /// splash timer and start awaiting the background tasks. When no
+  /// [splashConfig] is supplied a const [SplashConfig] is used.
   SplashCubit({SplashConfig? splashConfig})
     : config = splashConfig ?? const SplashConfig(),
       super(const SplashShowing());
 
+  /// The timing and copy controlling this flow.
   final SplashConfig config;
 
   Timer? _timer;
@@ -34,22 +37,23 @@ final class SplashCubit extends Cubit<SplashState> {
 
   /// Begins the splash phase and starts awaiting [tasks].
   ///
-  /// The splash artwork is shown for [splashDuration]. When the splash
+  /// The splash artwork is shown for [SplashConfig.splashDuration]. When that
   /// duration elapses, the cubit either transitions directly to
   /// [LandingShowing] (if the tasks have already completed) or to
-  /// [IndeterminateShowing] (if they have not). The [timeout] clock starts
-  /// only when [IndeterminateShowing] is emitted.
+  /// [IndeterminateShowing] (if they have not). The
+  /// [SplashConfig.timeoutDuration] clock starts only when
+  /// [IndeterminateShowing] is emitted.
   ///
   /// If any task fails, [BackgroundTaskFailed] is emitted with the first
-  /// error from `Future.wait`. If the indeterminate phase exceeds [timeout],
-  /// [TimedOut] is emitted.
+  /// error from `Future.wait`. If the indeterminate phase exceeds
+  /// [SplashConfig.timeoutDuration], [TimedOut] is emitted.
   void start({
     required List<Future<void>> tasks,
   }) {
     _splashElapsed = false;
     _tasksCompleted = false;
     _terminated = false;
-   
+
     _emitAndSetTimer(
       const SplashShowing(),
       config.splashDuration,
@@ -58,7 +62,6 @@ final class SplashCubit extends Cubit<SplashState> {
 
     unawaited(_awaitTasks(tasks));
   }
-
 
   Future<void> _awaitTasks(List<Future<void>> tasks) async {
     try {

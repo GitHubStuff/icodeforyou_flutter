@@ -2,9 +2,10 @@
 
 export 'src/cubit/cubit.dart'
     show MaterialTheme, MaterialThemeCubit, MaterialThemeState;
-export 'src/theme_mode/theme_persistence.dart' show ThemePersistence;
-export 'src/theme_mode/theme_persistence_abstract.dart'
+export 'src/persistence/theme_persistence.dart' show ThemePersistence;
+export 'src/persistence/theme_persistence_abstract.dart'
     show ThemePersistenceAbstract;
-export 'src/theme_service/material_widget.dart' show MaterialWidget;
-export 'src/theme_service/theme_descriptor.dart' show ThemeDescriptor;
-export 'src/theme_service/theme_service.dart' show ThemeService;
+export 'src/themes/_themes.dart' show CrossFadeTheme, inputDecorationTheme;
+export 'src/widgets/preference/material_preference.dart'
+    show MaterialPreference;
+export 'src/widgets/root/material_root.dart' show MaterialRoot;

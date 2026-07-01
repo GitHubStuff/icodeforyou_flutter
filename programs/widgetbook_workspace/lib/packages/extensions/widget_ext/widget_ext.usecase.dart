@@ -1,7 +1,7 @@
 // packages/extensions/lib/widget_ext/widget_ext.usecase.dart
 // ignore_for_file: public_member_api_docs
 
-import 'package:extensions/widget_ext/widget_ext.dart' show WidgetExt;
+import 'package:extensions/widget/widget_ext.dart' show WidgetExt;
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;

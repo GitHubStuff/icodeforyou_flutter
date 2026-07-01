@@ -4,8 +4,8 @@
 
 import 'package:animated_widgets/animated_widgets.dart';
 import 'package:custom_widgets/custom_widgets.dart';
-import 'package:extensions/extensions.dart' show ColorExtension;
-import 'package:extensions/widget_ext/widget_ext.dart';
+import 'package:extensions/extensions.dart' show ColorExt;
+import 'package:extensions/widget/widget_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart' show Gap;
 import 'package:startup_demo/src/pages/analytics_page/scrollable_content_widget.dart';

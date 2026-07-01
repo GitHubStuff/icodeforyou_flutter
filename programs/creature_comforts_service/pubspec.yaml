@@ -15,7 +15,7 @@ dependencies:
   flutter:
     sdk: flutter
   fpdart: ^1.2.0
-  meta: ^1.17.0
+  meta: ^1.18.0
 
 dev_dependencies:
   fake_cloud_firestore: ^4.1.0+1

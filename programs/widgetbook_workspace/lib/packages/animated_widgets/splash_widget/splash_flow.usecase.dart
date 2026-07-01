@@ -4,7 +4,7 @@
 import 'dart:async';
 
 import 'package:animated_widgets/animated_widgets.dart'
-    show SplashConfig, SplashCubit, SplashFlow;
+    show SplashConfig, SplashCubit, SplashScreen;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:widgetbook/widgetbook.dart';
@@ -26,7 +26,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 /// Defaults: splash 1000ms, tasks complete at 3000ms, timeout 10000ms.
 @widgetbook.UseCase(
   name: 'Splash ends before tasks (spinner shown)',
-  type: SplashFlow,
+  type: SplashScreen,
 )
 Widget buildSplashFlowSpinnerShownUseCase(BuildContext context) {
   final config = _splashConfigKnobs(context, splashMs: 1000, timeoutMs: 10000);
@@ -45,7 +45,7 @@ Widget buildSplashFlowSpinnerShownUseCase(BuildContext context) {
 /// Defaults: tasks complete at 800ms, splash 3000ms, timeout 10000ms.
 @widgetbook.UseCase(
   name: 'Splash ends after tasks (no spinner)',
-  type: SplashFlow,
+  type: SplashScreen,
 )
 Widget buildSplashFlowNoSpinnerUseCase(BuildContext context) {
   final config = _splashConfigKnobs(context, splashMs: 3000, timeoutMs: 10000);
@@ -62,7 +62,7 @@ Widget buildSplashFlowNoSpinnerUseCase(BuildContext context) {
 /// and the timeout widget (driven by the `timeout text` knob) is shown.
 ///
 /// Defaults: splash 1000ms, timeout 2000ms (fires at 3000ms), tasks pending.
-@widgetbook.UseCase(name: 'Tasks time out', type: SplashFlow)
+@widgetbook.UseCase(name: 'Tasks time out', type: SplashScreen)
 Widget buildSplashFlowTimeoutUseCase(BuildContext context) {
   final config = _splashConfigKnobs(context, splashMs: 1000, timeoutMs: 2000);
   return _Scenario(
@@ -76,7 +76,7 @@ Widget buildSplashFlowTimeoutUseCase(BuildContext context) {
 /// by the `background task failed text` knob) regardless of the splash phase.
 ///
 /// Defaults: splash 2000ms, task throws at 1000ms, timeout 10000ms.
-@widgetbook.UseCase(name: 'Task error', type: SplashFlow)
+@widgetbook.UseCase(name: 'Task error', type: SplashScreen)
 Widget buildSplashFlowTaskErrorUseCase(BuildContext context) {
   final config = _splashConfigKnobs(context, splashMs: 2000, timeoutMs: 10000);
   return _Scenario(
@@ -167,9 +167,9 @@ Key _flowKey(SplashConfig config) => ValueKey<int>(
   ),
 );
 
-/// Hosts one [SplashFlow] run.
+/// Hosts one [SplashScreen] run.
 ///
-/// Provides the required [SplashCubit] above [SplashFlow] and builds the
+/// Provides the required [SplashCubit] above [SplashScreen] and builds the
 /// background tasks exactly once (in [initState]) so that ordinary rebuilds
 /// never spawn stray futures — a new run only happens when this widget is
 /// recreated via a changed [Key].
@@ -200,7 +200,7 @@ class _ScenarioState extends State<_Scenario> {
   Widget build(BuildContext context) {
     return BlocProvider<SplashCubit>(
       create: (_) => SplashCubit(splashConfig: widget.config),
-      child: SplashFlow(
+      child: SplashScreen(
         splashWidget: const _SplashArt(),
         intermediateWidget: const _SpinnerPhase(),
         landingPage: const _LandingPage(),

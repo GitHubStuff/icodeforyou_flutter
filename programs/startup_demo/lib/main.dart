@@ -10,11 +10,11 @@ import 'package:animated_rail_menu/animated_rail_menu.dart'
         RailIcon,
         RailTransition;
 import 'package:animated_widgets/animated_widgets.dart'
-    show PulseConfig, PulseWidget, SplashConfig, SplashCubit, SplashFlow;
+    show PulseWidget, SplashConfig, SplashCubit, SplashScreen;
 import 'package:app_preferences_service/app_preferences_service.dart'
     show AppPreferencesDescriptor;
 import 'package:custom_widgets/custom_widgets.dart' show SizedSpinner;
-import 'package:extensions/haptics/haptic_intensity.dart' show HapticIntensity;
+import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:remind_me/remind_me.dart' show RemindMe;
@@ -25,7 +25,9 @@ import 'package:startup_demo/src/navigation/nav_entries.dart';
 import 'package:status_bar_chameleon/status_bar_chameleon.dart'
     show StatusBarChameleon;
 import 'package:theme_manager/theme_manager.dart'
-    show MaterialThemeCubit, MaterialWidget, ThemeDescriptor, ThemeService;
+    show MaterialRoot, MaterialThemeCubit;
+import 'package:theme_service/theme_service.dart'
+    show ThemeDescriptor, ThemeService;
 
 /// A task that succeeds after [delay].
 Future<void> succeedsAfter(Duration delay) async {
@@ -90,16 +92,17 @@ final providers = MultiBlocProvider(
     BlocProvider.value(
       value: SplashCubit(
         splashConfig: const SplashConfig(
+          splashDuration: Duration(seconds: 1),
           crossfadeDuration: Duration(milliseconds: 250),
         ),
       ),
     ),
   ],
-  child: MaterialWidget(splashWidget),
+  child: MaterialRoot(splashWidget),
 );
 
 Widget get splashWidget {
-  return SplashFlow(
+  return SplashScreen(
     splashWidget: pulse,
     intermediateWidget: const SizedSpinner(size: 60),
     landingPage: _homeScreen,
@@ -116,15 +119,6 @@ Widget get splashWidget {
 
 Widget get pulse {
   return const PulseWidget(
-    config: PulseConfig(
-      pulseRestScale: 1,
-      pulsePeakScale: 1.9,
-      pulseStartScale: 0.15,
-      // growDuration: Duration(milliseconds: 500),
-      // holdDuration: Duration(seconds: 1),
-      // shrinkDuration: Duration(milliseconds: 750),
-      // shrinkCurve: Curves.easeOut,
-    ),
     child: FlutterLogo(size: 200),
   );
 }

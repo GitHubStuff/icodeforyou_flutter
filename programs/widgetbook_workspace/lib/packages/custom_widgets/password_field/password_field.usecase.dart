@@ -3,7 +3,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:custom_widgets/custom_widgets.dart' show PasswordField;
-import 'package:extensions/haptics/haptic_intensity.dart' show HapticIntensity;
+import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
@@ -66,14 +66,18 @@ class _PasswordFieldHost extends StatefulWidget {
   State<_PasswordFieldHost> createState() => _PasswordFieldHostState();
 }
 
+//+
 class _PasswordFieldHostState extends State<_PasswordFieldHost> {
   late final TextEditingController _controller = TextEditingController(
     text: widget.initialText,
   );
 
+  late final passwordFocusNode = FocusNode(debugLabel: 'password');
+
   @override
   void dispose() {
     _controller.dispose();
+    passwordFocusNode.dispose();
     super.dispose();
   }
 
@@ -87,10 +91,11 @@ class _PasswordFieldHostState extends State<_PasswordFieldHost> {
             constraints: const BoxConstraints(maxWidth: _kMaxFieldWidth),
             child: PasswordField(
               controller: _controller,
-              passwordLabel: widget.passwordLabel,
+              label: widget.passwordLabel,
               haptic: widget.haptic,
               showTextIcon: const Icon(Icons.visibility_outlined),
               hideTextIcon: const Icon(Icons.visibility_off_outlined),
+              focusNode: passwordFocusNode,
             ),
           ),
         ),

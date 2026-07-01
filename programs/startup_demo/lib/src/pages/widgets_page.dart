@@ -1,17 +1,9 @@
 // programs/whatever/lib/src/widgets_page.dart
-// ignore_for_file: library_private_types_in_public_api, public_member_api_docs
 
 import 'dart:async';
 
 import 'package:animated_widgets/animated_widgets.dart'
-    show
-        AnimatedBarrier,
-        AnimationTween,
-        CombinationAnimation,
-        CombinationAnimationX,
-        PopoverHandle,
-        PulseConfig,
-        TimedWidget;
+    show AnimatedBarrier, AnimatesWidgetExt, PopoverHandle, TimedWidget;
 import 'package:flutter/material.dart';
 import 'package:status_bar_chameleon/status_bar_chameleon.dart'
     show StatusBarChameleon;
@@ -22,16 +14,6 @@ const TextStyle _style = TextStyle(
   fontSize: 22,
   fontWeight: FontWeight.w500,
   color: Colors.purple,
-);
-
-PulseConfig get examplePulseConfig => const PulseConfig(
-  growCurve: Curves.decelerate,
-  growDuration: Duration(seconds: 1),
-  holdDuration: Duration(seconds: 1, milliseconds: 30),
-  pulsePeakScale: 1.9,
-  pulseRestScale: 0.5,
-  shrinkCurve: Curves.bounceInOut,
-  shrinkDuration: Duration(milliseconds: 750),
 );
 
 //++++++++++++
@@ -46,7 +28,6 @@ class WidgetsPage extends StatefulWidget {
 class _WidgetsPage extends State<WidgetsPage> {
   late PopoverHandle? _popoverHandle;
   late PopoverHandle? _statusBarPopover;
-  Key? _comboKey;
 
   int pulseKey = 0;
 
@@ -62,13 +43,10 @@ class _WidgetsPage extends State<WidgetsPage> {
             children: [
               _animatedBarrier(context),
               Center(
-                child: const FlutterLogo(size: 200).combinationAnimation(
-                  scale: AnimationTween.up(finish: 0.9),
-                ),
+                child: const FlutterLogo(size: 200).animatedSteps(),
               ),
               _animatedBarrierAsync(context),
               _toggleWidget,
-              _comboButton,
             ],
           ),
 
@@ -82,7 +60,6 @@ class _WidgetsPage extends State<WidgetsPage> {
           //   icon: const Icon(Icons.replay),
           //   label: const Text('Replay'),
           // ),
-          _comboAnimation,
         ],
       ),
     );
@@ -174,27 +151,4 @@ class _WidgetsPage extends State<WidgetsPage> {
       style: _style,
     ),
   );
-
-  Widget get _comboButton => ElevatedButton.icon(
-    onPressed: () => setState(() => _comboKey = UniqueKey()),
-    icon: const Icon(Icons.expand_more, size: _iconSize),
-    label: const Text(
-      'Animation Combo',
-      style: _style,
-    ),
-  );
-
-  Widget get _comboAnimation => _comboKey == null
-      ? const SizedBox.shrink()
-      : CombinationAnimation(
-          key: _comboKey,
-          scale: AnimationTween.up(start: 1, finish: 0.1),
-          opacity: AnimationTween.up(start: 1, finish: 0.1),
-          curve: Curves.easeOutCubic,
-          duration: const Duration(milliseconds: 2600),
-          onComplete: () {
-            debugPrint('Done');
-          },
-          child: const FlutterLogo(size: 150),
-        );
 }

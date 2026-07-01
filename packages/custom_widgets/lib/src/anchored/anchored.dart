@@ -1,7 +1,7 @@
 // packages/custom_widgets/lib/src/anchored.dart
 // ignore_for_file: public_member_api_docs
 
-import 'package:extensions/placement/placement.dart' show Placement;
+import 'package:extensions/enum/src/placement.dart' show Placement;
 import 'package:flutter/widgets.dart';
 
 /// Positions a child relative to an anchor widget, using a [Placement] plus an

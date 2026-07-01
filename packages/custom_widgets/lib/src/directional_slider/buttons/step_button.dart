@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:extensions/extensions.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
-import 'package:widget_themes/widget_themes.dart' show CrossFadeTheme;
+import 'package:theme_manager/theme_manager.dart' show CrossFadeTheme;
 
 /// A circular icon button that fires [onPressed] once on tap and
 /// auto-repeats while the pointer remains pressed (long-press).

@@ -1,0 +1,15 @@
+# packages/icodeforyou_lints/pubspec.yaml
+name: icodeforyou_lints
+description: Shared lints for icodeforyou_flutter mono-repo
+version: 1.0.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+  very_good_analysis: ^10.2.0

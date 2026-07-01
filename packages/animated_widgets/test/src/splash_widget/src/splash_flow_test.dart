@@ -3,8 +3,8 @@ import 'dart:async';
 
 import 'package:animated_widgets/src/splash_widget/src/splash_cubit.dart'
     show SplashCubit;
-import 'package:animated_widgets/src/splash_widget/src/splash_flow.dart'
-    show SplashFlow;
+import 'package:animated_widgets/src/splash_widget/src/splash_screen.dart'
+    show SplashScreen;
 import 'package:animated_widgets/src/splash_widget/src/splash_state.dart'
     show
         BackgroundTaskFailed,
@@ -33,7 +33,7 @@ Widget _subject({
   return MaterialApp(
     home: BlocProvider<SplashCubit>.value(
       value: cubit,
-      child: SplashFlow(
+      child: SplashScreen(
         splashWidget: const Text('SPLASH', key: _splashKey),
         landingPage: const Text('LANDING', key: _landingKey),
         tasks: tasks,
@@ -57,7 +57,10 @@ void main() {
       expect(cubit.state, isA<SplashShowing>());
       expect(find.byKey(_splashKey), findsOneWidget);
       expect(
-        find.ancestor(of: find.byKey(_splashKey), matching: find.byType(Center)),
+        find.ancestor(
+          of: find.byKey(_splashKey),
+          matching: find.byType(Center),
+        ),
         findsOneWidget,
       );
 
@@ -112,7 +115,9 @@ void main() {
         _subject(cubit: cubit, tasks: [Future<void>.value()]),
       );
       await tester.pump(); // flush the completed-task microtask
-      await tester.pump(cubit.config.splashDuration); // splash elapses -> landing
+      await tester.pump(
+        cubit.config.splashDuration,
+      ); // splash elapses -> landing
       await tester.pumpAndSettle(); // terminal: safe to settle the crossfade
 
       expect(cubit.state, isA<LandingShowing>());

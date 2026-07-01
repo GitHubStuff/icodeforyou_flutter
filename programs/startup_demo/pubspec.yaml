@@ -31,7 +31,7 @@ dependencies:
   sqlite_viewer: ^1.0.0
   status_bar_chameleon: ^1.0.1
   theme_manager: ^1.0.0
-  theme_widget: ^1.0.0
+  theme_service: ^1.0.0
 
 dev_dependencies:
   flutter_test:

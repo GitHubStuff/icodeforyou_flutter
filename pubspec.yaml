@@ -16,6 +16,7 @@ workspace:
   - packages/extensions
   - packages/ice_chips
   - packages/ice_chips_service
+  - packages/icodeforyou_lints
   - packages/infinite_scroll_picking
   - packages/infinite_scroll_picking/example
   - packages/infinite_scroll_picking_settings
@@ -31,8 +32,8 @@ workspace:
   - packages/since_when_widgets
   - packages/sqlite_viewer
   - packages/theme_manager
-  - packages/theme_widget
-  - packages/widget_themes
+  - packages/theme_service
+  - packages/time_spans
   - plugins/status_bar_chameleon
   - programs/creature_comfort
   - programs/creature_comforts_service
@@ -176,5 +177,3 @@ melos:
       run: |
         echo "📦 Workspace packages:"
         find . -name "pubspec.yaml" -not -path "./pubspec.yaml" -exec dirname {} \; | sort
-dependencies:
-  widget_themes: ^1.0.0

@@ -3,6 +3,7 @@
 
 import 'dart:async' show unawaited;
 
+import 'package:animated_widgets/animated_widgets.dart';
 import 'package:creature_comfort/src/firebase/cubit/auth_cubit.dart'
     show AuthCubit;
 import 'package:creature_comfort/src/firebase/cubit/auth_state.dart'
@@ -15,7 +16,7 @@ import 'package:creature_comfort/src/firebase/cubit/auth_state.dart'
         AuthState;
 import 'package:creature_comfort/src/typedef.dart' show defStyle;
 import 'package:custom_widgets/custom_widgets.dart'
-    show PasswordField, SizedSpinner;
+    show InputField, PasswordField, SizedSpinner;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart' show Gap;
@@ -42,7 +43,6 @@ const IconData _kHidePasswordIcon = Icons.visibility_off;
 
 // Labels.
 const String _kTitle = 'Login';
-const String _kEmailLabel = 'Email';
 const String _kPasswordLabel = 'Password';
 const String _kRegisterLabel = 'Register';
 const String _kLoginLabel = 'Login';
@@ -75,17 +75,22 @@ class _LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<_LoginView> {
   final _emailController = TextEditingController();
+  final _emailFocusNode = FocusNode();
   final _passwordController = TextEditingController();
+  final _passwordFocusNode = FocusNode();
+  GlobalKey key = GlobalKey(debugLabel: 'dbug');
 
   @override
   void dispose() {
     _emailController.dispose();
+    _emailFocusNode.dispose();
     _passwordController.dispose();
+    _passwordFocusNode.dispose();
     super.dispose();
   }
 
   String get _email => _emailController.text.trim();
-  String get _password => _passwordController.text;
+  String get _password => _passwordController.text.trim();
 
   @override
   Widget build(BuildContext context) {
@@ -100,21 +105,46 @@ class _LoginViewState extends State<_LoginView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(_kTitle, style: defStyle),
-                const Gap(_kTitleGap),
-                TextField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  autocorrect: false,
-                  enableSuggestions: false,
-                  decoration: const InputDecoration(
-                    labelText: _kEmailLabel,
-                    border: OutlineInputBorder(),
+                OutlinedButton(
+                  onPressed: () {
+                    setState(() {
+                      key = GlobalKey();
+                    });
+                  },
+                  child: const Text(
+                    'Pulse:',
+                    style: defStyle,
                   ),
                 ),
+                const Gap(4),
+                PulseWidget(
+                  key: key,
+                  child: const Text(
+                    'PULSE ME',
+                    style: defStyle,
+                  ),
+                ),
+                InputField(
+                  controller: _emailController,
+                  focusNode: _emailFocusNode,
+                  textInputType: TextInputType.emailAddress,
+                  errorText: 'Fake Problem',
+                  label: 'EMail!',
+                  suffixWidget: IconButton(
+                    icon: const Icon(Icons.cancel),
+                    tooltip: 'Clear',
+                    onPressed: () {
+                      _emailController.clear();
+                      _emailFocusNode.requestFocus();
+                    },
+                  ),
+                ),
+
                 const Gap(_kFieldGap),
                 PasswordField(
                   controller: _passwordController,
-                  passwordLabel: _kPasswordLabel,
+                  focusNode: _passwordFocusNode,
+                  label: _kPasswordLabel,
                   showTextIcon: const Icon(_kShowPasswordIcon),
                   hideTextIcon: const Icon(_kHidePasswordIcon),
                 ),

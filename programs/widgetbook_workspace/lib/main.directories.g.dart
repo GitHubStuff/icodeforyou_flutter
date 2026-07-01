@@ -135,8 +135,14 @@ import 'package:widgetbook_workspace/packages/since_when_widgets/tag_glossary_re
     as _widgetbook_workspace_packages_since_when_widgets_tag_glossary_read_view_usecase;
 import 'package:widgetbook_workspace/packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_page/sqlite_viewer_page.usecase.dart'
     as _widgetbook_workspace_packages_sqlite_viewer_lib_src_widgets_sqlite_viewer_page_sqlite_viewer_page_usecase;
-import 'package:widgetbook_workspace/packages/theme_widget/lib/src/theme_widget.usecase.dart'
-    as _widgetbook_workspace_packages_theme_widget_lib_src_theme_widget_usecase;
+import 'package:widgetbook_workspace/packages/theme_manager/widgets/preference/material_preference.usecase.dart'
+    as _widgetbook_workspace_packages_theme_manager_widgets_preference_material_preference_usecase;
+import 'package:widgetbook_workspace/packages/theme_manager/widgets/preference/theme_radio_row.usecase.dart'
+    as _widgetbook_workspace_packages_theme_manager_widgets_preference_theme_radio_row_usecase;
+import 'package:widgetbook_workspace/packages/theme_manager/widgets/preference/theme_selection_body.usecase.dart'
+    as _widgetbook_workspace_packages_theme_manager_widgets_preference_theme_selection_body_usecase;
+import 'package:widgetbook_workspace/packages/theme_manager/widgets/root/material_root.usecase.dart'
+    as _widgetbook_workspace_packages_theme_manager_widgets_root_material_root_usecase;
 
 final directories = <_widgetbook.WidgetbookNode>[
   _widgetbook.WidgetbookComponent(
@@ -194,17 +200,6 @@ final directories = <_widgetbook.WidgetbookNode>[
         builder:
             _widgetbook_workspace_packages_infinite_scroll_picking_lib_src_infinite_scroll_picker_usecase
                 .infiniteScrollPickerUseCase,
-      ),
-    ],
-  ),
-  _widgetbook.WidgetbookComponent(
-    name: 'ThemeWidget',
-    useCases: [
-      _widgetbook.WidgetbookUseCase(
-        name: 'Default',
-        builder:
-            _widgetbook_workspace_packages_theme_widget_lib_src_theme_widget_usecase
-                .themeWidgetUseCase,
       ),
     ],
   ),
@@ -1071,6 +1066,66 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder:
                 _widgetbook_workspace_packages_extensions_widget_ext_widget_ext_usecase
                     .buildWidgetExtUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookFolder(
+        name: 'preference',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'MaterialPreference',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder:
+                    _widgetbook_workspace_packages_theme_manager_widgets_preference_material_preference_usecase
+                        .buildMaterialPreferenceUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Localized (Spanish)',
+                builder:
+                    _widgetbook_workspace_packages_theme_manager_widgets_preference_material_preference_usecase
+                        .buildMaterialPreferenceLocalizedUseCase,
+              ),
+            ],
+          ),
+          _widgetbook.WidgetbookComponent(
+            name: 'ThemeRadioRow',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder:
+                    _widgetbook_workspace_packages_theme_manager_widgets_preference_theme_radio_row_usecase
+                        .buildThemeRadioRowUseCase,
+              ),
+            ],
+          ),
+          _widgetbook.WidgetbookComponent(
+            name: 'ThemeSelectionBody',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder:
+                    _widgetbook_workspace_packages_theme_manager_widgets_preference_theme_selection_body_usecase
+                        .buildThemeSelectionBodyUseCase,
+              ),
+            ],
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookFolder(
+        name: 'root',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'MaterialRoot',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder:
+                    _widgetbook_workspace_packages_theme_manager_widgets_root_material_root_usecase
+                        .buildMaterialRootUseCase,
+              ),
+            ],
           ),
         ],
       ),

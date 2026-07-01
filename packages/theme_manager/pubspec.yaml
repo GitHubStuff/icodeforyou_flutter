@@ -16,7 +16,6 @@ dependencies:
   flutter_bloc: ^9.1.1
   my_logger: ^1.0.0
   service_locator: ^1.0.0
-  widget_themes: ^1.0.0
   
 dev_dependencies:
   flutter_test:
