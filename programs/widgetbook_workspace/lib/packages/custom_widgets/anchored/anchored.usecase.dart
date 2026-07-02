@@ -2,7 +2,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:custom_widgets/custom_widgets.dart';
-import 'package:extensions/extensions.dart' show Placement;
+import 'package:extensions/enum/src/placement.dart' show Placement;
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;

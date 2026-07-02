@@ -1,7 +1,5 @@
 // widgetbook_workspace/lib/packages/animated_barrier/centered.usecase.dart
 
-// ignore_for_file: comment_references
-
 import 'package:animated_widgets/animated_widgets.dart' show AnimatedBarrier;
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
@@ -18,7 +16,7 @@ Widget centeredAnimatedBarrierUseCase(BuildContext context) {
     label: 'barrierDismissible',
     initialValue: true,
   );
-  final hideStatusBar = context.knobs.boolean(
+  context.knobs.boolean(
     label: 'hideStatusBar',
     initialValue: true,
   );

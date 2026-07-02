@@ -20,19 +20,19 @@ dependencies:
   fpdart: ^1.2.0
   gap: ^3.0.1
   ice_chips: ^1.0.0
-  infinite_scroll_picking: ^1.0.0
   infinite_scroll_picking_settings: ^1.0.0
+  infinite_scroll_picking: ^1.0.0
   random_color_generator: ^1.0.0
   remind_me: ^1.0.0
   scrolling_datetime_pickers: ^1.0.0
   settings_widget: ^1.0.0
   since_when_framework: ^1.0.0
   since_when_widgets: ^1.0.0
-  status_bar_chameleon: ^1.0.0
   sqlite_viewer: ^1.0.0
+  status_bar_chameleon: ^1.0.0
   theme_manager: ^1.0.0
-  widgetbook: ^3.24.0
   widgetbook_annotation: ^3.11.0
+  widgetbook: ^3.24.0
 
 dev_dependencies:
   build_runner: ^2.7.0   # dart run build_runner build --delete-conflicting-outputs

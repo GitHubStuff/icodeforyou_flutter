@@ -4,6 +4,7 @@ analyzer:
   errors:
     always_use_package_imports: ignore
     avoid_redundant_argument_values: ignore
+    comment_references: ignore
     depend_on_referenced_packages: ignore
     omit_local_variable_types: ignore
     public_member_api_docs: ignore

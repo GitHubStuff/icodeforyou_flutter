@@ -9,7 +9,7 @@ import 'package:animated_rail_menu/animated_rail_menu.dart'
         RailIcon,
         RailTransition;
 import 'package:animated_widgets/animated_widgets.dart'
-    show PulseConfig, PulseWidget, SplashConfig, SplashCubit, SplashScreen;
+    show PulseWidget, SplashConfig, SplashCubit, SplashScreen;
 import 'package:app_preferences_service/app_preferences_service.dart'
     show AppPreferencesDescriptor;
 import 'package:creature_comfort/firebase_options.dart';

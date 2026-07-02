@@ -1,6 +1,6 @@
-// startup_demo/lib/src/pages/database_page/configuration_panel.dart
+// programs/startup_demo/lib/src/pages/database_page/configuration_panel.dart
 
-// ignore_for_file: public_member_api_docs
+// ignore_for_file: comment_references
 
 import 'package:flutter/material.dart';
 import 'package:since_when_framework/database.dart' show DatabaseAccess;

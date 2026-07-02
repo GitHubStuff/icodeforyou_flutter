@@ -27,7 +27,6 @@ import 'package:gap/gap.dart' show Gap;
 
 // Layout.
 const double _kPagePadding = 16;
-const double _kTitleGap = 16;
 const double _kFieldGap = 12;
 const double _kActionsGap = 16;
 const double _kStatusGap = 24;

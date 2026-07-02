@@ -1,7 +1,4 @@
-// ignore_for_file: public_member_api_docs
-
-import 'package:animated_widgets/animated_widgets.dart'
-    show AnimatedBarrier, PopoverPosition;
+// programs/creature_comfort/lib/src/screens/widgets_page.dart
 import 'package:creature_comfort/src/firebase/updater_crud.dart'
     show UpdaterCrud;
 import 'package:creature_comfort/src/setup/setup.dart';
@@ -15,9 +12,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart' show Gap;
 
-final GlobalKey _gKey = GlobalKey();
-
+/// {@template widgets_page}
+/// A page that reacts to [GeneralState] emitted by [GeneralCubit] and renders
+/// a state-specific view.
+///
+/// The page listens through a [BlocBuilder] and switches on the current
+/// [GeneralState]:
+///
+/// * [InitialState] — shows the landing content with two actions: an **Init**
+///   button that kicks off the cubit's initialization flow and drives the
+///   [Setup] pipeline, and an **Updater** button that performs a Firestore
+///   write via [UpdaterCrud].
+/// * [WaitingStart] — shows a [SizedSpinner] while work is in progress.
+/// * [WaitingFinished] — currently unhandled.
+///
+/// The widget itself is stateless; all mutable state is owned by the ambient
+/// [GeneralCubit] read from the [BuildContext].
+/// {@endtemplate}
 class WidgetsPage extends StatelessWidget {
+  /// {@macro widgets_page}
   const WidgetsPage({super.key});
 
   @override
@@ -58,9 +71,8 @@ class WidgetsPage extends StatelessWidget {
                   ),
                 ],
               ),
-              // TODO: Handle this case.
+              // TODO(steven): Handle the WaitingFinished case.
               WaitingFinished() => throw UnimplementedError(),
-
               WaitingStart() => const SizedSpinner(size: 100),
             };
           },
