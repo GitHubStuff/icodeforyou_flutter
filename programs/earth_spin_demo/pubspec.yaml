@@ -1,0 +1,27 @@
+name: earth_spin_demo
+description: "Demo For Rotating eart"
+publish_to: 'none'
+version: 1.0.0
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  earth_spin: ^1.0.0
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.1.1
+  gap: ^3.0.1
+  stacking_widgets: ^1.0.0
+  three_d_sphere: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.2.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
