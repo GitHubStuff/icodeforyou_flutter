@@ -6,11 +6,11 @@
 /// the same identifier.
 abstract final class TableNames {
   /// Main records table.
-  static const String sinceWhen = 'since_when';
+  static const String sinceWhen = 'sinceWhen';
 
   /// Tag glossary table.
-  static const String tagGlossary = 'since_when_tag_glossary';
+  static const String tagGlossary = 'sinceWhenGlossary';
 
   /// Join table linking records to tags.
-  static const String tags = 'since_when_tags';
+  static const String tags = 'sinceWhenTags';
 }

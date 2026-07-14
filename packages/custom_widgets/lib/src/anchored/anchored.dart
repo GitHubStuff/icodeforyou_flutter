@@ -1,5 +1,4 @@
 // packages/custom_widgets/lib/src/anchored.dart
-// ignore_for_file: public_member_api_docs
 
 import 'package:extensions/enum/src/placement.dart' show Placement;
 import 'package:flutter/widgets.dart';

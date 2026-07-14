@@ -8,7 +8,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
-  earth_spin: ^1.0.0
+  data_grid: ^1.0.0
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1

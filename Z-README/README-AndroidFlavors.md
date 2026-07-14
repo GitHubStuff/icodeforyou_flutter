@@ -9,51 +9,85 @@ Codename       → dessert/internal release name
 ```
 w
 ---
+ In Kotlin / Android code
 
-## Android Versions, Codenames, and API Levels
+```kotlin
+if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+    // Android 11 / API 30+
+}
+```
 
-| Android Version | Codename / Name | API Level |
-|---:|---|---:|
-| Android 1.0 | No public codename | 1 |
-| Android 1.1 | Petit Four | 2 |
-| Android 1.5 | Cupcake | 3 |
-| Android 1.6 | Donut | 4 |
-| Android 2.0 | Eclair | 5 |
-| Android 2.0.1 | Eclair | 6 |
-| Android 2.1 | Eclair | 7 |
-| Android 2.2 | Froyo | 8 |
-| Android 2.3 | Gingerbread | 9 |
-| Android 2.3.3 | Gingerbread | 10 |
-| Android 3.0 | Honeycomb | 11 |
-| Android 3.1 | Honeycomb | 12 |
-| Android 3.2 | Honeycomb | 13 |
-| Android 4.0 | Ice Cream Sandwich | 14 |
-| Android 4.0.3 | Ice Cream Sandwich | 15 |
-| Android 4.1 | Jelly Bean | 16 |
-| Android 4.2 | Jelly Bean | 17 |
-| Android 4.3 | Jelly Bean | 18 |
-| Android 4.4 | KitKat | 19 |
-| Android 4.4W | KitKat Watch | 20 |
-| Android 5.0 | Lollipop | 21 |
-| Android 5.1 | Lollipop | 22 |
-| Android 6.0 | Marshmallow | 23 |
-| Android 7.0 | Nougat | 24 |
-| Android 7.1 | Nougat | 25 |
-| Android 8.0 | Oreo | 26 |
-| Android 8.1 | Oreo | 27 |
-| Android 9 | Pie | 28 |
-| Android 10 | Quince Tart | 29 |
-| Android 11 | Red Velvet Cake | 30 |
-| Android 12 | Snow Cone | 31 |
-| Android 12L | Snow Cone v2 | 32 |
-| Android 13 | Tiramisu | 33 |
-| Android 14 | Upside Down Cake | 34 |
-| Android 15 | Vanilla Ice Cream | 35 |
-| Android 16 | Baklava | 36 |
+Using an imported `Build` class:
 
----
+```kotlin
+import android.os.Build
 
-## Practical Usage
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
+    // Android 16 / API 36+
+}
+```
+
+### Recent `Build.VERSION_CODES` constants
+
+| Constant                                | Android Version | API Level |
+| --------------------------------------- | --------------: | --------: |
+| `Build.VERSION_CODES.M`                 |     Android 6.0 |        23 |
+| `Build.VERSION_CODES.N`                 |     Android 7.0 |        24 |
+| `Build.VERSION_CODES.N_MR1`             |     Android 7.1 |        25 |
+| `Build.VERSION_CODES.O`                 |     Android 8.0 |        26 |
+| `Build.VERSION_CODES.O_MR1`             |     Android 8.1 |        27 |
+| `Build.VERSION_CODES.P`                 |       Android 9 |        28 |
+| `Build.VERSION_CODES.Q`                 |      Android 10 |        29 |
+| `Build.VERSION_CODES.R`                 |      Android 11 |        30 |
+| `Build.VERSION_CODES.S`                 |      Android 12 |        31 |
+| `Build.VERSION_CODES.S_V2`              |     Android 12L |        32 |
+| `Build.VERSION_CODES.TIRAMISU`          |      Android 13 |        33 |
+| `Build.VERSION_CODES.UPSIDE_DOWN_CAKE`  |      Android 14 |        34 |
+| `Build.VERSION_CODES.VANILLA_ICE_CREAM` |      Android 15 |        35 |
+| `Build.VERSION_CODES.BAKLAVA`           |      Android 16 |        36 |
+| `Build.VERSION_CODES.CINNAMON_BUN`      |      Android 17 |        37 |
+
+### All `Build.VERSION_CODES` constants
+
+| Constant                                     | Android Version | API Level |
+| -------------------------------------------- | --------------: | --------: |
+| `Build.VERSION_CODES.BASE`                   |     Android 1.0 |         1 |
+| `Build.VERSION_CODES.BASE_1_1`               |     Android 1.1 |         2 |
+| `Build.VERSION_CODES.CUPCAKE`                |     Android 1.5 |         3 |
+| `Build.VERSION_CODES.DONUT`                  |     Android 1.6 |         4 |
+| `Build.VERSION_CODES.ECLAIR`                 |     Android 2.0 |         5 |
+| `Build.VERSION_CODES.ECLAIR_0_1`             |   Android 2.0.1 |         6 |
+| `Build.VERSION_CODES.ECLAIR_MR1`             |     Android 2.1 |         7 |
+| `Build.VERSION_CODES.FROYO`                  |     Android 2.2 |         8 |
+| `Build.VERSION_CODES.GINGERBREAD`            |     Android 2.3 |         9 |
+| `Build.VERSION_CODES.GINGERBREAD_MR1`        |   Android 2.3.3 |        10 |
+| `Build.VERSION_CODES.HONEYCOMB`              |     Android 3.0 |        11 |
+| `Build.VERSION_CODES.HONEYCOMB_MR1`          |     Android 3.1 |        12 |
+| `Build.VERSION_CODES.HONEYCOMB_MR2`          |     Android 3.2 |        13 |
+| `Build.VERSION_CODES.ICE_CREAM_SANDWICH`     |     Android 4.0 |        14 |
+| `Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1` |   Android 4.0.3 |        15 |
+| `Build.VERSION_CODES.JELLY_BEAN`             |     Android 4.1 |        16 |
+| `Build.VERSION_CODES.JELLY_BEAN_MR1`         |     Android 4.2 |        17 |
+| `Build.VERSION_CODES.JELLY_BEAN_MR2`         |     Android 4.3 |        18 |
+| `Build.VERSION_CODES.KITKAT`                 |     Android 4.4 |        19 |
+| `Build.VERSION_CODES.KITKAT_WATCH`           |    Android 4.4W |        20 |
+| `Build.VERSION_CODES.LOLLIPOP`               |     Android 5.0 |        21 |
+| `Build.VERSION_CODES.LOLLIPOP_MR1`           |     Android 5.1 |        22 |
+| `Build.VERSION_CODES.M`                      |     Android 6.0 |        23 |
+| `Build.VERSION_CODES.N`                      |     Android 7.0 |        24 |
+| `Build.VERSION_CODES.N_MR1`                  |     Android 7.1 |        25 |
+| `Build.VERSION_CODES.O`                      |     Android 8.0 |        26 |
+| `Build.VERSION_CODES.O_MR1`                  |     Android 8.1 |        27 |
+| `Build.VERSION_CODES.P`                      |       Android 9 |        28 |
+| `Build.VERSION_CODES.Q`                      |      Android 10 |        29 |
+| `Build.VERSION_CODES.R`                      |      Android 11 |        30 |
+| `Build.VERSION_CODES.S`                      |      Android 12 |        31 |
+| `Build.VERSION_CODES.S_V2`                   |     Android 12L |        32 |
+| `Build.VERSION_CODES.TIRAMISU`               |      Android 13 |        33 |
+| `Build.VERSION_CODES.UPSIDE_DOWN_CAKE`       |      Android 14 |        34 |
+| `Build.VERSION_CODES.VANILLA_ICE_CREAM`      |      Android 15 |        35 |
+| `Build.VERSION_CODES.BAKLAVA`                |      Android 16 |        36 |
+| `Build.VERSION_CODES.CINNAMON_BUN`           |      Android 17 |        37 |
 
 ### In Kotlin / Android code
 

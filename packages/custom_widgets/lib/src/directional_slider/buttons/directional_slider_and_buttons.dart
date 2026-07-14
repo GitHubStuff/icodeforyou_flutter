@@ -41,6 +41,7 @@ class DirectionalSliderAndButtons extends StatelessWidget {
     this.haptics = HapticIntensity.selection,
   });
 
+  /// Display the min value first instead of last
   final bool minValueFirst;
 
   /// Drives the underlying [DirectionalSlider] slider.
@@ -88,6 +89,7 @@ class DirectionalSliderAndButtons extends StatelessWidget {
   /// Icon shown on the plus button.
   final IconData plusIcon;
 
+  /// The kind/style of haptics to use
   final HapticIntensity haptics;
 
   void _stepBy(double delta) {
