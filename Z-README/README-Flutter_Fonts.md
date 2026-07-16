@@ -1,14 +1,19 @@
-# Z-README/README-Flutter_Fonts.md
+# SQL.md
 
-Flutter defines weights numerically:
+## DDL - Data Definition Language
 
-## FontWeight.w100 → Thin
-## FontWeight.w200 → ExtraLight
-## FontWeight.w300 → Light
-## FontWeight.w400 → Normal (default)
-## FontWeight.w500 → Medium
-## FontWeight.w600 → SemiBold
-## FontWeight.w700 → Bold
-## FontWeight.w800 → ExtraBold
-## FontWeight.w900 → Black
+### CREATE TABLE, ALTER TABLE, DROP TABLE, CREATE INDEX
 
+## DML - Data Manipulator Language
+
+### SELECT, INSERT, UPDATE, DELETE
+
+## DCL - Data Control Language
+
+### GRANT/REVOKE
+
+## TCL - Transaction Control Language
+
+### BEGIN, COMMIT, ROLLBACK
+
+### Drift's transaction()
