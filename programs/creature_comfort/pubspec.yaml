@@ -17,7 +17,7 @@ dependencies:
   cloud_firestore: ^6.5.0                       # Firebase
   creature_comforts_service: ^1.0.0             # Internal: service (interface + Firestore impl)
   custom_widgets: ^1.0.0
-  equatable: ^2.0.8
+  equatable: ^2.1.0
   extensions: ^1.0.0                            # Internal: shared atoms (HapticIntensity)
   firebase_auth: ^6.5.2                         # Firebase
   firebase_core: ^4.10.0                        # Firebase

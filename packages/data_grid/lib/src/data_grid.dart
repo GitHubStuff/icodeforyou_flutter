@@ -1,7 +1,5 @@
-// lib/data_grid.dart
+// packages/data_grid/lib/src/data_grid.dart
 
-// Odd sizing with controllers
-// ignore_for_file: cascade_invocations
 
 import 'dart:async' show unawaited;
 import 'dart:math' as math;
