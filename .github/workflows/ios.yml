@@ -1,0 +1,17 @@
+name: iOS
+
+on:
+  pull_request:
+    paths:
+      - "plugins/**/ios/**"
+      - "packages/**/ios/**"
+
+jobs:
+  ios:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build iOS
+        run: xcodebuild -scheme Runner -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14'

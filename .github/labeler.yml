@@ -1,0 +1,18 @@
+packages:
+  - path: "packages/**/*"
+
+plugins:
+  - path: "plugins/**/*"
+
+programs:
+  - path: "programs/**/*"
+
+ci-cd:
+  - path: ".github/workflows/*"
+
+copilot:
+  - path: ".github/copilot-instructions.md"
+  - path: ".github/copilot-program-merge.md"
+
+pr-template:
+  - path: ".github/pull_request_template.md"

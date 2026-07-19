@@ -1,0 +1,23 @@
+name: Programs
+
+on:
+  pull_request:
+    paths:
+      - "programs/**"
+
+jobs:
+  programs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - run: flutter pub get
+      - run: dart run melos bootstrap
+
+      - name: Run Generators
+        run: dart run melos run build

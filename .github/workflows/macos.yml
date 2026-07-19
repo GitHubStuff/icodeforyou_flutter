@@ -1,0 +1,16 @@
+name: macOS
+
+on:
+  pull_request:
+    paths:
+      - "plugins/**/macos/**"
+
+jobs:
+  macos:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build macOS
+        run: xcodebuild -scheme Runner -destination 'platform=macOS'

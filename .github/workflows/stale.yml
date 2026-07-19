@@ -1,0 +1,22 @@
+name: "Close Stale Issues and PRs"
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+
+jobs:
+  stale:
+    permissions:
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          days-before-stale: 365
+          days-before-close: 7
+          stale-issue-message: "This issue has been marked stale due to inactivity."
+          stale-pr-message: "This PR has been marked stale due to inactivity."
+          close-issue-message: "Closing stale issue."
+          close-pr-message: "Closing stale PR."

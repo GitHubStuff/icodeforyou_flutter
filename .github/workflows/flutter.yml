@@ -1,0 +1,25 @@
+name: Flutter
+
+on:
+  pull_request:
+    paths:
+      - "**/*.dart"
+      - "packages/**"
+      - "plugins/**/lib/**"
+
+jobs:
+  flutter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - run: dart pub global activate melos
+      - run: melos bootstrap
+      - run: melos run analyze
+      - run: melos run test_all
+      - run: melos run build

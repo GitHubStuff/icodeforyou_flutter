@@ -1,0 +1,23 @@
+name: Android
+
+on:
+  pull_request:
+    paths:
+      - "plugins/**/android/**"
+      - "packages/**/android/**"
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Build Android
+        run: ./gradlew assembleDebug
