@@ -1,0 +1,21 @@
+# CODEOWNERS for icodeforyou_flutter
+
+# Packages
+/packages/* @icodeforyou-team
+
+# Plugins
+/plugins/* @icodeforyou-team
+
+# Programs (experimental/broken)
+# Require explicit human review
+/programs/* @icodeforyou-team
+
+# CI/CD and workflow files
+.github/workflows/* @icodeforyou-team
+
+# Copilot instruction files
+.github/copilot-instructions.md @icodeforyou-team
+.github/copilot-program-merge.md @icodeforyou-team
+
+# PR templates
+.github/pull_request_template.md @icodeforyou-team
