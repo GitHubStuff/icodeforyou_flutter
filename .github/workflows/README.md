@@ -19,15 +19,17 @@ These run for all pull requests:
 ## Platform Workflows
 
 Each platform has its own workflow:
-Platform	Workflow	Trigger Paths
-Flutter/Dart	flutter.yml	**/*.dart, packages/**, plugins/**/lib/**
-Android	android.yml	plugins/**/android/**, packages/**/android/**
-iOS	ios.yml	plugins/**/ios/**, packages/**/ios/**
-macOS	macos.yml	plugins/**/macos/**
-Windows	windows.yml	plugins/**/windows/**
-Linux	linux.yml	plugins/**/linux/**
-Web	web.yml	plugins/**/web/**
-Programs	programs.yml	programs/**
+
+| Platform | Workflow | Trigger Paths |
+| --- | --- | --- |
+| Flutter/Dart | flutter.yml | **/*.dart, packages/**, plugins/**/lib/** |
+| Android | android.yml | plugins/**/android/**, packages/**/android/** |
+| iOS | ios.yml | plugins/**/ios/**, packages/**/ios/** |
+| macOS | macos.yml | plugins/**/macos/** |
+| Windows | windows.yml | plugins/**/windows/** |
+| Linux | linyx.yml | plugins/**/linux/** |
+| Web | web.yml | plugins/**/web/** |
+| Programs | programs.yml | programs/** |
 
 ## Why Platform‑Specific Workflows?
 
