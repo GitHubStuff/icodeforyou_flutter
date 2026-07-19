@@ -1,9 +1,11 @@
-CI/CD Architecture
+# CI/CD Architecture
 
 This repository uses a platform‑specific CI/CD system designed for a Melos‑managed, multi‑platform Flutter mono‑repo. Each platform has its own workflow, triggered only when relevant files change. This keeps CI fast, accurate, and prevents cross‑platform breakage.
-Global Workflows
+
+## Global Workflows
 
 These run for all pull requests:
+```zsh
 
     dependency-review.yml — scans dependency changes
 
@@ -12,8 +14,9 @@ These run for all pull requests:
     stale.yml — manages stale issues/PRs
 
     release.yml — handles releases
+```
 
-Platform Workflows
+## Platform Workflows
 
 Each platform has its own workflow:
 Platform	Workflow	Trigger Paths
@@ -25,7 +28,9 @@ Windows	windows.yml	plugins/**/windows/**
 Linux	linux.yml	plugins/**/linux/**
 Web	web.yml	plugins/**/web/**
 Programs	programs.yml	programs/**
-Why Platform‑Specific Workflows?
+
+## Why Platform‑Specific Workflows?
+
 
 Flutter plugins contain native code for multiple platforms. A change in one platform must not break another. Platform‑specific workflows ensure:
 
