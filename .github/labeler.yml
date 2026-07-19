@@ -1,20 +1,18 @@
-# Automatic label assignment for icodeforyou_flutter
-
 packages:
-  - packages/**/*
+  - path: "packages/**/*"
 
 plugins:
-  - plugins/**/*
+  - path: "plugins/**/*"
 
 programs:
-  - programs/**/*
+  - path: "programs/**/*"
 
 ci-cd:
-  - .github/workflows/*
+  - path: ".github/workflows/*"
 
 copilot:
-  - .github/copilot-instructions.md
-  - .github/copilot-program-merge.md
+  - path: ".github/copilot-instructions.md"
+  - path: ".github/copilot-program-merge.md"
 
 pr-template:
-  - .github/pull_request_template.md
+  - path: ".github/pull_request_template.md"
