@@ -12,5 +12,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - run: flutter pub get
+      - run: dart run melos bootstrap
+
       - name: Run Generators
-        run: melos run generate
+        run: dart run melos run build
