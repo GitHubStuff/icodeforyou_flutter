@@ -1,0 +1,16 @@
+name: Programs
+
+on:
+  pull_request:
+    paths:
+      - "programs/**"
+
+jobs:
+  programs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Generators
+        run: melos run generate
