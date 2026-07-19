@@ -1,0 +1,20 @@
+# Automatic label assignment for icodeforyou_flutter
+
+packages:
+  - packages/**/*
+
+plugins:
+  - plugins/**/*
+
+programs:
+  - programs/**/*
+
+ci-cd:
+  - .github/workflows/*
+
+copilot:
+  - .github/copilot-instructions.md
+  - .github/copilot-program-merge.md
+
+pr-template:
+  - .github/pull_request_template.md
