@@ -1,0 +1,18 @@
+name: Linux
+
+on:
+  pull_request:
+    paths:
+      - "plugins/**/linux/**"
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Linux
+        run: |
+          cmake -S . -B build
+          cmake --build build
