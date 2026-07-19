@@ -11,7 +11,7 @@ import 'package:animated_rail_menu/src/model/rail_direction.dart';
 import 'package:animated_rail_menu/src/model/rail_icon.dart';
 import 'package:animated_rail_menu/src/model/rail_transition.dart';
 import 'package:animated_rail_menu/src/theme/animated_rail_menu_theme.dart';
-import 'package:extensions/haptics/haptic_intensity.dart' show HapticIntensity;
+import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

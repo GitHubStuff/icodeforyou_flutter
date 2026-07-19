@@ -6,9 +6,9 @@ import 'package:custom_widgets/src/directional_slider/slider/directional_control
 import 'package:custom_widgets/src/directional_slider/slider/directional_slider.dart'
     show DirectionalSlider;
 
-import 'package:extensions/haptics/haptic_intensity.dart' show HapticIntensity;
+import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
-import 'package:widget_themes/widget_themes.dart' show CrossFadeTheme;
+import 'package:theme_manager/theme_manager.dart' show CrossFadeTheme;
 
 import 'step_button.dart';
 
@@ -41,6 +41,7 @@ class DirectionalSliderAndButtons extends StatelessWidget {
     this.haptics = HapticIntensity.selection,
   });
 
+  /// Display the min value first instead of last
   final bool minValueFirst;
 
   /// Drives the underlying [DirectionalSlider] slider.
@@ -88,6 +89,7 @@ class DirectionalSliderAndButtons extends StatelessWidget {
   /// Icon shown on the plus button.
   final IconData plusIcon;
 
+  /// The kind/style of haptics to use
   final HapticIntensity haptics;
 
   void _stepBy(double delta) {

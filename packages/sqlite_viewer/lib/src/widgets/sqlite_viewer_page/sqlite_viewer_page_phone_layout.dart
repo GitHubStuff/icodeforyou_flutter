@@ -1,5 +1,7 @@
 // packages/sqlite_viewer/lib/src/widgets/_sqlite_viewer_page_phone_layout.dart
 
+// ignore_for_file: public_member_api_docs
+
 part of 'sqlite_viewer_page.dart';
 
 // =============================================================================
@@ -13,6 +15,7 @@ class PhoneLayout extends StatefulWidget {
     required this.showRowNumbers,
     required this.nullValueDisplay,
     required this.textHandling,
+    super.key,
   });
 
   final String title;
@@ -250,12 +253,6 @@ class PhoneLayoutState extends State<PhoneLayout> {
     SqliteViewerState state,
     DatabaseMetadata metadata,
   ) {
-    final isExecuting = state is QueryExecuting;
-    final lastQuery = switch (state) {
-      QueryResultLoaded(:final query) => query,
-      QueryFailed(:final query) => query,
-      _ => null,
-    };
 
     return Column(
       children: [

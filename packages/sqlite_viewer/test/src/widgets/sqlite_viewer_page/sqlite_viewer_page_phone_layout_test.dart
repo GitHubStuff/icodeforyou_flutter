@@ -453,6 +453,43 @@ void main() {
       await cubit.close();
     });
 
+    testWidgets(
+      'tapping refresh in SqliteViewerTableDetail dispatches selectTable',
+      (tester) async {
+        final source = createTestMockSource();
+        final cubit = SqliteViewerCubit.seeded(
+          source,
+          const TableDetailLoaded(
+            metadata: testMetadata,
+            tableName: 'users',
+            columns: ['id'],
+            tableInfo: [],
+            indexList: [],
+            foreignKeys: [],
+            rows: [
+              {'id': 1},
+            ],
+            rowCount: 1,
+          ),
+        );
+        await pumpPhone(tester, source: source, cubit: cubit);
+        await openDataTab(tester);
+
+        // The table-detail widget carries its own refresh action, tooltip
+        // 'Refresh table data' — distinct from the app bar's 'Refresh'.
+        final refreshButton = find.byTooltip('Refresh table data');
+        expect(refreshButton, findsOneWidget);
+
+        // Tapping invokes the onRefresh closure, which dispatches
+        // selectTable(tableName) and drops the body into a perpetual
+        // loading spinner — so pump a single frame rather than settle.
+        await tester.tap(refreshButton);
+        await tester.pump();
+
+        await cubit.close();
+      },
+    );
+
     testWidgets('renders ErrorView for TableDetailLoadFailed', (tester) async {
       final source = createTestMockSource();
       final cubit = SqliteViewerCubit.seeded(
@@ -554,6 +591,31 @@ void main() {
           ),
           findsOneWidget,
         );
+        await cubit.close();
+      },
+    );
+
+    testWidgets(
+      'tapping refresh in metadata panel dispatches refreshMetadata',
+      (tester) async {
+        final source = createTestMockSource();
+        final cubit = SqliteViewerCubit.seeded(
+          source,
+          const MetadataLoaded(metadata: testMetadata),
+        );
+        await pumpPhone(tester, source: source, cubit: cubit);
+
+        // The Tables tab (default index) hosts the metadata panel, whose
+        // own refresh button uses tooltip 'Refresh metadata' — distinct
+        // from the app bar's 'Refresh' action.
+        final refreshButton = find.byTooltip('Refresh metadata');
+        expect(refreshButton, findsOneWidget);
+
+        // Tapping invokes the panel's onRefresh closure, dispatching
+        // refreshMetadata() on the cubit.
+        await tester.tap(refreshButton);
+        await tester.pump();
+
         await cubit.close();
       },
     );

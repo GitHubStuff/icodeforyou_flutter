@@ -22,20 +22,21 @@ dependencies:
   go_router: ^17.1.0
   ice_chips: ^1.0.0
   my_logger: ^1.0.0
+  platform_utils: ^1.0.0
   random_color_generator: ^1.0.0
   remind_me: ^1.0.0
   service_locator: ^1.0.0
   since_when_service: ^1.0.0
   since_when_widgets: ^1.0.0
   sqlite_viewer: ^1.0.0
-  status_bar_chameleon: ^1.0.0
+  status_bar_chameleon: ^1.0.1
   theme_manager: ^1.0.0
-  theme_widget: ^1.0.0
+  theme_service: ^1.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^10.2.0
+  very_good_analysis: ^10.3.0
 
 flutter:
   uses-material-design: true

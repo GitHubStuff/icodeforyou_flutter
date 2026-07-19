@@ -1,0 +1,23 @@
+name: time_spans
+description: "Calendar-aware durations, periods, and intervals"
+version: 1.0.0
+publish_to: none
+resolution: workspace
+homepage:
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  equatable: ^2.1.0
+  flutter:
+    sdk: flutter
+  meta: ^1.18.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true

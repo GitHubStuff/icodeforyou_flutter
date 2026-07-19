@@ -1,5 +1,6 @@
 // startup_demo/lib/main.dart
 // ignore_for_file: public_member_api_docs
+import 'dart:async';
 
 import 'package:animated_rail_menu/animated_rail_menu.dart'
     show
@@ -9,10 +10,11 @@ import 'package:animated_rail_menu/animated_rail_menu.dart'
         RailIcon,
         RailTransition;
 import 'package:animated_widgets/animated_widgets.dart'
-    show AnimatedOverlayCubit;
+    show PulseWidget, SplashConfig, SplashCubit, SplashScreen;
 import 'package:app_preferences_service/app_preferences_service.dart'
     show AppPreferencesDescriptor;
-import 'package:extensions/haptics/haptic_intensity.dart' show HapticIntensity;
+import 'package:custom_widgets/custom_widgets.dart' show SizedSpinner;
+import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:remind_me/remind_me.dart' show RemindMe;
@@ -23,8 +25,33 @@ import 'package:startup_demo/src/navigation/nav_entries.dart';
 import 'package:status_bar_chameleon/status_bar_chameleon.dart'
     show StatusBarChameleon;
 import 'package:theme_manager/theme_manager.dart'
-    show MaterialThemeCubit, MaterialWidget, ThemeDescriptor, ThemeService;
+    show MaterialRoot, MaterialThemeCubit;
+import 'package:theme_service/theme_service.dart'
+    show ThemeDescriptor, ThemeService;
 
+/// A task that succeeds after [delay].
+Future<void> succeedsAfter(Duration delay) async {
+  await Future<void>.delayed(delay);
+}
+
+/// A task that throws [error] after [delay].
+Future<void> failsAfter(
+  Duration delay, {
+  Object error = 'task failed',
+}) async {
+  await Future<void>.delayed(delay);
+  throw error;
+}
+
+/// A task that never completes. Useful for forcing the timeout path.
+Future<void> neverCompletes() {
+  return Completer<void>().future;
+}
+
+/// A task that completes synchronously (already-done future).
+Future<void> alreadyDone() async {}
+
+//+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await RemindMe.instance.init();
@@ -62,12 +89,39 @@ final providers = MultiBlocProvider(
     BlocProvider<MaterialThemeCubit>.value(
       value: ServiceRegistry.R.getSync<ThemeService>('Theme').themeCubit,
     ),
-    BlocProvider<AnimatedOverlayCubit>(
-      create: (_) => AnimatedOverlayCubit(),
+    BlocProvider.value(
+      value: SplashCubit(
+        splashConfig: const SplashConfig(
+          splashDuration: Duration(seconds: 1),
+          crossfadeDuration: Duration(milliseconds: 250),
+        ),
+      ),
     ),
   ],
-  child: const MaterialWidget(_homeScreen),
+  child: MaterialRoot(splashWidget),
 );
+
+Widget get splashWidget {
+  return SplashScreen(
+    splashWidget: pulse,
+    intermediateWidget: const SizedSpinner(size: 60),
+    landingPage: _homeScreen,
+    tasks: [
+      succeedsAfter(const Duration(seconds: 7)),
+      succeedsAfter(const Duration(seconds: 3)),
+      //failsAfter(const Duration(seconds: 5)),
+      //neverCompletes(),
+    ],
+  );
+  // unawaited(StatusBarChameleon.setStatusBarHidden(hidden: false));
+  // return const FullScreenColor();
+}
+
+Widget get pulse {
+  return const PulseWidget(
+    child: FlutterLogo(size: 200),
+  );
+}
 
 const _homeScreen = AnimatedRailMenu(
   entries: navEntries,

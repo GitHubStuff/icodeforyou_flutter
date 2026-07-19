@@ -6,4 +6,3 @@ analyzer:
     cascade_invocations: ignore
     document_ignores: ignore
     lines_longer_than_80_chars: ignore
-    prefer_int_literals: ignore

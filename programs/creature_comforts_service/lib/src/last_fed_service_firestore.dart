@@ -1,11 +1,15 @@
 // packages/creature_comforts_service/lib/src/last_fed_service_firestore.dart
+// ignore_for_file: document_ignores, always_use_package_imports
+
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'failures/last_fed_failure.dart';
-import 'last_fed_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:meta/meta.dart';
+
+import 'failures/last_fed_failure.dart';
+import 'last_fed_service.dart';
 
 /// Maps any thrown object into a [LastFedFailure].
 ///

@@ -1,14 +1,13 @@
 // packages/custom_widgets/lib/src/anchored.dart
-// ignore_for_file: public_member_api_docs
 
-import 'package:extensions/placement/placement.dart' show Placement;
+import 'package:extensions/enum/src/placement.dart' show Placement;
 import 'package:flutter/widgets.dart';
 
 /// Positions a child relative to an anchor widget, using a [Placement] plus an
 /// optional additive [offset].
 ///
 /// The anchor ([toAnchor]) is laid out first and defines the box the child
-/// ([place]) is positioned within; the child is then aligned to [atPlacement]
+/// ([child]) is positioned within; the child is then aligned to [atPlacement]
 /// over that box. [offset] is applied after alignment, nudging the child away
 /// from the resolved position — e.g. [Placement.center] with
 /// `offset: Offset(0, -8)` sits centered, then 8 logical pixels up.
@@ -20,7 +19,7 @@ import 'package:flutter/widgets.dart';
 /// as the surrounding [Stack] sizes to it.
 class Anchored extends StatelessWidget {
   const Anchored({
-    required this.place,
+    required this.child,
     required this.atPlacement,
     required this.toAnchor,
     this.offset = Offset.zero,
@@ -28,12 +27,12 @@ class Anchored extends StatelessWidget {
   });
 
   /// The element being positioned.
-  final Widget place;
+  final Widget child;
 
-  /// Where [place] sits relative to [toAnchor].
+  /// Where [child] sits relative to [toAnchor].
   final Placement atPlacement;
 
-  /// The anchor [place] is positioned relative to.
+  /// The anchor [child] is positioned relative to.
   final Widget toAnchor;
 
   /// Additive nudge applied after alignment. Defaults to [Offset.zero].
@@ -48,7 +47,7 @@ class Anchored extends StatelessWidget {
         Positioned.fill(
           child: Align(
             alignment: atPlacement.toAlignment,
-            child: Transform.translate(offset: offset, child: place),
+            child: Transform.translate(offset: offset, child: child),
           ),
         ),
       ],

@@ -1,6 +1,6 @@
 name: animated_rail_menu
 description: "A new Flutter package project."
-version: 1.0.0
+version: 1.0.1
 resolution: workspace
 publish_to: "none"
 
@@ -17,7 +17,7 @@ dev_dependencies:
   bloc_test: ^10.0.0
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^10.2.0
+  very_good_analysis: ^10.3.0
   
 flutter:
   uses-material-design: true

@@ -8,6 +8,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
   
 dependencies:
+  animated_widgets: ^1.0.0
   app_preferences: ^1.0.0
   app_preferences_service: ^1.0.0
   flutter:
@@ -15,12 +16,11 @@ dependencies:
   flutter_bloc: ^9.1.1
   my_logger: ^1.0.0
   service_locator: ^1.0.0
-  widget_themes: ^1.0.0
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^10.2.0
+  very_good_analysis: ^10.3.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

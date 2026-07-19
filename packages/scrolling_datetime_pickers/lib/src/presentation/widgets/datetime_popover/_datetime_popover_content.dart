@@ -222,7 +222,8 @@ class _DateTimePopoverContentState extends State<_DateTimePopoverContent> {
     final anchorTop = widget.anchorPosition.dy;
 
     final tabBarHeight = showTabBar ? PopoverConstants.tabBarHeight : 0.0;
-    const headerHeight = PopoverConstants.headerPadding * 2 +
+    const headerHeight =
+        PopoverConstants.headerPadding * 2 +
         PopoverConstants.headerFontSize * 2 +
         8.0;
     final popoverHeight = headerHeight + tabBarHeight + pickerHeight;

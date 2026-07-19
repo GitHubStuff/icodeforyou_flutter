@@ -52,14 +52,14 @@ class SqliteViewerPage extends StatelessWidget {
     this.textHandling = TextHandling.trunc,
   }) : _cubit = null;
 
-  /// Creates [SqliteViewerPage] with a pre-seeded [cubit] for testing.
+  /// Creates [SqliteViewerPage] with a pre-seeded [_cubit] for testing.
   ///
   /// The provided cubit is used directly via [BlocProvider.value] — no
   /// internal cubit is created and [connect] is not called.
   @visibleForTesting
   const SqliteViewerPage.withCubit({
     required this.source,
-    required SqliteViewerCubit cubit,
+    required SqliteViewerCubit this._cubit,
     super.key,
     this.title = 'SQLite Viewer',
     this.showQueryInput = true,
@@ -67,9 +67,9 @@ class SqliteViewerPage extends StatelessWidget {
     this.showRowNumbers = true,
     this.nullValueDisplay = 'NULL',
     this.textHandling = TextHandling.trunc,
-  }) : _cubit = cubit;
+  });
 
-  /// Creates [SqliteViewerPage] with a pre-supplied [cubit] for use outside
+  /// Creates [SqliteViewerPage] with a pre-supplied [_cubit] for use outside
   /// tests — for example in a widgetbook workspace.
   ///
   /// The provided cubit is used directly via [BlocProvider.value] — no
@@ -79,7 +79,7 @@ class SqliteViewerPage extends StatelessWidget {
   /// [visibleForTesting] restriction.
   const SqliteViewerPage.forWidgetbook({
     required this.source,
-    required SqliteViewerCubit cubit,
+    required SqliteViewerCubit this._cubit,
     super.key,
     this.title = 'SQLite Viewer',
     this.showQueryInput = true,
@@ -87,7 +87,7 @@ class SqliteViewerPage extends StatelessWidget {
     this.showRowNumbers = true,
     this.nullValueDisplay = 'NULL',
     this.textHandling = TextHandling.trunc,
-  }) : _cubit = cubit;
+  });
 
   /// Database source implementing [SqliteViewerAbstract].
   final SqliteViewerAbstract source;

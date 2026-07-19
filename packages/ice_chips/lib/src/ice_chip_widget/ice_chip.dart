@@ -1,7 +1,7 @@
 // packages/ice_chip/lib/src/ice_chip.dart
 // ignore_for_file: public_member_api_docs
 
-import 'package:extensions/color_ext/color_ext.dart' show ColorExtension;
+import 'package:extensions/color/color_ext.dart' show ColorExt;
 import 'package:flutter/material.dart';
 
 class IceChip extends StatelessWidget {

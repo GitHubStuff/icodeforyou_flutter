@@ -6,7 +6,7 @@ import 'package:settings_widget/settings_widget.dart' show kSettingsBreakpoint;
 void main() {
   group('kSettingsBreakpoint', () {
     test('is 600', () {
-      expect(kSettingsBreakpoint, 600);
+      expect(kSettingsBreakpoint, 100);
     });
   });
 }

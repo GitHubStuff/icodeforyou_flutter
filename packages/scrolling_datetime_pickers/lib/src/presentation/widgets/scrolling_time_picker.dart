@@ -57,7 +57,7 @@ class ScrollingTimePicker extends StatelessWidget {
 
   /// Preferred size of the picker in portrait orientation.
   ///
-  /// Defaults to [DimensionConstants.defaultPortraitWidth] ×
+  /// Defaults to [DimensionConstants.defaultPortraitWidth]
   /// [DimensionConstants.defaultPortraitHeight].
   final Size portraitSize;
 

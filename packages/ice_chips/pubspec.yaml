@@ -8,7 +8,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
-  equatable: ^2.0.5
+  equatable: ^2.1.0
   extensions: ^1.0.1
   flutter:
     sdk: flutter
@@ -19,7 +19,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^10.2.0
+  very_good_analysis: ^10.3.0
 
 flutter:
   uses-material-design: true

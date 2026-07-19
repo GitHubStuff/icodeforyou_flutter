@@ -1,10 +1,11 @@
 import 'package:analog_clock_widget/src/analog_clock.dart'
     show ClockFaceStyle, HandStyle;
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart' show Color, immutable;
 
-/// Details about a clock is styled
+/// Describes how a clock is styled.
 @immutable
-class ClockStyle {
+class ClockStyle extends Equatable {
   /// Constructor
   const ClockStyle({
     this.faceColor,
@@ -45,10 +46,10 @@ class ClockStyle {
   /// The style of the clock hands.
   final HandStyle handStyle;
 
-  /// Convience Constructory
+  /// Convenience default instance.
   static const ClockStyle defaultStyle = ClockStyle();
 
-  /// For OOP copying
+  /// Returns a copy of this style with the given fields replaced.
   ClockStyle copyWith({
     Color? faceColor,
     Color? borderColor,
@@ -74,32 +75,15 @@ class ClockStyle {
   }
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is ClockStyle &&
-        other.faceColor == faceColor &&
-        other.borderColor == borderColor &&
-        other.hourHandColor == hourHandColor &&
-        other.minuteHandColor == minuteHandColor &&
-        other.secondHandColor == secondHandColor &&
-        other.showNumbers == showNumbers &&
-        other.showSecondHand == showSecondHand &&
-        other.faceStyle == faceStyle &&
-        other.handStyle == handStyle;
-  }
-
-  @override
-  int get hashCode {
-    return Object.hash(
-      faceColor,
-      borderColor,
-      hourHandColor,
-      minuteHandColor,
-      secondHandColor,
-      showNumbers,
-      showSecondHand,
-      faceStyle,
-      handStyle,
-    );
-  }
+  List<Object?> get props => [
+    faceColor,
+    borderColor,
+    hourHandColor,
+    minuteHandColor,
+    secondHandColor,
+    showNumbers,
+    showSecondHand,
+    faceStyle,
+    handStyle,
+  ];
 }

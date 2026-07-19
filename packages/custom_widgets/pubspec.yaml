@@ -8,19 +8,20 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
-  equatable: ^2.0.8
+  equatable: ^2.1.0
   extensions: ^1.0.4
   flutter:
     sdk: flutter
   flutter_bloc: 9.1.1
   platform_utils: ^1.0.0
   status_bar_chameleon: ^1.0.0
+  theme_manager: ^1.0.0
 
 dev_dependencies:
   bloc_test: ^10.0.0
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^10.2.0
+  very_good_analysis: ^10.3.0
 
 flutter:
   uses-material-design: true

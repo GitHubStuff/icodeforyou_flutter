@@ -9,11 +9,11 @@ import 'package:analog_clock_widget/src/clock_style.dart' show ClockStyle;
 import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
 
-part '_clock_constants.dart';
-part '_clock_models.dart';
-part '_clock_painter.dart';
-part '_clock_services.dart';
-part '_clock_state.dart';
+part 'clock_constants.dart';
+part 'clock_models.dart';
+part 'clock_painter.dart';
+part 'clock_services.dart';
+part 'clock_state.dart';
 
 const double defaultRadius = 30;
 

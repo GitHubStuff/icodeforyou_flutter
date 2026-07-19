@@ -1,0 +1,20 @@
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  errors:
+    avoid_redundant_argument_values: ignore
+    comment_references: ignore
+    omit_local_variable_types: ignore
+    prefer_int_literals: ignore
+
+  exclude:
+    - '**/*.config.dart'
+    - '**/*.directories.dart'
+    - '**/*.freezed.dart'
+    - '**/*.g.dart'
+    - '**/*.gen.dart'
+    - '**/*.mocks.dart'
+
+linter:
+  rules:
+    # Relaxed rules if needed (none for now - keeping strict)

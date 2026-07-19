@@ -35,7 +35,8 @@ enum AppPreferencesBackend {
 /// named box.
 class AppPreferencesDescriptor
     extends LazyAsyncServiceDescriptor<AppPreferences> {
-  /// Platform-backed descriptor (`SharedPreferencesAsync`).
+  /// Platform-backed descriptor (`SharedPreferencesAsync`),
+  /// Service to allow for on-device/persisted values of preference values
   const AppPreferencesDescriptor.platform({
     String serviceName = 'AppPreferences',
   }) : backend = AppPreferencesBackend.platform,

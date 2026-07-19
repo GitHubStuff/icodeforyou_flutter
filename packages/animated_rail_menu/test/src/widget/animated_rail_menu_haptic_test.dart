@@ -1,7 +1,7 @@
 // animated_rail_menu/test/src/widget/animated_rail_menu_haptic_test.dart
 
 import 'package:animated_rail_menu/animated_rail_menu.dart';
-import 'package:extensions/haptics/haptic_intensity.dart' show HapticIntensity;
+import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';

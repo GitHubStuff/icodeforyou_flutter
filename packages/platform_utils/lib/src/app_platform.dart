@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs
 
 import 'package:flutter/foundation.dart'
     show TargetPlatform, defaultTargetPlatform, kIsWeb;
@@ -99,4 +98,32 @@ enum AppPlatform {
     AppPlatform.web => false,
     AppPlatform.windows => true,
   };
+}
+
+enum PlatformVendor {
+  apple,
+  google,
+  microsoft,
+  other;
+
+  static PlatformVendor current() {
+    final platform = AppPlatform.current();
+    switch (platform) {
+      case AppPlatform.android:
+      case AppPlatform.fuchsia:
+        return .google;
+
+      case AppPlatform.iOS:
+      case AppPlatform.macOS:
+        return .apple;
+
+      case AppPlatform.linux:
+      case AppPlatform.tablet:
+      case AppPlatform.web:
+        return .other;
+
+      case AppPlatform.windows:
+        return .microsoft;
+    }
+  }
 }

@@ -13,14 +13,14 @@ dependencies:
     sdk: flutter
   flutter_local_notifications: ^21.0.0
   flutter_timezone: ^5.0.2
-  permission_handler: ^12.0.1
+  permission_handler: ^12.0.3
   timezone: ^0.11.0
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^10.2.0
+  very_good_analysis: ^10.3.0
 
 flutter:
   uses-material-design: true

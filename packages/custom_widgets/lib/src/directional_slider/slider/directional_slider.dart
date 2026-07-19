@@ -2,7 +2,7 @@
 // ignore_for_file: always_use_package_imports, comment_references
 
 import 'package:extensions/extensions.dart' show HapticIntensity;
-import 'package:extensions/placement/placement.dart' show Placement;
+import 'package:extensions/enum/src/placement.dart' show Placement;
 import 'package:flutter/material.dart';
 
 import 'directional_controller.dart';
