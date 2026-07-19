@@ -14,8 +14,9 @@ List the folders touched by this PR:
 Copilot must follow `.github/copilot-instructions.md`.
 
 ## CI/CD Rules
-- CI/CD runs automatically **only** when merging into `main`.
-- All other branches require a **manual CI/CD request**.
+- Pull request validation workflows may run automatically when relevant files change.
+- Release/deployment CI/CD runs automatically only when merging into `main`.
+- All other branches require a **manual CI/CD request** for release/deployment CI/CD.
 - `/programs/*` must never trigger tests.
 
 ## Testing

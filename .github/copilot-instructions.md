@@ -8,8 +8,9 @@
 - Copilot must never run or reference tests inside `/programs/*`.
 
 ## 2. CI/CD Rules
-- CI/CD runs automatically **only** on merges into `main`.  
-- For all other branches, Copilot must output:  
+- Pull request validation workflows may run automatically when relevant files change.  
+- Release/deployment CI/CD runs automatically **only** on merges into `main`.  
+- For non‑main branches, when release/deployment CI/CD is requested, Copilot must output:  
   **“Non‑main branch detected — CI/CD requires manual request.”**  
 - Copilot must not trigger CI/CD for non‑main branches.
 

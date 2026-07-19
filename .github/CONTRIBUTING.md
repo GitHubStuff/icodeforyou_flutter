@@ -7,8 +7,8 @@
 
 ## Branch Rules
 - `main` is protected.
-- CI/CD runs only on merges into `main`.
-- All other branches require manual CI/CD requests.
+- Pull request validation workflows run automatically when relevant files change.
+- Release/deployment CI/CD remains reserved for merges into `main`; all other branches require a manual CI/CD request.
 
 ## Commit Guidelines
 - Write clear, descriptive commit messages.
