@@ -21,5 +21,5 @@ jobs:
       - run: dart pub global activate melos
       - run: melos bootstrap
       - run: melos run analyze
-      - run: melos run test
+      - run: melos run test_all
       - run: melos run build
