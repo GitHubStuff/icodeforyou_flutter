@@ -18,7 +18,7 @@
 │  ios.yml       ← plugins/ios, packages/ios                                 │
 │  macos.yml     ← plugins/macos                                             │
 │  windows.yml   ← plugins/windows                                           │
-│  linux.yml     ← plugins/linux                                             │
+│  linyx.yml     ← plugins/linux                                             │
 │  web.yml       ← plugins/web                                               │
 │  programs.yml  ← programs/**                                               │
 └────────────────────────────────────────────────────────────────────────────┘
