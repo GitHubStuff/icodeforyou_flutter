@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:settings_widget/settings_widget.dart';
-import 'package:settings_widget/src/_settings_layout.dart';
-import 'package:settings_widget/src/_settings_sheet.dart';
+import 'package:settings_widget/src/settings_layout.dart';
+import 'package:settings_widget/src/settings_sheet.dart';
 
 class _StubEntry extends AppSettingsEntry {
   const _StubEntry({required this.label});

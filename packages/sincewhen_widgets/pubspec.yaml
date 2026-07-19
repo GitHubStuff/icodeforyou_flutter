@@ -1,0 +1,23 @@
+name: sincewhen_widgets
+description: "Widget that are used in the sincewhen_framework"
+publish_to: none
+resolution: workspace
+version: 1.0.0
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  gap: ^3.0.1
+  random_color_generator: ^1.0.0
+  sincewhen_framework: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^10.3.0
+
+flutter:
+  uses-material-design: true

@@ -1,3 +1,4 @@
+# packages/data_grid/pubspec.yaml
 name: data_grid
 description: >-
   A horizontally scrolling, schemaless data grid for query results
@@ -20,6 +21,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^10.2.0
+  very_good_analysis: ^10.3.0
 
 flutter:
+  uses-material-design: true

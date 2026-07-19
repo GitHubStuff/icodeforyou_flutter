@@ -1,11 +1,9 @@
-// plugins/status_bar_chameleon/test/status_bar_chameleon_test.dart
-
-// ignore_for_file: avoid_types_on_closure_parameters
+// plugins/status_bar_chameleon/test/src/status_bar_chameleon_test.dart
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:status_bar_chameleon/status_bar_chameleon.dart';
+import 'package:status_bar_chameleon/src/status_bar_chameleon.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -14,74 +12,78 @@ void main() {
     'status_bar_chameleon/status_bar',
   );
 
-  final List<MethodCall> log = <MethodCall>[];
+  late List<MethodCall> recordedCalls;
 
-  void mockHandler() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+  setUp(() {
+    recordedCalls = <MethodCall>[];
+    TestWidgetsFlutterBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall call) async {
-          log.add(call);
+          recordedCalls.add(call);
           return null;
         });
-  }
-
-  setUp(mockHandler);
+  });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+    TestWidgetsFlutterBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, null);
-    log.clear();
     debugDefaultTargetPlatformOverride = null;
   });
 
-  group('StatusBarChameleon', () {
-    test('invokes channel and flips isHidden true on iOS', () async {
+  group('StatusBarChameleon.setStatusBarHidden', () {
+    test('invokes the channel with hidden and durationMs on iOS', () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
 
       await StatusBarChameleon.setStatusBarHidden(
         hidden: true,
-        duration: const Duration(milliseconds: 250),
+        duration: const Duration(milliseconds: 300),
       );
 
+      expect(recordedCalls, hasLength(1));
+      expect(recordedCalls.single.method, 'setStatusBarHidden');
+      expect(recordedCalls.single.arguments, <String, Object?>{
+        'hidden': true,
+        'durationMs': 300,
+      });
       expect(StatusBarChameleon.isHidden, isTrue);
-      expect(log, hasLength(1));
-      expect(log.single.method, 'setStatusBarHidden');
-      expect(
-        log.single.arguments,
-        <String, Object?>{'hidden': true, 'durationMs': 250},
-      );
     });
 
-    test('invokes channel and flips isHidden false on Android', () async {
+    test('invokes the channel with default zero duration on Android', () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
 
       await StatusBarChameleon.setStatusBarHidden(hidden: false);
 
+      expect(recordedCalls, hasLength(1));
+      expect(recordedCalls.single.arguments, <String, Object?>{
+        'hidden': false,
+        'durationMs': 0,
+      });
       expect(StatusBarChameleon.isHidden, isFalse);
-      expect(log, hasLength(1));
-      expect(log.single.method, 'setStatusBarHidden');
-      expect(
-        log.single.arguments,
-        <String, Object?>{'hidden': false, 'durationMs': 0},
-      );
     });
 
-    test('defaults duration to zero milliseconds', () async {
+    test('is a no-op on non-mobile platforms', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      await StatusBarChameleon.setStatusBarHidden(hidden: true);
+      recordedCalls.clear();
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+      await StatusBarChameleon.setStatusBarHidden(hidden: false);
+
+      expect(recordedCalls, isEmpty);
+      // State must be untouched by the early return: still true from the
+      // Android call above, not false from the ignored macOS call.
+      expect(StatusBarChameleon.isHidden, isTrue);
+    });
+  });
+
+  group('StatusBarChameleon.isHidden', () {
+    test('tracks the last successfully applied value on mobile', () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
 
       await StatusBarChameleon.setStatusBarHidden(hidden: true);
+      expect(StatusBarChameleon.isHidden, isTrue);
 
-      expect(
-        (log.single.arguments as Map<Object?, Object?>)['durationMs'],
-        0,
-      );
-    });
-
-    test('no-ops on unsupported platforms', () async {
-      debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
-
-      await StatusBarChameleon.setStatusBarHidden(hidden: true);
-
-      expect(log, isEmpty);
+      await StatusBarChameleon.setStatusBarHidden(hidden: false);
+      expect(StatusBarChameleon.isHidden, isFalse);
     });
   });
 }

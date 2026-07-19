@@ -1,3 +1,4 @@
+// packages/projector/lib/src/projector.dart
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 

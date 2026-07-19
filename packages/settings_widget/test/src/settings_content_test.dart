@@ -1,7 +1,7 @@
 // ignore_for_file: unused_element
 
 import 'package:flutter/material.dart';
-import 'package:settings_widget/src/_app_settings_entry.dart';
+import 'package:settings_widget/src/app_settings_entry.dart';
 
 class _StubEntry extends AppSettingsEntry {
   const _StubEntry({required this.label});

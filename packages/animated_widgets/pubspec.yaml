@@ -2,7 +2,7 @@
 
 name: animated_widgets
 description: A collection of animated Flutter widgets including grow, grow+fade, and animated checkbox effects.
-version: 1.0.0
+version: 1.0.1
 resolution: workspace
 publish_to: none
 
@@ -16,6 +16,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  status_bar_chameleon: ^1.0.1
   theme_manager: ^1.0.0
 
 dev_dependencies:

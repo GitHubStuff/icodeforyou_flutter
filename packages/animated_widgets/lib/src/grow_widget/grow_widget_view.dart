@@ -1,5 +1,5 @@
 // animated_widgets/lib/src/grow_widget/grow_widget_view.dart
-import 'package:animated_widgets/src/grow_widget/_grow_animation_mixin.dart';
+import 'package:animated_widgets/src/grow_widget/grow_animation_mixin.dart';
 import 'package:flutter/widgets.dart';
 
 /// Scales [child] from 0.0 to 1.0 over [duration], centered in its parent.

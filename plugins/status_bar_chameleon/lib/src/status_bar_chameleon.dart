@@ -1,5 +1,4 @@
-// packages/status_bar_chameleon/lib/src/status_bar_chameleon.dart
-// ignore_for_file: public_member_api_docs
+// plugins/status_bar_chameleon/lib/src/status_bar_chameleon.dart
 
 import 'package:flutter/foundation.dart'
     show TargetPlatform, defaultTargetPlatform, kIsWeb;

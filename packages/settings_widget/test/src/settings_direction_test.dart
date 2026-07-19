@@ -1,7 +1,7 @@
 // test/src/_settings_direction_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:settings_widget/src/_settings_direction.dart';
+import 'package:settings_widget/src/settings_direction.dart';
 
 void main() {
   group('SettingsDirection', () {

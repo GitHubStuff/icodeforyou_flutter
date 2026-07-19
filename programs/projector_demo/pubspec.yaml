@@ -9,15 +9,19 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
+  animated_widgets: ^1.0.1
+  color_grid: ^1.0.0
   flutter:
     sdk: flutter
   projector: ^1.0.0
   gap: ^3.0.1
+  sincewhen_framework: ^1.0.0
+  sincewhen_widgets: ^1.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^10.2.0
+  very_good_analysis: ^10.3.0
 
 flutter:
   uses-material-design: true

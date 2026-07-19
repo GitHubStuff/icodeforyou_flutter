@@ -15,7 +15,7 @@ Flutter should use Flutter >= 3.11.x
 Should use packages:
 - get_it: 9.2.1
 - flutter_bloc (prefer cubits): 9.1.1
-- very_good_analysis: ^10.2.0
+- very_good_analysis: ^10.3.0
 
 
 ## Coding principles
@@ -83,7 +83,7 @@ D - Dependency Inversion Principle
 ## Files
 
 - Every file should have "// {packagename}/{file.path.to}/file.name.dart" at the very top
-- The file should obey very_good_analysis: ^10.2.0 rules
+- The file should obey very_good_analysis: ^10.3.0 rules
 
 
 ## Code generation

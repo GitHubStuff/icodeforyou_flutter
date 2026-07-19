@@ -24,6 +24,7 @@ export 'src/length_colored_border_field/color_point_ramp.dart'
     show ColorPointRamp;
 export 'src/length_colored_border_field/length_colored_border_field.dart'
     show LengthColoredBorderField;
+export 'src/pill_widget/pill_widget.dart' show PillWidget;
 export 'src/pulse_widget/pulse_widget.dart';
 export 'src/splash_widget/splash_widget.dart';
 export 'src/timed_widget/timed_widget.dart' show TimedWidget;

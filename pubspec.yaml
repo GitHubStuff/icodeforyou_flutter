@@ -12,9 +12,9 @@ workspace:
   - packages/app_preferences
   - packages/app_preferences_service
   - packages/biometric_gate_service
+  - packages/color_grid
   - packages/custom_widgets
   - packages/data_grid
-  - packages/earth_spin
   - packages/extensions
   - packages/ice_chips
   - packages/ice_chips_service
@@ -34,6 +34,7 @@ workspace:
   - packages/since_when_service
   - packages/since_when_widgets
   - packages/sincewhen_framework
+  - packages/sincewhen_widgets
   - packages/sqlite_viewer
   - packages/stacking_widgets
   - packages/theme_manager

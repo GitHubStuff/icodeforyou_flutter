@@ -1,6 +1,5 @@
 // packages/data_grid/lib/src/data_grid.dart
 
-
 import 'dart:async' show unawaited;
 import 'dart:math' as math;
 
@@ -334,9 +333,8 @@ class _DataGridState extends State<DataGrid> {
       oldWidget.verticalController,
       widget.verticalController,
     )) {
-      final oldEffective =
-          oldWidget.verticalController ?? _ownedVerticalController!;
-      oldEffective.removeListener(_syncRowButtons);
+      (oldWidget.verticalController ?? _ownedVerticalController!)
+          .removeListener(_syncRowButtons);
       if (oldWidget.verticalController == null) {
         _ownedVerticalController!.dispose();
         _ownedVerticalController = null;

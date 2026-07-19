@@ -180,6 +180,18 @@ void main() {
 
       expect(find.text('content'), findsOneWidget);
     });
+
+    testWidgets('tap on the content is swallowed and does not dismiss', (
+      tester,
+    ) async {
+      await _showCenter(tester, barrierDismissible: true);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('content'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('content'), findsOneWidget);
+    });
   });
 
   group('barrier animation variants', () {
@@ -387,13 +399,14 @@ BuildContext _overlayContext(WidgetTester tester) =>
 
 Future<PopoverHandle> _showCenter(
   WidgetTester tester, {
-  bool hideStatusBar = true,
+  bool hideStatusBar = false,
   bool barrierDismissible = true,
   BarrierAnimation animation = const FadeBarrier(),
   VoidCallback? onComplete,
 }) async {
   await _pumpHost(tester);
   final handle = AnimatedBarrier(
+    hideStatusBar: hideStatusBar,
     barrierDismissible: barrierDismissible,
     barrierAnimation: animation,
     child: const Text('content'),

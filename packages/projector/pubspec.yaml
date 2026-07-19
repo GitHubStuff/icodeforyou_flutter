@@ -1,5 +1,5 @@
 name: projector
-description: "A new Flutter package project."
+description: "Designed to animate .apng {Animated PNG} file (apng is a collection of images in a grid)."
 version: 1.0.0
 publish_to: none
 homepage:

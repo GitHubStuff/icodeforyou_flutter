@@ -18,13 +18,18 @@ CREATE TABLE IF NOT EXISTS ${TableNames.sinceWhen.name} (
 )
 ''';
 
-/// CREATE TABLE DDL for the `since_when_tag_glossary` table.
+/// CREATE TABLE DDL for the [TableNames.glossary] table.
+///
+/// `tagName` must be non-empty and at most 6 characters (spaces count;
+/// SQLite's `length()` counts characters, not bytes).
 final String createTableTagGlossary =
     '''
 CREATE TABLE IF NOT EXISTS ${TableNames.glossary.name} (
   id               INTEGER PRIMARY KEY AUTOINCREMENT,
   createdTimeStamp INTEGER NOT NULL UNIQUE,
-  tagName          TEXT    NOT NULL UNIQUE CHECK(tagName != ''),
+  tagName          TEXT    NOT NULL UNIQUE
+                   CHECK(tagName != '' AND length(tagName) <= 6),
+  description      TEXT    NOT NULL,
   color            INTEGER NOT NULL UNIQUE
 )
 ''';

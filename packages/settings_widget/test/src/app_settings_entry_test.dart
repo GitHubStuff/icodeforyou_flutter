@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:settings_widget/src/_app_settings_entry.dart';
+import 'package:settings_widget/src/app_settings_entry.dart';
 
 class _ConcreteEntry extends AppSettingsEntry {
   const _ConcreteEntry({super.key});

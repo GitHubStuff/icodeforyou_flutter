@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:settings_widget/src/_settings_direction.dart';
-import 'package:settings_widget/src/_settings_transition.dart';
+import 'package:settings_widget/src/settings_direction.dart';
+import 'package:settings_widget/src/settings_transition.dart';
 
 Widget _wrap(SettingsDirection direction, Animation<double> animation) =>
     MaterialApp(

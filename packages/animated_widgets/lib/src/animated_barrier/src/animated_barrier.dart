@@ -1,20 +1,13 @@
 // packages/animated_barrier/lib/src/animated_barrier.dart
 
-// ignore_for_file: public_member_api_docs, document_ignores
-
 part of '../animated_barrier.dart';
-
-typedef _DismissFn = void Function(VoidCallback? onComplete);
 
 /// A handle to a shown [AnimatedBarrier]. Call [dismiss] to animate it away.
 class PopoverHandle {
   PopoverHandle._();
 
-  _DismissFn? _dismiss;
+  void Function(VoidCallback? onComplete)? _dismiss;
   bool _dismissed = false;
-
-  // ignore: use_setters_to_change_properties
-  void _bind(_DismissFn dismiss) => _dismiss = dismiss;
 
   /// Animates the popover out using the same [BarrierAnimation] that brought
   /// it in (run in reverse from its current value), then removes the overlay
@@ -31,14 +24,6 @@ class PopoverHandle {
     }
     _dismissed = true;
     _dismiss?.call(onComplete);
-  }
-
-  Future<void> dismissAsync({
-    bool hideStatusBar = false,
-    VoidCallback? onComplete,
-  }) async {
-    await StatusBarChameleon.setStatusBarHidden(hidden: hideStatusBar);
-    dismiss(onComplete: onComplete);
   }
 }
 
@@ -59,6 +44,10 @@ class PopoverHandle {
 /// area using the child's *measured* size, walking the position's fallback
 /// chain to the first side that fits, else centering.
 class AnimatedBarrier {
+  /// Creates an immutable barrier spec.
+  ///
+  /// Constructing a spec has no visible effect; call [show] to insert it into
+  /// the overlay. The same spec can be shown any number of times.
   const AnimatedBarrier({
     required this.child,
     this.position,
@@ -67,9 +56,11 @@ class AnimatedBarrier {
     this.barrierDismissible = true,
     this.barrierAnimation = const FadeBarrier(),
     this.hapticIntensity = HapticIntensity.light,
+    this.hideStatusBar = false,
   });
 
-  /// HapticIntensity for the barrier
+  /// Haptic feedback intensity triggered when a barrier tap dismisses the
+  /// popover.
   final HapticIntensity hapticIntensity;
 
   /// The content to display on top of the barrier.
@@ -91,6 +82,14 @@ class AnimatedBarrier {
 
   /// How the barrier and child animate in and out. See [BarrierAnimation].
   final BarrierAnimation barrierAnimation;
+
+  /// Whether to hide the status bar while the barrier is shown.
+  ///
+  /// When true, the status bar is hidden as the barrier is inserted and
+  /// restored when the barrier is torn down — whether via
+  /// [PopoverHandle.dismiss], a barrier tap, or the missing-anchor
+  /// auto-dismiss. When false, the status bar is never touched.
+  final bool hideStatusBar;
 
   /// Inserts the popover into the root overlay and animates it in.
   ///
@@ -116,20 +115,11 @@ class AnimatedBarrier {
     overlay.insert(entry);
     return handle;
   }
-
-  Future<PopoverHandle?> showAsync(
-    BuildContext context, {
-    VoidCallback? onComplete,
-    bool hideStatusBar = true,
-  }) async {
-    await StatusBarChameleon.setStatusBarHidden(hidden: hideStatusBar);
-    if (context.mounted) return show(context, onComplete: onComplete);
-    return null;
-  }
 }
 
-/// Owns the [AnimationController] and drives the entrance/exit. Also handles
-/// the anchor-missing case by dismissing post-frame.
+/// Owns the [AnimationController] and drives the entrance/exit. Also owns the
+/// status bar lifecycle ([AnimatedBarrier.hideStatusBar]) and handles the
+/// anchor-missing case by dismissing post-frame.
 class _AnimatedBarrierLayer extends StatefulWidget {
   const _AnimatedBarrierLayer({
     required this.spec,
@@ -169,13 +159,26 @@ class _AnimatedBarrierLayerState extends State<_AnimatedBarrierLayer>
       reverseCurve: anim.curve.flipped,
     );
 
-    widget.handle._bind(_handleDismiss);
+    // Same library (part files), so direct assignment of the handle's
+    // library-private callback is idiomatic and avoids a forwarding method.
+    widget.handle._dismiss = _handleDismiss;
     _controller.addStatusListener(_handleStatusChange);
+
+    if (widget.spec.hideStatusBar) {
+      unawaited(StatusBarChameleon.setStatusBarHidden(hidden: true));
+    }
+
     unawaited(_controller.forward());
   }
 
   @override
   void dispose() {
+    // Single teardown point: every removal path (dismiss, barrier tap,
+    // missing-anchor auto-dismiss, overlay teardown) funnels through here,
+    // so the status bar is always restored exactly when it was hidden.
+    if (widget.spec.hideStatusBar) {
+      unawaited(StatusBarChameleon.setStatusBarHidden(hidden: false));
+    }
     _controller
       ..removeStatusListener(_handleStatusChange)
       ..dispose();

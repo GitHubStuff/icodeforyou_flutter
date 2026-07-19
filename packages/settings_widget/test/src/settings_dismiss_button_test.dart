@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:settings_widget/src/_settings_dismiss_button.dart';
+import 'package:settings_widget/src/settings_dismiss_button.dart';
 
 void main() {
   group('SettingsDismissButton', () {
