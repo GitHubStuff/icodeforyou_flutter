@@ -9,7 +9,36 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check dependency graph support
+        id: dependency-graph
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          status=$(
+            curl -fsSL \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY" \
+              | jq -r '.security_and_analysis.dependency_graph.status // "unknown"' \
+              || echo "unknown"
+          )
+
+          if [ "$status" = "enabled" ]; then
+            echo "supported=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "supported=false" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Dependency Review skipped"
+            echo
+            echo "Dependency graph status: $status"
+            echo
+            echo "Enable dependency graph in repository security settings to restore this check."
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Dependency Review
+        if: steps.dependency-graph.outputs.supported == 'true'
         uses: actions/dependency-review-action@v4
         with:
           fail-on-severity: high

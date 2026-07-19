@@ -7,7 +7,7 @@ This repository uses a platform‑specific CI/CD system designed for a Melos‑m
 These run for all pull requests:
 ```zsh
 
-    dependency-review.yml — scans dependency changes
+    dependency-review.yml — scans dependency changes when repository dependency graph is enabled
 
     labeler.yml — auto‑labels PRs
 
