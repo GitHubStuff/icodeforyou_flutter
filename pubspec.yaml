@@ -25,6 +25,7 @@ workspace:
   - packages/my_logger
   - packages/platform_utils
   - packages/projector
+  - packages/rail_navigation
   - packages/random_color_generator
   - packages/remind_me
   - packages/scrolling_datetime_pickers
