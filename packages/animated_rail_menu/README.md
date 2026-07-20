@@ -1,3 +1,5 @@
+# animated_rail_menu
+
 A directional animated navigation rail for Flutter that owns its own `Scaffold`. Renders as a bottom bar, a side rail, or adapts automatically to screen size and orientation — with overflow handling, configurable page transitions, and tuned sizing for phones, tablets, desktop, and web.
 
 ## Features

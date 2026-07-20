@@ -1,0 +1,2 @@
+# packages/rail_navigation/analysis_options.yaml
+include: package:flutter_lints/flutter.yaml
