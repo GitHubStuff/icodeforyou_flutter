@@ -1,6 +1,5 @@
-name: projector
-description: "Designed to animate .apng {Animated PNG} file (apng is a collection of images in a grid)."
-version: 1.0.0
+name: rail_navigation
+description: "A flutter package to create navigation rail apps"
 publish_to: none
 homepage:
 resolution: workspace

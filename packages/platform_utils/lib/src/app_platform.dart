@@ -1,50 +1,59 @@
+// core/platform/app_platform.dart
 
 import 'package:flutter/foundation.dart'
     show TargetPlatform, defaultTargetPlatform, kIsWeb;
 
-/// Represents the platform the application is currently running on.
+/// The operating system the application is currently running on.
 ///
 /// Wraps Flutter's [defaultTargetPlatform] and [kIsWeb] into a single,
 /// testable enum. Use [current] to resolve the active platform at runtime
 /// and [setPlatform] to override it in tests.
+///
+/// This enum answers exactly one question — *what OS?* — per the Single
+/// Responsibility Principle. Form factor lives in [FormFactor]; vendor
+/// grouping lives in `PlatformVendor` (see `platform_vendor.dart`).
+///
+/// ```dart
+/// if (AppPlatform.current().isMobile) {
+///   return const BottomNavLayout();
+/// }
+/// ```
 enum AppPlatform {
-  /// The Android mobile operating system.
+  /// Android phones and tablets.
   android,
 
-  /// Google's Fuchsia operating system.
+  /// Google Fuchsia. Recognized by the framework but not yet supported
+  /// by this application — capability getters throw for it.
   fuchsia,
 
-  /// Apple's iOS mobile operating system.
+  /// iOS and iPadOS. Flutter treats them as a single target platform.
   iOS,
 
-  /// The Linux desktop operating system.
+  /// Desktop Linux.
   linux,
 
-  /// Apple's macOS desktop operating system.
+  /// Desktop macOS.
   macOS,
 
-  /// If tablets ever have their own operating system (iPadOS?).
-  tablet,
-
-  /// Any browser-based web deployment target.
+  /// Any browser, regardless of the underlying operating system.
   web,
 
-  /// Microsoft Windows desktop operating system.
-  windows,
-  ;
+  /// Desktop Windows.
+  windows;
 
+  /// The active override set via [setPlatform], or `null` when runtime
+  /// resolution is in effect.
   static AppPlatform? _platformOverride;
 
-  /// Returns the active [AppPlatform] for the current runtime environment.
+  /// Resolves the platform the application is running on right now.
   ///
   /// Resolution order:
-  /// 1. A value set via [setPlatform] takes precedence.
-  /// 2. [AppPlatform.web] when [kIsWeb] is `true`.
-  /// 3. The value derived from [defaultTargetPlatform] otherwise.
+  /// 1. A debug override set via [setPlatform], when present.
+  /// 2. [web], when [kIsWeb] is `true` — the browser wins over whatever
+  ///    OS is hosting it.
+  /// 3. The mapping of [defaultTargetPlatform] otherwise.
   static AppPlatform current() {
-    if (_platformOverride != null) {
-      return _platformOverride!;
-    }
+    if (_platformOverride != null) return _platformOverride!;
     if (kIsWeb) return AppPlatform.web;
     return switch (defaultTargetPlatform) {
       TargetPlatform.android => AppPlatform.android,
@@ -56,11 +65,12 @@ enum AppPlatform {
     };
   }
 
-  /// Overrides the platform returned by [current].
+  /// Overrides the platform reported by [current] for testing.
   ///
   /// Only active in debug builds — the body runs inside an `assert`, so it
-  /// is stripped from release builds entirely. Pass `null` to clear a
-  /// previously set override and restore runtime resolution.
+  /// is stripped from release builds entirely. Pass `null` (or call with
+  /// no argument) to clear a previously set override and restore runtime
+  /// resolution.
   ///
   /// ```dart
   /// setUp(() => AppPlatform.setPlatform(to: AppPlatform.iOS));
@@ -77,53 +87,35 @@ enum AppPlatform {
     );
   }
 
+  /// Whether this platform is a mobile operating system.
+  ///
+  /// Throws [UnimplementedError] for [fuchsia], which this application
+  /// does not yet define behavior for.
   bool get isMobile => switch (this) {
     AppPlatform.android => true,
     AppPlatform.fuchsia => throw UnimplementedError('"fuchsia" is not defined'),
     AppPlatform.iOS => true,
     AppPlatform.linux => false,
     AppPlatform.macOS => false,
-    AppPlatform.tablet => false,
     AppPlatform.web => false,
     AppPlatform.windows => false,
   };
 
+  /// Whether this platform is a desktop operating system.
+  ///
+  /// [web] is `false` here: the browser's host OS is invisible to the
+  /// application, so desktop-ness for web is a [FormFactor] question
+  /// (window geometry), not a platform one.
+  ///
+  /// Throws [UnimplementedError] for [fuchsia], which this application
+  /// does not yet define behavior for.
   bool get isDesktop => switch (this) {
     AppPlatform.android => false,
     AppPlatform.fuchsia => throw UnimplementedError('"fuchsia" is not defined'),
     AppPlatform.iOS => false,
     AppPlatform.linux => true,
     AppPlatform.macOS => true,
-    AppPlatform.tablet => false,
     AppPlatform.web => false,
     AppPlatform.windows => true,
   };
-}
-
-enum PlatformVendor {
-  apple,
-  google,
-  microsoft,
-  other;
-
-  static PlatformVendor current() {
-    final platform = AppPlatform.current();
-    switch (platform) {
-      case AppPlatform.android:
-      case AppPlatform.fuchsia:
-        return .google;
-
-      case AppPlatform.iOS:
-      case AppPlatform.macOS:
-        return .apple;
-
-      case AppPlatform.linux:
-      case AppPlatform.tablet:
-      case AppPlatform.web:
-        return .other;
-
-      case AppPlatform.windows:
-        return .microsoft;
-    }
-  }
 }
