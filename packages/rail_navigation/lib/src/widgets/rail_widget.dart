@@ -11,6 +11,30 @@ const double _kDefaultExtent = 80;
 /// The default gap between adjacent children along the main axis.
 const double _kDefaultSpacing = 8;
 
+/// Where a [RailWidget] is anchored on the screen.
+///
+/// Placement determines both the layout axis and which safe-area
+/// insets the rail consumes. A rail only respects the insets of the
+/// screen edges it actually touches; in particular, a [left] rail
+/// ignores the right-hand inset (and vice versa), so a notch in
+/// landscape pads only the anchored side.
+enum RailPlacement {
+  /// Anchored along the bottom edge; children are laid out
+  /// horizontally. Respects the bottom, left, and right insets.
+  bottom,
+
+  /// Anchored along the left edge; children are laid out vertically.
+  /// Respects the top, bottom, and left insets.
+  left,
+
+  /// Anchored along the right edge; children are laid out vertically.
+  /// Respects the top, bottom, and right insets.
+  right;
+
+  /// The main axis children are laid out along for this placement.
+  Axis get axis => this == bottom ? Axis.horizontal : Axis.vertical;
+}
+
 /// A layout container that arranges navigation buttons along the bottom
 /// or side of a screen.
 ///
@@ -21,10 +45,12 @@ const double _kDefaultSpacing = 8;
 /// the parent tracks the selected index and rebuilds each child with the
 /// appropriate `isSelected` and `onPressed` values.
 ///
-/// Set [direction] to [Axis.horizontal] for a bottom bar or
-/// [Axis.vertical] for a side rail. Which of the two to use at a given
-/// screen size is an adaptive-layout decision that belongs one layer up;
-/// this widget simply obeys the axis it is given.
+/// [placement] positions the rail: [RailPlacement.bottom] for a bottom
+/// bar, [RailPlacement.left] or [RailPlacement.right] for a side rail.
+/// Which placement to use at a given screen size is an adaptive-layout
+/// decision that belongs one layer up; this widget simply obeys the
+/// placement it is given, consuming only the safe-area insets of the
+/// edges it touches.
 ///
 /// [children] is deliberately typed as `List<Widget>` rather than a list
 /// of `RailButton`s so callers can interleave dividers, spacers, or
@@ -36,7 +62,7 @@ class RailWidget extends StatelessWidget {
   const RailWidget({
     required this.children,
     super.key,
-    this.direction = Axis.horizontal,
+    this.placement = RailPlacement.bottom,
     this.alignment,
     this.spacing = _kDefaultSpacing,
     this.backgroundColor,
@@ -47,18 +73,17 @@ class RailWidget extends StatelessWidget {
   /// spacers) to arrange along the main axis.
   final List<Widget> children;
 
-  /// The main axis of the rail.
+  /// Where the rail is anchored on the screen.
   ///
-  /// [Axis.horizontal] lays children out as a bottom bar;
-  /// [Axis.vertical] lays them out as a side rail. Defaults to
-  /// [Axis.horizontal].
-  final Axis direction;
+  /// Determines the layout axis and which safe-area insets are
+  /// consumed. Defaults to [RailPlacement.bottom].
+  final RailPlacement placement;
 
   /// How children are distributed along the main axis.
   ///
-  /// When `null`, defaults by [direction]:
-  /// [MainAxisAlignment.spaceEvenly] for a horizontal bottom bar and
-  /// [MainAxisAlignment.start] for a vertical side rail.
+  /// When `null`, defaults by [placement]:
+  /// [MainAxisAlignment.spaceEvenly] for a bottom bar and
+  /// [MainAxisAlignment.start] for a side rail.
   final MainAxisAlignment? alignment;
 
   /// The gap between adjacent children along the main axis.
@@ -75,10 +100,13 @@ class RailWidget extends StatelessWidget {
   /// navigation surface color.
   final Color? backgroundColor;
 
-  /// The fixed cross-axis extent: the height of a horizontal bar or the
-  /// width of a vertical rail.
+  /// The fixed cross-axis extent: the height of a bottom bar or the
+  /// width of a side rail.
   ///
   /// Defaults to [_kDefaultExtent] (80), the Material 3 convention.
+  /// Safe-area insets on the anchored side are added outside this
+  /// extent, so content keeps its full [extent] clear of notches and
+  /// the home indicator.
   final double extent;
 
   @override
@@ -87,7 +115,7 @@ class RailWidget extends StatelessWidget {
         backgroundColor ?? Theme.of(context).colorScheme.surfaceContainer;
     final resolvedAlignment =
         alignment ??
-        (direction == Axis.horizontal
+        (placement == RailPlacement.bottom
             ? MainAxisAlignment.spaceEvenly
             : MainAxisAlignment.start);
 
@@ -97,12 +125,14 @@ class RailWidget extends StatelessWidget {
         child: Material(
           color: resolvedColor,
           child: SafeArea(
-            top: direction == Axis.vertical,
+            top: placement != RailPlacement.bottom,
+            left: placement != RailPlacement.right,
+            right: placement != RailPlacement.left,
             child: SizedBox(
-              height: direction == Axis.horizontal ? extent : null,
-              width: direction == Axis.vertical ? extent : null,
+              height: placement.axis == Axis.horizontal ? extent : null,
+              width: placement.axis == Axis.vertical ? extent : null,
               child: Flex(
-                direction: direction,
+                direction: placement.axis,
                 mainAxisAlignment: resolvedAlignment,
                 spacing: spacing,
                 children: children,
