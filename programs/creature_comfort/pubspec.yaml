@@ -8,7 +8,6 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
-  animated_rail_menu: ^1.0.1                    # Internal: widget
   animated_widgets: ^1.0.0
   app_preferences: ^1.0.0                       # Internal: infrastructure
   app_preferences_service: ^1.0.0               # Internal: infrastructure

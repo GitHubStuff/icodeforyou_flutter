@@ -9,7 +9,6 @@ environment:
 
 dependencies:
   analog_clock_widget: ^1.0.0
-  animated_rail_menu: ^1.0.0
   animated_widgets: ^1.0.0
   app_preferences: ^1.0.0
   custom_widgets: ^1.0.0
