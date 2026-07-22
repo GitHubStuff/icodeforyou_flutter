@@ -2,26 +2,17 @@
 // ignore_for_file: public_member_api_docs
 import 'dart:async';
 
-import 'package:animated_rail_menu/animated_rail_menu.dart'
-    show
-        AnimatedRailMenu,
-        MenuIconSpacing,
-        RailDirection,
-        RailIcon,
-        RailTransition;
 import 'package:animated_widgets/animated_widgets.dart'
     show PulseWidget, SplashConfig, SplashCubit, SplashScreen;
 import 'package:app_preferences_service/app_preferences_service.dart'
     show AppPreferencesDescriptor;
 import 'package:custom_widgets/custom_widgets.dart' show SizedSpinner;
-import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:remind_me/remind_me.dart' show RemindMe;
 import 'package:service_locator/service_locator.dart' show ServiceRegistry;
 import 'package:since_when_service/since_when_service.dart'
     show SinceWhenDescriptor, SinceWhenServiceClass;
-import 'package:startup_demo/src/navigation/nav_entries.dart';
 import 'package:status_bar_chameleon/status_bar_chameleon.dart'
     show StatusBarChameleon;
 import 'package:theme_manager/theme_manager.dart'
@@ -35,10 +26,7 @@ Future<void> succeedsAfter(Duration delay) async {
 }
 
 /// A task that throws [error] after [delay].
-Future<void> failsAfter(
-  Duration delay, {
-  Object error = 'task failed',
-}) async {
+Future<void> failsAfter(Duration delay, {Object error = 'task failed'}) async {
   await Future<void>.delayed(delay);
   throw error;
 }
@@ -105,7 +93,7 @@ Widget get splashWidget {
   return SplashScreen(
     splashWidget: pulse,
     intermediateWidget: const SizedSpinner(size: 60),
-    landingPage: _homeScreen,
+    landingPage: pulse,
     tasks: [
       succeedsAfter(const Duration(seconds: 7)),
       succeedsAfter(const Duration(seconds: 3)),
@@ -118,18 +106,5 @@ Widget get splashWidget {
 }
 
 Widget get pulse {
-  return const PulseWidget(
-    child: FlutterLogo(size: 200),
-  );
+  return const PulseWidget(child: FlutterLogo(size: 200));
 }
-
-const _homeScreen = AnimatedRailMenu(
-  entries: navEntries,
-  direction: RailDirection.adaptive,
-  icon: RailIcon.phone,
-  transition: RailTransition.slideDirectional,
-  transitionDuration: Duration(milliseconds: 750),
-  iconSpacing: MenuIconSpacing.collapsed,
-  haptic: HapticIntensity.medium,
-  limit: null,
-);

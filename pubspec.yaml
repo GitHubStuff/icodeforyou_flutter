@@ -7,7 +7,6 @@ version: 9.3.0
 workspace:
   - packages/abstractions
   - packages/analog_clock_widget
-  - packages/animated_rail_menu
   - packages/animated_widgets
   - packages/app_preferences
   - packages/app_preferences_service
