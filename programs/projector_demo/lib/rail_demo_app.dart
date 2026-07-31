@@ -2,6 +2,7 @@
 // Used when building apps as a 'stub'/'template'
 import 'package:flutter/material.dart';
 import 'package:rail_navigation/rail_navigation.dart';
+import 'package:theme_framework/theme_framework.dart' show ThemeSettingScreen;
 
 /// The seed color for the demo theme.
 const Color _kSeedColor = Colors.teal;
@@ -166,7 +167,7 @@ class _RailDemoAppState extends State<RailDemoApp> {
         onTransitionChanged: _setTransition,
       ),
       _DatabaseScreen(actions: _demoActions),
-      _SettingsScreen(actions: _demoActions),
+      ThemeSettingScreen(themeMode: ThemeMode.system),
       // Overflow destinations, in _kOverflowItems order: Games hosts
       // the counter, About is Scaffold-less, the rest are stubs.
       _GamesScreen(actions: _demoActions),
@@ -312,35 +313,6 @@ class _DatabaseScreen extends StatelessWidget {
       body: Center(
         child: Text(
           'Database screen',
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
-      ),
-    );
-  }
-}
-
-/// The settings screen: a deliberately different app bar style.
-class _SettingsScreen extends StatelessWidget {
-  const _SettingsScreen({required this.actions});
-
-  /// The global demo controls to show on this screen's app bar.
-  final List<Widget> actions;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Settings'),
-        centerTitle: true,
-        backgroundColor: colorScheme.tertiaryContainer,
-        foregroundColor: colorScheme.onTertiaryContainer,
-        actions: actions,
-      ),
-      body: Center(
-        child: Text(
-          'Settings screen',
           style: Theme.of(context).textTheme.headlineMedium,
         ),
       ),

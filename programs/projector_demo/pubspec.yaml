@@ -13,16 +13,18 @@ dependencies:
   color_grid: ^1.0.0
   flutter:
     sdk: flutter
-  projector: ^1.0.0
   gap: ^3.0.1
+  projector: ^1.0.0
   rail_navigation: ^1.0.0
   sincewhen_framework: ^1.0.0
   sincewhen_widgets: ^1.0.0
+  status_bar_chameleon: ^1.0.1
+  theme_framework: ^1.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^10.3.0
+  icodeforyou_lints: ^1.0.0
 
 flutter:
   uses-material-design: true

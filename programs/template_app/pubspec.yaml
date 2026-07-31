@@ -1,0 +1,65 @@
+name: template_app
+description: "MASON_CLI template for an app"
+publish_to: none
+resolution: workspace
+version: 1.0.0
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.5.5
+  status_bar_chameleon: ^1.0.1
+  widget_animation_framework: ^1.0.0
+
+dev_dependencies:
+  build_runner: 2.15.1
+  flutter_gen_runner: ^5.15.0
+  flutter_launcher_icons: ^0.14.4
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/iconer.png
+
+# Flutter Gen to create const assets
+flutter_gen:
+  output: lib/gen/
+
+  integrations:
+     image: true
+     flutter_svg: true
+     rive: true
+
+
+# Launcher Icons
+flutter_launcher_icons:
+  image_path: assets/iconer.png
+  remove_alpha_ios: true
+
+  android: true
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: assets/iconer_foreground.png
+  adaptive_icon_monochrome: assets/iconer_monochrome.png
+  min_sdk_android: 21
+
+  ios: true
+
+  web:
+    generate: true
+    background_color: "#FFFFFF"
+    theme_color: "#FFFFFF"
+
+  macos:
+    generate: true
+    image_path: assets/iconer.png
+
+  windows:
+    generate: true
+    image_path: assets/iconer.png
+    icon_size: 256
