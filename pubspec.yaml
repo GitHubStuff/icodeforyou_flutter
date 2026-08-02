@@ -10,7 +10,6 @@ workspace:
   - packages/animated_widgets
   - packages/app_preferences
   - packages/app_preferences_service
-  - packages/application_startup
   - packages/biometric_gate_service
   - packages/color_grid
   - packages/custom_widgets

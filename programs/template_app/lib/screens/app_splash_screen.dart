@@ -70,12 +70,12 @@ const ColorScheme _kBlackColorScheme = ColorScheme(
 /// [child] is the only thing on screen that is not black. It is centred and
 /// rendered with the theme that was ambient where this widget was created, so
 /// the black theme applied to the surface never reaches it.
-class AppSplashScreen extends StatelessWidget {
+class XAppSplashScreen extends StatelessWidget {
   /// Creates a black splash surface that shows [child] and nothing else.
-  const AppSplashScreen({required this.child, super.key});
+  const XAppSplashScreen({super.key});
 
   /// The only widget on the screen exempt from the black theme.
-  final Widget child;
+  //final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +85,7 @@ class AppSplashScreen extends StatelessWidget {
       value: _kOverlayStyle,
       child: Theme(
         data: _blackTheme(ambientTheme),
-        child: ColoredBox(
+        child: const ColoredBox(
           color: _kBlack,
           child: Scaffold(
             backgroundColor: _kBlack,
@@ -94,11 +94,8 @@ class AppSplashScreen extends StatelessWidget {
             extendBodyBehindAppBar: true,
             resizeToAvoidBottomInset: false,
             drawerScrimColor: _kBlack,
-            body: SizedBox.expand(
-              child: Center(
-                child: Theme(data: ambientTheme, child: child),
-              ),
-            ),
+            body: SizedBox(),
+            
           ),
         ),
       ),

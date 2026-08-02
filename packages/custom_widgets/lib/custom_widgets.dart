@@ -1,4 +1,5 @@
 export 'src/anchored/anchored.dart' show Anchored;
+export 'src/black_screen/black_screen.dart' show BlackScreen;
 export 'src/directional_slider/directional_slider.dart';
 export 'src/expanding_textfield/expanding_textfield.dart'
     show ExpandingTextField;
@@ -10,3 +11,4 @@ export 'src/textfield/textfield.dart' show InputField, PasswordField;
 export 'src/uniform_cluster/button_pair.dart' show ButtonPair;
 export 'src/uniform_cluster/uniform_cluster.dart' show UniformCluster;
 export 'src/uninherited_text/uninherited_text.dart' show UninheritedText;
+export 'src/welcome_screen/welcome_screen.dart' show WelcomeScreen;

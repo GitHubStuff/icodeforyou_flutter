@@ -1,5 +1,11 @@
 // programs/template_app/lib/screens/rail/rail_enum.dart
 
+import 'package:custom_widgets/custom_widgets.dart' show WelcomeScreen;
+import 'package:flutter/widgets.dart';
+import 'package:settings_widget/settings_widget.dart' show SettingsContent;
+import 'package:template_app/screens/rail/rails.dart' show RailContent;
+import 'package:theme_framework/theme_framework.dart' show ThemeModeEntry;
+
 /// The app's rail destinations.
 ///
 /// Each value names one place the rail can take the user. A destination is
@@ -40,5 +46,35 @@ enum RailDestinationEnum {
   main,
 
   /// The settings destination, hosting the app's settings controls.
-  settings,
+  settings;
+
+  static List<RailContent> railContents() {
+    final List<RailContent> result = [];
+    for (final destination in RailDestinationEnum.values) {
+      switch (destination) {
+        case .main:
+          result.add(
+            const RailContent(
+              identifier: .main,
+              widget: WelcomeScreen(),
+            ),
+          );
+        case .settings:
+          result.add(
+            const RailContent(
+              identifier: .settings,
+              // SettingsContent brings no Scaffold, so it needs the top inset
+              // itself; RailShell only guards the rail's own edge.
+              widget: SafeArea(
+                child: SettingsContent(
+                  title: Text('Settings'),
+                  entries: [ThemeModeEntry()],
+                ),
+              ),
+            ),
+          );
+      }
+    }
+    return result;
+  }
 }

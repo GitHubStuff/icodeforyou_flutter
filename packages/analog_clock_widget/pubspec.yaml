@@ -1,5 +1,4 @@
 # pubspec.yaml analog_clock_widget
-# Minimal dependencies for abstractions packagename: analog_clock_widget
 
 name: analog_clock_widget
 description: "Package to handle all abstract classes"
@@ -19,7 +18,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^10.3.0
+  icodeforyou_lints: ^1.0.0
 
 flutter:
   uses-material-design: true

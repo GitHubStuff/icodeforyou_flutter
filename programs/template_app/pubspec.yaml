@@ -8,6 +8,7 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
+  custom_widgets: ^1.0.0
   extensions: ^1.0.4
   flutter:
     sdk: flutter
@@ -34,6 +35,7 @@ flutter:
     - assets/iconer.png
 
 # Flutter Gen to create const assets
+# dart run build_runner build
 flutter_gen:
   output: lib/gen/
 
@@ -44,6 +46,7 @@ flutter_gen:
 
 
 # Launcher Icons
+# dart run flutter_launcher_icons
 flutter_launcher_icons:
   image_path: assets/iconer.png
   remove_alpha_ios: true

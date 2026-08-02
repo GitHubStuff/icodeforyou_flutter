@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 ///
 /// Presents the bundled `iconer` artwork centered on the surface, scaled to
 /// fit within [_kIconerExtent] without distortion.
-class HomeScreen extends StatelessWidget {
+class XHomeScreen extends StatelessWidget {
   /// Creates a [HomeScreen].
-  const HomeScreen({super.key});
+  const XHomeScreen({super.key});
 
   static const String _kIconerAsset = 'assets/iconer.png';
   static const String _kIconerLabel = 'Home Screen';
