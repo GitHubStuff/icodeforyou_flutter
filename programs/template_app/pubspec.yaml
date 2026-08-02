@@ -8,10 +8,15 @@ environment:
   sdk: ">=3.12.0 <4.0.0"
 
 dependencies:
+  extensions: ^1.0.4
   flutter:
     sdk: flutter
+  gap: ^3.0.1
+  rail_navigation: ^1.0.0
+  settings_widget: ^1.0.0
   shared_preferences: ^2.5.5
   status_bar_chameleon: ^1.0.1
+  theme_framework: ^1.0.0
   widget_animation_framework: ^1.0.0
 
 dev_dependencies:
@@ -21,6 +26,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   icodeforyou_lints: ^1.0.0
+  
 
 flutter:
   uses-material-design: true
@@ -34,7 +40,7 @@ flutter_gen:
   integrations:
      image: true
      flutter_svg: true
-     rive: true
+     rive: true           # Interactive vector animations (aka .riv files)
 
 
 # Launcher Icons

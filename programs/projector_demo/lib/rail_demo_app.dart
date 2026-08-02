@@ -2,7 +2,6 @@
 // Used when building apps as a 'stub'/'template'
 import 'package:flutter/material.dart';
 import 'package:rail_navigation/rail_navigation.dart';
-import 'package:theme_framework/theme_framework.dart' show ThemeSettingScreen;
 
 /// The seed color for the demo theme.
 const Color _kSeedColor = Colors.teal;
@@ -167,7 +166,6 @@ class _RailDemoAppState extends State<RailDemoApp> {
         onTransitionChanged: _setTransition,
       ),
       _DatabaseScreen(actions: _demoActions),
-      ThemeSettingScreen(themeMode: ThemeMode.system),
       // Overflow destinations, in _kOverflowItems order: Games hosts
       // the counter, About is Scaffold-less, the rest are stubs.
       _GamesScreen(actions: _demoActions),

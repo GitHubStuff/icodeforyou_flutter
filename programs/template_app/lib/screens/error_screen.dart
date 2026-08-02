@@ -1,6 +1,10 @@
 // programs/template_app/lib/screens/error_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:template_app/gen/assets.gen.dart';
+
+const String _kIconerLabel = 'Error Screen';
+const double _kIconerExtent = 240;
 
 /// The app's landing screen.
 ///
@@ -8,30 +12,35 @@ import 'package:flutter/material.dart';
 /// fit within [_kIconerExtent] without distortion.
 class ErrorScreen extends StatelessWidget {
   /// Creates a [ErrorScreen].
-  const ErrorScreen({super.key});
+  const ErrorScreen({this.errorBody, super.key});
 
-  static const String _kIconerAsset = 'assets/iconer.png';
-  static const String _kIconerLabel = 'Error Screen';
-  static const double _kIconerExtent = 240;
-  static const EdgeInsets _kContentPadding = EdgeInsets.all(24);
-
+  final Widget? errorBody;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text(_kIconerLabel)),
-      body: Center(
-        child: Padding(
-          padding: _kContentPadding,
-          child: Image.asset(
-            _kIconerAsset,
-            width: _kIconerExtent,
-            height: _kIconerExtent,
-            fit: BoxFit.contain,
-            filterQuality: FilterQuality.medium,
-            semanticLabel: _kIconerLabel,
-          ),
-        ),
-      ),
+      body: Center(child: _defaultErrorWidget(errorBody)),
     );
   }
 }
+
+//-
+Widget _defaultErrorWidget(Widget? errorWidget) {
+  if (errorWidget != null) return errorWidget;
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      _defaultIcon(),
+      const Text('Fatal Error', style: TextStyle(fontSize: 24)),
+    ],
+  );
+}
+
+//-
+Widget _defaultIcon() => Assets.iconer.image(
+  width: _kIconerExtent,
+  height: _kIconerExtent,
+  fit: BoxFit.contain,
+  filterQuality: FilterQuality.medium,
+  semanticLabel: _kIconerLabel,
+);

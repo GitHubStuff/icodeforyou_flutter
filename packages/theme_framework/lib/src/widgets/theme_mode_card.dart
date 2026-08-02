@@ -30,7 +30,7 @@ class ThemeModeCard extends StatelessWidget {
           padding: _kHeaderPadding,
           child: Text(
             'Appearance',
-            style: theme.textTheme.labelLarge?.copyWith(
+            style: theme.textTheme.titleLarge?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),

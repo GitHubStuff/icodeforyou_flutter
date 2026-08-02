@@ -1,2 +1,2 @@
 # programs/template_app/analysis_options.yaml
-include: package:icodeforyou_lints:analysis_options.yaml
+include: package:icodeforyou_lints/analysis_options.yaml
