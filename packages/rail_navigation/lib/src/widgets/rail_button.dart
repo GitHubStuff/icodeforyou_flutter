@@ -49,7 +49,7 @@ class RailButton extends StatelessWidget {
     this.hapticIntensity = HapticIntensity.light,
   }) : assert(
          icon != null || caption != null,
-         'RailButton requires an icon, a caption, or both.',
+         'Button requires an either/both a caption and/or icon',
        );
 
   /// Called when the button is tapped, after the haptic feedback for
@@ -124,8 +124,8 @@ class RailButton extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   spacing: _kContentSpacing,
                   children: [
-                    if (icon != null) icon!,
-                    if (caption != null) caption!,
+                    ?icon,
+                    ?caption,
                   ],
                 ),
               ),

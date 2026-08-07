@@ -38,12 +38,10 @@ class PlayOnMount extends StatefulWidget {
   const PlayOnMount({
     required this.builder,
     required this.duration,
-    this.onCompleted,
-    this.curve = _kDefaultCurve,
+    required this.curve,
+    required this.onCompleted,
     super.key,
   });
-
-  static const Curve _kDefaultCurve = Curves.easeInOut;
 
   /// Builds the subtree driven by the owned timeline.
   final AnimationWidgetBuilder builder;
@@ -51,7 +49,7 @@ class PlayOnMount extends StatefulWidget {
   /// Invoked once the timeline reaches [AnimationStatus.completed].
   ///
   /// Read at call time, so a caller may swap the callback between rebuilds.
-  final VoidCallback? onCompleted;
+  final VoidCallback onCompleted;
 
   /// The time taken to run the timeline from begin to end.
   final Duration duration;
@@ -114,7 +112,7 @@ class _PlayOnMountState extends State<PlayOnMount>
 
   void _handleStatusChanged(AnimationStatus status) {
     if (status == AnimationStatus.completed) {
-      widget.onCompleted?.call();
+      widget.onCompleted.call();
     }
   }
 

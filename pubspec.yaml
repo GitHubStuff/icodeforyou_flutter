@@ -45,6 +45,7 @@ workspace:
   - packages/time_spans
   - packages/widget_animation_framework
   - plugins/status_bar_chameleon
+  - programs/black_velvet
   - programs/creature_comfort
   - programs/creature_comforts_service
   - programs/earth_spin_demo

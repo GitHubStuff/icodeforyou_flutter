@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:theme_framework/src/preferences/theme_storage.dart';
+import 'package:theme_framework/src/preferences/theme_storage_abstract.dart';
 
 const String _kThemeModeKey = 'theme_framework.theme_mode';
 
-/// A [ThemeStorage] backed by `shared_preferences`.
+/// A [ThemeStorageAbstract] backed by `shared_preferences`.
 ///
 /// Suitable for a non-sensitive display preference. The storage key is private
 /// to this adapter, so no caller can come to depend on it.
 /// _prefs is passed as a parameter because it created with an awat
-final class SharedPreferencesThemeStorage implements ThemeStorage {
+final class SharedPreferencesThemeStorage implements ThemeStorageAbstract {
   /// Creates a [SharedPreferencesThemeStorage] backed by [prefs].
   const SharedPreferencesThemeStorage(this._prefs);
 

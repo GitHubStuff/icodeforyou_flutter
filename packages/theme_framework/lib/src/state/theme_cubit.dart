@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:theme_framework/src/preferences/theme_storage.dart';
+import 'package:theme_framework/src/preferences/theme_storage_abstract.dart';
 
 /// The mode held until [ThemeCubit.restore] completes.
 ///
@@ -13,17 +13,15 @@ const ThemeMode _kSplashThemeMode = ThemeMode.dark;
 const ThemeMode _kFirstLaunchThemeMode = ThemeMode.system;
 
 /// Owns the app's active [ThemeMode], hydrated from and persisted to a
-/// [ThemeStorage].
+/// [ThemeStorageAbstract].
 ///
 /// Seeds at [_kSplashThemeMode] so the tree is dark while the splash is up,
 /// then settles on the stored preference once [restore] completes.
 final class ThemeCubit extends Cubit<ThemeMode> {
   /// Creates a [ThemeCubit] backed by [storage].
-  ThemeCubit(ThemeStorage storage)
-    : _storage = storage,
-      super(_kSplashThemeMode);
+  ThemeCubit(this._storage) : super(_kSplashThemeMode);
 
-  final ThemeStorage _storage;
+  final ThemeStorageAbstract _storage;
 
   /// Emits the persisted [ThemeMode], or [_kFirstLaunchThemeMode] when the
   /// device holds none.
