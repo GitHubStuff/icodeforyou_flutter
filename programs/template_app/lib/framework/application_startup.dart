@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:template_app/framework/routes_framework.dart'
     show RoutesFramework;
 import 'package:theme_framework/theme_framework.dart'
-    show MaterialApplicationTheme, ThemeCubit, ThemeStorageAbstract;
+    show DefaultMaterialAppRouter, ThemeCubit, ThemeStorageAbstract;
 
 final class ApplicationStartup {
   const ApplicationStartup({
@@ -26,7 +26,7 @@ final class ApplicationStartup {
     final goRouter = RoutesFramework.builtRoutes();
 
     runApp(
-      MaterialApplicationTheme(
+      DefaultMaterialAppRouter(
         themeCubit: themeCubit,
         routerConfig: goRouter,
         debugShowCheckedModeBanner: showDebugBanner,

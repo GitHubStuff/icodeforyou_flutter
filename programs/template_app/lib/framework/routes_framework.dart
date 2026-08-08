@@ -11,9 +11,8 @@ import 'package:status_bar_chameleon/status_bar_chameleon.dart'
 import 'package:template_app/defaults/default_splash_screen.dart';
 import 'package:template_app/screens/rail/rail_destination_enum.dart'
     show RailDestinationEnum;
-import 'package:template_app/screens/rail/rails.dartX' show Rails;
 
-part 'routes_goroute.dart';
+part 'routes.goroute.dart';
 
 class RoutesFramework {
   static const app = '/app';

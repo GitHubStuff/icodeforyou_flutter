@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Theme applied to the Android Window while the process is starting when the OS's Dark Mode setting is off -->
-    <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
-        <!-- Show a splash screen on the activity. Automatically removed when
-             the Flutter engine draws its first frame -->
+    <!-- Theme for the Android 12+ system splash / starting window.
+         KNOWN LIMITATION: the splash window is OS-owned; the status bar
+         cannot be hidden during it by any app mechanism. -->
+    <!-- CHANGED: parents Theme.Light.NoTitleBar -> Theme.Black.NoTitleBar.
+         With no explicit icon-appearance flags, Android derives status icon
+         color from the theme's lightness. Light parent = dark icons =
+         invisible on a black app (the "only the battery's green fill shows"
+         bug). Black parent = white icons in both day and night modes, which
+         is also why deleting values-night regressed this: the night file's
+         Black parent was what dark-mode devices were relying on. -->
+    <style name="LaunchTheme" parent="@android:style/Theme.Black.NoTitleBar">
         <item name="android:windowBackground">@drawable/launch_background</item>
+        <item name="android:windowSplashScreenBackground">@android:color/black</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@android:color/transparent</item>
     </style>
-    <!-- Theme applied to the Android Window as soon as the process has started.
-         This theme determines the color of the Android Window while your
-         Flutter UI initializes, as well as behind your Flutter UI while its
-         running.
-
-         This Theme is only used starting with V2 of Flutter's Android embedding. -->
-    <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
-        <item name="android:windowBackground">?android:colorBackground</item>
+    <style name="NormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
+        <item name="android:windowBackground">@android:color/black</item>
     </style>
 </resources>

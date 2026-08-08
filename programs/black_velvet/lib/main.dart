@@ -1,7 +1,15 @@
-import 'package:custom_widgets/custom_widgets.dart' show SolidScreenColor;
+import 'package:black_velvet/application_startup.dart' show ApplicationStartup;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart'
+    show SharedPreferences;
 import 'package:status_bar_chameleon/status_bar_chameleon.dart'
     show StatusBarChameleon;
+import 'package:theme_framework/theme_framework.dart'
+    show SharedPreferencesThemeStorage;
+
+// NOTE: Android has a choke-hold on the splash screen on cold-start
+// So there is a small 'flash' of the screen status bar.
+// CONCLUSION: Avoid Android
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -9,22 +17,10 @@ Future<void> main() async {
   // Hide the bar with time/battery so the splash screen is on a black page
   await StatusBarChameleon.setStatusBarHidden(hidden: true);
 
-  runApp(const MyApp());
-}
+  // Preferenes are created here because it is an async task.
+  final preferences = await SharedPreferences.getInstance();
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-      home: const SolidScreenColor(
-        color: Colors.deepPurple,
-      ),
-    );
-  }
+  ApplicationStartup(
+    themeStorage: SharedPreferencesThemeStorage(preferences),
+  ).runner();
 }

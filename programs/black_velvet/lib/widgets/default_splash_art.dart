@@ -12,9 +12,9 @@ import 'package:widget_animation_framework/widget_animation_framework.dart'
 /// fades in (opacity 0 → 1), scales up (0 → 1), and completes one full
 /// rotation (turns 1 → 2) as the animation progresses.
 /// {@endtemplate}
-class DefaultSplashChild extends StatelessWidget {
+class DefaultSplashArt extends StatelessWidget {
   /// {@macro default_splash_screen_child}
-  const DefaultSplashChild({
+  const DefaultSplashArt({
     required this.animation,
     super.key,
   });

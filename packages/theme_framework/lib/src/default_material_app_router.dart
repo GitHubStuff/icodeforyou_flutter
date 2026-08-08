@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:theme_framework/src/state/theme_cubit.dart' show ThemeCubit;
 
-final class MaterialApplicationTheme extends StatelessWidget {
-  const MaterialApplicationTheme({
+final class DefaultMaterialAppRouter extends StatelessWidget {
+  const DefaultMaterialAppRouter({
     required this.themeCubit,
     required this.routerConfig,
     this.theme,
     this.darkTheme,
     this.highContrastTheme,
     this.highContrastDarkTheme,
-    required this.debugShowCheckedModeBanner,
     super.key,
   });
 
@@ -37,11 +36,6 @@ final class MaterialApplicationTheme extends StatelessWidget {
   /// When null, [MaterialApp] falls back to [darkTheme].
   final ThemeData? highContrastDarkTheme;
 
-  /// Whether to show the framework's banner in debug builds.
-  ///
-  /// Defaults to false. Has no effect in profile or release builds.
-  final bool debugShowCheckedModeBanner;
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider<ThemeCubit>.value(
@@ -51,7 +45,7 @@ final class MaterialApplicationTheme extends StatelessWidget {
           return MaterialApp.router(
             routerConfig: routerConfig,
             themeMode: themeMode,
-            debugShowCheckedModeBanner: debugShowCheckedModeBanner,
+            debugShowCheckedModeBanner: false,
             theme: theme ?? ThemeData(brightness: Brightness.light),
             darkTheme:
                 darkTheme ??

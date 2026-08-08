@@ -5,11 +5,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:status_bar_chameleon/status_bar_chameleon.dart'
     show StatusBarChameleon;
 import 'package:theme_framework/theme_framework.dart'
-    show MaterialApplicationTheme, ThemeStore;
+    show DefaultMaterialAppRouter, ThemeStore;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final store = ThemeStore(await SharedPreferences.getInstance());
   await StatusBarChameleon.setStatusBarHidden(hidden: true);
-  runApp(MaterialApplicationTheme(themeStore: store));
+  runApp(DefaultMaterialAppRouter(themeStore: store));
 }

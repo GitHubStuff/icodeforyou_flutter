@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 
-/// Builds a subtree against a timeline supplied by [PlayOnMount].
+/// Builds a subtree against a timeline supplied by [AnimationControllerWidget].
 typedef AnimationWidgetBuilder =
     Widget Function(BuildContext context, Animation<double> animation);
 
@@ -21,7 +21,7 @@ typedef AnimationWidgetBuilder =
 /// [AnimationController.duration].
 ///
 /// ```dart
-/// PlayOnMount(
+/// AnimationControllerWidget(
 ///   duration: const Duration(milliseconds: 2500),
 ///   curve: Curves.easeInOut,
 ///   onCompleted: _handleDone,
@@ -33,9 +33,9 @@ typedef AnimationWidgetBuilder =
 /// )
 /// ```
 /// {@endtemplate}
-class PlayOnMount extends StatefulWidget {
+class AnimationControllerWidget extends StatefulWidget {
   /// {@macro play_on_mount}
-  const PlayOnMount({
+  const AnimationControllerWidget({
     required this.builder,
     required this.duration,
     required this.curve,
@@ -58,10 +58,10 @@ class PlayOnMount extends StatefulWidget {
   final Curve curve;
 
   @override
-  State<PlayOnMount> createState() => _PlayOnMountState();
+  State<AnimationControllerWidget> createState() => _AnimationControllerWidgetState();
 }
 
-class _PlayOnMountState extends State<PlayOnMount>
+class _AnimationControllerWidgetState extends State<AnimationControllerWidget>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
@@ -82,7 +82,7 @@ class _PlayOnMountState extends State<PlayOnMount>
   }
 
   @override
-  void didUpdateWidget(PlayOnMount oldWidget) {
+  void didUpdateWidget(AnimationControllerWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (widget.duration != oldWidget.duration) {
@@ -102,7 +102,7 @@ class _PlayOnMountState extends State<PlayOnMount>
     super.dispose();
   }
 
-  /// Applies [PlayOnMount.curve] as an [Animatable] rather than a
+  /// Applies [AnimationControllerWidget.curve] as an [Animatable] rather than a
   /// [CurvedAnimation].
   ///
   /// The result registers no listeners of its own, so swapping the curve on a

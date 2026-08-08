@@ -19,7 +19,10 @@ android {
         applicationId = "com.icodeforyou.black_velvet"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        // CHANGED: was flutter.minSdkVersion. Android 12 floor (API 31) —
+        // the system splash screen is the only launch path supported, so
+        // splash styling lives in base values/ with no v31 qualifiers.
+        minSdk = 31
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
