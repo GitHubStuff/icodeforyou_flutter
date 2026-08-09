@@ -1,0 +1,242 @@
+#!/usr/bin/env zsh
+# bricks/build_brick
+readonly _kVersion='0.0.4'
+#
+# General-purpose Mason brick builder for the icodeforyou_flutter monorepo.
+#
+# Builds (or rebuilds) bricks/<name>/__brick__ from programs/<name>,
+# substituting every identity form with mustache case lambdas, generating
+# bricks/<name>/brick.yaml if missing, and registering the brick in the
+# root mason.yaml if absent.
+#
+# Run from the monorepo foloder root
+#   ./bricks/build_brick <template_app_name>
+#
+# Example:
+#   .build_brick black_velvet
+
+
+# ─── SHARED LIBRARIES ─────────────────────────────────────────────────────────
+
+## Home of the shared zsh libraries.
+readonly _kLibDir="${HOME}/bin/lib"
+
+## Required shared libraries; abort if any are missing.
+readonly -a _kLibs=('colors.zsh' 'common.zsh' 'datetime_library.zsh')
+
+for _lib in ${_kLibs[@]}; do
+  if [[ ! -f "${_kLibDir}/${_lib}" ]]; then
+    printf '❌ Missing required library: %s\n' "${_kLibDir}/${_lib}" >&2
+    printf '   Aborting. Fix _kLibDir in this script if your libraries live elsewhere.\n' >&2
+    exit 1
+  fi
+  source "${_kLibDir}/${_lib}"
+done
+
+# ─── HELP ─────────────────────────────────────────────────────────────────────
+
+## Prints usage instructions.
+show_help() {
+  printf "${BOLD}${GREEN}build_brick${RESET} — ${YELLOW}Mason brick builder, version %s${RESET}\n\n" "${_kVersion}"
+  printf "${UNDERLINE}${PURPLE}Usage${RESET}\n"
+  printf "  ./bricks/build_brick <template_app_name>\n\n"
+  printf "${UNDERLINE}${PURPLE}What it does${RESET}\n"
+  printf "  Rebuilds bricks/<name>/__brick__ from programs/<name>:\n"
+  printf "    1. Generates bricks/<name>/brick.yaml if missing (never overwrites).\n"
+  printf "    2. Registers the brick in the root mason.yaml if absent.\n"
+  printf "    3. Wipes and recopies __brick__, excluding build junk.\n"
+  printf "    4. Substitutes all identity forms with mustache case lambdas:\n"
+  printf "         snake_case, camelCase, PascalCase, Title Case\n"
+  printf "    5. Templates the pubspec description as {{description}}.\n"
+  printf "    6. Renames the Kotlin package directory to its mustache form.\n"
+  printf "    7. Verifies zero literal references remain; fails loudly if any do.\n\n"
+  printf "${UNDERLINE}${PURPLE}Example${RESET}\n"
+  printf "  ./bricks/build_brick black_velvet\n\n"
+  printf "  Run from the monorepo root. The template app must exist at\n"
+  printf "  ${BLUE}/programs/<name>${RESET} and ${BLUE}<name>${RESET} must be snake_case.\n"
+  echo
+}
+
+if (( $# == 0 )); then
+  show_help
+  exit 1
+fi
+
+set -e
+setopt null_glob
+
+# ─── PARAMETER AND DERIVED FORMS ──────────────────────────────────────────────
+
+## Template app name in snake_case, e.g. black_velvet.
+readonly _snake="$1"
+
+if [[ ! "${_snake}" =~ '^[a-z][a-z0-9_]*$' ]]; then
+  error "Name must be snake_case (got: ${_snake})"
+  exit 1
+fi
+
+## Title Case form, e.g. Black Velvet.
+readonly _title="${(C)${_snake//_/ }}"
+
+## PascalCase form, e.g. BlackVelvet.
+readonly _pascal="${_title// /}"
+
+## camelCase form, e.g. blackVelvet.
+readonly _camel="${_pascal[1]:l}${_pascal[2,-1]}"
+
+# ─── CONSTANTS ────────────────────────────────────────────────────────────────
+
+## Source template app, relative to the monorepo root.
+readonly _kSource="programs/${_snake}"
+
+## Brick home directory, relative to the monorepo root.
+readonly _kBrickHome="bricks/${_snake}"
+
+## Brick template payload directory.
+readonly _kBrick="${_kBrickHome}/__brick__"
+
+## Kotlin source-tree path segment that carries the app name.
+readonly _kKotlinBase='android/app/src/main/kotlin/com/icodeforyou'
+
+# ─── STARTUP BANNER ───────────────────────────────────────────────────────────
+printf "\n"
+color_print "${CYAN}" "$(local_time), build_brick ${_snake}, build version ${_kVersion}"
+printf "\n"
+
+# ─── PRECONDITIONS ────────────────────────────────────────────────────────────
+
+if [[ ! -f 'pubspec.yaml' || ! -d 'bricks' ]]; then
+  error "Run from the monorepo root (pubspec.yaml + bricks/ required)."
+  exit 1
+fi
+
+if [[ ! -d "${_kSource}" ]]; then
+  error "Template app not found: ${_kSource}"
+  exit 1
+fi
+
+# ─── 1. GENERATE brick.yaml IF MISSING ────────────────────────────────────────
+
+mkdir -p "${_kBrickHome}"
+
+if [[ -f "${_kBrickHome}/brick.yaml" ]]; then
+  plain_output 'brick.yaml' 'exists (untouched)'
+else
+  cat > "${_kBrickHome}/brick.yaml" << EOF
+name: ${_snake}
+description: >-
+  icodeforyou Flutter program template generated from programs/${_snake}.
+version: 1.0.0
+
+environment:
+  mason: ">=0.1.0 <0.2.0"
+
+vars:
+  name:
+    type: string
+    description: The app name (any case — snake/camel/pascal/title are derived)
+    prompt: What is the app name?
+  description:
+    type: string
+    description: One-line pubspec description
+    default: An icodeforyou Flutter application.
+    prompt: One-line app description?
+EOF
+  plain_output 'brick.yaml' 'generated'
+fi
+
+# ─── 2. REGISTER IN ROOT mason.yaml IF ABSENT ─────────────────────────────────
+
+if [[ ! -f 'mason.yaml' ]]; then
+  cat > 'mason.yaml' << EOF
+bricks:
+  ${_snake}:
+    path: bricks/${_snake}
+EOF
+  plain_output 'mason.yaml' 'created with entry'
+elif grep -q "^  ${_snake}:$" 'mason.yaml'; then
+  plain_output 'mason.yaml' 'entry exists (untouched)'
+else
+  cat >> 'mason.yaml' << EOF
+  ${_snake}:
+    path: bricks/${_snake}
+EOF
+  plain_output 'mason.yaml' 'entry appended'
+fi
+
+# ─── 3. WIPE AND COPY ─────────────────────────────────────────────────────────
+
+rm -rf "${_kBrick}"
+mkdir -p "${_kBrick}"
+
+rsync -a \
+  --exclude='.dart_tool/' \
+  --exclude='.idea/' \
+  --exclude='.gradle/' \
+  --exclude='build/' \
+  --exclude='ephemeral/' \
+  --exclude='Pods/' \
+  --exclude='.symlinks/' \
+  --exclude='xcuserdata/' \
+  --exclude='.DS_Store' \
+  --exclude='*.iml' \
+  --exclude='.flutter-plugins-dependencies' \
+  --exclude='local.properties' \
+  --exclude='ios/Flutter/Generated.xcconfig' \
+  --exclude='ios/Flutter/flutter_export_environment.sh' \
+  "${_kSource}/" "${_kBrick}/"
+
+plain_output 'Template copied' "${_kSource} -> ${_kBrick}"
+
+# ─── 4. SUBSTITUTE IDENTITY FORMS ─────────────────────────────────────────────
+
+grep -rlI "${_snake}\|${_camel}\|${_pascal}\|${_title}" "${_kBrick}" | \
+while read -r _file; do
+  sed -i '' \
+    -e "s/${_title}/{{name.titleCase()}}/g" \
+    -e "s/${_snake}/{{name.snakeCase()}}/g" \
+    -e "s/${_camel}/{{name.camelCase()}}/g" \
+    -e "s/${_pascal}/{{name.pascalCase()}}/g" \
+    "${_file}"
+done
+
+plain_output 'Substitutions' "${_snake} ${_camel} ${_pascal} '${_title}'"
+
+# ─── 5. TEMPLATE THE DESCRIPTION ──────────────────────────────────────────────
+
+sed -i '' 's/^description: .*/description: "{{description}}"/' "${_kBrick}/pubspec.yaml"
+
+# ─── 6. RENAME THE KOTLIN PACKAGE DIRECTORY ───────────────────────────────────
+
+if [[ -d "${_kBrick}/${_kKotlinBase}/${_snake}" ]]; then
+  mv "${_kBrick}/${_kKotlinBase}/${_snake}" \
+     "${_kBrick}/${_kKotlinBase}/{{name.snakeCase()}}"
+  plain_output 'Kotlin dir' 'renamed to {{name.snakeCase()}}'
+fi
+
+# ─── 7. VERIFY ────────────────────────────────────────────────────────────────
+
+if grep -rI "${_snake}\|${_camel}\|${_pascal}\|${_title}" "${_kBrick}"; then
+  error "Literal references remain (listed above). Brick is dirty."
+  exit 1
+fi
+
+success "Brick built clean: ${_kBrick}"
+
+# ─── USAGE EXAMPLES ───────────────────────────────────────────────────────────
+
+printf '\n'
+color_print "${WHITE}" "Create a NEW program from this brick (from the monorepo root):"
+printf '\n'
+printf "  mason get\n"
+printf "  mason make %s --name ${GREEN}my_app${RESET} --description \"${YELLOW}My app${RESET}\" -o ${YELLOW}programs/my_app${RESET}\n" "${_snake}"
+printf '\n'
+printf "  Then add ${YELLOW}programs/my_app${RESET} to the workspace list in the root ${YELLOW}pubspec.yaml${RESET}\n"
+printf "  and run: ${YELLOW}flutter pub get${RESET}\n\n"
+color_print "${WHITE}" "Pull template changes into an EXISTING program (clean git tree first):"
+printf "\n"
+printf "  From the terminal:\n"
+printf "   %% mason make %s --name my_app -o programs/my_app --on-conflict overwrite\n" "${_snake}"
+printf "   %% git diff\n\n"
+printf "  Review the diff; git checkout -- the files where the app's own edits\n"
+printf "  should win, then commit.\n\n"

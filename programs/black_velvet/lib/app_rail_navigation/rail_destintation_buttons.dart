@@ -1,13 +1,10 @@
 // packages/rail_navigation/lib/src/widgets/rail_destination_buttons.dart
 
 import 'package:flutter/material.dart';
-import 'package:black_velvet/rail_navigation/rail_destination_enum.dart'
-    show RailDestinationEnum;
-import 'package:rail_navigation/src/widgets/rail_button.dart' show RailButton;
-import 'package:rail_navigation/src/widgets/rail_overflow_button.dart'
-    show RailOverflowButton;
-import 'package:rail_navigation/src/widgets/rail_popover_tile.dart'
-    show RailPopoverTile;
+import 'package:rail_navigation/rail_navigation.dart'
+    show RailButton, RailOverflowButton, RailPopoverTile;
+
+import 'rail_destination_enum.dart' show RailDestinationEnum;
 
 /// The fixed footprint used for every destination button, including
 /// the overflow button.

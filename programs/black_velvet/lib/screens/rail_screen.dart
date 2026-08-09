@@ -1,10 +1,11 @@
 // programs/black_velvet/lib/screens/app_screen.dart
 
 import 'package:analog_clock_widget/analog_clock_widget.dart' show AnalogClock;
-import 'package:black_velvet/rail_navigation/rail_destination_enum.dart'
-    show RailDestinationEnum;
 import 'package:flutter/material.dart';
-import 'package:rail_navigation/rail_navigation.dart'
+
+import '../app_rail_navigation/rail_destination_enum.dart'
+    show RailDestinationEnum;
+import '../app_rail_navigation/rail_destintation_buttons.dart'
     show RailDestinationButtons;
 
 /// The destination shown when the app screen first appears.

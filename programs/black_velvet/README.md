@@ -9,6 +9,14 @@ Flutter template project
 - ios/Runner/StatusBarFlutterViewController.swift (new)
 - ios/Runner/Info.plist
 
+### StatusBarFlutterViewController.swift
+
+This ```.swift``` file was created to work with ```status_bar_chameleon``` package to faciliate a black/blank screen
+on an application's **cold start**. So far, as a template, it appears correctly in the xcode workspace as part of the
+iOS project. *IF THERE AN ERROR* on launch, startup **XCODE** and make sure the file is part of the known xcode files.
+
+## Layout
+
 ```txt
 tool/bricks/black_launch/
 ├── brick.yaml
@@ -19,7 +27,7 @@ tool/bricks/black_launch/
 
 ## Android Platform
 
-Dump ass platform doesn't allow for a truly black screen, the status bar always flashes.
+Dumb ass platform doesn't allow for a truly black screen, the status bar always flashes.
 
 ### android/app/build.gradle.kts
 

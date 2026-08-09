@@ -1,0 +1,18 @@
+name: black_velvet
+description: >-
+  icodeforyou Flutter program template generated from programs/black_velvet.
+version: 1.0.0
+
+environment:
+  mason: ">=0.1.0 <0.2.0"
+
+vars:
+  name:
+    type: string
+    description: The app name (any case — snake/camel/pascal/title are derived)
+    prompt: What is the app name?
+  description:
+    type: string
+    description: One-line pubspec description
+    default: An icodeforyou Flutter application.
+    prompt: One-line app description?
