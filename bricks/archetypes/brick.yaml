@@ -1,6 +1,6 @@
-name: black_velvet
+name: archetypes
 description: >-
-  icodeforyou Flutter template generated from programs/black_velvet.
+  icodeforyou Flutter template generated from packages/archetypes.
 version: 1.0.0
 
 environment:

@@ -1,19 +1,20 @@
 #!/usr/bin/env zsh
 # bricks/build_brick
-readonly _kVersion='0.0.4'
+readonly _kVersion='0.0.8'
 #
 # General-purpose Mason brick builder for the icodeforyou_flutter monorepo.
 #
-# Builds (or rebuilds) bricks/<name>/__brick__ from programs/<name>,
+# Builds (or rebuilds) bricks/<name>/__brick__ from <subfolder>/<name>,
 # substituting every identity form with mustache case lambdas, generating
 # bricks/<name>/brick.yaml if missing, and registering the brick in the
 # root mason.yaml if absent.
 #
-# Run from the monorepo foloder root
-#   ./bricks/build_brick <template_app_name>
+# Run from the monorepo folder root
+#   ./bricks/build_brick <template_app_name> -s <subfolder>
 #
-# Example:
-#   .build_brick black_velvet
+# Examples:
+#   ./bricks/build_brick black_velvet -s programs
+#   ./bricks/build_brick yellow_velvet -s packages
 
 
 # ─── SHARED LIBRARIES ─────────────────────────────────────────────────────────
@@ -39,21 +40,28 @@ done
 show_help() {
   printf "${BOLD}${GREEN}build_brick${RESET} — ${YELLOW}Mason brick builder, version %s${RESET}\n\n" "${_kVersion}"
   printf "${UNDERLINE}${PURPLE}Usage${RESET}\n"
-  printf "  ./bricks/build_brick <template_app_name>\n\n"
+  printf "  ./bricks/build_brick <template_app_name> -s <subfolder>\n\n"
+  printf "${UNDERLINE}${PURPLE}Options${RESET}\n"
+  printf "  -s <subfolder>   REQUIRED. Monorepo subfolder holding the template\n"
+  printf "                   (e.g. packages, plugins, programs).\n"
+  printf "                   Must exist as a directory at the monorepo root.\n\n"
   printf "${UNDERLINE}${PURPLE}What it does${RESET}\n"
-  printf "  Rebuilds bricks/<name>/__brick__ from programs/<name>:\n"
+  printf "  Rebuilds bricks/<name>/__brick__ from <subfolder>/<name>:\n"
   printf "    1. Generates bricks/<name>/brick.yaml if missing (never overwrites).\n"
   printf "    2. Registers the brick in the root mason.yaml if absent.\n"
   printf "    3. Wipes and recopies __brick__, excluding build junk.\n"
   printf "    4. Substitutes all identity forms with mustache case lambdas:\n"
   printf "         snake_case, camelCase, PascalCase, Title Case\n"
   printf "    5. Templates the pubspec description as {{description}}.\n"
-  printf "    6. Renames the Kotlin package directory to its mustache form.\n"
-  printf "    7. Verifies zero literal references remain; fails loudly if any do.\n\n"
-  printf "${UNDERLINE}${PURPLE}Example${RESET}\n"
-  printf "  ./bricks/build_brick black_velvet\n\n"
-  printf "  Run from the monorepo root. The template app must exist at\n"
-  printf "  ${BLUE}/programs/<name>${RESET} and ${BLUE}<name>${RESET} must be snake_case.\n"
+  printf "    6. Renames every file and directory carrying an identity form\n"
+  printf "       (e.g. lib/<name>.dart, the Kotlin package dir) to its mustache form.\n"
+  printf "    7. Verifies zero literal references remain in contents or file\n"
+  printf "       names; fails loudly if any do.\n\n"
+  printf "${UNDERLINE}${PURPLE}Examples${RESET}\n"
+  printf "  ./bricks/build_brick black_velvet -s programs\n"
+  printf "  ./bricks/build_brick yellow_velvet -s packages\n\n"
+  printf "  Run from the monorepo root. The template must exist at\n"
+  printf "  ${BLUE}/<subfolder>/<name>${RESET} and ${BLUE}<name>${RESET} must be snake_case.\n"
   echo
 }
 
@@ -62,18 +70,68 @@ if (( $# == 0 )); then
   exit 1
 fi
 
-set -e
-setopt null_glob
-
-# ─── PARAMETER AND DERIVED FORMS ──────────────────────────────────────────────
+# ─── ARGUMENT PARSING ─────────────────────────────────────────────────────────
 
 ## Template app name in snake_case, e.g. black_velvet.
-readonly _snake="$1"
+_snake=''
+
+## Monorepo subfolder holding the template, e.g. programs, packages, plugins.
+_subdir=''
+
+while (( $# > 0 )); do
+  case "$1" in
+    -h|--help)
+      show_help
+      exit 0
+      ;;
+    -s)
+      if (( $# < 2 )) || [[ -z "$2" ]]; then
+        error '-s requires a subfolder argument (e.g. -s packages)'
+        exit 1
+      fi
+      _subdir="$2"
+      shift 2
+      ;;
+    -*)
+      error "Unknown option: $1"
+      show_help
+      exit 1
+      ;;
+    *)
+      if [[ -n "${_snake}" ]]; then
+        error "Unexpected extra argument: $1"
+        exit 1
+      fi
+      _snake="$1"
+      shift
+      ;;
+  esac
+done
+
+readonly _snake
+readonly _subdir
+
+if [[ -z "${_snake}" ]]; then
+  error 'Missing <template_app_name>'
+  show_help
+  exit 1
+fi
+
+if [[ -z "${_subdir}" ]]; then
+  error 'Missing required -s <subfolder> (e.g. -s programs)'
+  show_help
+  exit 1
+fi
 
 if [[ ! "${_snake}" =~ '^[a-z][a-z0-9_]*$' ]]; then
   error "Name must be snake_case (got: ${_snake})"
   exit 1
 fi
+
+set -e
+setopt null_glob
+
+# ─── DERIVED FORMS ────────────────────────────────────────────────────────────
 
 ## Title Case form, e.g. Black Velvet.
 readonly _title="${(C)${_snake//_/ }}"
@@ -86,8 +144,8 @@ readonly _camel="${_pascal[1]:l}${_pascal[2,-1]}"
 
 # ─── CONSTANTS ────────────────────────────────────────────────────────────────
 
-## Source template app, relative to the monorepo root.
-readonly _kSource="programs/${_snake}"
+## Source template, relative to the monorepo root.
+readonly _kSource="${_subdir}/${_snake}"
 
 ## Brick home directory, relative to the monorepo root.
 readonly _kBrickHome="bricks/${_snake}"
@@ -95,18 +153,27 @@ readonly _kBrickHome="bricks/${_snake}"
 ## Brick template payload directory.
 readonly _kBrick="${_kBrickHome}/__brick__"
 
-## Kotlin source-tree path segment that carries the app name.
-readonly _kKotlinBase='android/app/src/main/kotlin/com/icodeforyou'
+## Mustache lambda tags used in file and directory renames. Held as values
+## so the braces never pass through shell escaping (a backslash before a
+## brace inside double quotes is RETAINED by zsh, not consumed).
+readonly _kSnakeTag='{{name.snakeCase()}}'
+readonly _kCamelTag='{{name.camelCase()}}'
+readonly _kPascalTag='{{name.pascalCase()}}'
 
 # ─── STARTUP BANNER ───────────────────────────────────────────────────────────
 printf "\n"
-color_print "${CYAN}" "$(local_time), build_brick ${_snake}, build version ${_kVersion}"
+color_print "${CYAN}" "$(local_time), build_brick ${_snake} (source: ${_subdir}), build version ${_kVersion}"
 printf "\n"
 
 # ─── PRECONDITIONS ────────────────────────────────────────────────────────────
 
 if [[ ! -f 'pubspec.yaml' || ! -d 'bricks' ]]; then
   error "Run from the monorepo root (pubspec.yaml + bricks/ required)."
+  exit 1
+fi
+
+if [[ ! -d "${_subdir}" ]]; then
+  error "Source subfolder not found: /${_subdir}"
   exit 1
 fi
 
@@ -125,7 +192,7 @@ else
   cat > "${_kBrickHome}/brick.yaml" << EOF
 name: ${_snake}
 description: >-
-  icodeforyou Flutter program template generated from programs/${_snake}.
+  icodeforyou Flutter template generated from ${_kSource}.
 version: 1.0.0
 
 environment:
@@ -206,18 +273,34 @@ plain_output 'Substitutions' "${_snake} ${_camel} ${_pascal} '${_title}'"
 
 sed -i '' 's/^description: .*/description: "{{description}}"/' "${_kBrick}/pubspec.yaml"
 
-# ─── 6. RENAME THE KOTLIN PACKAGE DIRECTORY ───────────────────────────────────
+# ─── 6. RENAME TEMPLATE-NAMED FILES AND DIRECTORIES ───────────────────────────
 
-if [[ -d "${_kBrick}/${_kKotlinBase}/${_snake}" ]]; then
-  mv "${_kBrick}/${_kKotlinBase}/${_snake}" \
-     "${_kBrick}/${_kKotlinBase}/{{name.snakeCase()}}"
-  plain_output 'Kotlin dir' 'renamed to {{name.snakeCase()}}'
-fi
+## Depth-first so children are renamed before their parent directories.
+## snake_case is replaced before camelCase so single-word template names
+## (where the two forms are identical) resolve to snakeCase(), matching
+## Dart file-naming convention.
+find "${_kBrick}" -depth \( -name "*${_snake}*" -o -name "*${_pascal}*" -o -name "*${_camel}*" \) | \
+while read -r _path; do
+  _dir="${_path:h}"
+  _base="${_path:t}"
+  _newbase="${_base//${_pascal}/${_kPascalTag}}"
+  _newbase="${_newbase//${_snake}/${_kSnakeTag}}"
+  _newbase="${_newbase//${_camel}/${_kCamelTag}}"
+  if [[ "${_newbase}" != "${_base}" ]]; then
+    mv "${_path}" "${_dir}/${_newbase}"
+    plain_output 'Renamed' "${_base} -> ${_newbase}"
+  fi
+done
 
 # ─── 7. VERIFY ────────────────────────────────────────────────────────────────
 
 if grep -rI "${_snake}\|${_camel}\|${_pascal}\|${_title}" "${_kBrick}"; then
-  error "Literal references remain (listed above). Brick is dirty."
+  error "Literal references remain in file contents (listed above). Brick is dirty."
+  exit 1
+fi
+
+if find "${_kBrick}" \( -name "*${_snake}*" -o -name "*${_pascal}*" -o -name "*${_camel}*" -o -name '*\\*' \) | grep .; then
+  error "Literal or malformed references remain in file names (listed above). Brick is dirty."
   exit 1
 fi
 
@@ -226,17 +309,17 @@ success "Brick built clean: ${_kBrick}"
 # ─── USAGE EXAMPLES ───────────────────────────────────────────────────────────
 
 printf '\n'
-color_print "${WHITE}" "Create a NEW program from this brick (from the monorepo root):"
+color_print "${WHITE}" "Create a NEW ${_subdir} member from this brick (from the monorepo root):"
 printf '\n'
 printf "  mason get\n"
-printf "  mason make %s --name ${GREEN}my_app${RESET} --description \"${YELLOW}My app${RESET}\" -o ${YELLOW}programs/my_app${RESET}\n" "${_snake}"
+printf "  mason make %s --name ${GREEN}my_app${RESET} --description \"${YELLOW}My app${RESET}\" -o ${YELLOW}%s/my_app${RESET}\n" "${_snake}" "${_subdir}"
 printf '\n'
-printf "  Then add ${YELLOW}programs/my_app${RESET} to the workspace list in the root ${YELLOW}pubspec.yaml${RESET}\n"
+printf "  Then add ${YELLOW}%s/my_app${RESET} to the workspace list in the root ${YELLOW}pubspec.yaml${RESET}\n" "${_subdir}"
 printf "  and run: ${YELLOW}flutter pub get${RESET}\n\n"
-color_print "${WHITE}" "Pull template changes into an EXISTING program (clean git tree first):"
+color_print "${WHITE}" "Pull template changes into an EXISTING member (clean git tree first):"
 printf "\n"
 printf "  From the terminal:\n"
-printf "   %% mason make %s --name my_app -o programs/my_app --on-conflict overwrite\n" "${_snake}"
+printf "   %% mason make %s --name my_app -o %s/my_app --on-conflict overwrite\n" "${_snake}" "${_subdir}"
 printf "   %% git diff\n\n"
 printf "  Review the diff; git checkout -- the files where the app's own edits\n"
 printf "  should win, then commit.\n\n"

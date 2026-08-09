@@ -1,3 +1,5 @@
 bricks:
   black_velvet:
     path: bricks/black_velvet
+  archetypes:
+    path: bricks/archetypes

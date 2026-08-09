@@ -1,0 +1,22 @@
+# packages/archetypes/pubspec.yaml
+name: archetypes
+description: Mason template for creating packages
+publish_to: none
+homepage:
+resolution: workspace
+version: 1.0.0
+
+environment:
+  sdk: ">=3.12.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true

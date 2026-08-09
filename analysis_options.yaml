@@ -13,6 +13,7 @@ analyzer:
 
   exclude:
     - 'bricks/**'
+    - 'build/**'
     - '**/build/**'
     - '**/*.config.dart'
     - '**/*.directories.dart'

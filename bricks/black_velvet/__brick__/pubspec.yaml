@@ -32,7 +32,7 @@ flutter:
     - assets/iconer.png
 
 # Flutter Gen to create const assets
-# dart run build_runner build
+# From terminal: % dart run build_runner build
 flutter_gen:
   output: lib/gen/
 
@@ -43,7 +43,7 @@ flutter_gen:
 
 
 # Launcher Icons
-# dart run flutter_launcher_icons
+# From terminal: % dart run flutter_launcher_icons
 flutter_launcher_icons:
   image_path: assets/iconer.png
   remove_alpha_ios: true

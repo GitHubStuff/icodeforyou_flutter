@@ -8,22 +8,22 @@ The governing principle: build a real, compiling reference package first, then c
 
 ## Step 1 — Create the reference package
 
-Create a genuine, analyzable package at `packages/velvet_package_reference` (a real name is better than `template`). Keep it **out of the workspace** `workspace:` list so it never ships.
+Create a genuine, analyzable package at `packages/archetypes` (a real name is better than `template`). Keep it **out of the workspace** `workspace:` list so it never ships.
 
 Full structure:
 
 ```
-packages/velvet_package_reference/
+packages/archetypes/
 ├── pubspec.yaml
 ├── analysis_options.yaml        # very_good_analysis include
 ├── README.md
 ├── CHANGELOG.md
 ├── lib/
-│   ├── velvet_package_reference.dart      # barrel file
+│   ├── archetypes.dart      # barrel file
 │   └── src/
-│       └── velvet_package_reference_placeholder.dart
+│       └── archetypes.dart
 └── test/
-    └── velvet_package_reference_test.dart
+    └── archetypes_test.dart
 ```
 
 ## Step 2 — Customize with house conventions
