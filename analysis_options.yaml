@@ -12,6 +12,9 @@ analyzer:
     omit_local_variable_types: ignore
 
   exclude:
+    - 'bricks/**'
+    - 'build/**'
+    - '**/build/**'
     - '**/*.config.dart'
     - '**/*.directories.dart'
     - '**/*.freezed.dart'

@@ -87,3 +87,8 @@ lcov.info
 *.bak
 *.rej
 *.swp
+
+# ───────── Mason hook build artifacts ─────────
+bricks/**/hooks/.dart_tool/
+bricks/**/hooks/pubspec.lock
+bricks/**/hooks/build/

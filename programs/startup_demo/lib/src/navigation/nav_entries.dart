@@ -1,6 +1,6 @@
 // startup_demo/lib/src/navigation/nav_entries.dart
 // ignore_for_file: public_member_api_docs
-
+/*
 import 'package:animated_rail_menu/animated_rail_menu.dart'
     show AnimatedRailMenuEntry;
 import 'package:flutter/material.dart';
@@ -74,3 +74,4 @@ const navEntries = <AnimatedRailMenuEntry>[
     page: HelpPage(),
   ),
 ];
+*/

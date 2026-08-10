@@ -1,7 +1,7 @@
 import 'package:analog_clock_widget/src/analog_clock.dart'
     show ClockFaceStyle, HandStyle;
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart' show Color, immutable;
+import 'package:flutter/material.dart' show Color, Colors, immutable;
 
 /// Describes how a clock is styled.
 @immutable
@@ -47,7 +47,14 @@ class ClockStyle extends Equatable {
   final HandStyle handStyle;
 
   /// Convenience default instance.
-  static const ClockStyle defaultStyle = ClockStyle();
+  static const ClockStyle defaultStyle = ClockStyle(
+    faceColor: Colors.white,
+    hourHandColor: Colors.black,
+    minuteHandColor: Colors.black,
+    secondHandColor: Colors.black,
+    showNumbers: true,
+    showSecondHand: true,
+  );
 
   /// Returns a copy of this style with the given fields replaced.
   ClockStyle copyWith({

@@ -1,4 +1,4 @@
-// ppackages/rail_navigation/lib/src/widgets/rail_button_main.dartshow 
+// ppackages/rail_navigation/lib/src/widgets/rail_button_main.dartshow
 
 import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart';

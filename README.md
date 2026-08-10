@@ -1,6 +1,7 @@
 # Super command
 
 ```zsh
+cd /Users/denm4/AppDevelopment/icodeforyou_flutter
 melos clean && \
 melos bootstrap && \
 melos coverage_clean && \

@@ -1,7 +1,5 @@
 // infinite_scroll_picking_settings/lib/src/widgets/settings_screen.dart
 
-// ignore_for_file: comment_references, always_use_package_imports, public_member_api_docs
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_picking/infinite_scroll_picking.dart';

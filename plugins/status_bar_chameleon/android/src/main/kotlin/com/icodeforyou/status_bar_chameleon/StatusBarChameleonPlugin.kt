@@ -1,8 +1,11 @@
 // plugins/status_bar_chameleon/android/src/main/kotlin/com/icodeforyou/status_bar_chameleon/StatusBarChameleonPlugin.kt
 package com.icodeforyou.status_bar_chameleon
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.app.Activity
+import android.graphics.Insets
 import android.os.Build
 import android.view.WindowInsets
 import android.view.WindowInsetsAnimationController
@@ -60,10 +63,23 @@ class StatusBarChameleonPlugin :
     private fun setStatusBarImmediate(act: Activity, hidden: Boolean) {
         val window = act.window
         val controller = WindowInsetsControllerCompat(window, window.decorView)
+        applyBehavior(controller, hidden)
         if (hidden) {
             controller.hide(WindowInsetsCompat.Type.statusBars())
         } else {
             controller.show(WindowInsetsCompat.Type.statusBars())
+        }
+    }
+
+    // FIXED (defect 3): behavior was never managed. Hidden bars get
+    // swipe-transient behavior (user can peek them); shown bars get the
+    // default restored, so a later show is a full, persistent bar instead
+    // of a degraded transient one.
+    private fun applyBehavior(controller: WindowInsetsControllerCompat, hidden: Boolean) {
+        controller.systemBarsBehavior = if (hidden) {
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        } else {
+            WindowInsetsControllerCompat.BEHAVIOR_DEFAULT
         }
     }
 
@@ -77,6 +93,11 @@ class StatusBarChameleonPlugin :
         runningAnimator = null
 
         val window = act.window
+        // Behavior applies to the window state, not the animation; set it
+        // up front so the end state is correct even if the animation is
+        // cancelled midway.
+        applyBehavior(WindowInsetsControllerCompat(window, window.decorView), hidden)
+
         val rootInsetsController = window.decorView.windowInsetsController
         if (rootInsetsController == null) {
             setStatusBarImmediate(act, hidden)
@@ -90,6 +111,36 @@ class StatusBarChameleonPlugin :
             LinearInterpolator(),
             null,
             object : WindowInsetsAnimationControlListener {
+                // FIXED (defect 1): result must be answered on every exit
+                // path exactly once, or the Dart await hangs forever.
+                private var resultSent = false
+
+                // FIXED (defect 2): finish() may only be called once, and
+                // never after the controller is cancelled.
+                private var controllerDone = false
+
+                private fun sendResultOnce() {
+                    if (!resultSent) {
+                        resultSent = true
+                        result.success(null)
+                    }
+                }
+
+                private fun finishOnce(controller: WindowInsetsAnimationController) {
+                    if (!controllerDone) {
+                        controllerDone = true
+                        // finish() throws if the controller was already
+                        // cancelled by the system between our check and the
+                        // call; that race is unwinnable, so absorb it.
+                        try {
+                            controller.finish(!hidden)
+                        } catch (_: IllegalStateException) {
+                            // System already settled the animation; the
+                            // window behavior set above still stands.
+                        }
+                    }
+                }
+
                 override fun onReady(
                     controller: WindowInsetsAnimationController,
                     types: Int,
@@ -105,34 +156,44 @@ class StatusBarChameleonPlugin :
                             val v = va.animatedValue as Float
                             // setInsetsAndAlpha wants top inset 0..shown
                             controller.setInsetsAndAlpha(
-                                android.graphics.Insets.of(0, v.toInt(), 0, 0),
+                                Insets.of(0, v.toInt(), 0, 0),
                                 1f,
                                 if (shown == 0f) 1f else v / shown,
                             )
                         }
-                        addListener(object : android.animation.AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: android.animation.Animator) {
-                                controller.finish(!hidden) // finish in target state
+                        addListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator) {
+                                finishOnce(controller)
                                 runningAnimator = null
                             }
-                            override fun onAnimationCancel(animation: android.animation.Animator) {
-                                controller.finish(!hidden)
+
+                            override fun onAnimationCancel(animation: Animator) {
+                                finishOnce(controller)
                                 runningAnimator = null
                             }
                         })
                     }
                     runningAnimator = animator
                     animator.start()
-                    result.success(null)
+                    sendResultOnce()
                 }
 
                 override fun onFinished(controller: WindowInsetsAnimationController) {
-                    // no-op
+                    // Covers system-side completion; harmless double-call
+                    // protection via the flags.
+                    sendResultOnce()
                 }
 
                 override fun onCancelled(controller: WindowInsetsAnimationController?) {
+                    // FIXED (defect 1): this path previously never answered
+                    // the channel — the single worst bug in the file.
+                    controllerDone = true // system killed it; finish() is now illegal
                     runningAnimator?.cancel()
                     runningAnimator = null
+                    // The animation died, but the requested end state must
+                    // still land: apply it immediately.
+                    activity?.let { setStatusBarImmediate(it, hidden) }
+                    sendResultOnce()
                 }
             }
         )

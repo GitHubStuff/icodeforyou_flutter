@@ -1,0 +1,25 @@
+// programs/template_app/lib/framework/default_main_screen.dart
+import 'package:flutter/widgets.dart';
+import 'package:template_app/screens/rail/rail_destination_enum.dart'
+    show RailDestinationEnum;
+import 'package:template_app/screens/rail/rails.dartX' show Rails;
+
+/// The default main screen of the app.
+///
+/// Hosts a [Rails] shell configured with the [RailDestinationEnum.main]
+/// destination selected, bottom rail placement, a fade-through transition
+/// between destinations, and light haptic feedback on selection. The rail's
+/// contents are built from [RailDestinationEnum.railContents].
+class DefaultMainScreen extends StatelessWidget {
+  /// Creates the default main screen.
+  const DefaultMainScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) => Rails(
+    selection: .home,
+    placement: .bottom,
+    transition: .fadeThrough,
+    haptics: .light,
+    contents: RailDestinationEnum.railContents(),
+  );
+}

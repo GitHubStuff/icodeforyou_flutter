@@ -1,0 +1,9 @@
+# programs/black_velvet/analysis_options.yaml
+include: package:icodeforyou_lints/analysis_options.yaml
+
+analyzer:
+  errors:
+    always_use_package_imports: ignore
+
+  exclude:
+    - '/ios/Runner/StatusBarFlutterViewController.swift'

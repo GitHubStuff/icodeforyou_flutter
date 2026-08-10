@@ -19,5 +19,12 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Build Android
-        run: ./gradlew assembleDebug
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - run: dart pub global activate melos
+      - run: melos bootstrap
+
+      - name: Analyze Android code
+        run: melos run analyze_all

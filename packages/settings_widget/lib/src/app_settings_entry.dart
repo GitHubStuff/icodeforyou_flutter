@@ -4,16 +4,34 @@ import 'package:flutter/material.dart';
 
 /// Abstract base for a single row in a settings list.
 ///
-/// Subclasses must provide a [title] widget and implement [build] to render
-/// the full row. By extending [StatelessWidget] directly, each entry remains
-/// side-effect-free and trivially testable.
+/// Declares no members: it exists to type the list a settings surface
+/// accepts, so `entries` cannot be handed an arbitrary widget. Subclasses
+/// implement [build] and nothing else.
+///
+/// The former `title` getter is gone. No surface in this package ever read
+/// it — `SettingsContent` lays out each entry's [build] output directly —
+/// so it obliged every implementor to expose a public member for the
+/// framework's benefit that the framework never consumed, and forced an
+/// `ignore_for_file: public_member_api_docs` on entry files to satisfy the
+/// lint. An entry that wants a label declares it privately, or inlines it.
+///
+/// ## Example
+///
+/// ```dart
+/// class NotificationsEntry extends AppSettingsEntry {
+///   const NotificationsEntry({super.key});
+///
+///   @override
+///   Widget build(BuildContext context) {
+///     return const ListTile(
+///       leading: Icon(Icons.notifications_outlined),
+///       title: Text('Notifications'),
+///       subtitle: Text('Manage alerts'),
+///     );
+///   }
+/// }
+/// ```
 abstract class AppSettingsEntry extends StatelessWidget {
   /// Creates an [AppSettingsEntry].
   const AppSettingsEntry({super.key});
-
-  /// The primary label widget displayed for this settings entry.
-  ///
-  /// Typically a [Text] widget, but any widget is valid. Implementations
-  /// should keep the title concise so it fits comfortably on a single line.
-  Widget get title;
 }

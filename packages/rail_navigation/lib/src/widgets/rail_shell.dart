@@ -91,7 +91,7 @@ enum RailTransition {
 /// slot handles this natively.
 class RailShell extends StatelessWidget {
   /// Creates a [RailShell].
-  RailShell({
+  const RailShell({
     required this.railChildren,
     required this.screens,
     required this.currentIndex,
