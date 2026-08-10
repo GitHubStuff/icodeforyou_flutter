@@ -13,5 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build iOS
-        run: xcodebuild -scheme Runner -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14'
+      - name: Lint iOS podspecs
+        run: |
+          find plugins packages -name "*.podspec" | while read podspec; do
+            echo "Linting $podspec"
+            pod lib lint "$podspec" --allow-warnings
+          done
