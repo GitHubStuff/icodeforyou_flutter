@@ -1,241 +1,120 @@
 # biometric_gate_service
 
-Backend-agnostic interface for biometric-gated secure storage.
-
-A small Flutter package that defines the `BiometricGateService` contract:
-biometric capability inspection, a biometric prompt for gating access to the
-app itself, and an opaque key/value store whose reads are gated by the
-device's biometric authentication (Face ID, Touch ID, Android
-BiometricPrompt). The contract knows nothing about emails, passwords, refresh
-tokens, or any other domain concept — callers decide what to store.
-
-The contract is split into small, composable role interfaces so callers
-depend only on what they actually use.
+A backend-agnostic biometric-gated secure storage contract: composable role
+interfaces for user presence and gated key/value storage, a composed service
+with an opt-in lifecycle, a hardware-capability enum, and a sealed failure
+hierarchy. Pure contracts — no `local_auth`, no `flutter_secure_storage`, no
+platform code. Programs depend on these interfaces; an implementation is
+registered with the services broker at app startup. Part of the
+`icodeforyou_flutter` monorepo (`packages/`).
 
 ## Features
 
-- Composable role interfaces (interface-segregation friendly):
-  - `BiometricAuthenticator` — `capability()` and `verify()`; user presence
-    only, no storage. Depend on this alone to gate the app at launch.
-  - `BiometricSecureStore` — `store()`, `retrieve()`, `clear()`; the gated
-    key/value store.
-  - `BiometricGateService` — composes both roles and adds the opt-in
-    lifecycle (`isEnabled()`, `enable()`, `disable()`).
-- All operations return `Either<BiometricFailure, T>` (no exceptions escape
-  an implementation)
-- Sealed `BiometricFailure` hierarchy for exhaustive error handling at call
-  sites: `BiometricUnavailable`, `BiometricNotEnrolled`, `BiometricCancelled`,
-  `BiometricLockedOut`, `BiometricPermanentlyLockedOut`,
-  `BiometricStorageFailure`, `BiometricUnknownFailure`
-- `BiometricCapability` enum reporting available hardware: `none`,
-  `notEnrolled`, `face`, `fingerprint`, `iris`, `generic`
-- Dependency-free contract: this package has no dependency on `local_auth`,
-  `flutter_secure_storage`, `service_locator`, or any platform SDK. Wiring an
-  implementation into a DI broker is a composition-root concern, carried by
-  the implementation — not baked into the contract.
+- **`BiometricAuthenticator`** — the user-presence role. `capability()`
+  reports the device's biometric modality (cheap, non-prompting, safe on
+  every launch — drives "Use Face ID" vs "Use Touch ID" vs generic labels);
+  `verify({reason})` runs the biometric prompt. Neither reads nor writes any
+  stored value, so a launch-screen unlock can depend on this role alone.
+- **`BiometricSecureStore`** — a secure key/value store whose reads are
+  gated by biometric authentication. Values are opaque strings; the role
+  does not interpret them, keeping it reusable for tokens, API keys, wallet
+  seeds, and other non-auth secrets. `store` guarantees a later `retrieve`
+  succeeds only after a successful biometric authentication; `clear` deletes
+  without prompting and is idempotent.
+- **`BiometricGateService`** — the composed handle: implements both roles
+  and adds the opt-in lifecycle. `isEnabled()` is independent of
+  `capability()` — a user may have enabled the gate on a device that has
+  since lost its enrolled biometric, and callers reconcile the two.
+  `enable()` is idempotent setup; `disable()` records the opt-out and, as a
+  deliberate, documented side effect, **purges every value stored behind
+  the gate** — callers that need the data must read it out first. The
+  interface is domain-blind: it knows nothing about emails, passwords, or
+  tokens.
+- **`BiometricCapability`** — the modality enum, ordered by specificity:
+  `none`, `notEnrolled`, `face`, `fingerprint`, `iris`, and `generic` (the
+  platform hid the modality — common on Android, where the framework may
+  surface only the security class; show a generic label).
+- **`BiometricFailure`** — a sealed, `@immutable` hierarchy carried on the
+  `Left` of every operation, each with a `message` and optional underlying
+  `cause`: `BiometricUnavailable`, `BiometricNotEnrolled`,
+  `BiometricCancelled` (typically a fall-back-to-password signal, not an
+  error), `BiometricLockedOut`, `BiometricPermanentlyLockedOut`,
+  `BiometricStorageFailure` (the prompt may have passed but storage
+  rejected the operation), and `BiometricUnknownFailure` (catch-all
+  carrying the original cause). Adding a failure is a compile-time event at
+  every exhaustive `switch`.
+- **No exceptions escape.** Every operation returns
+  `Either<BiometricFailure, T>` (via `fpdart`), making every failure path
+  visible at the call site and exhaustiveness-checked by the compiler.
 
 ## Getting started
 
-This package is the contract only — it ships no implementation and has no
-platform dependencies. To use it, register a concrete `BiometricGateService`
-implementation (one that wraps the device APIs — for example `local_auth` for
-the prompt and `flutter_secure_storage` for the store) with your services
-broker at startup. All other code depends on the interface.
+This package lives in the monorepo's `packages/` directory and is consumed
+via pub workspace resolution. Add it to a consumer's `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  biometric_gate_service: ^2.0.0
-  # plus a concrete implementation of BiometricGateService
+  biometric_gate_service: ^0.1.0
+```
+
+Its only dependencies are `fpdart` (`Either`, `Unit`) and `meta`
+(`@immutable`). An implementation package (for example, a `local_auth` +
+`flutter_secure_storage` backend) is registered at the composition root;
+registration with a dependency-injection mechanism is deliberately not
+expressed in these contracts.
+
+Import through the barrel:
+
+```dart
+import 'package:biometric_gate_service/biometric_gate_service.dart';
 ```
 
 ## Usage
 
 ```dart
-import 'package:biometric_gate_service/biometric_gate_service.dart';
+Future<void> unlock(BiometricGateService gate) async {
+  if (!await gate.isEnabled()) return; // user never opted in
 
-final BiometricGateService gate = /* injected from the broker */;
+  final result = await gate.retrieve(
+    key: 'session_token',
+    reason: 'Unlock your session',
+  );
 
-// Check what hardware is available before showing biometric UI.
-final cap = await gate.capability();
-final canShowToggle = switch (cap) {
-  BiometricCapability.none ||
-  BiometricCapability.notEnrolled => false,
-  _ => true,
-};
-
-// Record the user's opt-in (no prompt).
-await gate.enable();
-
-// Store an opaque value behind the gate.
-await gate.store(key: 'session_token', value: token);
-
-// Retrieve it later — runs the biometric prompt.
-final result = await gate.retrieve(
-  key: 'session_token',
-  reason: 'Unlock to sign in',
-);
-
-result.match(
-  (failure) => switch (failure) {
-    BiometricCancelled() => fallbackToPassword(),
-    BiometricLockedOut() => showPasscodePrompt(),
-    BiometricUnavailable() ||
-    BiometricNotEnrolled() => disableBiometricFeature(),
-    BiometricStorageFailure() ||
-    BiometricPermanentlyLockedOut() ||
-    BiometricUnknownFailure() => reportError(failure),
-  },
-  (value) => useToken(value),
-);
-```
-
-### Gating the app itself
-
-When you only need to prove user presence — not read a stored value — use
-`verify()`. A launch-time unlock can depend on the narrow
-`BiometricAuthenticator` role rather than the whole service:
-
-```dart
-final BiometricAuthenticator auth = gate; // or inject the role directly
-
-final unlocked = await auth.verify(reason: 'Unlock to continue');
-unlocked.match(
-  (failure) => routeToFallback(failure),
-  (_) => openApp(),
-);
-```
-
-### Opting out is destructive
-
-`disable()` records the opt-out **and purges every value stored behind the
-gate** — it is not merely a flag flip. Read anything you need to keep before
-calling it. Both `enable()` and `disable()` are idempotent.
-
-## Choosing what to store
-
-The gate is opaque on purpose. Different callers store different things:
-
-- A Firebase-backed `AuthService` typically stores nothing — Firebase Auth
-  has its own session persistence; the gate is used only as a yes/no door
-  on top of an already-signed-in app. Capability plus `verify()` is enough,
-  so such a caller can depend on the `BiometricAuthenticator` role alone.
-- A Supabase- or AWS Cognito-backed `AuthService` typically stores the
-  refresh token, since session re-hydration is the caller's responsibility.
-- Non-auth callers might store API keys, encryption seeds, or any other
-  secret that should be unlocked by biometric.
-
-Each caller picks its own keys and decides what to put in the values. The
-gate does not interpret value contents.
-
-## Example using Supabase
-
-Supabase owns the session, so the gate stores only the **refresh token**: the
-app persists it behind the gate at sign-in and re-hydrates the session behind
-a biometric prompt on the next launch. Refresh tokens are single-use (rotation
-is on by default), so the rotated token is re-stored after each restore.
-
-```dart
-import 'package:biometric_gate_service/biometric_gate_service.dart';
-import 'package:fpdart/fpdart.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-
-/// Biometric unlock layered on top of a Supabase session.
-class SupabaseBiometricAuth {
-  SupabaseBiometricAuth(this._gate, this._supabase);
-
-  final BiometricGateService _gate;
-  final SupabaseClient _supabase;
-
-  static const _refreshTokenKey = 'supabase_refresh_token';
-
-  /// Turn on biometric unlock after a successful Supabase sign-in.
-  Future<Either<BiometricFailure, Unit>> enableUnlock() async {
-    final refreshToken = _supabase.auth.currentSession?.refreshToken;
-    if (refreshToken == null) {
-      return left(
-        const BiometricStorageFailure(message: 'No active Supabase session.'),
-      );
-    }
-
-    // enable() first so the backend is ready, then persist the token.
-    final enabled = await _gate.enable();
-    return enabled.match(
-      (failure) async => left(failure),
-      (_) => _gate.store(key: _refreshTokenKey, value: refreshToken),
-    );
-  }
-
-  /// Restore the Supabase session at launch, behind a biometric prompt.
-  Future<Either<BiometricFailure, Session>> unlock() async {
-    if (!await _gate.isEnabled()) {
-      return left(
-        const BiometricStorageFailure(message: 'Biometric unlock is off.'),
-      );
-    }
-
-    final stored = await _gate.retrieve(
-      key: _refreshTokenKey,
-      reason: 'Unlock to sign in',
-    );
-
-    // Propagate any biometric/storage failure unchanged; otherwise restore.
-    return stored.match(
-      (failure) async => left(failure),
-      _restoreSession,
-    );
-  }
-
-  Future<Either<BiometricFailure, Session>> _restoreSession(
-    String refreshToken,
-  ) async {
-    final AuthResponse response;
-    try {
-      response = await _supabase.auth.setSession(refreshToken);
-    } on Object catch (error) {
-      return left(BiometricUnknownFailure(message: '$error', cause: error));
-    }
-
-    final session = response.session;
-    if (session == null) {
-      return left(
-        const BiometricStorageFailure(message: 'Session restore failed.'),
-      );
-    }
-
-    // Rotation invalidates the used token — persist the new one. Best-effort:
-    // a failed re-store does not invalidate the live session.
-    final rotated = session.refreshToken;
-    if (rotated != null) {
-      await _gate.store(key: _refreshTokenKey, value: rotated);
-    }
-    return right(session);
-  }
-
-  /// Sign out and turn off biometric unlock. disable() also purges the
-  /// stored refresh token.
-  Future<void> signOut() async {
-    await _supabase.auth.signOut();
-    await _gate.disable();
+  switch (result) {
+    case Right(value: final token):
+      // proceed with token
+      break;
+    case Left(value: final failure):
+      switch (failure) {
+        case BiometricCancelled():
+          // fall back to password
+          break;
+        case BiometricLockedOut() || BiometricPermanentlyLockedOut():
+          // direct the user to device passcode / re-enrollment
+          break;
+        case BiometricUnavailable() ||
+            BiometricNotEnrolled() ||
+            BiometricStorageFailure() ||
+            BiometricUnknownFailure():
+          // degrade to non-biometric auth
+          break;
+      }
   }
 }
 ```
 
-Wiring it to launch UI:
-
-```dart
-final result = await auth.unlock();
-result.match(
-  (failure) => switch (failure) {
-    BiometricCancelled() ||
-    BiometricUnavailable() ||
-    BiometricNotEnrolled() => showPasswordSignIn(),
-    _ => reportError(failure),
-  },
-  (session) => goToHome(),
-);
-```
-
 ## Additional information
 
-Part of the `icodeforyou_flutter` Melos monorepo. Issues, fixes, and PRs go
-through the monorepo, not this package directly.
+Part of the `icodeforyou_flutter` monorepo, managed with Melos (all
+configuration in `pubspec.yaml`); internal dependencies resolve through the
+pub workspace (`resolution: workspace`), never path dependencies. Not
+intended for publication to pub.dev. File issues and contribute through the
+monorepo's normal workflow.
+
+The package follows the repo's standing conventions: one type per file,
+curated barrel exports with a library-level dartdoc, dartdoc on all members,
+`final class` failure implementations under a sealed base, and
+`icodeforyou_lints` lint compliance. Design stances worth knowing before
+implementing a backend: role interfaces over a monolith, contracts with no
+platform bindings, typed failures over exceptions, and a destructive opt-out
+that is part of the contract — no backend may make the purge a surprise.

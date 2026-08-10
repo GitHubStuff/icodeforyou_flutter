@@ -1,3 +1,4 @@
+// packages/platform_utils/lib/src/platform_optimizer.dart
 import 'package:flutter/widgets.dart' show BuildContext, View;
 import 'package:platform_utils/platform_utils.dart' show AppPlatform;
 import 'package:platform_utils/src/frame_refresh.dart' show FrameRefreshRate;
@@ -70,7 +71,11 @@ class PlatformOptimizer {
     AppPlatform.web => (widgetWidth * 0.8).round(),
     _ when _current.isMobile => (widgetWidth * 0.6).round(),
     _ when _current.isDesktop => (widgetWidth * 1.2).round(),
-    _ => widgetWidth.round(),
+    // Required for exhaustiveness (guards don't count toward it), but no
+    // AppPlatform value can reach here: web matches first, android/iOS
+    // are mobile, the desktops are desktop, and fuchsia throws in the
+    // first guard.
+    _ => widgetWidth.round(), // coverage:ignore-line
   };
 
   /// Returns the per-frame movement step, in logical pixels, for particle
@@ -83,7 +88,9 @@ class PlatformOptimizer {
     AppPlatform.web => 2.5,
     _ when _current.isMobile => 2.0,
     _ when _current.isDesktop => 1.5,
-    _ => 2.0,
+    // Required for exhaustiveness (guards don't count toward it), but no
+    // AppPlatform value can reach here — see calculateOptimalParticleCount.
+    _ => 2.0, // coverage:ignore-line
   };
 
   /// Whether the current platform qualifies for high-performance rendering.

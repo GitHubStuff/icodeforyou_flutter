@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart' show IconData, Icons;
 
+/// {@template rail_destination_enum}
 /// The set of destinations available in the rail.
 ///
 /// Each member carries the data that varies per destination: the glyph
@@ -12,6 +13,7 @@ import 'package:flutter/material.dart' show IconData, Icons;
 /// Adding a destination to the rail is a one-line change: add a member
 /// with its [iconData] and [caption]. Nothing else in the package needs
 /// to be touched.
+/// {@endtemplate}
 enum RailDestinationEnum {
   /// The home destination.
   home(iconData: Icons.home_outlined, caption: 'Home'),
@@ -28,6 +30,7 @@ enum RailDestinationEnum {
   /// The database destination.
   database(iconData: Icons.storage, caption: 'Database');
 
+  // CODE:
   /// Creates a rail destination with its per-destination display data.
   const RailDestinationEnum({
     required this.iconData,

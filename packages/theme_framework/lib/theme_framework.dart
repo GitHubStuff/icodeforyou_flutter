@@ -7,3 +7,4 @@ export 'src/widgets/theme_setting_screen.dart' show ThemeSettingScreen;
 export 'src/preferences/shared_preferences_theme_storage.dart'
     show SharedPreferencesThemeStorage;
 export 'src/preferences/theme_storage_abstract.dart' show ThemeStorageAbstract;
+export 'src/widgets/settings_screen.dart' show SettingsScreen;

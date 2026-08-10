@@ -1,7 +1,6 @@
 // packages/splash_framework/lib/src/splash_screen.dart
 
-import 'package:custom_widgets/custom_widgets.dart'
-    show BlackScreen, SolidScreenColor;
+import 'package:custom_widgets/custom_widgets.dart' show SolidScreenColor;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

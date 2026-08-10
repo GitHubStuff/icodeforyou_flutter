@@ -14,7 +14,6 @@ dependencies:
   flutter:
     sdk: flutter
   gap: ^3.0.1
-  projector: ^1.0.0
   rail_navigation: ^1.0.0
   sincewhen_framework: ^1.0.0
   sincewhen_widgets: ^1.0.0

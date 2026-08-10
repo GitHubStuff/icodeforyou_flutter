@@ -4,7 +4,22 @@ import 'package:flutter/material.dart' show Colors;
 import 'package:flutter/widgets.dart';
 import 'package:three_d_sphere/src/quadrant.dart' show Quadrant;
 
+/// {@template three_d_sphere}
+/// A widget that renders a pseudo-3D sphere using layered radial gradients.
+///
+/// The sphere illusion is produced by a [CustomPaint] that draws two ovals:
+/// a base oval shaded with a lightness-ramped [RadialGradient] anchored at
+/// the [lightSource], and a smaller specular highlight oval offset toward
+/// the same quadrant.
+///
+/// The widget is sized explicitly via [width] and [height]; non-circular
+/// dimensions produce an ellipsoid rather than a sphere.
+/// {@endtemplate}
 class ThreeDSphere extends StatelessWidget {
+  /// Creates a pseudo-3D sphere.
+  ///
+  /// [width], [height], and [sphereRadius] must be greater than zero,
+  /// enforced by asserts in [build].
   const ThreeDSphere({
     required this.width,
     required this.height,
@@ -15,11 +30,39 @@ class ThreeDSphere extends StatelessWidget {
     super.key,
   });
 
+  /// The width of the sphere in logical pixels.
+  ///
+  /// Must be greater than zero.
   final double width;
+
+  /// The height of the sphere in logical pixels.
+  ///
+  /// Must be greater than zero.
   final double height;
+
+  /// The base color of the sphere.
+  ///
+  /// The shading gradient is derived from this color by adjusting its
+  /// lightness in HSL space.
   final Color color;
+
+  /// The color of the specular highlight.
+  ///
+  /// Defaults to [Colors.white]. The highlight fades from 70% of this
+  /// color's alpha at its center to fully transparent at its edge.
   final Color gradientColor;
+
+  /// The quadrant from which the light appears to originate.
+  ///
+  /// Controls both the anchor of the shading gradient and the placement
+  /// of the specular highlight. Defaults to [Quadrant.topRight].
   final Quadrant lightSource;
+
+  /// The radius of the shading gradient, in units of the shortest side
+  /// of the sphere's bounding rectangle.
+  ///
+  /// Values greater than 1.0 soften the falloff into shadow; smaller
+  /// values tighten it. Must be greater than zero. Defaults to 1.15.
   final double sphereRadius;
 
   @override
@@ -43,7 +86,12 @@ class ThreeDSphere extends StatelessWidget {
   }
 }
 
+/// The painter that renders the sphere for [ThreeDSphere].
+///
+/// Draws two ovals: the shaded sphere body, then the specular highlight
+/// layered on top of it.
 class _ThreeDSpherePainter extends CustomPainter {
+  /// Creates a painter with the shading inputs supplied by [ThreeDSphere].
   const _ThreeDSpherePainter({
     required this.color,
     required this.gradient,
@@ -51,9 +99,16 @@ class _ThreeDSpherePainter extends CustomPainter {
     required this.sphereRadius,
   });
 
+  /// The base color of the sphere body.
   final Color color;
+
+  /// The color of the specular highlight.
   final Color gradient;
+
+  /// The quadrant from which the light appears to originate.
   final Quadrant lightSource;
+
+  /// The radius of the body's shading gradient.
   final double sphereRadius;
 
   @override
@@ -96,6 +151,10 @@ class _ThreeDSpherePainter extends CustomPainter {
     canvas.drawOval(highlightRect, highlightPaint);
   }
 
+  /// Returns the shading gradient's anchor for [quadrant].
+  ///
+  /// Anchors sit at ±0.45 along each axis pulled toward the light source,
+  /// keeping the brightest region inside the sphere's silhouette.
   Alignment _alignmentFor(Quadrant quadrant) {
     return switch (quadrant) {
       Quadrant.topLeft => const Alignment(-0.45, -0.45),
@@ -109,6 +168,11 @@ class _ThreeDSpherePainter extends CustomPainter {
     };
   }
 
+  /// Returns the highlight gradient's anchor for [quadrant].
+  ///
+  /// Anchors sit at ±0.25 along each axis — closer to center than the
+  /// body's shading anchor — so the highlight's hot spot reads as a
+  /// reflection on the curved surface rather than at its edge.
   Alignment _highlightAlignmentFor(Quadrant quadrant) {
     return switch (quadrant) {
       Quadrant.topLeft => const Alignment(-0.25, -0.25),
@@ -122,6 +186,13 @@ class _ThreeDSpherePainter extends CustomPainter {
     };
   }
 
+  /// Returns the bounding rectangle of the specular highlight oval for
+  /// [quadrant] within a sphere of the given [size].
+  ///
+  /// The highlight measures 38% of the sphere's width by 28% of its
+  /// height, inset from the light-source edge by 18% horizontally and
+  /// 12% vertically, and centered on any axis where the quadrant is
+  /// centered.
   Rect _highlightRectFor({required Size size, required Quadrant quadrant}) {
     final double highlightWidth = size.width * 0.38;
     final double highlightHeight = size.height * 0.28;
@@ -132,28 +203,39 @@ class _ThreeDSpherePainter extends CustomPainter {
     final double left = switch (quadrant) {
       Quadrant.topLeft ||
       Quadrant.leftCenter ||
-      Quadrant.bottomLeft => horizontalInset,
+      Quadrant.bottomLeft =>
+        horizontalInset,
       Quadrant.topCenter ||
-      Quadrant.bottomCenter => (size.width - highlightWidth) / 2,
+      Quadrant.bottomCenter =>
+        (size.width - highlightWidth) / 2,
       Quadrant.topRight ||
       Quadrant.rightCenter ||
-      Quadrant.bottomRight => size.width - highlightWidth - horizontalInset,
+      Quadrant.bottomRight =>
+        size.width - highlightWidth - horizontalInset,
     };
 
     final double top = switch (quadrant) {
       Quadrant.topLeft ||
       Quadrant.topCenter ||
-      Quadrant.topRight => verticalInset,
+      Quadrant.topRight =>
+        verticalInset,
       Quadrant.leftCenter ||
-      Quadrant.rightCenter => (size.height - highlightHeight) / 2,
+      Quadrant.rightCenter =>
+        (size.height - highlightHeight) / 2,
       Quadrant.bottomLeft ||
       Quadrant.bottomCenter ||
-      Quadrant.bottomRight => size.height - highlightHeight - verticalInset,
+      Quadrant.bottomRight =>
+        size.height - highlightHeight - verticalInset,
     };
 
     return Rect.fromLTWH(left, top, highlightWidth, highlightHeight);
   }
 
+  /// Returns [value] with its HSL lightness shifted by [amount], clamped
+  /// to the valid 0.0–1.0 range.
+  ///
+  /// Positive amounts lighten toward the light source; negative amounts
+  /// darken toward the shadow terminator.
   Color _changeLightness(Color value, double amount) {
     final HSLColor hslColor = HSLColor.fromColor(value);
 

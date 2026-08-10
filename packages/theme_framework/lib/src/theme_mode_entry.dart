@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:settings_widget/settings_widget.dart' show AppSettingsEntry;
-import 'package:theme_framework/src/widgets/theme_mode_card.dart' show ThemeModeCard;
+import 'package:theme_framework/src/widgets/theme_mode_card.dart'
+    show ThemeModeCard;
 import 'package:theme_framework/theme_framework.dart' show ThemeCubit;
-
 
 /// The appearance row of a settings surface: a [ThemeModeCard] bound to the
 /// ambient [ThemeCubit].

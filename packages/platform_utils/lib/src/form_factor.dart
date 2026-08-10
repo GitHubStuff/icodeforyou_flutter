@@ -84,7 +84,7 @@ enum FormFactor {
     if (_formFactorOverride != null) {
       return _formFactorOverride!;
     }
-    if (kIsWeb) return FormFactor.web;
+    if (kIsWeb) return FormFactor.web; // coverage:ignore-line
     if (defaultTargetPlatform == TargetPlatform.linux ||
         defaultTargetPlatform == TargetPlatform.macOS ||
         defaultTargetPlatform == TargetPlatform.windows) {
