@@ -5,12 +5,15 @@ import 'package:animated_widgets/src/combination_animation/tweens/animation_twee
     show AnimationTween;
 import 'package:flutter/material.dart';
 
+/// {@template pulse_widget.dart}
 /// Scales [child] through a single pulse: grow, hold, then shrink.
 ///
 /// The motion uses `easeOut` on the way up so it settles into the held
 /// peak, and `easeIn` on the way down so it departs the peak smoothly
 /// before returning to rest. Tune the motion with [rate] and [peakScale].
+/// {@endtemplate}
 class PulseWidget extends StatelessWidget {
+  /// {@macro pulse_widget.dart}
   /// Creates a [PulseWidget] that pulses [child] once per build.
   ///
   /// [rate] sets the duration of each leg and [peakScale] the apex scale;

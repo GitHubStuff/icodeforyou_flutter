@@ -15,7 +15,7 @@ dependencies:
     sdk: flutter
   flutter_bloc: 9.1.1
   gap: ^3.0.1
-  go_router: ^17.1.0
+  go_router: ^17.5.0
   google_fonts: ^8.2.1
   platform_utils: ^1.0.0
   status_bar_chameleon: ^1.0.0

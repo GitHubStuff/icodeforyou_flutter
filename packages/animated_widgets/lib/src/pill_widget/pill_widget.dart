@@ -9,6 +9,7 @@ const double _kBorderWidth = 2;
 const double _kLuminanceThreshold = 0.5;
 const String _kPlaceholder = 'tag';
 
+/// {@template pill_widget.dart}
 /// A tappable tag pill.
 ///
 /// Renders [label] on a [color] background with no checkmark. The label
@@ -26,7 +27,9 @@ const String _kPlaceholder = 'tag';
 /// 32dp visual floor), [PillWidget.medium] (16, tablets), and
 /// [PillWidget.large] (18, desktop/web) pick platform-appealing font
 /// sizes; the default constructor accepts any [fontSize].
+/// {@endtemplate}
 class PillWidget extends StatefulWidget {
+  /// {@macro pill_widget.dart}
   const PillWidget({
     required this.label,
     required this.color,

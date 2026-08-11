@@ -119,6 +119,7 @@ typedef DataGridRowTapCallback =
       Map<String, Object?> rowData,
     );
 
+/// {@template data_grid.dart}
 /// A horizontally scrolling, spreadsheet-style grid for query results.
 ///
 /// [DataGrid] renders a `List<Map<String, Object?>>` — the shape returned
@@ -163,8 +164,9 @@ typedef DataGridRowTapCallback =
 ///
 /// [DataGrid] must be given bounded height (as with any vertically
 /// scrolling list).
+/// {@endtemplate}
 class DataGrid extends StatefulWidget {
-  /// Creates a [DataGrid] for [data].
+  /// {@macro data_grid.dart}
   const DataGrid({
     required this.data,
     this.columnWidths,
@@ -529,9 +531,9 @@ class _DataGridState extends State<DataGrid> {
   }
 
   void _showCellDialog(String column, Object? value) {
-    showDialog<void>(
+    unawaited(showDialog<void>(
       context: context,
-      builder: (BuildContext dialogContext) {
+      builder: (dialogContext) {
         final theme = Theme.of(dialogContext);
         final dataStyle = _effectiveDataStyle(theme);
         return AlertDialog(
@@ -541,7 +543,7 @@ class _DataGridState extends State<DataGrid> {
               : SelectableText(value.toString(), style: dataStyle),
         );
       },
-    );
+    ));
   }
 
   TextStyle _nullStyle(ThemeData theme, TextStyle base) {
@@ -618,7 +620,7 @@ class _DataGridState extends State<DataGrid> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemExtent: rowHeight,
                     itemCount: _rows.length,
-                    itemBuilder: (BuildContext context, int index) {
+                    itemBuilder: (context, index) {
                       return _buildRowButton(
                         rowNumber: index + 1,
                         rowData: _rows[index],
@@ -662,7 +664,7 @@ class _DataGridState extends State<DataGrid> {
                         controller: _verticalController,
                         itemExtent: rowHeight,
                         itemCount: _rows.length,
-                        itemBuilder: (BuildContext context, int index) {
+                        itemBuilder: (context, index) {
                           final row = _rows[index];
                           final background = index.isEven
                               ? theme.colorScheme.surfaceContainerHighest

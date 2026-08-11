@@ -2,4 +2,5 @@
 export 'src/cubit/splash_cubit.dart' show SplashCubit;
 export 'src/cubit/splash_state.dart'
     show SplashComplete, SplashError, SplashRunning, SplashState, SplashWaiting;
-export 'src/splash_screen.dart';
+export 'src/splash_screen.dart' show SplashScreen;
+export 'src/splash_screen_args.dart' show SplashScreenArgs;

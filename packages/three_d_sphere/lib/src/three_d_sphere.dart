@@ -1,10 +1,12 @@
 // packages/three_d_sphere/lib/src/three_d_sphere.dart
 
+// ignore_for_file: omit_local_variable_types
+
 import 'package:flutter/material.dart' show Colors;
 import 'package:flutter/widgets.dart';
 import 'package:three_d_sphere/src/quadrant.dart' show Quadrant;
 
-/// {@template three_d_sphere}
+/// {@template three_d_sphere.dart}
 /// A widget that renders a pseudo-3D sphere using layered radial gradients.
 ///
 /// The sphere illusion is produced by a [CustomPaint] that draws two ovals:
@@ -16,7 +18,7 @@ import 'package:three_d_sphere/src/quadrant.dart' show Quadrant;
 /// dimensions produce an ellipsoid rather than a sphere.
 /// {@endtemplate}
 class ThreeDSphere extends StatelessWidget {
-  /// Creates a pseudo-3D sphere.
+  /// {@macro three_d_sphere.dart}
   ///
   /// [width], [height], and [sphereRadius] must be greater than zero,
   /// enforced by asserts in [build].

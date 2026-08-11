@@ -1,7 +1,8 @@
 // packages/custom_widgets/lib/src/input_field/input_field.dart
 // ignore_for_file: always_use_package_imports
 
-import 'package:extensions/enum/src/window_size_category.dart' show WindowSizeCategory;
+import 'package:extensions/enum/src/window_size_category.dart'
+    show WindowSizeCategory;
 import 'package:flutter/material.dart';
 
 import '_suffix_slot.dart';
@@ -12,6 +13,7 @@ import '_suffix_slot.dart';
 /// password) never desync vertically when only one is in error.
 const String _kReservedHelperLine = ' ';
 
+/// {@template input_field.dart}
 /// A reusable, self-sizing outlined text input.
 ///
 /// [InputField] exists to make a small set of decisions that a bare
@@ -38,8 +40,9 @@ const String _kReservedHelperLine = ' ';
 /// Pass-through [TextField] options (keyboard type, formatters, callbacks,
 /// etc.) are intentionally omitted; they can be added in later revisions if a
 /// real need appears, rather than relaying the entire [TextField] API.
+/// {@endtemplate}
 class InputField extends StatelessWidget {
-  /// Creates an input field.
+  /// {@macro input_field.dart}
   ///
   /// [controller] and [focusNode] are owned by the caller; this widget never
   /// disposes them.

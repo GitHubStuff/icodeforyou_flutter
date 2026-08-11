@@ -2,6 +2,7 @@
 
 part of 'animates_widget.dart';
 
+/// {@template combination_animation_sequenced.dart}
 /// Runs a list of [CombinationAnimationStep]s sequentially on a single
 /// timeline.
 ///
@@ -12,7 +13,9 @@ part of 'animates_widget.dart';
 /// twice as much of the timeline.
 ///
 /// When the final step finishes, [onComplete] fires.
+/// {@endtemplate}
 class CombinationAnimationSequenced extends StatefulWidget {
+  /// {@macro combination_animation_sequenced.dart}
   const CombinationAnimationSequenced({
     required this.steps,
     required this.child,

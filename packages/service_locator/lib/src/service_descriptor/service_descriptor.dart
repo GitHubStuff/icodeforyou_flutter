@@ -6,8 +6,6 @@
 // [LazyAsyncServiceDescriptor] (builder-on-first-access) — cover every
 // registration mode the locator supports.
 
-// ignore_for_file: public_member_api_docs
-
 import 'dart:async' show FutureOr;
 
 import 'package:service_locator/src/errors.dart' show BadServiceClass;
@@ -26,6 +24,7 @@ import 'package:service_locator/src/service_registry/service_registration.dart'
 /// generics like [ServiceLocator.getServiceSync] a compile-time handle
 /// on "something registered here" without falling back to `dynamic`.
 abstract interface class ServiceClass {
+  ///
   static void checkGeneric<SRV extends ServiceClass>(String name) {
     if (SRV == ServiceClass || SRV == dynamic || SRV == Object) {
       throw BadServiceClass(name);

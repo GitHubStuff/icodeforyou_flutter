@@ -47,9 +47,6 @@ workspace:
   - programs/black_velvet
   - programs/creature_comfort
   - programs/creature_comforts_service
-  - programs/earth_spin_demo
-  - programs/my_app
-  - programs/projector_demo
   - programs/startup_demo
   - programs/widgetbook_workspace
 

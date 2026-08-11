@@ -3,137 +3,173 @@
 
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_workspace/packages/analog_clock_widget/face_and_hand_matrix.usecase.dart'
-    as analog_clock_widget_face_and_hand_matrix;
+    as face_and_hand_matrix;
 import 'package:widgetbook_workspace/packages/analog_clock_widget/injected_providers.usecase.dart'
-    as analog_clock_widget_injected_providers;
+    as injected_providers;
 import 'package:widgetbook_workspace/packages/analog_clock_widget/playground.usecase.dart'
-    as analog_clock_widget_playground;
+    as playground;
 import 'package:widgetbook_workspace/packages/analog_clock_widget/sizing.usecase.dart'
-    as analog_clock_widget_sizing;
+    as sizing;
 import 'package:widgetbook_workspace/packages/analog_clock_widget/themed_presets.usecase.dart'
-    as analog_clock_widget_themed_presets;
+    as themed_presets;
 import 'package:widgetbook_workspace/packages/analog_clock_widget/timezones.usecase.dart'
-    as analog_clock_widget_timezones;
+    as timezones;
 import 'package:widgetbook_workspace/packages/analog_clock_widget/toggles.usecase.dart'
-    as analog_clock_widget_toggles;
-import 'package:widgetbook_workspace/packages/animated_rail_menu/animated_rail_menu_widget.usecase.dart'
-    as animated_rail_menu_animated_rail_menu_widget;
+    as toggles;
 import 'package:widgetbook_workspace/packages/animated_widgets/animated_barrier/anchored.usecase.dart'
-    as animated_widgets_animated_barrier_anchored;
+    as animated_widgets_anchored;
 import 'package:widgetbook_workspace/packages/animated_widgets/animated_barrier/animation_playground.usecase.dart'
-    as animated_widgets_animated_barrier_animation_playground;
+    as animation_playground;
 import 'package:widgetbook_workspace/packages/animated_widgets/animated_barrier/barrier_styling.usecase.dart'
-    as animated_widgets_animated_barrier_barrier_styling;
+    as barrier_styling;
 import 'package:widgetbook_workspace/packages/animated_widgets/animated_barrier/centered.usecase.dart'
-    as animated_widgets_animated_barrier_centered;
+    as centered;
 import 'package:widgetbook_workspace/packages/animated_widgets/animated_barrier/confirm_dialog.usecase.dart'
-    as animated_widgets_animated_barrier_confirm_dialog;
+    as confirm_dialog;
 import 'package:widgetbook_workspace/packages/animated_widgets/animated_barrier/fallback_chain.usecase.dart'
-    as animated_widgets_animated_barrier_fallback_chain;
+    as fallback_chain;
 import 'package:widgetbook_workspace/packages/animated_widgets/animated_barrier/imperative_control.usecase.dart'
-    as animated_widgets_animated_barrier_imperative_control;
+    as imperative_control;
 import 'package:widgetbook_workspace/packages/animated_widgets/animated_barrier/scrollable_list.usecase.dart'
-    as animated_widgets_animated_barrier_scrollable_list;
+    as scrollable_list;
 import 'package:widgetbook_workspace/packages/animated_widgets/animated_barrier/slide_down.usecase.dart'
-    as animated_widgets_animated_barrier_slide_down;
+    as slide_down;
 import 'package:widgetbook_workspace/packages/animated_widgets/animated_barrier/slide_up.usecase.dart'
-    as animated_widgets_animated_barrier_slide_up;
+    as slide_up;
 import 'package:widgetbook_workspace/packages/animated_widgets/animated_checkbox/animated_checkbox.usecase.dart'
-    as animated_widgets_animated_checkbox_animated_checkbox;
-import 'package:widgetbook_workspace/packages/animated_widgets/comination_animation/combination_animation.usecase.dart'
-    as animated_widgets_comination_animation_combination_animation;
+    as animated_checkbox;
 import 'package:widgetbook_workspace/packages/animated_widgets/contextual_reveal/contextual_reveal.usecase.dart'
-    as animated_widgets_contextual_reveal_contextual_reveal;
+    as contextual_reveal;
 import 'package:widgetbook_workspace/packages/animated_widgets/crossfade_widgets/crossfade_widgets.usecase.dart'
-    as animated_widgets_crossfade_widgets_crossfade_widgets;
+    as crossfade_widgets;
 import 'package:widgetbook_workspace/packages/animated_widgets/fade_in_out_view/fade_in_out_view.usecase.dart'
-    as animated_widgets_fade_in_out_view_fade_in_out_view;
+    as fade_in_out_view;
 import 'package:widgetbook_workspace/packages/animated_widgets/fader_widget/fader_widget.usecase.dart'
-    as animated_widgets_fader_widget_fader_widget;
+    as fader_widget;
 import 'package:widgetbook_workspace/packages/animated_widgets/grow_and_fade_widget/grow_and_fade_widget_view.usecase.dart'
-    as animated_widgets_grow_and_fade_widget_grow_and_fade_widget_view;
+    as grow_and_fade_widget_view;
 import 'package:widgetbook_workspace/packages/animated_widgets/grow_widget/grow_widget_view.usecase.dart'
-    as animated_widgets_grow_widget_grow_widget_view;
+    as grow_widget_view;
 import 'package:widgetbook_workspace/packages/animated_widgets/length_colored_border_field/length_colored_border_field.usecase.dart'
-    as animated_widgets_length_colored_border_field_length_colored_border_field;
+    as length_colored_border_field;
+import 'package:widgetbook_workspace/packages/animated_widgets/pill_widget/pill_widget.usecase.dart'
+    as pill_widget;
 import 'package:widgetbook_workspace/packages/animated_widgets/pulse_widget/pulse_widget.usecase.dart'
-    as animated_widgets_pulse_widget_pulse_widget;
+    as pulse_widget;
 import 'package:widgetbook_workspace/packages/animated_widgets/splash_widget/splash_flow.usecase.dart'
-    as animated_widgets_splash_widget_splash_flow;
+    as splash_flow;
 import 'package:widgetbook_workspace/packages/animated_widgets/timed_widget/timed_widget.usecase.dart'
-    as animated_widgets_timed_widget_timed_widget;
+    as timed_widget;
 import 'package:widgetbook_workspace/packages/app_preferences/abstract_preferences_interface.usecase.dart'
-    as app_preferences_abstract_preferences_interface;
+    as abstract_preferences_interface;
 import 'package:widgetbook_workspace/packages/app_preferences/hive_init_mode.usecase.dart'
-    as app_preferences_hive_init_mode;
+    as hive_init_mode;
 import 'package:widgetbook_workspace/packages/app_preferences/hive_preferences.usecase.dart'
-    as app_preferences_hive_preferences;
+    as hive_preferences;
 import 'package:widgetbook_workspace/packages/app_preferences/mock_preferences.usecase.dart'
-    as app_preferences_mock_preferences;
+    as mock_preferences;
+import 'package:widgetbook_workspace/packages/color_grid/color_grid.usecase.dart'
+    as color_grid;
 import 'package:widgetbook_workspace/packages/custom_widgets/anchored/anchored.usecase.dart'
-    as custom_widgets_anchored_anchored;
+    as custom_widgets_anchored;
+import 'package:widgetbook_workspace/packages/custom_widgets/crash_screen/crash_screen.usecase.dart'
+    as crash_screen;
+import 'package:widgetbook_workspace/packages/custom_widgets/default_welcome_screen/default_welcome_screen.usecase.dart'
+    as default_welcome_screen;
 import 'package:widgetbook_workspace/packages/custom_widgets/directional_slider/buttons/directional_slider_and_buttons.usecase.dart'
-    as custom_widgets_directional_slider_buttons_directional_slider_and_buttons;
+    as directional_slider_and_buttons;
 import 'package:widgetbook_workspace/packages/custom_widgets/directional_slider/slider/directional_slider.usecase.dart'
-    as custom_widgets_directional_slider_slider_directional_slider;
+    as directional_slider;
 import 'package:widgetbook_workspace/packages/custom_widgets/expanding_textfield/expanding_textfield.usecase.dart'
-    as custom_widgets_expanding_textfield_expanding_textfield;
-import 'package:widgetbook_workspace/packages/custom_widgets/full_screen_color/full_screen_color.usecase.dart'
-    as custom_widgets_full_screen_color_full_screen_color;
+    as expanding_textfield;
 import 'package:widgetbook_workspace/packages/custom_widgets/orientation_flex/orientation_flex.usecase.dart'
-    as custom_widgets_orientation_flex_orientation_flex;
-import 'package:widgetbook_workspace/packages/custom_widgets/password_field/password_field.usecase.dart'
-    as custom_widgets_password_field_password_field;
+    as orientation_flex;
 import 'package:widgetbook_workspace/packages/custom_widgets/sized_spinner/sized_spinner.usecase.dart'
-    as custom_widgets_sized_spinner_sized_spinner;
+    as sized_spinner;
+import 'package:widgetbook_workspace/packages/custom_widgets/slide_index_stack/slide_index_stack.usecase.dart'
+    as slide_index_stack;
+import 'package:widgetbook_workspace/packages/custom_widgets/solid_screen_color/solid_screen_color.usecase.dart'
+    as solid_screen_color;
+import 'package:widgetbook_workspace/packages/custom_widgets/textfield/input_field.usecase.dart'
+    as input_field;
+import 'package:widgetbook_workspace/packages/custom_widgets/textfield/password_field.usecase.dart'
+    as password_field;
 import 'package:widgetbook_workspace/packages/custom_widgets/uniform_cluster/button_pair.usecase.dart'
-    as custom_widgets_uniform_cluster_button_pair;
+    as button_pair;
 import 'package:widgetbook_workspace/packages/custom_widgets/uniform_cluster/uniform_cluster.usecase.dart'
-    as custom_widgets_uniform_cluster_uniform_cluster;
+    as uniform_cluster;
 import 'package:widgetbook_workspace/packages/custom_widgets/uninhertied_text/uninherited_text.usecase.dart'
-    as custom_widgets_uninhertied_text_uninherited_text;
-import 'package:widgetbook_workspace/packages/extensions/datetime_ext/datetime_delta_text.usecase.dart'
-    as extensions_datetime_ext_datetime_delta_text;
+    as uninherited_text;
+import 'package:widgetbook_workspace/packages/data_grid/data_grid.usecase.dart'
+    as data_grid;
 import 'package:widgetbook_workspace/packages/extensions/widget_ext/widget_ext.usecase.dart'
-    as extensions_widget_ext_widget_ext;
+    as widget_ext;
 import 'package:widgetbook_workspace/packages/ice_chips/ice_chip_tray/ice_chip_tray.usecase.dart'
-    as ice_chips_ice_chip_tray_ice_chip_tray;
+    as ice_chip_tray;
 import 'package:widgetbook_workspace/packages/ice_chips/ice_chip_widget/ice_chip.usecase.dart'
-    as ice_chips_ice_chip_widget_ice_chip;
+    as ice_chip;
 import 'package:widgetbook_workspace/packages/infinite_scroll_picking/lib/src/infinite_scroll_picker.usecase.dart'
-    as infinite_scroll_picking_lib_src_infinite_scroll_picker;
+    as infinite_scroll_picker;
 import 'package:widgetbook_workspace/packages/infinite_scroll_picking_settings/settings_screen.usecase.dart'
     as infinite_scroll_picking_settings_settings_screen;
+import 'package:widgetbook_workspace/packages/rail_navigation/rail_button.usecase.dart'
+    as rail_button;
+import 'package:widgetbook_workspace/packages/rail_navigation/rail_button_presets.usecase.dart'
+    as rail_button_presets;
+import 'package:widgetbook_workspace/packages/rail_navigation/rail_overflow_button.usecase.dart'
+    as rail_overflow_button;
+import 'package:widgetbook_workspace/packages/rail_navigation/rail_popover_tile.usecase.dart'
+    as rail_popover_tile;
+import 'package:widgetbook_workspace/packages/rail_navigation/rail_shell.usecase.dart'
+    as rail_shell;
+import 'package:widgetbook_workspace/packages/rail_navigation/rail_widget.usecase.dart'
+    as rail_widget;
 import 'package:widgetbook_workspace/packages/random_color_generator/random_color_generator.usecase.dart'
-    as random_color_generator_random_color_generator;
+    as random_color_generator;
 import 'package:widgetbook_workspace/packages/remind_me/notification_permission_status.usecase.dart'
-    as remind_me_notification_permission_status;
+    as notification_permission_status;
 import 'package:widgetbook_workspace/packages/remind_me/remind_me.usecase.dart'
-    as remind_me_remind_me;
+    as remind_me;
 import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/lib/src/presentation/widgets/datetime_popover/datetime_picker_field.usecase.dart'
-    as scrolling_datetime_pickers_lib_src_presentation_widgets_datetime_popover_datetime_picker_field;
+    as datetime_picker_field;
 import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/lib/src/presentation/widgets/datetime_popover/datetime_picker_popover.usecase.dart'
-    as scrolling_datetime_pickers_lib_src_presentation_widgets_datetime_popover_datetime_picker_popover;
+    as datetime_picker_popover;
 import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/lib/src/presentation/widgets/scrolling_date_picker.usecase.dart'
-    as scrolling_datetime_pickers_lib_src_presentation_widgets_scrolling_date_picker;
+    as scrolling_date_picker;
 import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/lib/src/presentation/widgets/scrolling_time_picker.usecase.dart'
-    as scrolling_datetime_pickers_lib_src_presentation_widgets_scrolling_time_picker;
+    as scrolling_time_picker;
 import 'package:widgetbook_workspace/packages/settings_widget/settings_widget.usecase.dart'
-    as settings_widget_settings_widget;
+    as settings_widget;
 import 'package:widgetbook_workspace/packages/since_when_widgets/tag_glossary_edit_screen.usecase.dart'
-    as since_when_widgets_tag_glossary_edit_screen;
+    as tag_glossary_edit_screen;
 import 'package:widgetbook_workspace/packages/since_when_widgets/tag_glossary_read_view.usecase.dart'
-    as since_when_widgets_tag_glossary_read_view;
+    as tag_glossary_read_view;
+import 'package:widgetbook_workspace/packages/splash_framework/splash_screen.usecase.dart'
+    as splash_screen;
 import 'package:widgetbook_workspace/packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_page/sqlite_viewer_page.usecase.dart'
-    as sqlite_viewer_lib_src_widgets_sqlite_viewer_page_sqlite_viewer_page;
-import 'package:widgetbook_workspace/packages/theme_manager/widgets/preference/material_preference.usecase.dart'
-    as theme_manager_widgets_preference_material_preference;
-import 'package:widgetbook_workspace/packages/theme_manager/widgets/preference/theme_radio_row.usecase.dart'
-    as theme_manager_widgets_preference_theme_radio_row;
-import 'package:widgetbook_workspace/packages/theme_manager/widgets/preference/theme_selection_body.usecase.dart'
-    as theme_manager_widgets_preference_theme_selection_body;
-import 'package:widgetbook_workspace/packages/theme_manager/widgets/root/material_root.usecase.dart'
-    as theme_manager_widgets_root_material_root;
+    as sqlite_viewer_page;
+import 'package:widgetbook_workspace/packages/stacking_widgets/stacking_widgets.usecase.dart'
+    as stacking_widgets;
+import 'package:widgetbook_workspace/packages/theme_framework/settings_screen.usecase.dart'
+    as theme_framework_settings_screen;
+import 'package:widgetbook_workspace/packages/theme_framework/theme_mode_card.usecase.dart'
+    as theme_mode_card;
+import 'package:widgetbook_workspace/packages/theme_framework/theme_mode_entry.usecase.dart'
+    as theme_mode_entry;
+import 'package:widgetbook_workspace/packages/theme_framework/theme_setting_screen.usecase.dart'
+    as theme_setting_screen;
+import 'package:widgetbook_workspace/packages/theme_manager/material_preference.usecase.dart'
+    as material_preference;
+import 'package:widgetbook_workspace/packages/theme_manager/theme_radio_row.usecase.dart'
+    as theme_radio_row;
+import 'package:widgetbook_workspace/packages/theme_manager/theme_selection_body.usecase.dart'
+    as theme_selection_body;
+import 'package:widgetbook_workspace/packages/three_d_sphere/three_d_sphere.usecase.dart'
+    as three_d_sphere;
+import 'package:widgetbook_workspace/packages/widget_animation_framework/animation_combiner_on_widget.usecase.dart'
+    as animation_combiner_on_widget;
+import 'package:widgetbook_workspace/packages/widget_animation_framework/animation_controller_widget.usecase.dart.dart'
+    as animation_controller_widget;
 
 final directories = <WidgetbookNode>[
   WidgetbookFolder(
@@ -144,50 +180,31 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Face × Hand matrix',
-            builder: analog_clock_widget_face_and_hand_matrix
-                .faceAndHandMatrixAnalogClockUseCase,
+            builder: face_and_hand_matrix.faceAndHandMatrixAnalogClockUseCase,
           ),
           WidgetbookUseCase(
             name: 'Injected providers (frozen time)',
-            builder: analog_clock_widget_injected_providers
-                .injectedProvidersAnalogClockUseCase,
+            builder: injected_providers.injectedProvidersAnalogClockUseCase,
           ),
           WidgetbookUseCase(
             name: 'Playground',
-            builder: analog_clock_widget_playground
-                .playgroundAnalogClockUseCase,
+            builder: playground.playgroundAnalogClockUseCase,
           ),
           WidgetbookUseCase(
             name: 'Sizing (radius ladder)',
-            builder: analog_clock_widget_sizing.sizingAnalogClockUseCase,
+            builder: sizing.sizingAnalogClockUseCase,
           ),
           WidgetbookUseCase(
             name: 'Themed presets',
-            builder: analog_clock_widget_themed_presets
-                .themedPresetsAnalogClockUseCase,
+            builder: themed_presets.themedPresetsAnalogClockUseCase,
           ),
           WidgetbookUseCase(
             name: 'Toggles (numbers × second hand)',
-            builder: analog_clock_widget_toggles.togglesAnalogClockUseCase,
+            builder: toggles.togglesAnalogClockUseCase,
           ),
           WidgetbookUseCase(
             name: 'World clocks (timezones)',
-            builder: analog_clock_widget_timezones.timezonesAnalogClockUseCase,
-          ),
-        ],
-      ),
-    ],
-  ),
-  WidgetbookFolder(
-    name: 'animated_rail_menu',
-    children: [
-      WidgetbookComponent(
-        name: 'AnimatedRailMenu',
-        useCases: [
-          WidgetbookUseCase(
-            name: 'Default',
-            builder: animated_rail_menu_animated_rail_menu_widget
-                .animatedRailMenuUseCase,
+            builder: timezones.timezonesAnalogClockUseCase,
           ),
         ],
       ),
@@ -201,53 +218,44 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Anchored to button',
-            builder: animated_widgets_animated_barrier_anchored
-                .anchoredAnimatedBarrierUseCase,
-          ),
-          WidgetbookUseCase(
-            name: 'Animation playground',
-            builder: animated_widgets_animated_barrier_animation_playground
-                .animationPlaygroundAnimatedBarrierUseCase,
+            builder: animated_widgets_anchored.anchoredAnimatedBarrierUseCase,
           ),
           WidgetbookUseCase(
             name: 'Barrier styling',
-            builder: animated_widgets_animated_barrier_barrier_styling
-                .barrierStylingAnimatedBarrierUseCase,
+            builder: barrier_styling.barrierStylingAnimatedBarrierUseCase,
+          ),
+          WidgetbookUseCase(
+            name: 'BarrierAnimation playground',
+            builder:
+                animation_playground.animationPlaygroundAnimatedBarrierUseCase,
           ),
           WidgetbookUseCase(
             name: 'Centered',
-            builder: animated_widgets_animated_barrier_centered
-                .centeredAnimatedBarrierUseCase,
+            builder: centered.centeredAnimatedBarrierUseCase,
           ),
           WidgetbookUseCase(
             name: 'Confirm dialog',
-            builder: animated_widgets_animated_barrier_confirm_dialog
-                .confirmDialogAnimatedBarrierUseCase,
+            builder: confirm_dialog.confirmDialogAnimatedBarrierUseCase,
           ),
           WidgetbookUseCase(
             name: 'Fallback chain',
-            builder: animated_widgets_animated_barrier_fallback_chain
-                .fallbackChainAnimatedBarrierUseCase,
+            builder: fallback_chain.fallbackChainAnimatedBarrierUseCase,
           ),
           WidgetbookUseCase(
             name: 'Imperative control',
-            builder: animated_widgets_animated_barrier_imperative_control
-                .imperativeControlAnimatedBarrierUseCase,
+            builder: imperative_control.imperativeControlAnimatedBarrierUseCase,
           ),
           WidgetbookUseCase(
             name: 'Scrollable list popover',
-            builder: animated_widgets_animated_barrier_scrollable_list
-                .scrollableListAnimatedBarrierUseCase,
+            builder: scrollable_list.scrollableListAnimatedBarrierUseCase,
           ),
           WidgetbookUseCase(
             name: 'Slide down (from top)',
-            builder: animated_widgets_animated_barrier_slide_down
-                .slideDownAnimatedBarrierUseCase,
+            builder: slide_down.slideDownAnimatedBarrierUseCase,
           ),
           WidgetbookUseCase(
             name: 'Slide up (from bottom)',
-            builder: animated_widgets_animated_barrier_slide_up
-                .slideUpAnimatedBarrierUseCase,
+            builder: slide_up.slideUpAnimatedBarrierUseCase,
           ),
         ],
       ),
@@ -256,33 +264,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: animated_widgets_animated_checkbox_animated_checkbox
-                .animatedCheckboxUseCase,
-          ),
-        ],
-      ),
-      WidgetbookComponent(
-        name: 'CombinationAnimation',
-        useCases: [
-          WidgetbookUseCase(
-            name: 'Chained x3 (parallel)',
-            builder: animated_widgets_comination_animation_combination_animation
-                .buildCombinationAnimationChainedUseCase,
-          ),
-          WidgetbookUseCase(
-            name: 'Single',
-            builder: animated_widgets_comination_animation_combination_animation
-                .buildCombinationAnimationSingleUseCase,
-          ),
-        ],
-      ),
-      WidgetbookComponent(
-        name: 'CombinationAnimationSequenced',
-        useCases: [
-          WidgetbookUseCase(
-            name: 'Sequenced x3',
-            builder: animated_widgets_comination_animation_combination_animation
-                .buildCombinationAnimationSequencedUseCase,
+            builder: animated_checkbox.animatedCheckboxUseCase,
           ),
         ],
       ),
@@ -291,8 +273,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: animated_widgets_contextual_reveal_contextual_reveal
-                .contextualRevealUseCase,
+            builder: contextual_reveal.contextualRevealUseCase,
           ),
         ],
       ),
@@ -301,8 +282,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: animated_widgets_crossfade_widgets_crossfade_widgets
-                .crossFadeWidgetsUseCase,
+            builder: crossfade_widgets.crossFadeWidgetsUseCase,
           ),
         ],
       ),
@@ -311,8 +291,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: animated_widgets_fade_in_out_view_fade_in_out_view
-                .fadeInOutViewUseCase,
+            builder: fade_in_out_view.fadeInOutViewUseCase,
           ),
         ],
       ),
@@ -321,8 +300,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: animated_widgets_fader_widget_fader_widget
-                .faderWidgetUseCase,
+            builder: fader_widget.faderWidgetUseCase,
           ),
         ],
       ),
@@ -331,9 +309,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder:
-                animated_widgets_grow_and_fade_widget_grow_and_fade_widget_view
-                    .growAndFadeWidgetViewUseCase,
+            builder: grow_and_fade_widget_view.growAndFadeWidgetViewUseCase,
           ),
         ],
       ),
@@ -342,8 +318,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: animated_widgets_grow_widget_grow_widget_view
-                .growWidgetViewUseCase,
+            builder: grow_widget_view.growWidgetViewUseCase,
           ),
         ],
       ),
@@ -353,8 +328,16 @@ final directories = <WidgetbookNode>[
           WidgetbookUseCase(
             name: 'Default',
             builder:
-                animated_widgets_length_colored_border_field_length_colored_border_field
-                    .lengthColoredBorderFieldUseCase,
+                length_colored_border_field.lengthColoredBorderFieldUseCase,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'PillWidget',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: pill_widget.buildPillWidgetUseCase,
           ),
         ],
       ),
@@ -363,33 +346,28 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: animated_widgets_pulse_widget_pulse_widget
-                .buildPulseWidgetUseCase,
+            builder: pulse_widget.buildPulseWidgetUseCase,
           ),
         ],
       ),
       WidgetbookComponent(
-        name: 'SplashFlow',
+        name: 'SplashScreen',
         useCases: [
           WidgetbookUseCase(
             name: 'Splash ends after tasks (no spinner)',
-            builder: animated_widgets_splash_widget_splash_flow
-                .buildSplashFlowNoSpinnerUseCase,
+            builder: splash_flow.buildSplashFlowNoSpinnerUseCase,
           ),
           WidgetbookUseCase(
             name: 'Splash ends before tasks (spinner shown)',
-            builder: animated_widgets_splash_widget_splash_flow
-                .buildSplashFlowSpinnerShownUseCase,
+            builder: splash_flow.buildSplashFlowSpinnerShownUseCase,
           ),
           WidgetbookUseCase(
             name: 'Task error',
-            builder: animated_widgets_splash_widget_splash_flow
-                .buildSplashFlowTaskErrorUseCase,
+            builder: splash_flow.buildSplashFlowTaskErrorUseCase,
           ),
           WidgetbookUseCase(
             name: 'Tasks time out',
-            builder: animated_widgets_splash_widget_splash_flow
-                .buildSplashFlowTimeoutUseCase,
+            builder: splash_flow.buildSplashFlowTimeoutUseCase,
           ),
         ],
       ),
@@ -398,8 +376,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: animated_widgets_timed_widget_timed_widget
-                .buildTimedWidgetUseCase,
+            builder: timed_widget.buildTimedWidgetUseCase,
           ),
         ],
       ),
@@ -413,17 +390,17 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Contract — absent keys',
-            builder: app_preferences_abstract_preferences_interface
+            builder: abstract_preferences_interface
                 .abstractPreferencesContractAbsent,
           ),
           WidgetbookUseCase(
             name: 'Contract — structural ops',
-            builder: app_preferences_abstract_preferences_interface
+            builder: abstract_preferences_interface
                 .abstractPreferencesContractStructural,
           ),
           WidgetbookUseCase(
             name: 'Contract — type filtering',
-            builder: app_preferences_abstract_preferences_interface
+            builder: abstract_preferences_interface
                 .abstractPreferencesContractTyping,
           ),
         ],
@@ -433,7 +410,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Overview',
-            builder: app_preferences_hive_init_mode.hiveInitModeOverview,
+            builder: hive_init_mode.hiveInitModeOverview,
           ),
         ],
       ),
@@ -442,7 +419,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Playground',
-            builder: app_preferences_hive_preferences.hivePreferencesPlayground,
+            builder: hive_preferences.hivePreferencesPlayground,
           ),
         ],
       ),
@@ -451,12 +428,25 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Playground',
-            builder: app_preferences_mock_preferences.mockPreferencesPlayground,
+            builder: mock_preferences.mockPreferencesPlayground,
           ),
           WidgetbookUseCase(
             name: 'Test helpers',
-            builder: app_preferences_mock_preferences
-                .mockPreferencesTestHelpers,
+            builder: mock_preferences.mockPreferencesTestHelpers,
+          ),
+        ],
+      ),
+    ],
+  ),
+  WidgetbookFolder(
+    name: 'color_grid',
+    children: [
+      WidgetbookComponent(
+        name: 'ColorGrid',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: color_grid.buildColorGridUseCase,
           ),
         ],
       ),
@@ -470,7 +460,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: custom_widgets_anchored_anchored.anchoredUseCase,
+            builder: custom_widgets_anchored.anchoredUseCase,
           ),
         ],
       ),
@@ -479,8 +469,25 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: custom_widgets_uniform_cluster_button_pair
-                .buttonPairUseCase,
+            builder: button_pair.buttonPairUseCase,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'CrashScreen',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: crash_screen.buildCrashScreenUseCase,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'DefaultWelcomeScreen',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: default_welcome_screen.buildDefaultWelcomeScreenUseCase,
           ),
         ],
       ),
@@ -489,8 +496,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: custom_widgets_directional_slider_slider_directional_slider
-                .directionalSliderUseCase,
+            builder: directional_slider.directionalSliderUseCase,
           ),
         ],
       ),
@@ -499,9 +505,8 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder:
-                custom_widgets_directional_slider_buttons_directional_slider_and_buttons
-                    .directionalSliderAndButtonsUseCase,
+            builder: directional_slider_and_buttons
+                .directionalSliderAndButtonsUseCase,
           ),
         ],
       ),
@@ -510,18 +515,16 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: custom_widgets_expanding_textfield_expanding_textfield
-                .expandingTextFieldUseCase,
+            builder: expanding_textfield.expandingTextFieldUseCase,
           ),
         ],
       ),
       WidgetbookComponent(
-        name: 'FullScreenColor',
+        name: 'InputField',
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: custom_widgets_full_screen_color_full_screen_color
-                .buildFullScreenColorUseCase,
+            builder: input_field.buildInputFieldUseCase,
           ),
         ],
       ),
@@ -530,8 +533,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Login / Register',
-            builder: custom_widgets_orientation_flex_orientation_flex
-                .buildOrientationFlexUseCase,
+            builder: orientation_flex.buildOrientationFlexUseCase,
           ),
         ],
       ),
@@ -539,14 +541,8 @@ final directories = <WidgetbookNode>[
         name: 'PasswordField',
         useCases: [
           WidgetbookUseCase(
-            name: 'Long Value (wraps when revealed)',
-            builder: custom_widgets_password_field_password_field
-                .passwordFieldLongValueUseCase,
-          ),
-          WidgetbookUseCase(
-            name: 'Playground',
-            builder: custom_widgets_password_field_password_field
-                .passwordFieldPlaygroundUseCase,
+            name: 'Default',
+            builder: password_field.buildPasswordFieldUseCase,
           ),
         ],
       ),
@@ -555,8 +551,25 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: custom_widgets_sized_spinner_sized_spinner
-                .buildSizedSpinnerUseCase,
+            builder: sized_spinner.buildSizedSpinnerUseCase,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'SlideIndexedStack',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: slide_index_stack.buildSlideIndexedStackUseCase,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'SolidScreenColor',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: solid_screen_color.buildSolidScreenColorUseCase,
           ),
         ],
       ),
@@ -565,8 +578,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: custom_widgets_uniform_cluster_uniform_cluster
-                .uniformClusterUseCase,
+            builder: uniform_cluster.uniformClusterUseCase,
           ),
         ],
       ),
@@ -575,8 +587,21 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: custom_widgets_uninhertied_text_uninherited_text
-                .buildUninheritedTextUseCase,
+            builder: uninherited_text.buildUninheritedTextUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  WidgetbookFolder(
+    name: 'data_grid',
+    children: [
+      WidgetbookComponent(
+        name: 'DataGrid',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: data_grid.buildDataGridUseCase,
           ),
         ],
       ),
@@ -586,21 +611,11 @@ final directories = <WidgetbookNode>[
     name: 'extensions',
     children: [
       WidgetbookComponent(
-        name: 'DateTimeDeltaText',
-        useCases: [
-          WidgetbookUseCase(
-            name: 'Default',
-            builder: extensions_datetime_ext_datetime_delta_text
-                .buildDateTimeDeltaTextUseCase,
-          ),
-        ],
-      ),
-      WidgetbookComponent(
         name: 'Widget',
         useCases: [
           WidgetbookUseCase(
             name: 'Widget Extensions',
-            builder: extensions_widget_ext_widget_ext.buildWidgetExtUseCase,
+            builder: widget_ext.buildWidgetExtUseCase,
           ),
         ],
       ),
@@ -614,7 +629,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: ice_chips_ice_chip_widget_ice_chip.iceChipUseCase,
+            builder: ice_chip.iceChipUseCase,
           ),
         ],
       ),
@@ -623,7 +638,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: ice_chips_ice_chip_tray_ice_chip_tray.iceChipsTrayUseCase,
+            builder: ice_chip_tray.iceChipsTrayUseCase,
           ),
         ],
       ),
@@ -637,8 +652,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: infinite_scroll_picking_lib_src_infinite_scroll_picker
-                .infiniteScrollPickerUseCase,
+            builder: infinite_scroll_picker.infiniteScrollPickerUseCase,
           ),
         ],
       ),
@@ -660,6 +674,83 @@ final directories = <WidgetbookNode>[
     ],
   ),
   WidgetbookFolder(
+    name: 'rail_navigation',
+    children: [
+      WidgetbookComponent(
+        name: 'MainRailButton',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: rail_button_presets.buildMainRailButtonUseCase,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'MoreRailButton',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: rail_button_presets.buildMoreRailButtonUseCase,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'RailButton',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: rail_button.buildRailButtonUseCase,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'RailOverflowButton',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: rail_overflow_button.buildRailOverflowButtonUseCase,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'RailPopoverTile',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: rail_popover_tile.buildRailPopoverTileUseCase,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'RailShell',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: rail_shell.buildRailShellUseCase,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'RailWidget',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: rail_widget.buildRailWidgetUseCase,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'SettingsRailButton',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: rail_button_presets.buildSettingsRailButtonUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  WidgetbookFolder(
     name: 'random_color_generator',
     children: [
       WidgetbookComponent(
@@ -667,8 +758,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Palette',
-            builder: random_color_generator_random_color_generator
-                .randomColorGeneratorUseCase,
+            builder: random_color_generator.randomColorGeneratorUseCase,
           ),
         ],
       ),
@@ -682,12 +772,12 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'All states overview',
-            builder: remind_me_notification_permission_status
+            builder: notification_permission_status
                 .notificationPermissionStatusOverview,
           ),
           WidgetbookUseCase(
             name: 'State picker',
-            builder: remind_me_notification_permission_status
+            builder: notification_permission_status
                 .notificationPermissionStatusPicker,
           ),
         ],
@@ -697,7 +787,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'API reference',
-            builder: remind_me_remind_me.remindMeApiReference,
+            builder: remind_me.remindMeApiReference,
           ),
         ],
       ),
@@ -711,9 +801,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder:
-                scrolling_datetime_pickers_lib_src_presentation_widgets_datetime_popover_datetime_picker_field
-                    .dateTimePickerFieldUseCase,
+            builder: datetime_picker_field.dateTimePickerFieldUseCase,
           ),
         ],
       ),
@@ -722,9 +810,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder:
-                scrolling_datetime_pickers_lib_src_presentation_widgets_datetime_popover_datetime_picker_popover
-                    .dateTimePickerPopoverUseCase,
+            builder: datetime_picker_popover.dateTimePickerPopoverUseCase,
           ),
         ],
       ),
@@ -733,9 +819,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder:
-                scrolling_datetime_pickers_lib_src_presentation_widgets_scrolling_date_picker
-                    .scrollingDatePickerUseCase,
+            builder: scrolling_date_picker.scrollingDatePickerUseCase,
           ),
         ],
       ),
@@ -744,9 +828,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder:
-                scrolling_datetime_pickers_lib_src_presentation_widgets_scrolling_time_picker
-                    .scrollingTimePickerUseCase,
+            builder: scrolling_time_picker.scrollingTimePickerUseCase,
           ),
         ],
       ),
@@ -760,7 +842,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: settings_widget_settings_widget.settingsWidgetUseCase,
+            builder: settings_widget.settingsWidgetUseCase,
           ),
         ],
       ),
@@ -774,8 +856,7 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: since_when_widgets_tag_glossary_edit_screen
-                .tagGlossaryEditScreenUseCase,
+            builder: tag_glossary_edit_screen.tagGlossaryEditScreenUseCase,
           ),
         ],
       ),
@@ -784,8 +865,21 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder: since_when_widgets_tag_glossary_read_view
-                .tagGlossaryReadViewUseCase,
+            builder: tag_glossary_read_view.tagGlossaryReadViewUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  WidgetbookFolder(
+    name: 'splash_framework',
+    children: [
+      WidgetbookComponent(
+        name: 'SplashScreen',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: splash_screen.buildSplashScreenUseCase,
           ),
         ],
       ),
@@ -799,9 +893,67 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Default',
-            builder:
-                sqlite_viewer_lib_src_widgets_sqlite_viewer_page_sqlite_viewer_page
-                    .sqliteViewerPageUseCase,
+            builder: sqlite_viewer_page.sqliteViewerPageUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  WidgetbookFolder(
+    name: 'stacking_widgets',
+    children: [
+      WidgetbookComponent(
+        name: 'StackingWidgets',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: stacking_widgets.buildStackingWidgetsUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  WidgetbookFolder(
+    name: 'theme_framework',
+    children: [
+      WidgetbookComponent(
+        name: 'SettingsScreen',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Custom entries',
+            builder: theme_framework_settings_screen.buildSettingsScreenUseCase,
+          ),
+          WidgetbookUseCase(
+            name: 'With theme',
+            builder: theme_framework_settings_screen
+                .buildSettingsScreenWithThemeUseCase,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'ThemeModeCard',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Controlled',
+            builder: theme_mode_card.buildThemeModeCardUseCase,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'ThemeModeEntry',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Live',
+            builder: theme_mode_entry.buildThemeModeEntryUseCase,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'ThemeSettingScreen',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Default',
+            builder: theme_setting_screen.buildThemeSettingScreenUseCase,
           ),
         ],
       ),
@@ -814,24 +966,8 @@ final directories = <WidgetbookNode>[
         name: 'MaterialPreference',
         useCases: [
           WidgetbookUseCase(
-            name: 'Default',
-            builder: theme_manager_widgets_preference_material_preference
-                .buildMaterialPreferenceUseCase,
-          ),
-          WidgetbookUseCase(
-            name: 'Localized (Spanish)',
-            builder: theme_manager_widgets_preference_material_preference
-                .buildMaterialPreferenceLocalizedUseCase,
-          ),
-        ],
-      ),
-      WidgetbookComponent(
-        name: 'MaterialRoot',
-        useCases: [
-          WidgetbookUseCase(
-            name: 'Default',
-            builder: theme_manager_widgets_root_material_root
-                .buildMaterialRootUseCase,
+            name: 'Live',
+            builder: material_preference.buildMaterialPreferenceUseCase,
           ),
         ],
       ),
@@ -839,9 +975,8 @@ final directories = <WidgetbookNode>[
         name: 'ThemeRadioRow',
         useCases: [
           WidgetbookUseCase(
-            name: 'Default',
-            builder: theme_manager_widgets_preference_theme_radio_row
-                .buildThemeRadioRowUseCase,
+            name: 'Controlled',
+            builder: theme_radio_row.buildThemeRadioRowUseCase,
           ),
         ],
       ),
@@ -849,9 +984,47 @@ final directories = <WidgetbookNode>[
         name: 'ThemeSelectionBody',
         useCases: [
           WidgetbookUseCase(
-            name: 'Default',
-            builder: theme_manager_widgets_preference_theme_selection_body
-                .buildThemeSelectionBodyUseCase,
+            name: 'Controlled',
+            builder: theme_selection_body.buildThemeSelectionBodyUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  WidgetbookFolder(
+    name: 'three_d_sphere',
+    children: [
+      WidgetbookComponent(
+        name: 'ThreeDSphere',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Parametric',
+            builder: three_d_sphere.buildThreeDSphereUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  WidgetbookFolder(
+    name: 'widget_animation_framework',
+    children: [
+      WidgetbookComponent(
+        name: 'AnimationCombinerOnWidget',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Scrubbed',
+            builder: animation_combiner_on_widget
+                .buildAnimationCombinerOnWidgetUseCase,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'AnimationControllerWidget',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Play on mount',
+            builder: animation_controller_widget
+                .buildAnimationControllerWidgetUseCase,
           ),
         ],
       ),

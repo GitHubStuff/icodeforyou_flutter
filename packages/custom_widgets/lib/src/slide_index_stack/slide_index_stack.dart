@@ -8,6 +8,7 @@ const Duration _kDefaultDuration = Duration(milliseconds: 750);
 /// The default curve shaping the slide.
 const Curve _kDefaultCurve = Curves.easeInOutCubic;
 
+/// {@template slide_indexed_stack}
 /// An [IndexedStack] replacement that slides between children when
 /// [index] changes.
 ///
@@ -30,8 +31,9 @@ const Curve _kDefaultCurve = Curves.easeInOutCubic;
 /// layout, paint, or animation work. During a slide only the two
 /// children involved come on stage; the rest remain off. A tap that
 /// arrives mid-slide restarts the animation from the new pair.
+/// {@endtemplate}
 class SlideIndexedStack extends StatefulWidget {
-  /// Creates a sliding indexed stack.
+  /// {@macro slide_indexed_stack}
   const SlideIndexedStack({
     required this.index,
     required this.children,

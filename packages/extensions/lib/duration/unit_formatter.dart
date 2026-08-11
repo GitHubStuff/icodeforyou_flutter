@@ -1,3 +1,4 @@
+// packages/extensions/lib/duration/unit_formatter.dart
 /// {@template unit_formatter_library}
 /// A tiny formatting DSL for rendering a single duration unit value.
 ///
@@ -212,7 +213,10 @@ class UnitFormatter {
   String? separator;
   if (at(i) == _kSeparatorFlag) {
     final c = at(i + 1);
-    assert(c != null, 'Separator flag "_" must be followed by a character in: $s');
+    assert(
+      c != null,
+      'Separator flag "_" must be followed by a character in: $s',
+    );
     separator = c;
     i += 2;
   }
@@ -248,7 +252,9 @@ class UnitFormatter {
       precisionDigits.isNotEmpty,
       'Precision "." must be followed by digits in: $s',
     );
-    precision = precisionDigits.isEmpty ? 0 : int.parse(precisionDigits.toString());
+    precision = precisionDigits.isEmpty
+        ? 0
+        : int.parse(precisionDigits.toString());
   }
 
   final terminator = at(i);
@@ -307,12 +313,18 @@ class UnitFormatter {
 
   final singular = _readArm(s, i);
   i = singular.next;
-  assert(i < len && s[i] == _kPipe, 'Plurality is missing its second "|" in: $s');
+  assert(
+    i < len && s[i] == _kPipe,
+    'Plurality is missing its second "|" in: $s',
+  );
   i++; // middle '|'
 
   final plural = _readArm(s, i);
   i = plural.next;
-  assert(i < len && s[i] == _kPipe, 'Plurality is missing its closing "|" in: $s');
+  assert(
+    i < len && s[i] == _kPipe,
+    'Plurality is missing its closing "|" in: $s',
+  );
   i++; // closing '|'
 
   final driver = i < len ? s[i] : null;

@@ -16,7 +16,7 @@ import '_shared.dart';
 /// Lets a designer feel each [BarrierAnimation] variant with adjustable
 /// duration and curve. The popover is centered so attention stays on the
 /// motion itself, not on positioning.
-@widgetbook.UseCase(name: 'Animation playground', type: AnimatedBarrier)
+@widgetbook.UseCase(name: 'BarrierAnimation playground', type: AnimatedBarrier)
 Widget animationPlaygroundAnimatedBarrierUseCase(BuildContext context) {
   final variant = context.knobs.object.dropdown<_Variant>(
     label: 'animation variant',

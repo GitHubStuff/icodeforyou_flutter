@@ -16,6 +16,7 @@ const int _kColorCount = 15;
 const Color _kBorderColorLight = Color(0xFF6A1B9A);
 const Color _kBorderColorDark = Color(0xFFCE93D8);
 
+/// {@template color_grid.dart}
 /// A 4×4 grid of tappable color cells with a refresh action.
 ///
 /// Renders exactly [_kColorCount] ARGB color values in the first
@@ -28,8 +29,9 @@ const Color _kBorderColorDark = Color(0xFFCE93D8);
 /// [_kCellSize] logical pixels, spaced evenly — including the inset
 /// from the surrounding [_kBorderWidth] border — at [_kGapWide],
 /// dropping to [_kGapNarrow] when the parent is too narrow.
+/// {@endtemplate}
 class ColorGrid extends StatelessWidget {
-  /// Creates a grid picker.
+  /// {@macro color_grid.dart}
   ///
   /// [colors] must contain exactly fifteen ARGB values.
   const ColorGrid({

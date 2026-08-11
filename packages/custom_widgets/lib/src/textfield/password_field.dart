@@ -1,9 +1,9 @@
 // packages/custom_widgets/lib/src/password_field/password_field.dart
-// ignore_for_file: always_use_package_imports, comment_references
+// ignore_for_file: always_use_package_imports
 
-import 'package:extensions/enum/src/window_size_category.dart' show WindowSizeCategory;
-import 'package:extensions/extensions.dart'
-    show HapticIntensity;
+import 'package:extensions/enum/src/window_size_category.dart'
+    show WindowSizeCategory;
+import 'package:extensions/extensions.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
 
 import '_suffix_slot.dart';
@@ -23,6 +23,7 @@ const String _kShowLabel = 'Show password';
 /// Accessibility label announced while the text is revealed.
 const String _kHideLabel = 'Hide password';
 
+/// {@template password_field.dart}
 /// A password text field that masks its input and offers a tap-to-reveal
 /// toggle in the trailing slot.
 ///
@@ -43,8 +44,9 @@ const String _kHideLabel = 'Hide password';
 /// [Theme] for one field). [showTextIcon] and [hideTextIcon] are display-only;
 /// their interactivity is neutralized so the entire trailing slot toggles
 /// visibility.
+/// {@endtemplate}
 class PasswordField extends StatefulWidget {
-  /// Creates a password field.
+  /// {@macro password_field.dart}
   ///
   /// [controller] and [focusNode] are owned by the caller; this widget never
   /// disposes them.

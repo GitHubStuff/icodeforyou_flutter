@@ -1,6 +1,4 @@
-// service_locator/lib/service_locator.dart
-
-// ignore_for_file: public_member_api_docs
+// packages/service_locator/lib/service_locator.dart
 
 import 'package:get_it/get_it.dart';
 import 'package:service_locator/service_locator.dart'

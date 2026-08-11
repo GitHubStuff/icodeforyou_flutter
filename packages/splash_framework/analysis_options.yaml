@@ -1,2 +1,6 @@
 # packages/splash_framework/analysis_options.yaml
-include: package:icodeforyou_lints:analysis_options.yaml
+analyzer:
+  errors:
+    always_use_package_imports: ignore
+    document_ignores: ignore
+include: package:icodeforyou_lints/analysis_options.yaml

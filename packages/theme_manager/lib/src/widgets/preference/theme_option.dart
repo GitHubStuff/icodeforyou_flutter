@@ -1,4 +1,4 @@
-// theme_widget/lib/src/_theme_option.dart
+// packages/theme_manager/lib/src/widgets/preference/theme_option.dart
 import 'package:flutter/material.dart';
 
 /// A configuration object that pairs a [ThemeMode] with its visual

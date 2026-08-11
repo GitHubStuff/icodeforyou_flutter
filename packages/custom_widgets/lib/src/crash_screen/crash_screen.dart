@@ -10,6 +10,7 @@ const _kContentPadding = EdgeInsets.all(24);
 /// Vertical gap between crash screen sections.
 const double _kSectionGap = 12;
 
+/// {@template crash_screen.dart}
 /// A terminal error screen the user cannot navigate away from.
 ///
 /// Displays [error] (and optionally [stackTrace]) as selectable text so
@@ -19,8 +20,9 @@ const double _kSectionGap = 12;
 /// navigation stack. If [onReport] is non-null, a report button is shown;
 /// wire this to a crash-reporting service later without changing this
 /// widget.
+/// {@endtemplate}
 final class CrashScreen extends StatelessWidget {
-  /// Creates a crash screen.
+  /// {@macro crash_screen.dart}
   const CrashScreen({
     required this.error,
     this.stackTrace,

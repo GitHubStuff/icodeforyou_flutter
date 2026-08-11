@@ -1,3 +1,4 @@
+// packages/custom_widgets/lib/src/default_welcome_screen/default_welcome_screen.dart
 import 'package:analog_clock_widget/analog_clock_widget.dart'
     show AnalogClock, ClockStyle;
 import 'package:flutter/material.dart';
@@ -17,9 +18,12 @@ const MaterialColor _kBackgroundColor = Colors.deepPurple;
 /// Welcome text foreground color.
 const Color _kTextColor = Colors.white;
 
+/// {@template default_welcome_screen.dart}
 /// A full-screen welcome surface showing the analog clock beside a
 /// 'Welcome' label, centered on a deep purple background.
+/// {@endtemplate}
 class DefaultWelcomeScreen extends StatelessWidget {
+  /// {@macro default_welcome_screen.dart}
   /// Creates a [DefaultWelcomeScreen].
   const DefaultWelcomeScreen({super.key});
 
