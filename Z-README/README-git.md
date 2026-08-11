@@ -74,7 +74,11 @@ Clean up locally:
 ```bash
 git switch main
 git pull
+
 git branch -d feature/my-new-thing      # delete local branch
+ -- OR --
+git branch -D feature/my-new-thing      # delete if the branch still has unmerged commits (aka super remove)
+
 git push origin --delete feature/my-new-thing  # delete remote branch (if not auto-deleted)
 ```
 
