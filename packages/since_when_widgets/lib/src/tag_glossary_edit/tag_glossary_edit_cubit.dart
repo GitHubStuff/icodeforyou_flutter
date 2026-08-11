@@ -13,6 +13,7 @@ import 'package:ice_chips/ice_chips.dart'
 import 'package:random_color_generator/random_color_generator.dart';
 import 'package:since_when_widgets/src/tag_glossary_edit/tag_glossary_edit_state.dart';
 
+/// {@template tag_glossary_edit_cubit.dart}
 /// Drives the edit-tag flow for Create, Update, and Delete.
 ///
 /// Construction is mode-driven via the named constructors:
@@ -30,8 +31,9 @@ import 'package:since_when_widgets/src/tag_glossary_edit/tag_glossary_edit_state
 /// The Ready/Error states preserve the typed name and rolled color so
 /// failures never lose user input. Tag names are upper-cased on entry,
 /// in display, and on save.
+/// {@endtemplate}
 class TagGlossaryEditCubit extends Cubit<TagGlossaryEditState> {
-  /// Create-mode constructor.
+  /// {@macro tag_glossary_edit_cubit.dart}
   TagGlossaryEditCubit.create({
     required GlossaryRepository repository,
     required GlossaryReader reader,

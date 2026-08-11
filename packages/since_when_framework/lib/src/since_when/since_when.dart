@@ -51,6 +51,7 @@ abstract final class SinceWhen {
     }
   }
 
+  /// {@template future_reset}
   /// Drop the three since_when tables and, for file-backed
   /// configurations, erase the on-device database file.
   ///
@@ -66,6 +67,7 @@ abstract final class SinceWhen {
   /// Returns `Right(unit)` on success, `Left(DatabaseFailure)` on
   /// failure: `DatabaseSetupFailure` if a DROP fails,
   /// `DatabaseEraseFailure` if the file delete fails.
+  /// {@endtemplate}
   static Future<Either<DatabaseFailure, Unit>> reset(
     DatabaseHandle handle,
     DatabaseConfiguration configuration,

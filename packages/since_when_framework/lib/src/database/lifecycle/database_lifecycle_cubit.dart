@@ -16,19 +16,22 @@ import 'package:since_when_framework/src/database/setup/database_setup.dart';
 /// Factory signature for producing a [DatabaseHandle] from a
 /// [DatabaseConfiguration]. Defaults to [SqfliteHandle]; tests and alternate
 /// backends inject their own.
-typedef HandleFactory =
-    Future<DatabaseHandle> Function(DatabaseConfiguration configuration);
+typedef HandleFactory = Future<DatabaseHandle> Function(
+    DatabaseConfiguration configuration);
 
+/// {@template database_lifecycle_cubit.dart}
 /// Owns the database connection's lifecycle.
 ///
 /// Emits [DatabaseLifecycleState] transitions as the connection moves
 /// through open, schema install, ready, import/export, and close. Holds
 /// zero knowledge of any specific tables — schema is supplied by callers
 /// as a list of [DatabaseSetup] contributions.
+/// {@endtemplate}
 class DatabaseLifecycleCubit extends Cubit<DatabaseLifecycleState> {
+  /// {@macro database_lifecycle_cubit.dart}
   DatabaseLifecycleCubit({HandleFactory? handleFactory})
-    : _handleFactory = handleFactory ?? SqfliteHandle.open,
-      super(const DatabaseClosed());
+      : _handleFactory = handleFactory ?? SqfliteHandle.open,
+        super(const DatabaseClosed());
 
   final HandleFactory _handleFactory;
 
@@ -108,8 +111,10 @@ class DatabaseLifecycleCubit extends Cubit<DatabaseLifecycleState> {
 
   (String, DatabaseAccess) _fileMetadata(DatabaseConfiguration cfg) {
     return switch (cfg) {
-      DatabaseConfigurationDocuments(:final dbName, :final access) =>
-        (dbName, access),
+      DatabaseConfigurationDocuments(:final dbName, :final access) => (
+          dbName,
+          access
+        ),
       DatabaseConfigurationApplicationSupport(
         :final dbName,
         :final access,

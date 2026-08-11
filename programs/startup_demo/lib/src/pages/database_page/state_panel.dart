@@ -1,7 +1,5 @@
 // startup_demo/lib/src/pages/database_page/state_panel.dart
 
-// ignore_for_file: public_member_api_docs
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:since_when_framework/database.dart'
@@ -17,6 +15,7 @@ import 'package:since_when_framework/database.dart'
         DatabaseOpening,
         DatabaseReady;
 
+/// {@template state_panel.dart}
 /// Always-visible badge displaying the cubit's current
 /// [DatabaseLifecycleState] in monospace, prefixed by a colored dot.
 ///
@@ -31,7 +30,9 @@ import 'package:since_when_framework/database.dart'
 /// - outline (themed)  — Closed (idle)
 /// - tertiary          — transient states (Opening / InstallingSchema /
 ///                       Importing / Exporting / Closing)
+/// {@endtemplate}
 class StatePanel extends StatelessWidget {
+  /// {@macro state_panel.dart}
   const StatePanel({super.key});
 
   /// Formats the state into a single human-readable line, including

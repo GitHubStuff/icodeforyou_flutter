@@ -10,6 +10,7 @@ sealed class DatabaseFailure implements Exception {
 
 /// Database name was empty or whitespace.
 final class DatabaseInvalidName extends DatabaseFailure {
+  ///
   const DatabaseInvalidName();
 
   @override
@@ -18,15 +19,16 @@ final class DatabaseInvalidName extends DatabaseFailure {
 
 /// File already exists when `DatabaseAccess.create` was requested.
 final class DatabaseAlreadyExists extends DatabaseFailure {
+  ///
   const DatabaseAlreadyExists();
 
   @override
-  String toString() =>
-      'DatabaseAlreadyExists: database file already exists.';
+  String toString() => 'DatabaseAlreadyExists: database file already exists.';
 }
 
 /// File does not exist when `DatabaseAccess.open` was requested.
 final class DatabaseNotFound extends DatabaseFailure {
+  ///
   const DatabaseNotFound();
 
   @override
@@ -35,8 +37,10 @@ final class DatabaseNotFound extends DatabaseFailure {
 
 /// An unexpected error occurred while opening the database connection.
 final class DatabaseOpenFailure extends DatabaseFailure {
+  ///
   const DatabaseOpenFailure(this.cause);
 
+  /// General class to encapsule error message.
   final Object cause;
 
   @override
@@ -47,29 +51,36 @@ final class DatabaseOpenFailure extends DatabaseFailure {
 
 /// A registered setup contribution threw while installing its schema.
 final class DatabaseSetupFailure extends DatabaseFailure {
+  ///
   const DatabaseSetupFailure({
     required this.setupName,
     required this.cause,
   });
 
+  /// Name of the database/setup
   final String setupName;
+
+  /// Contains the message/reason for the failure
   final Object cause;
 
   @override
-  String toString() =>
-      'DatabaseSetupFailure(setup="$setupName"): $cause';
+  String toString() => 'DatabaseSetupFailure(setup="$setupName"): $cause';
 }
 
 // ─── Import/export failures ──────────────────────────────────────────────────
 
 /// An importer threw while loading data into the database.
 final class DatabaseImportFailure extends DatabaseFailure {
+  ///
   const DatabaseImportFailure({
     required this.importerName,
     required this.cause,
   });
 
+  /// Name of the import file
   final String importerName;
+
+  /// Contains error information
   final Object cause;
 
   @override
@@ -79,12 +90,16 @@ final class DatabaseImportFailure extends DatabaseFailure {
 
 /// An exporter threw while writing data out of the database.
 final class DatabaseExportFailure extends DatabaseFailure {
+  ///
   const DatabaseExportFailure({
     required this.exporterName,
     required this.cause,
   });
 
+  /// Name of the export path
   final String exporterName;
+
+  /// Contains error information
   final Object cause;
 
   @override
@@ -96,8 +111,10 @@ final class DatabaseExportFailure extends DatabaseFailure {
 
 /// An unexpected error occurred while closing the database connection.
 final class DatabaseCloseFailure extends DatabaseFailure {
+  ///
   const DatabaseCloseFailure(this.cause);
 
+  /// Contains error information
   final Object cause;
 
   @override
@@ -106,8 +123,10 @@ final class DatabaseCloseFailure extends DatabaseFailure {
 
 /// An unexpected error occurred while erasing the on-device database file.
 final class DatabaseEraseFailure extends DatabaseFailure {
+  ///
   const DatabaseEraseFailure(this.cause);
 
+  /// Contains error information
   final Object cause;
 
   @override

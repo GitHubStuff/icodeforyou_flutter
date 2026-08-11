@@ -20,18 +20,22 @@ sealed class DatabaseLifecycleState extends Equatable {
 
 /// No database connection is held.
 final class DatabaseClosed extends DatabaseLifecycleState {
+  ///
   const DatabaseClosed();
 }
 
 /// Connection is being opened.
 final class DatabaseOpening extends DatabaseLifecycleState {
+  ///
   const DatabaseOpening();
 }
 
 /// A registered setup is installing or upgrading its schema.
 final class DatabaseInstallingSchema extends DatabaseLifecycleState {
+  /// A registered setup is installing or upgrading its schema.
   const DatabaseInstallingSchema({required this.currentSetupName});
 
+  /// The current setup database/name
   final String currentSetupName;
 
   @override
@@ -40,6 +44,7 @@ final class DatabaseInstallingSchema extends DatabaseLifecycleState {
 
 /// Connection is open and the live [DatabaseHandle] is available.
 final class DatabaseReady extends DatabaseLifecycleState {
+  ///
   const DatabaseReady({required this.handle});
 
   final DatabaseHandle handle;

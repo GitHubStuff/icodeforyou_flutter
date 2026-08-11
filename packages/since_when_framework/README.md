@@ -19,7 +19,7 @@ In your package's `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  since_when_framework: ^0.1.0
+  since_when_framework: ^1.0.0
 ```
 
 Then import the layer(s) you need:
