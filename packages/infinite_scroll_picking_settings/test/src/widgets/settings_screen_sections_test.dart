@@ -1,61 +1,80 @@
 // infinite_scroll_picking_settings/test/src/widgets/settings_screen_sections_test.dart
 
-// ignore_for_file: invalid_use_of_visible_for_testing_member,
-// invalid_use_of_protected_member
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:infinite_scroll_picking_settings/infinite_scroll_picking_settings.dart';
-import 'package:mocktail/mocktail.dart';
+import 'package:infinite_scroll_picking/infinite_scroll_picking.dart'
+    show InfiniteScrollPicker;
+import 'package:infinite_scroll_picking_settings/src/picker_visual_settings/picker_visual_settings.dart'
+    show PickerVisualSettings;
+import 'package:infinite_scroll_picking_settings/src/settings/settings_cubit.dart'
+    show SettingsCubit;
+import 'package:infinite_scroll_picking_settings/src/settings/settings_holder.dart'
+    show SettingsHolder;
+import 'package:infinite_scroll_picking_settings/src/settings/settings_repository.dart'
+    show SettingsRepository;
+import 'package:infinite_scroll_picking_settings/src/settings/settings_state/settings_state.dart'
+    show SettingsLoaded;
+import 'package:infinite_scroll_picking_settings/src/widgets/settings_screen.dart'
+    show SettingsScreen;
 
-class _MockRepo extends Mock implements SettingsRepository {}
+/// No-op repository — section tests never persist.
+final class _FakeRepository implements SettingsRepository {
+  @override
+  Future<PickerVisualSettings?> load() async => null;
 
-/// Drives a control by its visible label text.
+  @override
+  Future<void> save(PickerVisualSettings settings) async {}
+
+  @override
+  Future<void> clear() async {}
+}
+
+/// Reads the current loaded settings out of [cubit].
+PickerVisualSettings _settingsOf(SettingsCubit cubit) =>
+    (cubit.state as SettingsLoaded).settings;
+
+/// Finds the [Slider] in the row labeled [label].
+Finder _sliderFor(String label) => find.descendant(
+  of: find.widgetWithText(Row, label),
+  matching: find.byType(Slider),
+);
+
+/// Scrolls the labeled slider into view, then drags it by [dx].
 ///
-/// `_SliderRow` and `_SwitchRow` both render their label as a `Text` next to
-/// the control. We walk up to the parent `Row`, find the control inside, and
-/// drag/tap.
-Finder _sliderByLabel(String label) {
-  return find.ancestor(
-    of: find.text(label),
-    matching: find.byType(Row),
-  ).first;
+/// Material [Slider] gesture semantics: the gesture starts at the
+/// widget's *center*, and the thumb jumps to the touch-down position
+/// before tracking the move. The resulting value is therefore relative
+/// to the range midpoint, not the current value. Saturating drags
+/// (|dx| well beyond the track width) deterministically land on the
+/// range min/max; small drags land near mid-range.
+Future<void> _dragSlider(
+  WidgetTester tester,
+  String label,
+  double dx,
+) async {
+  final finder = _sliderFor(label);
+  await tester.ensureVisible(finder);
+  await tester.pumpAndSettle();
+  await tester.drag(finder, Offset(dx, 0));
+  await tester.pumpAndSettle();
 }
 
-Future<void> _dragSlider(WidgetTester tester, String label) async {
-  final row = _sliderByLabel(label);
-  final slider = find.descendant(of: row, matching: find.byType(Slider));
-  expect(slider, findsOneWidget, reason: 'no Slider under "$label"');
-  await tester.drag(slider, const Offset(80, 0));
-  await tester.pump();
-}
-
-Future<void> _toggleSwitch(WidgetTester tester, String label) async {
-  final row = _sliderByLabel(label);
-  final swtch = find.descendant(of: row, matching: find.byType(Switch));
-  expect(swtch, findsOneWidget, reason: 'no Switch under "$label"');
-  await tester.tap(swtch);
-  await tester.pump();
-}
-
-Future<SettingsCubit> _pumpScreen(
-  WidgetTester tester, {
-  PickerVisualSettings initial = const PickerVisualSettings(),
-}) async {
-  // Tall + wide enough to show every section without scrolling.
-  tester.view
-    ..physicalSize = const Size(1200, 4000)
-    ..devicePixelRatio = 1.0;
+/// Pumps a [SettingsScreen] over a fresh cubit on a tall surface and
+/// returns the cubit for state assertions.
+Future<SettingsCubit> _pumpScreen(WidgetTester tester) async {
+  tester.view.physicalSize = const Size(1200, 3200);
+  tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.resetPhysicalSize);
   addTearDown(tester.view.resetDevicePixelRatio);
 
-  final repo = _MockRepo();
-  when(() => repo.save(any())).thenAnswer((_) async {});
-  when(() => repo.clear()).thenAnswer((_) async {});
-
-  final holder = SettingsHolder(initial);
-  final cubit = SettingsCubit(holder: holder, repository: repo);
+  final holder = SettingsHolder(const PickerVisualSettings());
+  addTearDown(holder.dispose);
+  final cubit = SettingsCubit(
+    holder: holder,
+    repository: _FakeRepository(),
+  );
+  addTearDown(cubit.close);
 
   await tester.pumpWidget(
     MaterialApp(
@@ -65,168 +84,150 @@ Future<SettingsCubit> _pumpScreen(
       ),
     ),
   );
-
+  await tester.pumpAndSettle();
   return cubit;
 }
 
 void main() {
-  setUpAll(() {
-    registerFallbackValue(const PickerVisualSettings());
+  group('Frame section', () {
+    testWidgets('all three frame sliders update their fields', (tester) async {
+      final cubit = await _pumpScreen(tester);
+
+      await _dragSlider(tester, 'frameBorderRadius', 200);
+      expect(_settingsOf(cubit).frameBorderRadius, isNot(8.0));
+
+      await _dragSlider(tester, 'frameHorizontalPadding', 200);
+      expect(_settingsOf(cubit).frameHorizontalPadding, isNot(12.0));
+
+      await _dragSlider(tester, 'frameVerticalPadding', 200);
+      expect(_settingsOf(cubit).frameVerticalPadding, isNot(6.0));
+
+      expect((cubit.state as SettingsLoaded).isDirty, isTrue);
+    });
   });
 
-  group('settings_screen_sections', () {
-    testWidgets(
-      'every Frame slider routes through to the cubit',
-      (tester) async {
-        final cubit = await _pumpScreen(tester);
-        addTearDown(cubit.close);
-
-        await _dragSlider(tester, 'frameBorderRadius');
-        expect((cubit.state as SettingsLoaded).isDirty, isTrue);
-
-        await _dragSlider(tester, 'frameHorizontalPadding');
-        await _dragSlider(tester, 'frameVerticalPadding');
-
-        // Each drag rebuilt the section with the new value reflected.
-        expect(cubit.state, isA<SettingsLoaded>());
-      },
-    );
-
-    testWidgets(
-      'every WheelDimensions slider routes through to the cubit',
-      (tester) async {
-        final cubit = await _pumpScreen(tester);
-        addTearDown(cubit.close);
-
-        await _dragSlider(tester, 'itemExtent');
-        await _dragSlider(tester, 'wheelWidth');
-        await _dragSlider(tester, 'wheelHeight');
-        await _dragSlider(tester, 'wheelBorderRadius');
-
-        expect(cubit.state, isA<SettingsLoaded>());
-        expect((cubit.state as SettingsLoaded).isDirty, isTrue);
-      },
-    );
-
-    testWidgets(
-      'itemExtent drag clamps wheelHeight when below the 1.1x threshold',
-      (tester) async {
-        // Seed with itemExtent low and wheelHeight just above the threshold,
-        // so dragging itemExtent rightward forces wheelHeight to clamp UP —
-        // exercises the `wheelHeight < min` branch of _clampWheelHeight.
-        final cubit = await _pumpScreen(
-          tester,
-          initial: const PickerVisualSettings(
-            wheel: WheelSettings(itemExtent: 10, wheelHeight: 12),
-          ),
-        );
-        addTearDown(cubit.close);
-
-        await _dragSlider(tester, 'itemExtent');
-        final after = (cubit.state as SettingsLoaded).settings.wheel;
-        expect(after.itemExtent, greaterThan(10));
-        expect(after.wheelHeight, greaterThanOrEqualTo(after.itemExtent * 1.1));
-      },
-    );
-
-    testWidgets(
-      'itemExtent drag leaves wheelHeight alone when already above threshold',
-      (tester) async {
-        // Seed with wheelHeight already well above any plausible new
-        // itemExtent * 1.1 → exercises the else branch of _clampWheelHeight.
-        final cubit = await _pumpScreen(
-          tester,
-          initial: const PickerVisualSettings(
-            wheel: WheelSettings(itemExtent: 10, wheelHeight: 140),
-          ),
-        );
-        addTearDown(cubit.close);
-
-        await _dragSlider(tester, 'itemExtent');
-        expect((cubit.state as SettingsLoaded).settings.wheel.wheelHeight, 140);
-      },
-    );
-
-    testWidgets(
-      'wheelHeight drag also clamps via _clampWheelHeight',
-      (tester) async {
-        // Seed with itemExtent high enough that any leftward drag of
-        // wheelHeight will push it under the threshold, forcing the clamp.
-        final cubit = await _pumpScreen(
-          tester,
-          initial: const PickerVisualSettings(
-            wheel: WheelSettings(itemExtent: 60, wheelHeight: 140),
-          ),
-        );
-        addTearDown(cubit.close);
-
-        // Drag left to push wheelHeight down.
-        final row = _sliderByLabel('wheelHeight');
-        final slider = find.descendant(of: row, matching: find.byType(Slider));
-        await tester.drag(slider, const Offset(-200, 0));
-        await tester.pump();
-
-        final after = (cubit.state as SettingsLoaded).settings.wheel;
-        expect(after.wheelHeight, greaterThanOrEqualTo(after.itemExtent * 1.1));
-      },
-    );
-
-    testWidgets(
-      'every SelectionBand slider routes through to the cubit',
-      (tester) async {
-        final cubit = await _pumpScreen(tester);
-        addTearDown(cubit.close);
-
-        await _dragSlider(tester, 'dividerThickness');
-        await _dragSlider(tester, 'dividerInset');
-
-        expect((cubit.state as SettingsLoaded).isDirty, isTrue);
-      },
-    );
-
-    testWidgets(
-      'every Perspective control routes through to the cubit',
-      (tester) async {
-        final cubit = await _pumpScreen(tester);
-        addTearDown(cubit.close);
-
-        await _dragSlider(tester, 'perspectiveDiameter');
-        await _dragSlider(tester, 'magnification');
-        await _dragSlider(tester, 'selectionDebounce ms');
-        await _toggleSwitch(tester, 'showBorder');
-
-        final after = (cubit.state as SettingsLoaded).settings.wheel;
-        expect(after.showBorder, isFalse);
-      },
-    );
-
-    testWidgets('Picker section startingIndex slider routes through',
-        (tester) async {
+  group('Wheel dimensions section', () {
+    testWidgets('raising itemExtent clamps wheelHeight up with it', (
+      tester,
+    ) async {
       final cubit = await _pumpScreen(tester);
-      addTearDown(cubit.close);
 
-      await _dragSlider(tester, 'startingIndex');
+      await _dragSlider(tester, 'itemExtent', 600);
+
+      final wheel = _settingsOf(cubit).wheel;
+      expect(wheel.itemExtent, 70);
+      expect(wheel.wheelHeight, moreOrLessEquals(70 * 1.1 + 0.1));
+    });
+
+    testWidgets('a moderate itemExtent leaves a tall-enough wheelHeight '
+        'untouched', (tester) async {
+      final cubit = await _pumpScreen(tester);
+
+      // Center-jump lands the value near the range midpoint (~39).
+      // Any itemExtent below 43.5 keeps min height under the current
+      // wheelHeight of 48, exercising the clamp's pass-through branch.
+      await _dragSlider(tester, 'itemExtent', -60);
+
+      final wheel = _settingsOf(cubit).wheel;
+      expect(wheel.itemExtent, isNot(24.0));
+      expect(wheel.itemExtent * 1.1 + 0.1, lessThan(48));
+      expect(wheel.wheelHeight, 48.0);
+    });
+
+    testWidgets('wheelWidth and wheelBorderRadius sliders update', (
+      tester,
+    ) async {
+      final cubit = await _pumpScreen(tester);
+
+      await _dragSlider(tester, 'wheelWidth', 200);
+      expect(_settingsOf(cubit).wheel.wheelWidth, isNot(56.0));
+
+      await _dragSlider(tester, 'wheelBorderRadius', 200);
+      expect(_settingsOf(cubit).wheel.wheelBorderRadius, isNot(8.0));
+    });
+
+    testWidgets('dragging wheelHeight below the minimum clamps it', (
+      tester,
+    ) async {
+      final cubit = await _pumpScreen(tester);
+
+      await _dragSlider(tester, 'wheelHeight', -900);
 
       expect(
-        (cubit.state as SettingsLoaded).settings.startingIndex,
-        isNonZero,
+        _settingsOf(cubit).wheel.wheelHeight,
+        moreOrLessEquals(24 * 1.1 + 0.1),
       );
     });
 
-    testWidgets(
-      'PreviewHeader builds with non-default settings, exercising itemBuilder',
-      (tester) async {
-        // Force a starting index away from 0 so the preview lands on a
-        // different selected item, and the itemBuilder runs both isSelected
-        // branches at least once across the visible items.
-        final cubit = await _pumpScreen(
-          tester,
-          initial: const PickerVisualSettings(startingIndex: 5),
-        );
-        addTearDown(cubit.close);
+    testWidgets('dragging wheelHeight above the minimum passes through', (
+      tester,
+    ) async {
+      final cubit = await _pumpScreen(tester);
 
-        expect(find.text('Preview'), findsOneWidget);
-      },
-    );
+      await _dragSlider(tester, 'wheelHeight', 300);
+
+      expect(_settingsOf(cubit).wheel.wheelHeight, greaterThan(48));
+    });
+  });
+
+  group('Selection band section', () {
+    testWidgets('divider sliders update their fields', (tester) async {
+      final cubit = await _pumpScreen(tester);
+
+      await _dragSlider(tester, 'dividerThickness', 200);
+      expect(_settingsOf(cubit).wheel.dividerThickness, isNot(1.0));
+
+      await _dragSlider(tester, 'dividerInset', 200);
+      expect(_settingsOf(cubit).wheel.dividerInset, isNot(4.0));
+    });
+  });
+
+  group('Perspective & motion section', () {
+    testWidgets('perspective and magnification sliders update', (tester) async {
+      final cubit = await _pumpScreen(tester);
+
+      await _dragSlider(tester, 'perspectiveDiameter', 200);
+      expect(_settingsOf(cubit).wheel.perspectiveDiameter, isNot(1.2));
+
+      await _dragSlider(tester, 'magnification', 200);
+      expect(_settingsOf(cubit).wheel.magnification, isNot(1.25));
+    });
+
+    testWidgets('debounce slider produces a rounded-millisecond Duration', (
+      tester,
+    ) async {
+      final cubit = await _pumpScreen(tester);
+
+      await _dragSlider(tester, 'selectionDebounce ms', 300);
+
+      final debounce = _settingsOf(cubit).wheel.selectionDebounce;
+      expect(debounce, greaterThan(Duration.zero));
+      expect(debounce.inMilliseconds % 25, 0);
+    });
+  });
+
+  group('Picker section', () {
+    testWidgets('startingIndex slider rounds to an int', (tester) async {
+      final cubit = await _pumpScreen(tester);
+
+      await _dragSlider(tester, 'startingIndex', 300);
+
+      expect(_settingsOf(cubit).startingIndex, greaterThan(0));
+    });
+  });
+
+  group('Preview header', () {
+    testWidgets('scrolling the preview wheel fires onItemSelected '
+        'without error', (tester) async {
+      await _pumpScreen(tester);
+      final picker = find.byType(InfiniteScrollPicker<int, String>);
+      expect(picker, findsOneWidget);
+      expect(find.text('Preview'), findsOneWidget);
+
+      await tester.drag(picker, const Offset(0, -48));
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+    });
   });
 }

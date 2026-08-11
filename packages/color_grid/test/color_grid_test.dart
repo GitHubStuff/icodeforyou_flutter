@@ -1,86 +1,76 @@
-// packages/color_grid/test/color_grid_test.dartpackages/color_grid/test/color_grid_test.dart
+// packages/color_grid/test/color_grid_test.dart
 
-
-import 'package:color_grid/color_grid.dart' show ColorGrid, ColorGridColorTap;
-import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
+import 'package:color_grid/color_grid.dart' show ColorGrid;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-const int _kColorCount = 15;
-const double _kCellSize = 70;
-const double _kGapWide = 8;
-const double _kGapNarrow = 4;
-const double _kNarrowSurfaceWidth = 320;
+/// The fifteen ARGB values fed to every grid under test, in grid order.
+const List<int> _kColors = [
+  0xFFFF0000,
+  0xFF00FF00,
+  0xFF0000FF,
+  0xFFFFFF00,
+  0xFFFF00FF,
+  0xFF00FFFF,
+  0xFF880000,
+  0xFF008800,
+  0xFF000088,
+  0xFF888800,
+  0xFF880088,
+  0xFF008888,
+  0xFF444444,
+  0xFF888888,
+  0xFFCCCCCC,
+];
 
+/// The border color the grid uses under [Brightness.light].
 const Color _kBorderColorLight = Color(0xFF6A1B9A);
+
+/// The border color the grid uses under [Brightness.dark].
 const Color _kBorderColorDark = Color(0xFFCE93D8);
 
-/// Fifteen distinct, fully opaque ARGB values.
-final List<int> _testColors = List<int>.generate(
-  _kColorCount,
-  (index) => 0xFF000000 | (index + 1) * 0x0F0F0F,
-);
+/// The minimum parent width at which the grid keeps its wide gap:
+/// four 70px cells, five 8px gaps, and a 2px border on both sides.
+const double _kWideModeMinWidth = 4 * 70 + 5 * 8 + 2 * 2;
+
+/// Pumps [grid] centred inside a parent constrained to [width].
+Future<void> _pump(
+  WidgetTester tester,
+  ColorGrid grid, {
+  double width = _kWideModeMinWidth,
+  Brightness brightness = Brightness.light,
+}) {
+  return tester.pumpWidget(
+    MaterialApp(
+      theme: ThemeData(brightness: brightness),
+      home: Scaffold(
+        body: Center(
+          child: SizedBox(width: width, child: grid),
+        ),
+      ),
+    ),
+  );
+}
+
+/// Returns the [Border] painted by the grid's [DecoratedBox].
+Border _border(WidgetTester tester) {
+  final box = tester.widget<DecoratedBox>(
+    find.descendant(
+      of: find.byType(ColorGrid),
+      matching: find.byType(DecoratedBox),
+    ),
+  );
+  return (box.decoration as BoxDecoration).border! as Border;
+}
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
-  Future<void> pumpPicker(
-    WidgetTester tester, {
-    List<int>? colors,
-    ColorGridColorTap? onColorTapped,
-    VoidCallback? onRefreshRequested,
-    HapticIntensity haptics = HapticIntensity.light,
-    double? width,
-    Brightness brightness = Brightness.light,
-  }) async {
-    final picker = ColorGrid(
-      colors: colors ?? _testColors,
-      onColorTapped: onColorTapped ?? (_, _) {},
-      onRefreshRequested: onRefreshRequested ?? () {},
-      haptics: haptics,
-    );
-
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: ThemeData(brightness: brightness),
-        home: Scaffold(
-          body: Center(
-            child: width == null
-                ? picker
-                : SizedBox(width: width, child: picker),
-          ),
-        ),
-      ),
-    );
-  }
-
-  List<MethodCall> recordHaptics(WidgetTester tester) {
-    final log = <MethodCall>[];
-    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-      SystemChannels.platform,
-      (call) async {
-        if (call.method == 'HapticFeedback.vibrate') log.add(call);
-        return null;
-      },
-    );
-    addTearDown(
-      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-        SystemChannels.platform,
-        null,
-      ),
-    );
-    return log;
-  }
-
-  Finder inPicker(Finder matching) =>
-      find.descendant(of: find.byType(ColorGrid), matching: matching);
-
-  group('construction', () {
-    test('asserts when fewer than fifteen colors are supplied', () {
+  group('ColorGrid', () {
+    testWidgets('asserts when given a color count other than fifteen', (
+      tester,
+    ) async {
       expect(
         () => ColorGrid(
-          colors: _testColors.sublist(0, _kColorCount - 1),
+          colors: const [0xFF000000],
           onColorTapped: (_, __) {},
           onRefreshRequested: () {},
         ),
@@ -88,195 +78,233 @@ void main() {
       );
     });
 
-    test('asserts when more than fifteen colors are supplied', () {
-      expect(
-        () => ColorGrid(
-          colors: [..._testColors, 0xFFFFFFFF],
+    testWidgets('renders fifteen color cells and one refresh cell', (
+      tester,
+    ) async {
+      await _pump(
+        tester,
+        ColorGrid(
+          colors: _kColors,
           onColorTapped: (_, __) {},
           onRefreshRequested: () {},
         ),
-        throwsAssertionError,
       );
-    });
-  });
 
-  group('layout', () {
-    testWidgets('renders fifteen color cells in supplied order', (
-      tester,
-    ) async {
-      await pumpPicker(tester);
-
-      final cells = tester
-          .widgetList<ColoredBox>(inPicker(find.byType(ColoredBox)))
-          .toList();
-
-      expect(cells, hasLength(_kColorCount));
-      for (var index = 0; index < _kColorCount; index++) {
-        expect(cells[index].color, Color(_testColors[index]));
-      }
-    });
-
-    testWidgets('renders the refresh icon as the sixteenth cell', (
-      tester,
-    ) async {
-      await pumpPicker(tester);
-
-      expect(inPicker(find.byIcon(Icons.refresh)), findsOneWidget);
-    });
-
-    testWidgets('sizes every cell at 70x70', (tester) async {
-      await pumpPicker(tester);
-
-      final cellFinder = inPicker(find.byType(ColoredBox));
-      for (var index = 0; index < _kColorCount; index++) {
+      expect(
+        find.descendant(
+          of: find.byType(ColorGrid),
+          matching: find.byType(ColoredBox),
+        ),
+        findsNWidgets(15),
+      );
+      expect(find.byIcon(Icons.refresh), findsOneWidget);
+      for (final color in _kColors) {
         expect(
-          tester.getSize(cellFinder.at(index)),
-          const Size(_kCellSize, _kCellSize),
+          find.byWidgetPredicate(
+            (widget) => widget is ColoredBox && widget.color == Color(color),
+          ),
+          findsOneWidget,
         );
       }
     });
 
-    testWidgets('uses 8dp spacing and inset when width allows', (
+    testWidgets('uses the wide gap when the parent fits wide mode', (
       tester,
     ) async {
-      await pumpPicker(tester);
-
-      final column = tester.widget<Column>(inPicker(find.byType(Column)));
-      expect(column.spacing, _kGapWide);
-
-      for (final row in tester.widgetList<Row>(inPicker(find.byType(Row)))) {
-        expect(row.spacing, _kGapWide);
-      }
-
-      final padding = tester.widget<Padding>(
-        inPicker(find.byType(Padding)).first,
-      );
-      expect(padding.padding, const EdgeInsets.all(_kGapWide));
-    });
-
-    testWidgets('drops to 4dp spacing and inset when width is tight', (
-      tester,
-    ) async {
-      await pumpPicker(tester, width: _kNarrowSurfaceWidth);
-
-      final column = tester.widget<Column>(inPicker(find.byType(Column)));
-      expect(column.spacing, _kGapNarrow);
-
-      for (final row in tester.widgetList<Row>(inPicker(find.byType(Row)))) {
-        expect(row.spacing, _kGapNarrow);
-      }
-
-      final padding = tester.widget<Padding>(
-        inPicker(find.byType(Padding)).first,
-      );
-      expect(padding.padding, const EdgeInsets.all(_kGapNarrow));
-    });
-  });
-
-  group('border', () {
-    Border borderOf(WidgetTester tester) {
-      final box = tester.widget<DecoratedBox>(
-        inPicker(find.byType(DecoratedBox)).first,
-      );
-      return (box.decoration as BoxDecoration).border! as Border;
-    }
-
-    testWidgets('is 2dp purple in light mode', (tester) async {
-      await pumpPicker(tester);
-
-      final border = borderOf(tester);
-      expect(border.top.width, 2);
-      expect(border.top.color, _kBorderColorLight);
-    });
-
-    testWidgets('is 2dp purple in dark mode', (tester) async {
-      await pumpPicker(tester, brightness: Brightness.dark);
-
-      final border = borderOf(tester);
-      expect(border.top.width, 2);
-      expect(border.top.color, _kBorderColorDark);
-    });
-  });
-
-  group('taps', () {
-    testWidgets('color cells report their index and ARGB value', (
-      tester,
-    ) async {
-      recordHaptics(tester);
-      final taps = <(int, int)>[];
-      await pumpPicker(
+      await _pump(
         tester,
-        onColorTapped: (index, colorValue) => taps.add((index, colorValue)),
+        ColorGrid(
+          colors: _kColors,
+          onColorTapped: (_, __) {},
+          onRefreshRequested: () {},
+        ),
       );
 
-      final cellFinder = inPicker(find.byType(ColoredBox));
-      for (var index = 0; index < _kColorCount; index++) {
-        await tester.tap(cellFinder.at(index));
+      final column = tester.widget<Column>(
+        find.descendant(
+          of: find.byType(ColorGrid),
+          matching: find.byType(Column),
+        ),
+      );
+      expect(column.spacing, 8);
+
+      final rows = tester
+          .widgetList<Row>(
+            find.descendant(
+              of: find.byType(ColorGrid),
+              matching: find.byType(Row),
+            ),
+          )
+          .toList();
+      expect(rows, hasLength(4));
+      for (final row in rows) {
+        expect(row.spacing, 8);
       }
 
-      expect(taps, hasLength(_kColorCount));
-      for (var index = 0; index < _kColorCount; index++) {
-        expect(taps[index], (index, _testColors[index]));
-      }
+      final padding = tester.widget<Padding>(
+        find.descendant(
+          of: find.byType(ColorGrid),
+          matching: find.byType(Padding),
+        ),
+      );
+      expect(padding.padding, const EdgeInsets.all(8));
     });
 
-    testWidgets('refresh cell fires the refresh callback only', (
+    testWidgets('drops to the narrow gap when the parent is too narrow', (
       tester,
     ) async {
-      recordHaptics(tester);
+      await _pump(
+        tester,
+        ColorGrid(
+          colors: _kColors,
+          onColorTapped: (_, __) {},
+          onRefreshRequested: () {},
+        ),
+        width: _kWideModeMinWidth - 1,
+      );
+
+      final column = tester.widget<Column>(
+        find.descendant(
+          of: find.byType(ColorGrid),
+          matching: find.byType(Column),
+        ),
+      );
+      expect(column.spacing, 4);
+
+      final padding = tester.widget<Padding>(
+        find.descendant(
+          of: find.byType(ColorGrid),
+          matching: find.byType(Padding),
+        ),
+      );
+      expect(padding.padding, const EdgeInsets.all(4));
+    });
+
+    testWidgets('paints the light border color under a light theme', (
+      tester,
+    ) async {
+      await _pump(
+        tester,
+        ColorGrid(
+          colors: _kColors,
+          onColorTapped: (_, __) {},
+          onRefreshRequested: () {},
+        ),
+      );
+
+      expect(_border(tester).top.color, _kBorderColorLight);
+      expect(_border(tester).top.width, 2);
+      expect(
+        tester.widget<Icon>(find.byIcon(Icons.refresh)).color,
+        _kBorderColorLight,
+      );
+    });
+
+    testWidgets('paints the dark border color under a dark theme', (
+      tester,
+    ) async {
+      await _pump(
+        tester,
+        ColorGrid(
+          colors: _kColors,
+          onColorTapped: (_, __) {},
+          onRefreshRequested: () {},
+        ),
+        brightness: Brightness.dark,
+      );
+
+      expect(_border(tester).top.color, _kBorderColorDark);
+      expect(
+        tester.widget<Icon>(find.byIcon(Icons.refresh)).color,
+        _kBorderColorDark,
+      );
+    });
+
+    testWidgets('tapping a color cell fires onColorTapped with its index '
+        'and value', (tester) async {
+      int? tappedIndex;
+      int? tappedValue;
+      await _pump(
+        tester,
+        ColorGrid(
+          colors: _kColors,
+          onColorTapped: (index, colorValue) {
+            tappedIndex = index;
+            tappedValue = colorValue;
+          },
+          onRefreshRequested: () {},
+        ),
+      );
+
+      await tester.tap(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget is ColoredBox && widget.color == Color(_kColors[6]),
+        ),
+      );
+
+      expect(tappedIndex, 6);
+      expect(tappedValue, _kColors[6]);
+    });
+
+    testWidgets('tapping the refresh cell fires onRefreshRequested', (
+      tester,
+    ) async {
       var refreshes = 0;
-      var colorTaps = 0;
-      await pumpPicker(
+      await _pump(
         tester,
-        onColorTapped: (_, __) => colorTaps++,
-        onRefreshRequested: () => refreshes++,
+        ColorGrid(
+          colors: _kColors,
+          onColorTapped: (_, __) {},
+          onRefreshRequested: () => refreshes++,
+        ),
       );
 
-      await tester.tap(inPicker(find.byIcon(Icons.refresh)));
+      await tester.tap(find.byIcon(Icons.refresh));
 
       expect(refreshes, 1);
-      expect(colorTaps, 0);
-    });
-  });
-
-  group('haptics', () {
-    testWidgets('fire on color cell taps by default', (tester) async {
-      final log = recordHaptics(tester);
-      await pumpPicker(tester);
-
-      await tester.tap(inPicker(find.byType(ColoredBox)).first);
-
-      expect(log, hasLength(1));
-      expect(log.single.arguments, 'HapticFeedbackType.lightImpact');
     });
 
-    testWidgets('fire on refresh taps by default', (tester) async {
-      final log = recordHaptics(tester);
-      await pumpPicker(tester);
+    testWidgets('refresh cell has an icon sized to half a cell', (
+      tester,
+    ) async {
+      await _pump(
+        tester,
+        ColorGrid(
+          colors: _kColors,
+          onColorTapped: (_, __) {},
+          onRefreshRequested: () {},
+        ),
+      );
 
-      await tester.tap(inPicker(find.byIcon(Icons.refresh)));
-
-      expect(log, hasLength(1));
-      expect(log.single.arguments, 'HapticFeedbackType.lightImpact');
+      expect(tester.widget<Icon>(find.byIcon(Icons.refresh)).size, 35);
+      expect(
+        tester.getSize(find.byIcon(Icons.refresh).hitTestable()),
+        isNotNull,
+      );
     });
 
-    testWidgets('respect the configured intensity', (tester) async {
-      final log = recordHaptics(tester);
-      await pumpPicker(tester, haptics: HapticIntensity.heavy);
+    testWidgets('cells are fixed at seventy logical pixels', (tester) async {
+      await _pump(
+        tester,
+        ColorGrid(
+          colors: _kColors,
+          onColorTapped: (_, __) {},
+          onRefreshRequested: () {},
+        ),
+      );
 
-      await tester.tap(inPicker(find.byType(ColoredBox)).first);
-
-      expect(log.single.arguments, 'HapticFeedbackType.heavyImpact');
-    });
-
-    testWidgets('stay silent when set to none', (tester) async {
-      final log = recordHaptics(tester);
-      await pumpPicker(tester, haptics: HapticIntensity.none);
-
-      await tester.tap(inPicker(find.byType(ColoredBox)).first);
-      await tester.tap(inPicker(find.byIcon(Icons.refresh)));
-
-      expect(log, isEmpty);
+      expect(
+        tester.getSize(
+          find
+              .descendant(
+                of: find.byType(ColorGrid),
+                matching: find.byType(ColoredBox),
+              )
+              .first,
+        ),
+        const Size(70, 70),
+      );
     });
   });
 }

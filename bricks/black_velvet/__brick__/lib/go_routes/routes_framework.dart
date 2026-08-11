@@ -1,4 +1,4 @@
-// programs/template_app/lib/framework/routes.dart
+// programs/{{name.snakeCase()}}/lib/go_routes/routes_framework.dart
 
 import 'dart:async' show unawaited;
 
@@ -16,6 +16,7 @@ import '../screens/rail_screen.dart' show RailScreen;
 
 part 'routes.goroute.dart';
 
+/// {@template routes_framework}
 /// Central routing framework for the application.
 ///
 /// Owns every route path exposed by the app and assembles the fully
@@ -35,8 +36,9 @@ part 'routes.goroute.dart';
 ///   routerConfig: RoutesFramework.builtRoutes(),
 /// )
 /// ```
+/// {@endtemplate}
 class RoutesFramework {
-  /// Route path for the main application shell.
+  /// {@macro rail_destination_buttons}
   ///
   /// Navigated to once startup work completes and the splash
   /// sequence has finished.

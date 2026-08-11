@@ -1,3 +1,4 @@
+// programs/{{name.snakeCase()}}/lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart'
     show SharedPreferences;

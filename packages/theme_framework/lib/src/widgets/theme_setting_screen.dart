@@ -7,7 +7,7 @@ import 'package:theme_framework/theme_framework.dart' show ThemeCubit;
 import 'theme_mode_card.dart';
 
 /// The title shown in the screen's app bar.
-const String _kTitle = 'Settings';
+const String _kTitle = 'App Settings';
 
 /// Inset around the screen's content.
 const EdgeInsets _kPadding = EdgeInsets.all(16);

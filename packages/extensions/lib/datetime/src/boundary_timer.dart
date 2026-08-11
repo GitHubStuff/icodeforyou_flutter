@@ -30,9 +30,9 @@ class BoundaryTimer {
   BoundaryTimer({
     required this.unit,
     required this._onTick,
-    this._now = DateTime.now,
+    DateTime Function()? now,
     this._onError,
-  });
+  }) : _now = now ?? DateTime.now;
 
   /// The boundary the timer aligns each tick to.
   final DateTimeUnit unit;
@@ -72,11 +72,12 @@ class BoundaryTimer {
   Future<void> _onBoundary() async {
     if (!_running) return;
     try {
-      if (!await _onTick()) {
+      final shouldContinue = await _onTick();
+      if (!shouldContinue) {
         _running = false;
         return;
       }
-    } catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
       _running = false;
       _onError?.call(error, stackTrace);
       return;

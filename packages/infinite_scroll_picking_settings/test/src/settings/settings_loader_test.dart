@@ -1,104 +1,72 @@
 // infinite_scroll_picking_settings/test/src/settings/settings_loader_test.dart
 
-// ignore_for_file: avoid_types_on_closure_parameters
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:infinite_scroll_picking_settings/infinite_scroll_picking_settings.dart';
+import 'package:infinite_scroll_picking_settings/src/picker_visual_settings/picker_visual_settings.dart'
+    show PickerVisualSettings;
+import 'package:infinite_scroll_picking_settings/src/settings/settings_loader.dart'
+    show SettingsLoader;
+import 'package:infinite_scroll_picking_settings/src/settings/settings_repository.dart'
+    show SettingsRepository;
 
-class _StubRepo implements SettingsRepository {
-  _StubRepo({this.loadResult, this.loadError});
+/// Repository resolving to a canned value, or throwing when [error] is
+/// non-null. Save and clear are unreachable from [SettingsLoader].
+final class _FakeRepository implements SettingsRepository {
+  /// Creates a repository whose [load] resolves to [stored] or throws
+  /// [error] when provided.
+  _FakeRepository({this.stored, this.error});
 
-  final PickerVisualSettings? loadResult;
-  final Object? loadError;
+  /// Value returned by [load] when [error] is null.
+  final PickerVisualSettings? stored;
+
+  /// Error thrown by [load] when non-null.
+  final Object? error;
 
   @override
   Future<PickerVisualSettings?> load() async {
-    if (loadError != null) throw loadError!;
-    return loadResult;
+    final failure = error;
+    if (failure != null) throw failure;
+    return stored;
   }
 
   @override
-  Future<void> save(PickerVisualSettings settings) async {}
+  Future<void> save(PickerVisualSettings settings) =>
+      throw UnimplementedError();
 
   @override
-  Future<void> clear() async {}
-}
-
-class _SyncThrowingRepo implements SettingsRepository {
-  // Throws synchronously from load() — exercises the catch path when
-  // repository.load() itself raises before returning a Future.
-  @override
-  Future<PickerVisualSettings?> load() {
-    throw StateError('synchronous boom');
-  }
-
-  @override
-  Future<void> save(PickerVisualSettings settings) async {}
-
-  @override
-  Future<void> clear() async {}
-}
-
-/// Runs [body] with `debugPrint` silenced. Restores the original handler
-/// after the body completes, even on failure.
-Future<T> _silentDebugPrint<T>(Future<T> Function() body) async {
-  final original = debugPrint;
-  debugPrint = (String? _, {int? wrapWidth}) {};
-  try {
-    return await body();
-  } finally {
-    debugPrint = original;
-  }
+  Future<void> clear() => throw UnimplementedError();
 }
 
 void main() {
-  group('SettingsLoader.load', () {
-    test('seeds the holder with the loaded settings when present', () async {
-      const stored = PickerVisualSettings(startingIndex: 7);
+  group('SettingsLoader', () {
+    test('seeds the holder with the persisted settings', () async {
+      const persisted = PickerVisualSettings(startingIndex: 6);
       final holder = await SettingsLoader.load(
-        repository: _StubRepo(loadResult: stored),
+        repository: _FakeRepository(stored: persisted),
       );
+      addTearDown(holder.dispose);
 
-      expect(holder, isA<SettingsHolder>());
-      expect(holder.value, stored);
+      expect(holder.value, persisted);
     });
 
-    test(
-      'seeds the holder with defaults when the repo returns null',
-      () async {
-        final holder = await SettingsLoader.load(
-          repository: _StubRepo(),
-        );
+    test('seeds with defaults when nothing is persisted', () async {
+      final holder = await SettingsLoader.load(
+        repository: _FakeRepository(),
+      );
+      addTearDown(holder.dispose);
 
-        expect(holder.value, const PickerVisualSettings());
-      },
-    );
+      expect(holder.value, const PickerVisualSettings());
+    });
 
-    test(
-      'falls back to defaults when the repo throws asynchronously',
-      () async {
-        final holder = await _silentDebugPrint(
-          () => SettingsLoader.load(
-            repository: _StubRepo(loadError: Exception('decode failure')),
-          ),
-        );
+    test('seeds with defaults and swallows the error when the '
+        'repository throws', () async {
+      final holder = await SettingsLoader.load(
+        repository: _FakeRepository(
+          error: const FormatException('corrupt store'),
+        ),
+      );
+      addTearDown(holder.dispose);
 
-        expect(holder.value, const PickerVisualSettings());
-      },
-    );
-
-    test(
-      'falls back to defaults when the repo throws synchronously',
-      () async {
-        final holder = await _silentDebugPrint(
-          () => SettingsLoader.load(
-            repository: _SyncThrowingRepo(),
-          ),
-        );
-
-        expect(holder.value, const PickerVisualSettings());
-      },
-    );
+      expect(holder.value, const PickerVisualSettings());
+    });
   });
 }

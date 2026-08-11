@@ -21,6 +21,7 @@ SystemUiOverlayStyle _kOverlayStyle(Color color) => SystemUiOverlayStyle(
   systemNavigationBarContrastEnforced: false,
 );
 
+/// {@template full_screen_color.dart}
 /// A chrome-free surface that fills the screen with a single solid [color].
 ///
 /// Paints the entire viewport, including the status bar and system
@@ -34,8 +35,9 @@ SystemUiOverlayStyle _kOverlayStyle(Color color) => SystemUiOverlayStyle(
 /// const SolidScreenColor(); // black
 /// const SolidScreenColor(color: Colors.white);
 /// ```
+/// {@endtemplate}
 final class SolidScreenColor extends StatelessWidget {
-  /// Creates a full-screen solid color surface.
+  /// {@macro full_screen_color.dart}
   ///
   /// [color] defaults to black.
   const SolidScreenColor({this.color = _kBlack, super.key});

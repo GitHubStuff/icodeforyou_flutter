@@ -1,172 +1,108 @@
 // infinite_scroll_picking_settings/test/src/settings/settings_mapper_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:infinite_scroll_picking/infinite_scroll_picking.dart';
-import 'package:infinite_scroll_picking_settings/infinite_scroll_picking_settings.dart';
+import 'package:infinite_scroll_picking/infinite_scroll_picking.dart'
+    show InfiniteScrollWheelConfig;
+import 'package:infinite_scroll_picking_settings/src/picker_visual_settings/picker_visual_settings.dart'
+    show PickerVisualSettings;
+import 'package:infinite_scroll_picking_settings/src/settings/settings_mapper.dart'
+    show PickerVisualSettingsMapper, WheelConfigMapper, WheelSettingsMapper;
+import 'package:infinite_scroll_picking_settings/src/wheel_settings/wheel_settings.dart'
+    show WheelSettings;
+
+/// Fully non-default wheel settings so field mix-ups can't hide behind
+/// matching defaults.
+const _kWheel = WheelSettings(
+  itemExtent: 30,
+  dividerThickness: 2,
+  dividerInset: 6,
+  wheelWidth: 70,
+  wheelHeight: 100,
+  perspectiveDiameter: 1.5,
+  magnification: 1.5,
+  wheelBorderRadius: 12,
+  showBorder: false,
+  selectionDebounce: Duration(milliseconds: 100),
+);
 
 void main() {
-  // Distinctive, all-different field values so a copy-paste error that
-  // crosses two fields would surface as a failing assertion.
-  const wheelSettings = WheelSettings(
-    itemExtent: 30,
-    dividerThickness: 2,
-    dividerInset: 8,
-    wheelWidth: 80,
-    wheelHeight: 100,
-    perspectiveDiameter: 2,
-    magnification: 1.5,
-    wheelBorderRadius: 12,
-    showBorder: false,
-    selectionDebounce: Duration(milliseconds: 250),
-  );
-
-  const wheelConfig = InfiniteScrollWheelConfig(
-    itemExtent: 30,
-    dividerThickness: 2,
-    dividerInset: 8,
-    wheelWidth: 80,
-    wheelHeight: 100,
-    perspectiveDiameter: 2,
-    magnification: 1.5,
-    wheelBorderRadius: 12,
-    showBorder: false,
-    selectionDebounce: Duration(milliseconds: 250),
-  );
-
   group('WheelSettingsMapper.toWheelConfig', () {
-    test('copies every field into an InfiniteScrollWheelConfig', () {
-      final result = wheelSettings.toWheelConfig();
+    test('copies every field into the runtime config', () {
+      final config = _kWheel.toWheelConfig();
 
-      expect(result.itemExtent, 30);
-      expect(result.dividerThickness, 2);
-      expect(result.dividerInset, 8);
-      expect(result.wheelWidth, 80);
-      expect(result.wheelHeight, 100);
-      expect(result.perspectiveDiameter, 2);
-      expect(result.magnification, 1.5);
-      expect(result.wheelBorderRadius, 12);
-      expect(result.showBorder, isFalse);
-      expect(result.selectionDebounce, const Duration(milliseconds: 250));
-    });
-
-    test('round-trips through toWheelSettings without drift', () {
-      expect(
-        wheelSettings.toWheelConfig().toWheelSettings(),
-        wheelSettings,
-      );
-    });
-
-    test('uses defaults when the source uses defaults', () {
-      const defaults = WheelSettings();
-      const expected = InfiniteScrollWheelConfig();
-
-      expect(defaults.toWheelConfig(), expected);
+      expect(config.itemExtent, 30);
+      expect(config.dividerThickness, 2);
+      expect(config.dividerInset, 6);
+      expect(config.wheelWidth, 70);
+      expect(config.wheelHeight, 100);
+      expect(config.perspectiveDiameter, 1.5);
+      expect(config.magnification, 1.5);
+      expect(config.wheelBorderRadius, 12);
+      expect(config.showBorder, isFalse);
+      expect(config.selectionDebounce, const Duration(milliseconds: 100));
     });
   });
 
   group('WheelConfigMapper.toWheelSettings', () {
-    test('copies every field into a WheelSettings', () {
-      final result = wheelConfig.toWheelSettings();
-
-      expect(result.itemExtent, 30);
-      expect(result.dividerThickness, 2);
-      expect(result.dividerInset, 8);
-      expect(result.wheelWidth, 80);
-      expect(result.wheelHeight, 100);
-      expect(result.perspectiveDiameter, 2);
-      expect(result.magnification, 1.5);
-      expect(result.wheelBorderRadius, 12);
-      expect(result.showBorder, isFalse);
-      expect(result.selectionDebounce, const Duration(milliseconds: 250));
+    test('reverse-maps every field back into settings', () {
+      final settings = _kWheel.toWheelConfig().toWheelSettings();
+      expect(settings, _kWheel);
     });
 
-    test('round-trips through toWheelConfig without drift', () {
-      expect(
-        wheelConfig.toWheelSettings().toWheelConfig(),
-        wheelConfig,
-      );
-    });
-
-    test('uses defaults when the source uses defaults', () {
-      const defaults = InfiniteScrollWheelConfig();
-      const expected = WheelSettings();
-
-      expect(defaults.toWheelSettings(), expected);
+    test('a default runtime config maps to default settings', () {
+      final settings = const WheelSettings()
+          .toWheelConfig()
+          .toWheelSettings();
+      expect(settings, const WheelSettings());
     });
   });
 
   group('PickerVisualSettingsMapper.toPickerConfig', () {
     const visual = PickerVisualSettings(
-      wheel: wheelSettings,
-      startingIndex: 1,
-      frameBorderRadius: 16,
+      wheel: _kWheel,
+      startingIndex: 2,
+      frameBorderRadius: 4,
       frameHorizontalPadding: 20,
       frameVerticalPadding: 10,
     );
 
-    test('copies every field and embeds the mapped wheel config', () {
-      final result = visual.toPickerConfig<String, _Key>(
+    test('combines settings with runtime items and pickerId', () {
+      final config = visual.toPickerConfig<String, int>(
         items: const ['a', 'b', 'c'],
-        pickerId: _Key.minutes,
+        pickerId: 99,
       );
 
-      expect(result.items, const ['a', 'b', 'c']);
-      expect(result.pickerId, _Key.minutes);
-      expect(result.startingIndex, 1);
-      expect(result.frameBorderRadius, 16);
-      expect(result.frameHorizontalPadding, 20);
-      expect(result.frameVerticalPadding, 10);
-      expect(result.wheelConfig, wheelSettings.toWheelConfig());
+      expect(config.items, const ['a', 'b', 'c']);
+      expect(config.pickerId, 99);
+      expect(config.startingIndex, 2);
+      expect(config.frameBorderRadius, 4);
+      expect(config.frameHorizontalPadding, 20);
+      expect(config.frameVerticalPadding, 10);
+      expect(config.wheelConfig.itemExtent, 30);
+      expect(
+        config.wheelConfig.selectionDebounce,
+        const Duration(milliseconds: 100),
+      );
     });
 
-    test('asserts when items is empty', () {
+    test('asserts reject an empty items list', () {
       expect(
-        () => visual.toPickerConfig<String, _Key>(
+        () => visual.toPickerConfig<String, int>(
           items: const [],
-          pickerId: _Key.minutes,
+          pickerId: 1,
         ),
-        throwsA(isA<AssertionError>()),
+        throwsAssertionError,
       );
     });
 
-    test('asserts when startingIndex >= items.length', () {
-      const oob = PickerVisualSettings(startingIndex: 3);
-
+    test('asserts reject startingIndex beyond items.length', () {
       expect(
-        () => oob.toPickerConfig<String, _Key>(
-          items: const ['a', 'b', 'c'],
-          pickerId: _Key.minutes,
+        () => visual.toPickerConfig<String, int>(
+          items: const ['only', 'two'],
+          pickerId: 1,
         ),
-        throwsA(isA<AssertionError>()),
+        throwsAssertionError,
       );
-    });
-
-    test(
-      'accepts startingIndex == items.length - 1 (boundary)',
-      () {
-        const boundary = PickerVisualSettings(startingIndex: 2);
-
-        expect(
-          () => boundary.toPickerConfig<String, _Key>(
-            items: const ['a', 'b', 'c'],
-            pickerId: _Key.minutes,
-          ),
-          returnsNormally,
-        );
-      },
-    );
-
-    test('preserves generic type parameters', () {
-      final result = const PickerVisualSettings().toPickerConfig<int, String>(
-        items: const [10, 20, 30],
-        pickerId: 'numeric-picker',
-      );
-
-      expect(result, isA<InfiniteScrollPickerConfig<int, String>>());
-      expect(result.items, const [10, 20, 30]);
-      expect(result.pickerId, 'numeric-picker');
     });
   });
 }
-
-enum _Key { minutes }

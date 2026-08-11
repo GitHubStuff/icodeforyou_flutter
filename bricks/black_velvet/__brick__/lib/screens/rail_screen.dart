@@ -1,7 +1,9 @@
-// programs/{{name.snakeCase()}}/lib/screens/app_screen.dart
+// programs/{{name.snakeCase()}}/lib/screens/rail_screen.dart
 
-import 'package:analog_clock_widget/analog_clock_widget.dart' show AnalogClock;
+import 'package:custom_widgets/custom_widgets.dart'
+    show DefaultWelcomeScreen, SlideIndexedStack;
 import 'package:flutter/material.dart';
+import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
 import '../app_rail_navigation/rail_destination_enum.dart'
     show RailDestinationEnum;
@@ -20,8 +22,7 @@ const RailDestinationEnum _kInitialDestination = RailDestinationEnum.home;
 /// demote it.
 const List<RailDestinationEnum> _kVisibleDestinations = [
   RailDestinationEnum.home,
-  RailDestinationEnum.database,
-  RailDestinationEnum.search,
+  RailDestinationEnum.settings,
 ];
 
 /// The destinations folded into the overflow popover, in tile order.
@@ -30,9 +31,10 @@ const List<RailDestinationEnum> _kVisibleDestinations = [
 /// slot; tapping it opens a popover listing these as tiles.
 const List<RailDestinationEnum> _kOverflowedDestinations = [
   RailDestinationEnum.library,
-  RailDestinationEnum.settings,
+  RailDestinationEnum.database,
 ];
 
+/// {@template rail_screen}
 /// The app's main screen: a content area plus the rail of destination
 /// buttons.
 ///
@@ -51,14 +53,20 @@ const List<RailDestinationEnum> _kOverflowedDestinations = [
 /// need to.
 ///
 /// Destination views are kept alive across switches: every view lives
-/// in an [IndexedStack] covering all of [RailDestinationEnum.values] —
-/// overflowed destinations still have live views; the partition
-/// changes their entry point, not their existence.
+/// in a [SlideIndexedStack] covering all of
+/// [RailDestinationEnum.values] — overflowed destinations still have
+/// live views; the partition changes their entry point, not their
+/// existence. [SlideIndexedStack] keeps the [IndexedStack] contract —
+/// all children mounted for the screen's lifetime — while sliding
+/// between views on selection, in the direction implied by
+/// [RailDestinationEnum] declaration order.
 ///
 /// The rail is placed along the bottom, so the buttons are laid out
 /// with [Axis.horizontal]; this screen owns that placement decision and
 /// states the axis explicitly, as [RailDestinationButtons] requires.
+/// {@endtemplate}
 class RailScreen extends StatefulWidget {
+  /// {@macro rail_screen}
   /// Creates the app's main screen.
   const RailScreen({super.key});
 
@@ -87,11 +95,11 @@ class _RailScreenState extends State<RailScreen> {
   /// until its view is declared.
   Widget _destinationView(RailDestinationEnum destination) =>
       switch (destination) {
-        RailDestinationEnum.home => Center(child: AnalogClock(radius: 105)),
+        RailDestinationEnum.home => const DefaultWelcomeScreen(),
         RailDestinationEnum.database => const Center(child: Text('Database')),
         RailDestinationEnum.library => const Center(child: Text('Library')),
         RailDestinationEnum.search => const Center(child: Text('Search')),
-        RailDestinationEnum.settings => const Center(child: Text('Settings')),
+        RailDestinationEnum.settings => SettingsScreen.withTheme(),
       };
 
   @override
@@ -101,7 +109,7 @@ class _RailScreenState extends State<RailScreen> {
         child: Column(
           children: [
             Expanded(
-              child: IndexedStack(
+              child: SlideIndexedStack(
                 index: RailDestinationEnum.values.indexOf(_selected),
                 children: [
                   for (final destination in RailDestinationEnum.values)
@@ -115,6 +123,7 @@ class _RailScreenState extends State<RailScreen> {
               overflowed: _kOverflowedDestinations,
               selected: _selected,
               onSelect: _onSelect,
+              sizeOverrides: const {},
             ),
           ],
         ),

@@ -1,4 +1,4 @@
-// core/platform/app_platform.dart
+// packages/platform_utils/lib/src/app_platform.dart
 
 import 'package:flutter/foundation.dart'
     show TargetPlatform, defaultTargetPlatform, kIsWeb;
@@ -54,7 +54,7 @@ enum AppPlatform {
   /// 3. The mapping of [defaultTargetPlatform] otherwise.
   static AppPlatform current() {
     if (_platformOverride != null) return _platformOverride!;
-    if (kIsWeb) return AppPlatform.web;
+    if (kIsWeb) return AppPlatform.web; // coverage:ignore-line
     return switch (defaultTargetPlatform) {
       TargetPlatform.android => AppPlatform.android,
       TargetPlatform.fuchsia => AppPlatform.fuchsia,

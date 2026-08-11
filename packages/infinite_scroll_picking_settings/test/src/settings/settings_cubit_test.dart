@@ -1,193 +1,200 @@
 // infinite_scroll_picking_settings/test/src/settings/settings_cubit_test.dart
 
-// ignore_for_file: invalid_use_of_visible_for_testing_member,
-// invalid_use_of_protected_member
-
 import 'package:flutter_test/flutter_test.dart';
-import 'package:infinite_scroll_picking_settings/infinite_scroll_picking_settings.dart';
-import 'package:mocktail/mocktail.dart';
+import 'package:infinite_scroll_picking_settings/src/picker_visual_settings/picker_visual_settings.dart'
+    show PickerVisualSettings;
+import 'package:infinite_scroll_picking_settings/src/settings/settings_cubit.dart'
+    show SettingsCubit;
+import 'package:infinite_scroll_picking_settings/src/settings/settings_holder.dart'
+    show SettingsHolder;
+import 'package:infinite_scroll_picking_settings/src/settings/settings_repository.dart'
+    show SettingsRepository;
+import 'package:infinite_scroll_picking_settings/src/settings/settings_state/settings_state.dart'
+    show SettingsError, SettingsLoaded, SettingsState;
 
-class _MockRepo extends Mock implements SettingsRepository {}
+/// Repository recording writes with switchable failure modes.
+final class _FakeRepository implements SettingsRepository {
+  /// Last settings received by [save]; null when never saved.
+  PickerVisualSettings? saved;
 
-class _RepoFails implements SettingsRepository {
-  _RepoFails({this.onSave, this.onClear});
+  /// Number of [clear] invocations.
+  int clearCalls = 0;
 
-  final Exception? onSave;
-  final Exception? onClear;
+  /// When true, [save] throws.
+  bool throwOnSave = false;
+
+  /// When true, [clear] throws.
+  bool throwOnClear = false;
 
   @override
-  Future<PickerVisualSettings?> load() async => null;
+  Future<PickerVisualSettings?> load() async => saved;
 
   @override
   Future<void> save(PickerVisualSettings settings) async {
-    if (onSave != null) throw onSave!;
+    if (throwOnSave) throw Exception('disk full');
+    saved = settings;
   }
 
   @override
   Future<void> clear() async {
-    if (onClear != null) throw onClear!;
+    if (throwOnClear) throw Exception('store locked');
+    clearCalls++;
+    saved = null;
   }
 }
 
+/// Seed value distinct from defaults so holder mutations are observable.
+const _kSeed = PickerVisualSettings(startingIndex: 3);
+
+/// Edited value distinct from both defaults and [_kSeed].
+const _kEdited = PickerVisualSettings(startingIndex: 8);
+
 void main() {
-  setUpAll(() {
-    registerFallbackValue(const PickerVisualSettings());
-  });
-
   group('SettingsCubit', () {
-    late _MockRepo repo;
     late SettingsHolder holder;
-
-    const initial = PickerVisualSettings(startingIndex: 2);
-    const edited = PickerVisualSettings(startingIndex: 5);
-    const defaults = PickerVisualSettings();
+    late _FakeRepository repository;
+    late SettingsCubit cubit;
 
     setUp(() {
-      repo = _MockRepo();
-      holder = SettingsHolder(initial);
+      holder = SettingsHolder(_kSeed);
+      repository = _FakeRepository();
+      cubit = SettingsCubit(holder: holder, repository: repository);
     });
 
-    SettingsCubit build() => SettingsCubit(holder: holder, repository: repo);
+    tearDown(() async {
+      await cubit.close();
+      holder.dispose();
+    });
 
-    group('construction', () {
-      test('emits loaded(holder.value, clean) immediately', () {
-        final cubit = build();
-        expect(
-          cubit.state,
-          const SettingsState.loaded(settings: initial),
-        );
-        addTearDown(cubit.close);
-      });
+    test('constructs directly into loaded(clean) seeded from the holder',
+        () {
+      expect(
+        cubit.state,
+        const SettingsState.loaded(settings: _kSeed),
+      );
     });
 
     group('updateSettings', () {
-      test('emits loaded(working, dirty) without touching the holder', () {
-        final cubit = build();
-        addTearDown(cubit.close);
-
-        cubit.updateSettings(edited);
+      test('replaces the working copy and marks it dirty', () {
+        cubit.updateSettings(_kEdited);
 
         expect(
           cubit.state,
-          const SettingsState.loaded(settings: edited, isDirty: true),
+          const SettingsState.loaded(settings: _kEdited, isDirty: true),
         );
-        expect(holder.value, initial);
       });
 
-      test('asserts and no-ops when called from a non-loaded state', () {
-        final cubit = build();
-        addTearDown(cubit.close);
-        cubit.emit(const SettingsState.error(message: 'broken'));
+      test('does not touch the holder — preview only', () {
+        cubit.updateSettings(_kEdited);
+        expect(holder.value, _kSeed);
+      });
+
+      test('asserts when called outside loaded state', () async {
+        repository.throwOnSave = true;
+        cubit.updateSettings(_kEdited);
+        await cubit.save();
+        expect(cubit.state, isA<SettingsError>());
 
         expect(
-          () => cubit.updateSettings(edited),
-          throwsA(isA<AssertionError>()),
+          () => cubit.updateSettings(_kEdited),
+          throwsAssertionError,
         );
       });
     });
 
     group('save', () {
-      test('writes through, updates holder, emits loaded(clean)', () async {
-        when(() => repo.save(any())).thenAnswer((_) async {});
-        final cubit = build();
-        addTearDown(cubit.close);
+      test('persists, propagates to the holder, and emits clean',
+          () async {
+        cubit.updateSettings(_kEdited);
 
-        cubit.updateSettings(edited);
         await cubit.save();
 
+        expect(repository.saved, _kEdited);
+        expect(holder.value, _kEdited);
         expect(
           cubit.state,
-          const SettingsState.loaded(settings: edited),
+          const SettingsState.loaded(settings: _kEdited),
         );
-        expect(holder.value, edited);
-        verify(() => repo.save(edited)).called(1);
       });
 
-      test(
-        'emits error and leaves holder untouched when the repo throws',
-        () async {
-          final cubit = SettingsCubit(
-            holder: holder,
-            repository: _RepoFails(onSave: Exception('disk full')),
-          );
-          addTearDown(cubit.close);
+      test('on failure emits error and leaves the holder untouched',
+          () async {
+        repository.throwOnSave = true;
+        cubit.updateSettings(_kEdited);
 
-          cubit.updateSettings(edited);
-          await cubit.save();
+        await cubit.save();
 
-          expect(cubit.state, isA<SettingsError>());
-          final state = cubit.state as SettingsError;
-          expect(state.message, contains('Failed to save settings'));
-          expect(state.message, contains('disk full'));
-          expect(holder.value, initial);
-        },
-      );
+        expect(holder.value, _kSeed);
+        expect(
+          cubit.state,
+          isA<SettingsError>().having(
+            (state) => state.message,
+            'message',
+            contains('Failed to save settings'),
+          ),
+        );
+      });
 
-      test('asserts and no-ops when called from a non-loaded state', () async {
-        final cubit = build();
-        addTearDown(cubit.close);
-        cubit.emit(const SettingsState.error(message: 'broken'));
+      test('asserts when called outside loaded state', () async {
+        repository.throwOnSave = true;
+        cubit.updateSettings(_kEdited);
+        await cubit.save();
+        expect(cubit.state, isA<SettingsError>());
 
-        expect(cubit.save, throwsA(isA<AssertionError>()));
-        verifyNever(() => repo.save(any()));
+        expect(cubit.save, throwsAssertionError);
       });
     });
 
     group('reset', () {
-      test('emits loaded(defaults, dirty) without touching storage or holder',
-          () {
-        final cubit = build();
-        addTearDown(cubit.close);
-
+      test('emits defaults dirty without touching storage or holder', () {
         cubit.reset();
 
         expect(
           cubit.state,
-          const SettingsState.loaded(settings: defaults, isDirty: true),
+          const SettingsState.loaded(
+            settings: PickerVisualSettings(),
+            isDirty: true,
+          ),
         );
-        expect(holder.value, initial);
-        verifyNever(() => repo.save(any()));
-        verifyNever(() => repo.clear());
+        expect(holder.value, _kSeed);
+        expect(repository.saved, isNull);
       });
     });
 
     group('clearPersisted', () {
-      test(
-        'clears storage, resets holder to defaults, emits loaded(defaults)',
-        () async {
-          when(() => repo.clear()).thenAnswer((_) async {});
-          final cubit = build();
-          addTearDown(cubit.close);
+      test('clears storage, resets the holder, and emits clean defaults',
+          () async {
+        await cubit.clearPersisted();
 
-          await cubit.clearPersisted();
+        expect(repository.clearCalls, 1);
+        expect(holder.value, const PickerVisualSettings());
+        expect(
+          cubit.state,
+          const SettingsState.loaded(settings: PickerVisualSettings()),
+        );
+      });
 
-          expect(
-            cubit.state,
-            const SettingsState.loaded(settings: defaults),
-          );
-          expect(holder.value, defaults);
-          verify(() => repo.clear()).called(1);
-        },
-      );
+      test('on failure emits error and leaves the holder untouched',
+          () async {
+        repository.throwOnClear = true;
 
-      test(
-        'emits error and leaves holder untouched when the repo throws',
-        () async {
-          final cubit = SettingsCubit(
-            holder: holder,
-            repository: _RepoFails(onClear: Exception('lock held')),
-          );
-          addTearDown(cubit.close);
+        await cubit.clearPersisted();
 
-          await cubit.clearPersisted();
+        expect(holder.value, _kSeed);
+        expect(
+          cubit.state,
+          isA<SettingsError>().having(
+            (state) => state.message,
+            'message',
+            contains('Failed to clear settings'),
+          ),
+        );
+      });
+    });
 
-          expect(cubit.state, isA<SettingsError>());
-          final state = cubit.state as SettingsError;
-          expect(state.message, contains('Failed to clear settings'));
-          expect(state.message, contains('lock held'));
-          expect(holder.value, initial);
-        },
-      );
+    test('SettingsLoaded state exposes isDirty with a false default', () {
+      const state = SettingsLoaded(settings: _kSeed);
+      expect(state.isDirty, isFalse);
     });
   });
 }

@@ -25,8 +25,6 @@ import 'package:widgetbook_workspace/packages/analog_clock_widget/timezones.usec
     as _widgetbook_workspace_packages_analog_clock_widget_timezones_usecase;
 import 'package:widgetbook_workspace/packages/analog_clock_widget/toggles.usecase.dart'
     as _widgetbook_workspace_packages_analog_clock_widget_toggles_usecase;
-import 'package:widgetbook_workspace/packages/animated_rail_menu/animated_rail_menu_widget.usecase.dart'
-    as _widgetbook_workspace_packages_animated_rail_menu_animated_rail_menu_widget_usecase;
 import 'package:widgetbook_workspace/packages/animated_widgets/animated_barrier/anchored.usecase.dart'
     as _widgetbook_workspace_packages_animated_widgets_animated_barrier_anchored_usecase;
 import 'package:widgetbook_workspace/packages/animated_widgets/animated_barrier/animation_playground.usecase.dart'
@@ -49,8 +47,6 @@ import 'package:widgetbook_workspace/packages/animated_widgets/animated_barrier/
     as _widgetbook_workspace_packages_animated_widgets_animated_barrier_slide_up_usecase;
 import 'package:widgetbook_workspace/packages/animated_widgets/animated_checkbox/animated_checkbox.usecase.dart'
     as _widgetbook_workspace_packages_animated_widgets_animated_checkbox_animated_checkbox_usecase;
-import 'package:widgetbook_workspace/packages/animated_widgets/comination_animation/combination_animation.usecase.dart'
-    as _widgetbook_workspace_packages_animated_widgets_comination_animation_combination_animation_usecase;
 import 'package:widgetbook_workspace/packages/animated_widgets/contextual_reveal/contextual_reveal.usecase.dart'
     as _widgetbook_workspace_packages_animated_widgets_contextual_reveal_contextual_reveal_usecase;
 import 'package:widgetbook_workspace/packages/animated_widgets/crossfade_widgets/crossfade_widgets.usecase.dart'
@@ -65,6 +61,8 @@ import 'package:widgetbook_workspace/packages/animated_widgets/grow_widget/grow_
     as _widgetbook_workspace_packages_animated_widgets_grow_widget_grow_widget_view_usecase;
 import 'package:widgetbook_workspace/packages/animated_widgets/length_colored_border_field/length_colored_border_field.usecase.dart'
     as _widgetbook_workspace_packages_animated_widgets_length_colored_border_field_length_colored_border_field_usecase;
+import 'package:widgetbook_workspace/packages/animated_widgets/pill_widget/pill_widget.usecase.dart'
+    as _widgetbook_workspace_packages_animated_widgets_pill_widget_pill_widget_usecase;
 import 'package:widgetbook_workspace/packages/animated_widgets/pulse_widget/pulse_widget.usecase.dart'
     as _widgetbook_workspace_packages_animated_widgets_pulse_widget_pulse_widget_usecase;
 import 'package:widgetbook_workspace/packages/animated_widgets/splash_widget/splash_flow.usecase.dart'
@@ -79,30 +77,40 @@ import 'package:widgetbook_workspace/packages/app_preferences/hive_preferences.u
     as _widgetbook_workspace_packages_app_preferences_hive_preferences_usecase;
 import 'package:widgetbook_workspace/packages/app_preferences/mock_preferences.usecase.dart'
     as _widgetbook_workspace_packages_app_preferences_mock_preferences_usecase;
+import 'package:widgetbook_workspace/packages/color_grid/color_grid.usecase.dart'
+    as _widgetbook_workspace_packages_color_grid_color_grid_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/anchored/anchored.usecase.dart'
     as _widgetbook_workspace_packages_custom_widgets_anchored_anchored_usecase;
+import 'package:widgetbook_workspace/packages/custom_widgets/crash_screen/crash_screen.usecase.dart'
+    as _widgetbook_workspace_packages_custom_widgets_crash_screen_crash_screen_usecase;
+import 'package:widgetbook_workspace/packages/custom_widgets/default_welcome_screen/default_welcome_screen.usecase.dart'
+    as _widgetbook_workspace_packages_custom_widgets_default_welcome_screen_default_welcome_screen_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/directional_slider/buttons/directional_slider_and_buttons.usecase.dart'
     as _widgetbook_workspace_packages_custom_widgets_directional_slider_buttons_directional_slider_and_buttons_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/directional_slider/slider/directional_slider.usecase.dart'
     as _widgetbook_workspace_packages_custom_widgets_directional_slider_slider_directional_slider_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/expanding_textfield/expanding_textfield.usecase.dart'
     as _widgetbook_workspace_packages_custom_widgets_expanding_textfield_expanding_textfield_usecase;
-import 'package:widgetbook_workspace/packages/custom_widgets/full_screen_color/full_screen_color.usecase.dart'
-    as _widgetbook_workspace_packages_custom_widgets_full_screen_color_full_screen_color_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/orientation_flex/orientation_flex.usecase.dart'
     as _widgetbook_workspace_packages_custom_widgets_orientation_flex_orientation_flex_usecase;
-import 'package:widgetbook_workspace/packages/custom_widgets/password_field/password_field.usecase.dart'
-    as _widgetbook_workspace_packages_custom_widgets_password_field_password_field_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/sized_spinner/sized_spinner.usecase.dart'
     as _widgetbook_workspace_packages_custom_widgets_sized_spinner_sized_spinner_usecase;
+import 'package:widgetbook_workspace/packages/custom_widgets/slide_index_stack/slide_index_stack.usecase.dart'
+    as _widgetbook_workspace_packages_custom_widgets_slide_index_stack_slide_index_stack_usecase;
+import 'package:widgetbook_workspace/packages/custom_widgets/solid_screen_color/solid_screen_color.usecase.dart'
+    as _widgetbook_workspace_packages_custom_widgets_solid_screen_color_solid_screen_color_usecase;
+import 'package:widgetbook_workspace/packages/custom_widgets/textfield/input_field.usecase.dart'
+    as _widgetbook_workspace_packages_custom_widgets_textfield_input_field_usecase;
+import 'package:widgetbook_workspace/packages/custom_widgets/textfield/password_field.usecase.dart'
+    as _widgetbook_workspace_packages_custom_widgets_textfield_password_field_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/uniform_cluster/button_pair.usecase.dart'
     as _widgetbook_workspace_packages_custom_widgets_uniform_cluster_button_pair_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/uniform_cluster/uniform_cluster.usecase.dart'
     as _widgetbook_workspace_packages_custom_widgets_uniform_cluster_uniform_cluster_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/uninhertied_text/uninherited_text.usecase.dart'
     as _widgetbook_workspace_packages_custom_widgets_uninhertied_text_uninherited_text_usecase;
-import 'package:widgetbook_workspace/packages/extensions/datetime_ext/datetime_delta_text.usecase.dart'
-    as _widgetbook_workspace_packages_extensions_datetime_ext_datetime_delta_text_usecase;
+import 'package:widgetbook_workspace/packages/data_grid/data_grid.usecase.dart'
+    as _widgetbook_workspace_packages_data_grid_data_grid_usecase;
 import 'package:widgetbook_workspace/packages/extensions/widget_ext/widget_ext.usecase.dart'
     as _widgetbook_workspace_packages_extensions_widget_ext_widget_ext_usecase;
 import 'package:widgetbook_workspace/packages/ice_chips/ice_chip_tray/ice_chip_tray.usecase.dart'
@@ -113,6 +121,18 @@ import 'package:widgetbook_workspace/packages/infinite_scroll_picking/lib/src/in
     as _widgetbook_workspace_packages_infinite_scroll_picking_lib_src_infinite_scroll_picker_usecase;
 import 'package:widgetbook_workspace/packages/infinite_scroll_picking_settings/settings_screen.usecase.dart'
     as _widgetbook_workspace_packages_infinite_scroll_picking_settings_settings_screen_usecase;
+import 'package:widgetbook_workspace/packages/rail_navigation/rail_button.usecase.dart'
+    as _widgetbook_workspace_packages_rail_navigation_rail_button_usecase;
+import 'package:widgetbook_workspace/packages/rail_navigation/rail_button_presets.usecase.dart'
+    as _widgetbook_workspace_packages_rail_navigation_rail_button_presets_usecase;
+import 'package:widgetbook_workspace/packages/rail_navigation/rail_overflow_button.usecase.dart'
+    as _widgetbook_workspace_packages_rail_navigation_rail_overflow_button_usecase;
+import 'package:widgetbook_workspace/packages/rail_navigation/rail_popover_tile.usecase.dart'
+    as _widgetbook_workspace_packages_rail_navigation_rail_popover_tile_usecase;
+import 'package:widgetbook_workspace/packages/rail_navigation/rail_shell.usecase.dart'
+    as _widgetbook_workspace_packages_rail_navigation_rail_shell_usecase;
+import 'package:widgetbook_workspace/packages/rail_navigation/rail_widget.usecase.dart'
+    as _widgetbook_workspace_packages_rail_navigation_rail_widget_usecase;
 import 'package:widgetbook_workspace/packages/random_color_generator/random_color_generator.usecase.dart'
     as _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecase;
 import 'package:widgetbook_workspace/packages/remind_me/notification_permission_status.usecase.dart'
@@ -133,16 +153,32 @@ import 'package:widgetbook_workspace/packages/since_when_widgets/tag_glossary_ed
     as _widgetbook_workspace_packages_since_when_widgets_tag_glossary_edit_screen_usecase;
 import 'package:widgetbook_workspace/packages/since_when_widgets/tag_glossary_read_view.usecase.dart'
     as _widgetbook_workspace_packages_since_when_widgets_tag_glossary_read_view_usecase;
+import 'package:widgetbook_workspace/packages/splash_framework/splash_screen.usecase.dart'
+    as _widgetbook_workspace_packages_splash_framework_splash_screen_usecase;
 import 'package:widgetbook_workspace/packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_page/sqlite_viewer_page.usecase.dart'
     as _widgetbook_workspace_packages_sqlite_viewer_lib_src_widgets_sqlite_viewer_page_sqlite_viewer_page_usecase;
-import 'package:widgetbook_workspace/packages/theme_manager/widgets/preference/material_preference.usecase.dart'
-    as _widgetbook_workspace_packages_theme_manager_widgets_preference_material_preference_usecase;
-import 'package:widgetbook_workspace/packages/theme_manager/widgets/preference/theme_radio_row.usecase.dart'
-    as _widgetbook_workspace_packages_theme_manager_widgets_preference_theme_radio_row_usecase;
-import 'package:widgetbook_workspace/packages/theme_manager/widgets/preference/theme_selection_body.usecase.dart'
-    as _widgetbook_workspace_packages_theme_manager_widgets_preference_theme_selection_body_usecase;
-import 'package:widgetbook_workspace/packages/theme_manager/widgets/root/material_root.usecase.dart'
-    as _widgetbook_workspace_packages_theme_manager_widgets_root_material_root_usecase;
+import 'package:widgetbook_workspace/packages/stacking_widgets/stacking_widgets.usecase.dart'
+    as _widgetbook_workspace_packages_stacking_widgets_stacking_widgets_usecase;
+import 'package:widgetbook_workspace/packages/theme_framework/settings_screen.usecase.dart'
+    as _widgetbook_workspace_packages_theme_framework_settings_screen_usecase;
+import 'package:widgetbook_workspace/packages/theme_framework/theme_mode_card.usecase.dart'
+    as _widgetbook_workspace_packages_theme_framework_theme_mode_card_usecase;
+import 'package:widgetbook_workspace/packages/theme_framework/theme_mode_entry.usecase.dart'
+    as _widgetbook_workspace_packages_theme_framework_theme_mode_entry_usecase;
+import 'package:widgetbook_workspace/packages/theme_framework/theme_setting_screen.usecase.dart'
+    as _widgetbook_workspace_packages_theme_framework_theme_setting_screen_usecase;
+import 'package:widgetbook_workspace/packages/theme_manager/material_preference.usecase.dart'
+    as _widgetbook_workspace_packages_theme_manager_material_preference_usecase;
+import 'package:widgetbook_workspace/packages/theme_manager/theme_radio_row.usecase.dart'
+    as _widgetbook_workspace_packages_theme_manager_theme_radio_row_usecase;
+import 'package:widgetbook_workspace/packages/theme_manager/theme_selection_body.usecase.dart'
+    as _widgetbook_workspace_packages_theme_manager_theme_selection_body_usecase;
+import 'package:widgetbook_workspace/packages/three_d_sphere/three_d_sphere.usecase.dart'
+    as _widgetbook_workspace_packages_three_d_sphere_three_d_sphere_usecase;
+import 'package:widgetbook_workspace/packages/widget_animation_framework/animation_combiner_on_widget.usecase.dart'
+    as _widgetbook_workspace_packages_widget_animation_framework_animation_combiner_on_widget_usecase;
+import 'package:widgetbook_workspace/packages/widget_animation_framework/animation_controller_widget.usecase.dart.dart'
+    as _widgetbook_workspace_packages_widget_animation_framework_animation_controller_widget_usecase;
 
 final directories = <_widgetbook.WidgetbookNode>[
   _widgetbook.WidgetbookComponent(
@@ -193,6 +229,26 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookComponent(
+    name: 'ColorGrid',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Default',
+        builder: _widgetbook_workspace_packages_color_grid_color_grid_usecase
+            .buildColorGridUseCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
+    name: 'DataGrid',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Default',
+        builder: _widgetbook_workspace_packages_data_grid_data_grid_usecase
+            .buildDataGridUseCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
     name: 'InfiniteScrollPicker<dynamic, dynamic>',
     useCases: [
       _widgetbook.WidgetbookUseCase(
@@ -200,6 +256,50 @@ final directories = <_widgetbook.WidgetbookNode>[
         builder:
             _widgetbook_workspace_packages_infinite_scroll_picking_lib_src_infinite_scroll_picker_usecase
                 .infiniteScrollPickerUseCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
+    name: 'SplashScreen',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Default',
+        builder:
+            _widgetbook_workspace_packages_splash_framework_splash_screen_usecase
+                .buildSplashScreenUseCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
+    name: 'StackingWidgets',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Default',
+        builder:
+            _widgetbook_workspace_packages_stacking_widgets_stacking_widgets_usecase
+                .buildStackingWidgetsUseCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
+    name: 'ThemeModeEntry',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Live',
+        builder:
+            _widgetbook_workspace_packages_theme_framework_theme_mode_entry_usecase
+                .buildThemeModeEntryUseCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
+    name: 'ThreeDSphere',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Parametric',
+        builder:
+            _widgetbook_workspace_packages_three_d_sphere_three_d_sphere_usecase
+                .buildThreeDSphereUseCase,
       ),
     ],
   ),
@@ -235,16 +335,16 @@ final directories = <_widgetbook.WidgetbookNode>[
                         .anchoredAnimatedBarrierUseCase,
               ),
               _widgetbook.WidgetbookUseCase(
-                name: 'Animation playground',
-                builder:
-                    _widgetbook_workspace_packages_animated_widgets_animated_barrier_animation_playground_usecase
-                        .animationPlaygroundAnimatedBarrierUseCase,
-              ),
-              _widgetbook.WidgetbookUseCase(
                 name: 'Barrier styling',
                 builder:
                     _widgetbook_workspace_packages_animated_widgets_animated_barrier_barrier_styling_usecase
                         .barrierStylingAnimatedBarrierUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'BarrierAnimation playground',
+                builder:
+                    _widgetbook_workspace_packages_animated_widgets_animated_barrier_animation_playground_usecase
+                        .animationPlaygroundAnimatedBarrierUseCase,
               ),
               _widgetbook.WidgetbookUseCase(
                 name: 'Centered',
@@ -316,38 +416,27 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookFolder(
-    name: 'combination_animation',
+    name: 'animation_combiner_on_widget',
     children: [
-      _widgetbook.WidgetbookFolder(
-        name: 'widgets',
-        children: [
-          _widgetbook.WidgetbookComponent(
-            name: 'CombinationAnimation',
-            useCases: [
-              _widgetbook.WidgetbookUseCase(
-                name: 'Chained x3 (parallel)',
-                builder:
-                    _widgetbook_workspace_packages_animated_widgets_comination_animation_combination_animation_usecase
-                        .buildCombinationAnimationChainedUseCase,
-              ),
-              _widgetbook.WidgetbookUseCase(
-                name: 'Single',
-                builder:
-                    _widgetbook_workspace_packages_animated_widgets_comination_animation_combination_animation_usecase
-                        .buildCombinationAnimationSingleUseCase,
-              ),
-            ],
+      _widgetbook.WidgetbookComponent(
+        name: 'AnimationCombinerOnWidget',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Scrubbed',
+            builder:
+                _widgetbook_workspace_packages_widget_animation_framework_animation_combiner_on_widget_usecase
+                    .buildAnimationCombinerOnWidgetUseCase,
           ),
-          _widgetbook.WidgetbookComponent(
-            name: 'CombinationAnimationSequenced',
-            useCases: [
-              _widgetbook.WidgetbookUseCase(
-                name: 'Sequenced x3',
-                builder:
-                    _widgetbook_workspace_packages_animated_widgets_comination_animation_combination_animation_usecase
-                        .buildCombinationAnimationSequencedUseCase,
-              ),
-            ],
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'AnimationControllerWidget',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Play on mount',
+            builder:
+                _widgetbook_workspace_packages_widget_animation_framework_animation_controller_widget_usecase
+                    .buildAnimationControllerWidgetUseCase,
           ),
         ],
       ),
@@ -375,6 +464,22 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookFolder(
+    name: 'crash_screen',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'CrashScreen',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_custom_widgets_crash_screen_crash_screen_usecase
+                    .buildCrashScreenUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
     name: 'crossfade_widgets',
     children: [
       _widgetbook.WidgetbookComponent(
@@ -391,16 +496,16 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookFolder(
-    name: 'datetime_ext',
+    name: 'default_welcome_screen',
     children: [
       _widgetbook.WidgetbookComponent(
-        name: 'DateTimeDeltaText',
+        name: 'DefaultWelcomeScreen',
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Default',
             builder:
-                _widgetbook_workspace_packages_extensions_datetime_ext_datetime_delta_text_usecase
-                    .buildDateTimeDeltaTextUseCase,
+                _widgetbook_workspace_packages_custom_widgets_default_welcome_screen_default_welcome_screen_usecase
+                    .buildDefaultWelcomeScreenUseCase,
           ),
         ],
       ),
@@ -491,22 +596,6 @@ final directories = <_widgetbook.WidgetbookNode>[
                         .faderWidgetUseCase,
               ),
             ],
-          ),
-        ],
-      ),
-    ],
-  ),
-  _widgetbook.WidgetbookFolder(
-    name: 'full_screen_color',
-    children: [
-      _widgetbook.WidgetbookComponent(
-        name: 'FullScreenColor',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder:
-                _widgetbook_workspace_packages_custom_widgets_full_screen_color_full_screen_color_usecase
-                    .buildFullScreenColorUseCase,
           ),
         ],
       ),
@@ -792,22 +881,16 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookFolder(
-    name: 'password_field',
+    name: 'pill_widget',
     children: [
       _widgetbook.WidgetbookComponent(
-        name: 'PasswordField',
+        name: 'PillWidget',
         useCases: [
           _widgetbook.WidgetbookUseCase(
-            name: 'Long Value (wraps when revealed)',
+            name: 'Default',
             builder:
-                _widgetbook_workspace_packages_custom_widgets_password_field_password_field_usecase
-                    .passwordFieldLongValueUseCase,
-          ),
-          _widgetbook.WidgetbookUseCase(
-            name: 'Playground',
-            builder:
-                _widgetbook_workspace_packages_custom_widgets_password_field_password_field_usecase
-                    .passwordFieldPlaygroundUseCase,
+                _widgetbook_workspace_packages_animated_widgets_pill_widget_pill_widget_usecase
+                    .buildPillWidgetUseCase,
           ),
         ],
       ),
@@ -864,19 +947,14 @@ final directories = <_widgetbook.WidgetbookNode>[
   _widgetbook.WidgetbookFolder(
     name: 'pulse_widget',
     children: [
-      _widgetbook.WidgetbookFolder(
-        name: 'src',
-        children: [
-          _widgetbook.WidgetbookComponent(
-            name: 'PulseWidget',
-            useCases: [
-              _widgetbook.WidgetbookUseCase(
-                name: 'Default',
-                builder:
-                    _widgetbook_workspace_packages_animated_widgets_pulse_widget_pulse_widget_usecase
-                        .buildPulseWidgetUseCase,
-              ),
-            ],
+      _widgetbook.WidgetbookComponent(
+        name: 'PulseWidget',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_animated_widgets_pulse_widget_pulse_widget_usecase
+                    .buildPulseWidgetUseCase,
           ),
         ],
       ),
@@ -899,13 +977,45 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookFolder(
+    name: 'slide_index_stack',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'SlideIndexedStack',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_custom_widgets_slide_index_stack_slide_index_stack_usecase
+                    .buildSlideIndexedStackUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
+    name: 'solid_screen_color',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'SolidScreenColor',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_custom_widgets_solid_screen_color_solid_screen_color_usecase
+                    .buildSolidScreenColorUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
     name: 'splash_widget',
     children: [
       _widgetbook.WidgetbookFolder(
         name: 'src',
         children: [
           _widgetbook.WidgetbookComponent(
-            name: 'SplashFlow',
+            name: 'SplashScreen',
             useCases: [
               _widgetbook.WidgetbookUseCase(
                 name: 'Splash ends after tasks (no spinner)',
@@ -964,6 +1074,33 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder:
                 _widgetbook_workspace_packages_since_when_widgets_tag_glossary_read_view_usecase
                     .tagGlossaryReadViewUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
+    name: 'textfield',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'InputField',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_custom_widgets_textfield_input_field_usecase
+                    .buildInputFieldUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'PasswordField',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_custom_widgets_textfield_password_field_usecase
+                    .buildPasswordFieldUseCase,
           ),
         ],
       ),
@@ -1029,32 +1166,138 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookFolder(
-    name: 'widget',
+    name: 'widgets',
     children: [
       _widgetbook.WidgetbookComponent(
-        name: 'AnimatedRailMenu',
+        name: 'MainRailButton',
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Default',
             builder:
-                _widgetbook_workspace_packages_animated_rail_menu_animated_rail_menu_widget_usecase
-                    .animatedRailMenuUseCase,
+                _widgetbook_workspace_packages_rail_navigation_rail_button_presets_usecase
+                    .buildMainRailButtonUseCase,
           ),
         ],
       ),
-    ],
-  ),
-  _widgetbook.WidgetbookFolder(
-    name: 'widgets',
-    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'MoreRailButton',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_rail_navigation_rail_button_presets_usecase
+                    .buildMoreRailButtonUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RailButton',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_rail_navigation_rail_button_usecase
+                    .buildRailButtonUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RailOverflowButton',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_rail_navigation_rail_overflow_button_usecase
+                    .buildRailOverflowButtonUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RailPopoverTile',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_rail_navigation_rail_popover_tile_usecase
+                    .buildRailPopoverTileUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RailShell',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_rail_navigation_rail_shell_usecase
+                    .buildRailShellUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'RailWidget',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_rail_navigation_rail_widget_usecase
+                    .buildRailWidgetUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'SettingsRailButton',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_rail_navigation_rail_button_presets_usecase
+                    .buildSettingsRailButtonUseCase,
+          ),
+        ],
+      ),
       _widgetbook.WidgetbookComponent(
         name: 'SettingsScreen',
         useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Custom entries',
+            builder:
+                _widgetbook_workspace_packages_theme_framework_settings_screen_usecase
+                    .buildSettingsScreenUseCase,
+          ),
           _widgetbook.WidgetbookUseCase(
             name: 'Default',
             builder:
                 _widgetbook_workspace_packages_infinite_scroll_picking_settings_settings_screen_usecase
                     .settingsScreenUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'With theme',
+            builder:
+                _widgetbook_workspace_packages_theme_framework_settings_screen_usecase
+                    .buildSettingsScreenWithThemeUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'ThemeModeCard',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Controlled',
+            builder:
+                _widgetbook_workspace_packages_theme_framework_theme_mode_card_usecase
+                    .buildThemeModeCardUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'ThemeSettingScreen',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_theme_framework_theme_setting_screen_usecase
+                    .buildThemeSettingScreenUseCase,
           ),
         ],
       ),
@@ -1076,16 +1319,10 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'MaterialPreference',
             useCases: [
               _widgetbook.WidgetbookUseCase(
-                name: 'Default',
+                name: 'Live',
                 builder:
-                    _widgetbook_workspace_packages_theme_manager_widgets_preference_material_preference_usecase
+                    _widgetbook_workspace_packages_theme_manager_material_preference_usecase
                         .buildMaterialPreferenceUseCase,
-              ),
-              _widgetbook.WidgetbookUseCase(
-                name: 'Localized (Spanish)',
-                builder:
-                    _widgetbook_workspace_packages_theme_manager_widgets_preference_material_preference_usecase
-                        .buildMaterialPreferenceLocalizedUseCase,
               ),
             ],
           ),
@@ -1093,9 +1330,9 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'ThemeRadioRow',
             useCases: [
               _widgetbook.WidgetbookUseCase(
-                name: 'Default',
+                name: 'Controlled',
                 builder:
-                    _widgetbook_workspace_packages_theme_manager_widgets_preference_theme_radio_row_usecase
+                    _widgetbook_workspace_packages_theme_manager_theme_radio_row_usecase
                         .buildThemeRadioRowUseCase,
               ),
             ],
@@ -1104,26 +1341,10 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'ThemeSelectionBody',
             useCases: [
               _widgetbook.WidgetbookUseCase(
-                name: 'Default',
+                name: 'Controlled',
                 builder:
-                    _widgetbook_workspace_packages_theme_manager_widgets_preference_theme_selection_body_usecase
+                    _widgetbook_workspace_packages_theme_manager_theme_selection_body_usecase
                         .buildThemeSelectionBodyUseCase,
-              ),
-            ],
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookFolder(
-        name: 'root',
-        children: [
-          _widgetbook.WidgetbookComponent(
-            name: 'MaterialRoot',
-            useCases: [
-              _widgetbook.WidgetbookUseCase(
-                name: 'Default',
-                builder:
-                    _widgetbook_workspace_packages_theme_manager_widgets_root_material_root_usecase
-                        .buildMaterialRootUseCase,
               ),
             ],
           ),

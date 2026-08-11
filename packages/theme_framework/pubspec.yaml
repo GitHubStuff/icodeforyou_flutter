@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
+  gap: ^3.0.1
   settings_widget: ^1.0.0
   shared_preferences: ^2.5.5
 

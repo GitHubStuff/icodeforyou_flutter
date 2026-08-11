@@ -1,3 +1,4 @@
+# packages/app_preferences/pubspec.yaml
 name: app_preferences
 description: "Preferences abstraction with multiple backend implementations."
 version: 1.0.0

@@ -20,11 +20,9 @@ workspace:
   - packages/ice_chips_service
   - packages/icodeforyou_lints
   - packages/infinite_scroll_picking
-  - packages/infinite_scroll_picking/example
   - packages/infinite_scroll_picking_settings
   - packages/my_logger
   - packages/platform_utils
-  - packages/projector
   - packages/rail_navigation
   - packages/random_color_generator
   - packages/remind_me
@@ -49,10 +47,7 @@ workspace:
   - programs/black_velvet
   - programs/creature_comfort
   - programs/creature_comforts_service
-  - programs/earth_spin_demo
-  - programs/projector_demo
   - programs/startup_demo
-  - programs/template_app
   - programs/widgetbook_workspace
 
 environment:

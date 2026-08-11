@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 /// the affordance never paints over the border.
 const double _kSuffixGap = 8;
 
+/// {@template suffix_slot.dart}
 /// A fixed-size, right-inset slot that centres a field's trailing affordance.
 ///
 /// Both `InputField` and `PasswordField` route their suffix through this slot
@@ -27,7 +28,9 @@ const double _kSuffixGap = 8;
 /// wants the whole tap target (e.g. an opaque gesture region) should size
 /// itself to [kMinInteractiveDimension]; centring a square that already fills
 /// the slot is a no-op.
+/// {@endtemplate}
 class SuffixSlot extends StatelessWidget {
+  /// {@macro suffix_slot.dart}
   const SuffixSlot({required this.child, super.key});
 
   /// Constraints a field passes to [InputDecoration.suffixIconConstraints] so

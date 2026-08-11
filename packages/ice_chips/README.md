@@ -1,197 +1,168 @@
 # ice_chips
 
-Stadium-shaped, auto-contrasting tag chips for Flutter, with selection state managed by a Cubit and a sealed layout strategy. Designed to work either standalone over your own data or wired to the `since_when` glossary via a built-in `TagsCubit`.
+Domain-free chip rendering for Flutter, plus the glue that binds it to the
+`since_when` tag glossary. The package splits cleanly into two halves: a
+reusable tray/chip layer that knows nothing but `IceChipData` and integer
+ids, and a tags layer that loads `RecordTagDefinition` rows through
+role-segregated glossary interfaces and feeds them into the tray.
 
-## Features
+## Structure
 
-- **`IceChip`** — single stadium-shaped chip that auto-picks black/white label text based on background luminance, with an optional border for the selected state.
-- **`IceChipData`** — domain-free DTO (`id`, `label`, `colorInt`) that decouples the tray from your data source.
-- **`IceChipsTray`** — renders a collection of chips, reads selection from an ambient `IceChipsTrayCubit`, and delegates spatial arrangement to a layout strategy.
-- **Sealed `IceChipsTrayLayout`** — three concrete layouts (`Wrap`, `List`, `Row`); new layouts are added as new sealed cases without touching the tray.
-- **`IceChipsTrayCubit`** — pure UI selection state — `Set<int>` of selected ids with `toggle`, `selectAll`, `clear`, `isSelected`, and `count`.
-- **Per-chip decoration** — `IceChipsChipBuilder` callback lets you wrap each chip in a `Dismissible`, `Tooltip`, `Padding`, or any composition without forking the tray.
-- **`TagsCubit` + sealed `TagsState`** — loads `RecordTagDefinition`s from the glossary, with reload-after-mutate semantics and a four-case state hierarchy (`Initial`, `Loading`, `Loaded`, `Error`).
-- **Interface-segregated writes** — `TagsCubit` accepts four narrow interfaces (`GlossaryReader`, `GlossaryRepository`, `GlossaryWriter`, `GlossaryDeleter`); pass `null` for the ones you don't need and the cubit raises a descriptive `StateError` if those methods are called.
-- **`IcePickerTray`** — glue widget that bridges `TagsCubit` data into an `IceChipsTray` selection UI, rendering each `TagsState` case appropriately.
-
-## Getting started
-
-Add the package to your `pubspec.yaml`:
-
-```yaml
-dependencies:
-  ice_chips: ^1.0.0
+```
+lib/
+├── ice_chips.dart                          # Public barrel
+└── src/
+    ├── glossary_types_todo.dart            # TEMPORARY glossary stand-ins
+    ├── ice_chip_tray/
+    │   ├── ice_chip_tray.dart              # IceChipsTray widget
+    │   ├── ice_chip_tray_cubit.dart        # Selection state (Set<int>)
+    │   ├── ice_chip_tray_layout.dart       # Sealed layout strategies
+    │   └── ice_picker_tray.dart            # TagsCubit → tray glue widget
+    ├── ice_chip_widget/
+    │   ├── ice_chip.dart                   # Single chip (FilterChip)
+    │   └── ice_chip_data.dart              # Chip DTO
+    └── tags/
+        ├── tags_cubit.dart                 # Glossary CRUD → observable state
+        └── tags_state.dart                 # Sealed TagsState hierarchy
 ```
 
-Then import the barrel:
+## Public API
 
-```dart
-import 'package:ice_chips/ice_chips.dart';
-```
+### `ice_chips.dart`
 
-### About the glossary types
+The barrel. Exports everything below, including — for now — the glossary
+placeholder types via a `show` clause. Consumers import
+`package:ice_chips/ice_chips.dart` and nothing else.
 
-This package currently re-exports `GlossaryReader`, `GlossaryRepository`, `GlossaryWriter`, `GlossaryDeleter`, `RecordTagDefinition`, and `SinceWhenFailure` from a stand-in file (`glossary_types_todo.dart`). They will be replaced by imports from the real `since_when` package once it ships, after which consumers should import those types directly from `since_when` and stop relying on the `ice_chips` re-exports.
+### `src/glossary_types_todo.dart` — TEMPORARY
+
+Stand-in for the future `since_when` package so `ice_chips` compiles
+against `since_when_framework` alone. This file is the single source of
+truth for these types during the stub period; `since_when_widgets` imports
+them from here. Delete the entire file the day the real package ships —
+the migration steps are documented at the top of the file.
+
+Contents:
+
+- **`SinceWhenFailure`** — typed failure for glossary CRUD. Wraps an
+  underlying `DatabaseFailure` from `since_when_framework`; `Equatable`
+  so it flows through `Either` and Cubit state comparisons.
+- **`RecordTagDefinition`** — one row from `since_when_tag_glossary`:
+  nullable auto-increment `id`, stable `createdTimeStamp` (the FK target
+  from `since_when_tags.glossary_timestamp`), `UNIQUE` upper-cased
+  `tagName`, `UNIQUE` ARGB32-packed `color`. Full `copyWith` and
+  value equality.
+- **Role-segregated interfaces** — `GlossaryReader.fetchAllTagDefinitions`,
+  `GlossaryRepository.insertTagDefinition`,
+  `GlossaryWriter.updateTagDefinition`,
+  `GlossaryDeleter.deleteTagDefinition`. Four narrow interfaces instead
+  of one god-object (ISP): tests substitute fakes per role, and read-only
+  consumers construct a `TagsCubit` with only a reader.
+
+## Chip layer (domain-free)
+
+### `IceChipData` — `src/ice_chip_widget/ice_chip_data.dart`
+
+Immutable DTO and the boundary type between domain models and the render
+layer: `id` (selection and `Dismissible` key), `label`, `colorInt`
+(packed ARGB). The tray and its Cubit operate exclusively on this type;
+callers translate their domain records at the call site.
+
+### `IceChip` — `src/ice_chip_widget/ice_chip.dart`
+
+A single chip rendered as a `StadiumBorder` `FilterChip`. Background
+comes from the packed `backgroundColorInt`; label color is computed via
+`ColorExt.contrastingTextColor()` from `package:extensions`, with an
+optional caller `TextStyle` merged over the bold 14pt default.
+`showBorder` draws a 2px selection border — black in light themes, white
+in dark, transparent when unselected. Taps forward to `onPress`.
+
+### `IceChipsTrayCubit` — `src/ice_chip_tray/ice_chip_tray_cubit.dart`
+
+`Cubit<Set<int>>` holding the selected chip ids. Pure UI state — no
+persistence, no knowledge of the chip source. One instance per tray via
+`BlocProvider` at the appropriate scope. API: `toggle`, `selectAll`,
+`clear`, `isSelected`, `count`.
+
+### `IceChipsTrayLayout` — `src/ice_chip_tray/ice_chip_tray_layout.dart`
+
+Sealed strategy hierarchy deciding how the tray arranges its chips (OCP:
+new layouts are new sealed cases; the tray never changes). All variants
+are const-constructible:
+
+| Layout | Widget | Materialization | Use for |
+| --- | --- | --- | --- |
+| `IceChipsTrayLayoutWrap` | `Wrap` | Eager | Display, flowing rows |
+| `IceChipsTrayLayoutList` | `ListView.builder` | Lazy | Large sets, swipe-to-dismiss edit modes |
+| `IceChipsTrayLayoutRow` | `Row` | Eager | Short single-line groups |
+
+For long horizontal lists prefer `IceChipsTrayLayoutList` with
+`scrollDirection: Axis.horizontal` over `IceChipsTrayLayoutRow`.
+
+### `IceChipsTray` — `src/ice_chip_tray/ice_chip_tray.dart`
+
+The tray. Reads `Set<int>` from the nearest `IceChipsTrayCubit`, renders
+`chipCount` chips through `chipDataAt(index)`, and delegates spatial
+arrangement to the injected layout strategy. Tapping a chip toggles its
+id in the Cubit; membership drives `showBorder`. Per-chip decoration
+(`Dismissible`, `Padding`, `Tooltip`, …) is delegated to an
+`IceChipsChipBuilder` callback, defaulting to identity.
+
+## Tags layer (glossary-aware)
+
+### `TagsState` — `src/tags/tags_state.dart`
+
+Sealed hierarchy covering the load lifecycle: `TagsInitial` (constructed,
+not yet loaded), `TagsLoading`, `TagsLoaded(tags)`, and
+`TagsError(failure)` carrying the typed `SinceWhenFailure` for
+pattern-matching.
+
+### `TagsCubit` — `src/tags/tags_cubit.dart`
+
+Wraps the four glossary interfaces into observable state. `load()` emits
+`TagsLoading` then `TagsLoaded`/`TagsError`. Mutations — `add`, `update`,
+`remove` — reload on success (keeping the Cubit aligned with the
+database's truth without in-memory diff logic) and emit `TagsError` on
+failure. Only the reader is required at construction; calling a mutation
+on a cubit built without the corresponding interface throws a
+`StateError` naming the missing role.
+
+### `IcePickerTray` — `src/ice_chip_tray/ice_picker_tray.dart`
+
+Glue widget binding `TagsCubit` to an `IceChipsTray`. Renders the four
+states as: nothing (`TagsInitial`), a small progress indicator
+(`TagsLoading`), the failure text in the theme's error color
+(`TagsError`), or the tray with each `RecordTagDefinition` translated to
+an `IceChipData` (`TagsLoaded`). Layout, chip builder, and style pass
+straight through to the tray.
 
 ## Usage
-
-### Standalone — your own data through `IceChipsTray`
-
-For the simplest case, hold your own list of chip data and let `IceChipsTrayCubit` track selection:
-
-```dart
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ice_chips/ice_chips.dart';
-
-class CategoryPicker extends StatelessWidget {
-  const CategoryPicker({super.key, required this.categories});
-
-  final List<IceChipData> categories;
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => IceChipsTrayCubit(),
-      child: IceChipsTray(
-        chipCount: categories.length,
-        chipDataAt: (i) => categories[i],
-        layout: const IceChipsTrayLayoutWrap(spacing: 8, runSpacing: 8),
-      ),
-    );
-  }
-}
-
-// Translate your domain to IceChipData at the call site:
-final categories = myCategories
-    .map((c) => IceChipData(id: c.dbId, label: c.name, colorInt: c.argb))
-    .toList();
-```
-
-Tapping any chip toggles its id in the cubit's `Set<int>`. Read the selection back from anywhere with `context.read<IceChipsTrayCubit>().state`.
-
-### Pre-selecting and reading the selection
-
-```dart
-final tray = context.read<IceChipsTrayCubit>();
-
-tray.selectAll([3, 7, 12]);     // replace the selection
-tray.isSelected(7);             // true
-tray.count;                     // 3
-tray.clear();                   // empty
-
-// Listen for changes:
-BlocListener<IceChipsTrayCubit, Set<int>>(
-  listener: (context, ids) => onSelectionChanged(ids),
-  child: const IceChipsTray(...),
-)
-```
-
-### Choosing a layout
-
-`IceChipsTrayLayout` is sealed — pick the case that fits, or extend it for a custom one:
-
-```dart
-// Filter bar that wraps to new rows as needed:
-const IceChipsTrayLayoutWrap(spacing: 8, runSpacing: 8)
-
-// Scrollable list — required for swipe-to-dismiss edit modes, and the
-// right choice for very long collections that benefit from lazy build.
-const IceChipsTrayLayoutList(
-  scrollDirection: Axis.vertical,
-  shrinkWrap: true,
-)
-
-// Single horizontal row, eager — for short fixed-size sets:
-const IceChipsTrayLayoutRow(spacing: 6)
-```
-
-### Decorating chips with `chipBuilder`
-
-`IceChipsChipBuilder` wraps each rendered chip without forking the tray. Pair it with `IceChipsTrayLayoutList` for swipe-to-delete:
-
-```dart
-IceChipsTray(
-  chipCount: tags.length,
-  chipDataAt: (i) => tags[i],
-  layout: const IceChipsTrayLayoutList(shrinkWrap: true),
-  chipBuilder: (context, data, chip) {
-    return Dismissible(
-      key: ValueKey(data.id),
-      direction: DismissDirection.endToStart,
-      background: const ColoredBox(color: Colors.red),
-      onDismissed: (_) => context.read<TagsCubit>().remove(data.id),
-      child: chip,
-    );
-  },
-)
-```
-
-The builder receives the chip's `IceChipData` and the already-rendered `IceChip` widget — return whatever wrapping you want, or the chip itself unchanged.
-
-### Glossary-backed — `TagsCubit` + `IcePickerTray`
-
-When the chip data lives in the `since_when` glossary, wire up a `TagsCubit` and let `IcePickerTray` handle state rendering:
 
 ```dart
 MultiBlocProvider(
   providers: [
-    BlocProvider(
-      create: (_) => TagsCubit(
-        reader: glossaryReader,
-        repository: glossaryRepository, // optional
-        writer: glossaryWriter,         // optional
-        deleter: glossaryDeleter,       // optional
-      )..load(),
-    ),
+    BlocProvider.value(value: iceChipsService.tagsCubit),
     BlocProvider(create: (_) => IceChipsTrayCubit()),
   ],
-  child: const IcePickerTray(
-    layout: IceChipsTrayLayoutWrap(spacing: 8, runSpacing: 8),
-  ),
+  child: const IcePickerTray(layout: IceChipsTrayLayoutWrap()),
 )
 ```
 
-`IcePickerTray` renders each `TagsState` case for you:
+For a tray driven by arbitrary domain data, skip the tags layer and use
+`IceChipsTray` directly with your own `IceChipData` translation.
 
-- `TagsInitial` → `SizedBox.shrink()`.
-- `TagsLoading` → small `CircularProgressIndicator` with padding.
-- `TagsError` → error text in the theme's `colorScheme.error`.
-- `TagsLoaded` → `IceChipsTray` with the loaded data.
+## Dependencies
 
-### Mutating the glossary
+`flutter_bloc` (Cubits), `equatable` (value types), `fpdart`
+(`Either`/`Unit` on the glossary interfaces), `extensions`
+(`contrastingTextColor`), `since_when_framework` (`DatabaseFailure`).
+`fpdart` may become removable once the real `since_when` package ships,
+if it re-exports the functional types.
 
-Mutations on `TagsCubit` reload the list on success and emit `TagsError` on failure, so the cubit's state always matches the database:
+## Testing
 
-```dart
-final tags = context.read<TagsCubit>();
-
-await tags.add(tagName: 'Urgent', color: 0xFFFF3B30);
-await tags.update(existing.copyWith(color: 0xFF34C759));
-await tags.remove(existing.id!);
-```
-
-### Read-only cubits
-
-`TagsCubit` follows the Interface Segregation Principle — the read interface is required, the write/update/delete interfaces are optional. A read-only consumer can omit them:
-
-```dart
-// Display-only tray — load() and the loaded list are all that's used.
-final cubit = TagsCubit(reader: glossaryReader)..load();
-```
-
-Calling `add`, `update`, or `remove` on a read-only cubit throws `StateError` with a descriptive message naming the method and the missing interface — so the failure is loud and immediate at the call site.
-
-## Layout reference
-
-| Layout | Build mode | Best for |
-| --- | --- | --- |
-| `IceChipsTrayLayoutWrap` | Eager (all chips up front) | Filter bars, tag clouds, anything that should reflow to fit. |
-| `IceChipsTrayLayoutList` | Lazy (`ListView.builder`) | Long lists, swipe-to-dismiss edit modes, scrollable horizontal strips. |
-| `IceChipsTrayLayoutRow` | Eager | Short, fixed-size horizontal sets that should never wrap. |
-
-For long horizontal sets, prefer `IceChipsTrayLayoutList` with `scrollDirection: Axis.horizontal` over `IceChipsTrayLayoutRow`.
-
-## Additional information
-
-`IceChipsTrayCubit` is scoped per tray — `BlocProvider` it at the appropriate scope (typically per screen) so multiple trays on the same screen each get their own selection state. `TagsCubit`, by contrast, is usually app-wide and provided once via `BlocProvider.value`. The glossary types currently re-exported from this package will move to `since_when` in a future release.
+`test/` mirrors `lib/` one test file per source file, targeting 100%
+LCOV. Cubit stream sequences are asserted with
+`expectLater`/`emitsInOrder` registered before the action under test;
+glossary roles are faked per interface; `SinceWhenFailure` causes are
+constructed from the real sealed `DatabaseOpenFailure` variant.

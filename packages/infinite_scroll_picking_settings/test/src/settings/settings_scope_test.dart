@@ -2,135 +2,104 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:infinite_scroll_picking_settings/infinite_scroll_picking_settings.dart';
-
-/// Captures the result of calling a `SettingsScope` accessor from a real
-/// `BuildContext` so the test can assert on it.
-class _Probe extends StatelessWidget {
-  const _Probe({required this.onBuild});
-
-  final void Function(BuildContext context) onBuild;
-
-  @override
-  Widget build(BuildContext context) {
-    onBuild(context);
-    return const SizedBox.shrink();
-  }
-}
+import 'package:infinite_scroll_picking_settings/src/picker_visual_settings/picker_visual_settings.dart'
+    show PickerVisualSettings;
+import 'package:infinite_scroll_picking_settings/src/settings/settings_holder.dart'
+    show SettingsHolder;
+import 'package:infinite_scroll_picking_settings/src/settings/settings_scope.dart'
+    show SettingsScope;
 
 void main() {
   group('SettingsScope', () {
-    const seed = PickerVisualSettings(startingIndex: 1);
-
-    testWidgets('of() returns the enclosing holder without subscribing',
+    testWidgets('of returns the holder without subscribing',
         (tester) async {
-      final holder = SettingsHolder(seed);
-      late SettingsHolder captured;
-
-      await tester.pumpWidget(
-        SettingsScope(
-          holder: holder,
-          child: _Probe(
-            onBuild: (context) => captured = SettingsScope.of(context),
-          ),
-        ),
-      );
-
-      expect(captured, same(holder));
-    });
-
-    testWidgets('of() does NOT rebuild dependents when the holder updates',
-        (tester) async {
-      final holder = SettingsHolder(seed);
+      final holder = SettingsHolder(const PickerVisualSettings());
+      addTearDown(holder.dispose);
+      late SettingsHolder resolved;
       var builds = 0;
 
       await tester.pumpWidget(
         SettingsScope(
           holder: holder,
-          child: _Probe(
-            onBuild: (context) {
-              SettingsScope.of(context);
+          child: Builder(
+            builder: (context) {
               builds++;
+              resolved = SettingsScope.of(context);
+              return const SizedBox.shrink();
             },
           ),
         ),
       );
-      expect(builds, 1);
 
-      holder.update(const PickerVisualSettings(startingIndex: 9));
+      expect(resolved, same(holder));
+
+      holder.update(const PickerVisualSettings(startingIndex: 1));
       await tester.pump();
 
       expect(builds, 1);
     });
 
-    testWidgets('of() throws FlutterError when no SettingsScope is found',
+    testWidgets('watch returns the value and rebuilds on holder updates',
         (tester) async {
-      late Object? caught;
+      final holder = SettingsHolder(const PickerVisualSettings());
+      addTearDown(holder.dispose);
 
       await tester.pumpWidget(
-        _Probe(
-          onBuild: (context) {
-            try {
-              SettingsScope.of(context);
-            } catch (e) {
-              caught = e;
-            }
+        SettingsScope(
+          holder: holder,
+          child: Builder(
+            builder: (context) {
+              final settings = SettingsScope.watch(context);
+              return Text(
+                'index:${settings.startingIndex}',
+                textDirection: TextDirection.ltr,
+              );
+            },
+          ),
+        ),
+      );
+
+      expect(find.text('index:0'), findsOneWidget);
+
+      holder.update(const PickerVisualSettings(startingIndex: 5));
+      await tester.pump();
+
+      expect(find.text('index:5'), findsOneWidget);
+    });
+
+    testWidgets('of throws FlutterError without an enclosing scope',
+        (tester) async {
+      late BuildContext captured;
+      await tester.pumpWidget(
+        Builder(
+          builder: (context) {
+            captured = context;
+            return const SizedBox.shrink();
           },
         ),
       );
 
-      expect(caught, isA<FlutterError>());
       expect(
-        (caught! as FlutterError).message,
-        contains('SettingsScope.of() called with a context'),
+        () => SettingsScope.of(captured),
+        throwsA(isA<FlutterError>()),
       );
     });
 
-    testWidgets(
-      'watch() returns the current settings and subscribes to rebuilds',
-      (tester) async {
-        final holder = SettingsHolder(seed);
-        final captured = <PickerVisualSettings>[];
-
-        await tester.pumpWidget(
-          SettingsScope(
-            holder: holder,
-            child: _Probe(
-              onBuild: (context) =>
-                  captured.add(SettingsScope.watch(context)),
-            ),
-          ),
-        );
-        expect(captured, [seed]);
-
-        const next = PickerVisualSettings(startingIndex: 9);
-        holder.update(next);
-        await tester.pump();
-
-        expect(captured, [seed, next]);
-      },
-    );
-
-    testWidgets('watch() throws FlutterError when no SettingsScope is found',
+    testWidgets('watch throws FlutterError without an enclosing scope',
         (tester) async {
-      late Object? caught;
-
+      late BuildContext captured;
       await tester.pumpWidget(
-        _Probe(
-          onBuild: (context) {
-            try {
-              SettingsScope.watch(context);
-            } catch (e) {
-              caught = e;
-            }
+        Builder(
+          builder: (context) {
+            captured = context;
+            return const SizedBox.shrink();
           },
         ),
       );
 
-      expect(caught, isA<FlutterError>());
       expect(
-        (caught! as FlutterError).message,
-        contains('SettingsScope.watch() called with a context'),
+        () => SettingsScope.watch(captured),
+        throwsA(isA<FlutterError>()),
       );
     });
   });

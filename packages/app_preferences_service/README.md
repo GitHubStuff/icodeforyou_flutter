@@ -1,130 +1,118 @@
 # app_preferences_service
 
-A service-locator descriptor and handle for `app_preferences`. Registers the preferences store as a `LazyAsyncServiceDescriptor` so other services can depend on it, with the concrete backend (platform, Hive, or in-memory mock) chosen at registration time.
+Service-locator integration for the app's preferences store. Part of the
+`icodeforyou_flutter` monorepo (`packages/`).
 
-## Features
+This package bridges two other monorepo packages: it wraps
+`app_preferences`' `AbstractPreferencesInterface` in a `service_locator`
+service handle and provides descriptors that select and build the concrete
+backend at registration time. Consumers depend on the service, never on a
+concrete preferences implementation.
 
-- **One service, three backends** — pick `.platform`, `.hive`, or `.mock` at registration; consumers always see the same `AppPreferences` handle.
-- **Lazy async registration** — extends `LazyAsyncServiceDescriptor<AppPreferences>`, so the backend is constructed on first resolve, not at app start.
-- **Hive setup baked in** — the `.hive` constructor calls `HivePreferences.init` against the chosen `HiveInitMode` and opens the named box for you.
-- **Test seeding** — the `.mock` constructor accepts an `initialValues` map for deterministic test fixtures.
-- **Built-in timeout** — construction is wrapped in a 500 ms timeout; exceeding it throws `ServiceItemTimeout` for the locator to surface.
-- **Custom service name** — every constructor accepts `serviceName` so multiple preference stores can coexist under different locator names.
+## Dependencies
 
-## Getting started
+- `app_preferences` — `AbstractPreferencesInterface` and the concrete
+  backends: `PlatformPreferences`, `HivePreferences`, `MockPreferences`,
+  plus `HiveInitMode`
+- `service_locator` — `ServiceClass`, `LazyAsyncServiceDescriptor`,
+  `ServiceItemTimeout`
 
-Add the package to your `pubspec.yaml`:
+## Library structure
 
-```yaml
-dependencies:
-  app_preferences_service: ^1.0.0
+```
+lib/
+├── app_preferences_service.dart          # Barrel
+└── src/
+    ├── app_preferences.dart              # AppPreferences service handle
+    └── app_preferences_descriptor.dart   # Descriptor + backend selector
 ```
 
-Then import it where you wire up your services:
+## API
+
+### AppPreferences
+
+The service-locator handle for the preferences store. Exposes a single
+`AbstractPreferencesInterface` via `prefs`. Other services that need
+preferences access declare a dependency on this service class and read
+`prefs` from the locator. The concrete backend — platform, Hive, or mock —
+is invisible to consumers; it is selected entirely by the descriptor used at
+registration time.
 
 ```dart
-import 'package:app_preferences_service/app_preferences_service.dart';
-```
-
-This package builds on `app_preferences` (the backend implementations) and `service_locator` (the registration/resolution mechanism). Consumers depend on `AppPreferences` — not on a concrete backend — so the storage choice stays a composition-root decision.
-
-## Usage
-
-### Choosing a backend
-
-`AppPreferencesDescriptor` has three named constructors, one per backend:
-
-```dart
-// Platform-native — SharedPreferencesAsync on iOS/Android/web/macOS.
-const platform = AppPreferencesDescriptor.platform();
-
-// Hive — file-backed, fast reads, named box.
-const hive = AppPreferencesDescriptor.hive(
-  boxName: 'user_settings',
-  initMode: HiveInitMode.productionSupport,
-);
-
-// Mock — in-memory, optionally seeded. Tests and dev harnesses only.
-const mock = AppPreferencesDescriptor.mock(
-  initialValues: {'theme': 'dark', 'launch_count': 0},
-);
-```
-
-Each constructor accepts an optional `serviceName` (default `'AppPreferences'`) so you can register multiple independent stores side by side:
-
-```dart
-const userPrefs = AppPreferencesDescriptor.hive(
-  boxName: 'user_settings',
-  serviceName: 'UserPreferences',
-);
-
-const featureFlags = AppPreferencesDescriptor.hive(
-  boxName: 'feature_flags',
-  serviceName: 'FeatureFlags',
-);
-```
-
-### Consuming the handle
-
-Once the descriptor has been registered through your `service_locator` setup and resolved, the `AppPreferences` handle exposes the underlying `AbstractPreferencesInterface` on its `prefs` field:
-
-```dart
-final appPrefs = /* resolved AppPreferences from the locator */;
-
-await appPrefs.prefs.setString('theme', 'dark');
-final theme = await appPrefs.prefs.getString('theme');     // 'dark'
-
-await appPrefs.prefs.setInt('launch_count', 42);
-final launches = await appPrefs.prefs.getInt('launch_count'); // 42
-
-if (await appPrefs.prefs.contains('legacy_flag')) {
-  await appPrefs.prefs.remove('legacy_flag');
+class AppPreferences implements ServiceClass {
+  const AppPreferences(this.prefs);
+  final AbstractPreferencesInterface prefs;
 }
 ```
 
-A service that needs preferences should declare its dependency on `AppPreferences` in its own descriptor and read `prefs` from it — never reach for a concrete backend directly.
+### AppPreferencesBackend
 
-### Hive backend with a custom path
+Backend selector enum for the descriptor:
 
-When you need the Hive box to live somewhere specific (a shared container directory, a per-flavor folder, an external SD-card path), pair `HiveInitMode.custom` with `customPath`:
+| Value      | Backing store                | Notes                          |
+| ---------- | ---------------------------- | ------------------------------ |
+| `platform` | `SharedPreferencesAsync`     | Platform-native, no cache      |
+| `hive`     | `hive_ce`                    | Dart-native, file-backed       |
+| `mock`     | In-memory map                | Test/dev only, no persistence  |
+
+### AppPreferencesDescriptor
+
+A `LazyAsyncServiceDescriptor<AppPreferences>` with one named constructor
+per backend. All three are `const`; backend-specific fields not used by a
+given constructor are pinned to `null`.
+
+- **`AppPreferencesDescriptor.platform`** — builds `PlatformPreferences`
+  over `SharedPreferencesAsync` for on-device persisted values.
+- **`AppPreferencesDescriptor.hive`** — builds `HivePreferences`. Requires
+  `boxName` (the Hive box storing preferences); `initMode` selects the
+  storage location (defaults to `HiveInitMode.productionDocuments`) and
+  `customPath` is required when `initMode` is `HiveInitMode.custom`. Building
+  additionally initializes Hive against the chosen location and opens the
+  named box.
+- **`AppPreferencesDescriptor.mock`** — builds `MockPreferences`, optionally
+  seeded with `initialValues` at construction.
+
+All variants share `serviceName` (default `'AppPreferences'`), declare no
+`dependencies`, and enforce a 500ms build `timeout`.
+
+#### Build flow and timeout
+
+`builder` awaits the backend construction with `Future.timeout(timeout)` and
+converts a `TimeoutException` into the locator's `ServiceItemTimeout(name,
+timeout)`, so a hung backend surfaces as a well-typed startup failure rather
+than an unbounded await.
+
+The backend construction itself lives in `build()`, exposed as `@protected`
+and `@visibleForTesting`: subclasses can substitute a slow or failing
+implementation to exercise the timeout branch in `builder` without touching
+real storage.
+
+## Usage
+
+Register one descriptor per app; consumers resolve `AppPreferences` from the
+locator and use `prefs`.
 
 ```dart
-const descriptor = AppPreferencesDescriptor.hive(
-  boxName: 'user_settings',
-  initMode: HiveInitMode.custom,
-  customPath: '/var/mobile/Containers/Shared/AppGroup/.../hive',
+// Production — Hive-backed.
+const AppPreferencesDescriptor.hive(boxName: 'preferences');
+
+// Production — platform-backed.
+const AppPreferencesDescriptor.platform();
+
+// Tests — in-memory, seeded.
+const AppPreferencesDescriptor.mock(
+  initialValues: {'themeMode': 'dark'},
 );
 ```
 
-For all other modes (`productionDocuments`, `productionSupport`, `test`), the descriptor resolves the directory for you — no `customPath` needed.
+Swapping backends is a one-line change at registration; no consumer code
+changes.
 
-### Test fixture with the mock backend
+## Conventions
 
-The mock backend wipes between app runs but accepts seed data at construction, which keeps integration tests deterministic without touching disk:
-
-```dart
-const descriptor = AppPreferencesDescriptor.mock(
-  serviceName: 'AppPreferences',
-  initialValues: {
-    'theme': 'light',
-    'launch_count': 5,
-    'favourite_tags': ['flutter', 'dart'],
-  },
-);
-```
-
-After resolution, `appPrefs.prefs` is a `MockPreferences` that returns those seeded values on first read.
-
-## Descriptor reference
-
-| Constructor | Backend | Required | Optional |
-| --- | --- | --- | --- |
-| `.platform()` | `PlatformPreferences` | — | `serviceName` |
-| `.hive(...)` | `HivePreferences` | `boxName` | `serviceName`, `initMode` (default `productionDocuments`), `customPath` |
-| `.mock(...)` | `MockPreferences` | — | `serviceName`, `initialValues` |
-
-All three resolve to the same `AppPreferences` handle, with the chosen backend exposed on `prefs`. Construction is wrapped in a 500 ms timeout; exceeding it throws `ServiceItemTimeout(name, timeout)`.
-
-## Additional information
-
-`AppPreferencesDescriptor.build()` is `@protected` and `@visibleForTesting`, so test subclasses can substitute a slow or failing implementation to exercise the timeout branch.
+- Curated barrel exports in `lib/app_preferences_service.dart`.
+- One class per file.
+- `const` descriptors throughout; backend selection is data, not behavior,
+  until `build()` runs.
+- Test seams (`build()`) are explicit and annotated rather than reached via
+  reflection or global mutation.

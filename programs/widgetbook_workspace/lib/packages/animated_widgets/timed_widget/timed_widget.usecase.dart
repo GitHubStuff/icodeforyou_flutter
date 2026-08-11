@@ -1,5 +1,4 @@
 // widgetbook_workspace/lib/animated_widgets/timed_widget.usecase.dart
-// ignore_for_file: public_member_api_docs
 
 import 'package:animated_widgets/animated_widgets.dart';
 import 'package:flutter/material.dart';

@@ -5,8 +5,6 @@
 // reporting. Concrete implementations live alongside this file —
 // [GetItServiceLocator] for production, [MockServiceLocator] for tests.
 
-// ignore_for_file: comment_references
-
 import 'package:service_locator/service_locator.dart' show ServiceClass;
 import 'package:service_locator/src/locator_status.dart' show LocatorStatus;
 import 'package:service_locator/src/service_registry/service_registration.dart'
