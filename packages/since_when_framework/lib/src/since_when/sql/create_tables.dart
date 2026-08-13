@@ -3,8 +3,7 @@
 import 'package:since_when_framework/src/since_when/table_names.dart';
 
 /// CREATE TABLE DDL for the `since_when` table.
-const String createTableSinceWhen =
-    '''
+const String createTableSinceWhen = '''
 CREATE TABLE IF NOT EXISTS ${TableNames.sinceWhen} (
   id                INTEGER PRIMARY KEY AUTOINCREMENT,
   createdTimeStamp  INTEGER NOT NULL UNIQUE,
@@ -14,13 +13,12 @@ CREATE TABLE IF NOT EXISTS ${TableNames.sinceWhen} (
   eventTimeStamp    INTEGER,
   sequenceNumber    INTEGER NOT NULL DEFAULT 0,
   metaData          TEXT,
-  data              TEXT    NOT NULL
+  content           TEXT NOT NULL
 )
 ''';
 
 /// CREATE TABLE DDL for the `since_when_tag_glossary` table.
-const String createTableTagGlossary =
-    '''
+const String createTableTagGlossary = '''
 CREATE TABLE IF NOT EXISTS ${TableNames.tagGlossary} (
   id               INTEGER PRIMARY KEY AUTOINCREMENT,
   createdTimeStamp INTEGER NOT NULL UNIQUE,
@@ -30,8 +28,7 @@ CREATE TABLE IF NOT EXISTS ${TableNames.tagGlossary} (
 ''';
 
 /// CREATE TABLE DDL for the `since_when_tags` join table.
-const String createTableTags =
-    '''
+const String createTableTags = '''
 CREATE TABLE IF NOT EXISTS ${TableNames.tags} (
   id                 INTEGER PRIMARY KEY AUTOINCREMENT,
   record_timestamp   INTEGER NOT NULL,

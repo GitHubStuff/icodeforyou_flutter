@@ -1,0 +1,5 @@
+# packages/sincewhen_drift_framework/analysis_options.yaml
+analyzer:
+  errors:
+    use_super_parameters: ignore
+include: package:icodeforyou_lints/analysis_options.yaml

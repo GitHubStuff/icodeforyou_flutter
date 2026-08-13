@@ -11,6 +11,7 @@ import '../app_rail_navigation/rail_destintation_buttons.dart'
     show RailDestinationButtons;
 
 /// The destination shown when the app screen first appears.
+/// TODO: Change the first RAIL-Button to appear
 const RailDestinationEnum _kInitialDestination = RailDestinationEnum.home;
 
 /// The destinations shown as rail buttons, in rail order.
@@ -20,6 +21,7 @@ const RailDestinationEnum _kInitialDestination = RailDestinationEnum.home;
 /// secondary ones live behind the overflow button. Moving a member
 /// between the two lists is the whole change needed to promote or
 /// demote it.
+/// TODO: Control the order of the RAIL buttons
 const List<RailDestinationEnum> _kVisibleDestinations = [
   RailDestinationEnum.home,
   RailDestinationEnum.settings,
@@ -29,6 +31,7 @@ const List<RailDestinationEnum> _kVisibleDestinations = [
 ///
 /// Non-empty, so the rail renders an overflow button in its last
 /// slot; tapping it opens a popover listing these as tiles.
+/// TODO: Control the order of the RAIL-OVERFLOW buttons
 const List<RailDestinationEnum> _kOverflowedDestinations = [
   RailDestinationEnum.library,
   RailDestinationEnum.database,
@@ -93,6 +96,8 @@ class _RailScreenState extends State<RailScreen> {
   /// between destinations and their buttons. The switch is exhaustive:
   /// adding a [RailDestinationEnum] member is a compile error here
   /// until its view is declared.
+  /// TODO: Add any destination Screen here.
+
   Widget _destinationView(RailDestinationEnum destination) =>
       switch (destination) {
         RailDestinationEnum.home => const DefaultWelcomeScreen(),

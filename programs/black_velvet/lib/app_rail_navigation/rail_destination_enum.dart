@@ -14,6 +14,7 @@ import 'package:flutter/material.dart' show IconData, Icons;
 /// with its [iconData] and [caption]. Nothing else in the package needs
 /// to be touched.
 /// {@endtemplate}
+/// TODO: Add any new Enum that defines a new RailDestination
 enum RailDestinationEnum {
   /// The home destination.
   home(iconData: Icons.home_outlined, caption: 'Home'),

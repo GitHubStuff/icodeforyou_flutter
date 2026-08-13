@@ -4,8 +4,6 @@
 // exhaustive switches throughout the registry and locator adapters —
 // any new variant added here must be handled everywhere.
 
-// ignore_for_file: comment_references
-
 /// Lifecycle state of a single [ServiceRegistration] within the
 /// [ServiceLocatorRegistry].
 ///

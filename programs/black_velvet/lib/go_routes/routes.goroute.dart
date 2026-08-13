@@ -1,4 +1,4 @@
-// programs/black_velvet/lib/go_routes/routes.goroute.dart
+// programs/since_when_dev/lib/go_routes/routes.goroute.dart
 part of 'routes_framework.dart';
 
 //+ COLLECTION OF STARTER/DEFAULT ROUTES +//
@@ -38,12 +38,12 @@ GoRoute _crashRoute() => GoRoute(
 );
 
 /// Splash screens are [no] fun. They display, then transfer to the /app route
-GoRoute _splashRoute() => GoRoute(
+GoRoute _splashRoute({required List<Future<void> Function()> tasks}) => GoRoute(
   path: RoutesFramework.splash,
   builder: (context, state) {
     return SplashScreen(
       duration: const Duration(milliseconds: 2500),
-      tasks: const [],
+      tasks: tasks,
       onComplete: () {
         context.go(RoutesFramework.app);
         unawaited(StatusBarChameleon.setStatusBarHidden(hidden: false));

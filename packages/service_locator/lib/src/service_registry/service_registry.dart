@@ -9,8 +9,6 @@
 // dispatch (`_LocatorStateChangeHandling` mixin) lives in the part file
 // `service_locator_registry_state_change.dart`.
 
-// ignore_for_file: avoid_types_on_closure_parameters
-
 import 'dart:async' show Completer;
 
 import 'package:extensions/extensions.dart' show IterableExt;
@@ -58,11 +56,10 @@ part 'service_registry_state_change.dart';
 class ServiceLocatorRegistry
     with _LocatorStateChangeHandling
     implements ServiceRegistryInterface, ServiceResolver {
-  /// Creates a registry backed by [locator]. Pass `GetItServiceLocator()`
+  /// Creates a registry backed by [_locator]. Pass `GetItServiceLocator()`
   /// for production wiring, `MockServiceLocator()` in tests. The locator
   /// is not touched until [register] transitions a staged descriptor.
-  ServiceLocatorRegistry({required ServiceLocator locator})
-    : _locator = locator;
+  ServiceLocatorRegistry({required this._locator});
 
   final ServiceLocator _locator;
   final Map<String, ServiceRegistration<ServiceClass>> _registrations = {};
@@ -363,7 +360,7 @@ class ServiceLocatorRegistry
               stackTrace: stackTrace,
             ),
       );
-    // ignore: avoid_catches_without_on_clauses
+      // ignore: avoid_catches_without_on_clauses
     } catch (error, stackTrace) {
       registration.markFailed(error, stackTrace);
       // Throw the canonical wrapper stored by [markFailed]. This way the

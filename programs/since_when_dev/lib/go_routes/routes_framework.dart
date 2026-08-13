@@ -62,13 +62,13 @@ class RoutesFramework {
   /// The router starts at [splash] and registers the application,
   /// crash, and splash routes. Call once during startup and hand the
   /// result to the router-aware application widget.
-  static GoRouter builtRoutes() {
+  static GoRouter builtRoutes({required List<Future<void> Function()> tasks}) {
     return GoRouter(
       initialLocation: splash,
       routes: <RouteBase>[
         _appRoute(),
         _crashRoute(),
-        _splashRoute(),
+        _splashRoute(tasks: tasks),
       ],
     );
   }

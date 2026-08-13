@@ -35,15 +35,17 @@ final class SplashCubit extends Cubit<SplashState> {
   /// concurrently using `Future.wait`.
   final List<Future<void> Function()> tasks;
 
-  /// Starts the splash process by executing all tasks and enforcing the minimum
-  /// [duration].
+  /// Starts the splash process by executing all tasks and enforcing the
+  /// minimum [duration].
   ///
   /// Flow:
-  /// - All [tasks] begin executing concurrently.
+  /// - All [tasks] begin executing concurrently, invoked exactly once.
   /// - The cubit waits for [duration] to elapse.
-  /// - If tasks are still running after the duration, [SplashWaiting] is emitted.
+  /// - If tasks are still running after the duration, [SplashWaiting] is
+  ///   emitted.
   /// - When all tasks complete, [SplashComplete] is emitted.
-  /// - If any task throws an exception, [SplashError] is emitted with the error.
+  /// - If any task throws an exception, [SplashError] is emitted with the
+  ///   error.
   ///
   /// This method should be called once, typically immediately after cubit
   /// creation.
@@ -51,7 +53,9 @@ final class SplashCubit extends Cubit<SplashState> {
     try {
       var tasksComplete = false;
 
-      final tasksFuture = Future.wait(tasks.map((task) => task())).then((_) {
+      final futures = tasks.map((task) => task()).toList();
+
+      final tasksFuture = Future.wait(futures).then((_) {
         tasksComplete = true;
       });
 

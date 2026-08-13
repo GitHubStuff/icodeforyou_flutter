@@ -22,6 +22,7 @@ const RailDestinationEnum _kInitialDestination = RailDestinationEnum.home;
 /// demote it.
 const List<RailDestinationEnum> _kVisibleDestinations = [
   RailDestinationEnum.home,
+  RailDestinationEnum.database,
   RailDestinationEnum.settings,
 ];
 
@@ -31,7 +32,6 @@ const List<RailDestinationEnum> _kVisibleDestinations = [
 /// slot; tapping it opens a popover listing these as tiles.
 const List<RailDestinationEnum> _kOverflowedDestinations = [
   RailDestinationEnum.library,
-  RailDestinationEnum.database,
 ];
 
 /// {@template rail_screen}

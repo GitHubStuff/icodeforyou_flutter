@@ -1,0 +1,2 @@
+# packages/dependency_resolver/analysis_options.yaml
+include: package:icodeforyou_lints/analysis_options.yaml

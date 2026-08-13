@@ -1,4 +1,4 @@
-// programs/{{name.snakeCase()}}/lib/application_startup.dart
+// programs/since_when_dev/lib/application_startup.dart
 
 import 'package:flutter/material.dart';
 import 'package:theme_framework/theme_framework.dart'
@@ -22,10 +22,14 @@ final class ApplicationStartup {
   /// {@macro application_startup.dart}
   const ApplicationStartup({
     required this.themeStorage,
+    required this.tasks,
   });
 
   /// The device store the theme is read from and written to.
   final ThemeStorageAbstract themeStorage;
+
+  /// Tasks to run "under" the splash screen
+  final List<Future<void> Function()> tasks;
 
   /// Builds the app and hands it to [runApp].
   void runner() {
@@ -35,7 +39,7 @@ final class ApplicationStartup {
     final themeCubit = ThemeCubit(themeStorage);
 
     // The routes for navigation.
-    final goRouter = RoutesFramework.builtRoutes();
+    final goRouter = RoutesFramework.builtRoutes(tasks: tasks);
 
     runApp(
       DefaultMaterialAppRouter(

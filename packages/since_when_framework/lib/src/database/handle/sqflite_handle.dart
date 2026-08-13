@@ -7,6 +7,7 @@ import 'package:since_when_framework/src/database/configuration/database_configu
 import 'package:since_when_framework/src/database/handle/database_handle.dart';
 import 'package:sqflite/sqflite.dart';
 
+/// {@template sqflite_handle.dart}
 /// The default [DatabaseHandle] implementation, backed by sqflite.
 ///
 /// Construct via [open], which dispatches on the [DatabaseConfiguration]
@@ -14,14 +15,16 @@ import 'package:sqflite/sqflite.dart';
 /// the responsibility of the lifecycle cubit running registered setup
 /// contributions against the returned handle — nothing about the database's
 /// schema lives in here.
+/// {@endtemplate}
 class SqfliteHandle implements DatabaseHandle {
+  /// {@macro sqflite_handle.dart}
   SqfliteHandle._({
     required DatabaseExecutor executor,
     required Database root,
     required String fullPath,
-  }) : _executor = executor,
-       _root = root,
-       _fullPath = fullPath;
+  })  : _executor = executor,
+        _root = root,
+        _fullPath = fullPath;
 
   final DatabaseExecutor _executor;
   final Database _root;
