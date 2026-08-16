@@ -1,5 +1,4 @@
-// packages/widget_animation_framework/lib/src/play_on_mount.dart
-
+// packages/widget_animation_framework/lib/src/animation_combiner_on_widget/animation_controller_widget.dart
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
@@ -58,7 +57,8 @@ class AnimationControllerWidget extends StatefulWidget {
   final Curve curve;
 
   @override
-  State<AnimationControllerWidget> createState() => _AnimationControllerWidgetState();
+  State<AnimationControllerWidget> createState() =>
+      _AnimationControllerWidgetState();
 }
 
 class _AnimationControllerWidgetState extends State<AnimationControllerWidget>

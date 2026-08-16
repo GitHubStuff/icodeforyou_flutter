@@ -1,166 +1,311 @@
 // packages/custom_widgets/test/src/slide_index_stack/slide_index_stack_test.dart
 
-import 'package:custom_widgets/custom_widgets.dart' show SlideIndexedStack;
+import 'package:custom_widgets/src/slide_index_stack/slide_index_stack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// A short slide so tests settle quickly.
-const Duration _kDuration = Duration(milliseconds: 200);
+const Key _keyA = ValueKey<String>('a');
+const Key _keyB = ValueKey<String>('b');
+const Key _keyC = ValueKey<String>('c');
 
-/// Keys for the three children under test.
-const List<Key> _kKeys = [Key('child-0'), Key('child-1'), Key('child-2')];
+const Duration _testDuration = Duration(milliseconds: 300);
 
-/// Pumps a three-child [SlideIndexedStack] showing [index].
-Future<void> _pump(
-  WidgetTester tester, {
+/// Wraps a [SlideIndexedStack] in a minimal app shell.
+Widget _harness({
   required int index,
-  Axis direction = Axis.horizontal,
-  Duration duration = _kDuration,
+  Duration duration = _testDuration,
+  Curve curve = Curves.easeInOutCubic,
+  List<Widget> children = const <Widget>[
+    SizedBox(key: _keyA),
+    SizedBox(key: _keyB),
+    SizedBox(key: _keyC),
+  ],
 }) {
-  return tester.pumpWidget(
-    Directionality(
-      textDirection: TextDirection.ltr,
-      child: SizedBox(
-        width: 300,
-        height: 300,
-        child: SlideIndexedStack(
-          index: index,
-          direction: direction,
-          duration: duration,
-          children: [for (final key in _kKeys) SizedBox(key: key)],
-        ),
+  return MaterialApp(
+    home: Scaffold(
+      body: SlideIndexedStack(
+        index: index,
+        duration: duration,
+        curve: curve,
+        children: children,
       ),
     ),
   );
 }
 
-/// The [SlideTransition] wrapping the child at [index], if any.
-Finder _transitionOf(int index) => find.ancestor(
-  of: find.byKey(_kKeys[index]),
-  matching: find.byType(SlideTransition),
+/// Every [SlideTransition] the stack owns, on stage or off.
+///
+/// `skipOffstage: false` must be set on the descendant finder itself,
+/// not only the matcher: it governs the tree traversal, and hidden
+/// children live inside [Offstage] subtrees.
+Finder _slides() => find.descendant(
+  of: find.byType(SlideIndexedStack),
+  matching: find.byType(SlideTransition, skipOffstage: false),
+  skipOffstage: false,
 );
 
-/// Finds every [SlideTransition], including any hidden inside an
-/// [Offstage] subtree, so "no transitions" assertions are honest.
-Finder _allTransitions() => find.byType(SlideTransition, skipOffstage: false);
+/// The [SlideTransition] wrapping the child at [key].
+SlideTransition _slideOf(WidgetTester tester, Key key) {
+  return tester.widget<SlideTransition>(
+    find
+        .ancestor(
+          of: find.byKey(key, skipOffstage: false),
+          matching: find.byType(SlideTransition, skipOffstage: false),
+        )
+        .first,
+  );
+}
 
-/// The [Offstage] wrapping the child at [index].
-///
-/// Offstage subtrees are invisible to default finders, so both the
-/// anchor and the ancestor lookup must opt out of offstage skipping.
-Offstage _offstageOf(WidgetTester tester, int index) {
+/// The [Offstage] wrapping the child at [key].
+Offstage _offstageOf(WidgetTester tester, Key key) {
   return tester.widget<Offstage>(
-    find.ancestor(
-      of: find.byKey(_kKeys[index], skipOffstage: false),
-      matching: find.byType(Offstage, skipOffstage: false),
-    ),
+    find
+        .ancestor(
+          of: find.byKey(key, skipOffstage: false),
+          matching: find.byType(Offstage, skipOffstage: false),
+        )
+        .first,
   );
 }
 
-/// The [TickerMode] wrapping the child at [index].
-TickerMode _tickerModeOf(WidgetTester tester, int index) {
-  return tester.widget<TickerMode>(
-    find.ancestor(
-      of: find.byKey(_kKeys[index], skipOffstage: false),
-      matching: find.byType(TickerMode, skipOffstage: false),
-    ),
-  );
-}
-
-/// The incoming slide offset of the child at [index] on the first frame.
-Offset _entryOffset(WidgetTester tester, int index) {
-  return tester.widget<SlideTransition>(_transitionOf(index)).position.value;
+/// Whether tickers are enabled at the child at [key].
+bool _tickersEnabledAt(WidgetTester tester, Key key) {
+  return TickerMode.of(tester.element(find.byKey(key, skipOffstage: false)));
 }
 
 void main() {
-  group('SlideIndexedStack', () {
-    testWidgets('at rest, the selected child is bare and the rest are '
-        'offstage with tickers disabled', (tester) async {
-      await _pump(tester, index: 0);
-
-      expect(_allTransitions(), findsNothing);
-      expect(find.byKey(_kKeys[0]), findsOneWidget);
-      for (final hidden in const [1, 2]) {
-        expect(_offstageOf(tester, hidden).offstage, isTrue);
-        expect(_tickerModeOf(tester, hidden).enabled, isFalse);
-      }
+  group(SlideIndexedStack, () {
+    test('exposes the documented defaults', () {
+      const stack = SlideIndexedStack(index: 0, children: <Widget>[]);
+      expect(stack.duration, const Duration(milliseconds: 750));
+      expect(stack.curve, Curves.easeInOutCubic);
     });
 
-    testWidgets('moving to a higher index slides in from the end', (
-      tester,
-    ) async {
-      await _pump(tester, index: 0);
-      await _pump(tester, index: 1);
+    testWidgets(
+      'at rest, keeps the identical wrapper chain for every child: '
+      'the selected child on stage at center, the rest offstage with '
+      'tickers disabled',
+      (tester) async {
+        await tester.pumpWidget(_harness(index: 0));
 
-      expect(_entryOffset(tester, 1), const Offset(1, 0));
-      expect(_transitionOf(0), findsOneWidget);
-      expect(_offstageOf(tester, 2).offstage, isTrue);
-    });
+        // One permanent SlideTransition per child — the constant
+        // wrapper chain that makes state survive.
+        expect(_slides(), findsNWidgets(3));
 
-    testWidgets('moving to a lower index slides in from the start', (
-      tester,
-    ) async {
-      await _pump(tester, index: 1);
-      await _pump(tester, index: 0);
+        // The selected child: on stage, tickers live, held at center.
+        expect(_offstageOf(tester, _keyA).offstage, isFalse);
+        expect(_tickersEnabledAt(tester, _keyA), isTrue);
+        expect(_slideOf(tester, _keyA).position.value, Offset.zero);
 
-      expect(_entryOffset(tester, 0), const Offset(-1, 0));
-      expect(_transitionOf(1), findsOneWidget);
-    });
+        // The rest: mounted, hidden, ticker-frozen, held at center.
+        for (final key in <Key>[_keyB, _keyC]) {
+          expect(find.byKey(key, skipOffstage: false), findsOneWidget);
+          expect(_offstageOf(tester, key).offstage, isTrue);
+          expect(_tickersEnabledAt(tester, key), isFalse);
+          expect(_slideOf(tester, key).position.value, Offset.zero);
+        }
+      },
+    );
 
-    testWidgets('vertical direction slides along the y axis, both ways', (
-      tester,
-    ) async {
-      await _pump(tester, index: 0, direction: Axis.vertical);
-      await _pump(tester, index: 1, direction: Axis.vertical);
-      expect(_entryOffset(tester, 1), const Offset(0, 1));
+    testWidgets(
+      'ignores an update that keeps the same index',
+      (tester) async {
+        await tester.pumpWidget(_harness(index: 1));
+        await tester.pumpWidget(
+          _harness(index: 1, duration: const Duration(milliseconds: 100)),
+        );
+        await tester.pump(const Duration(milliseconds: 50));
 
-      await tester.pumpAndSettle();
+        // No slide started: nothing moved, nothing came on stage.
+        expect(_offstageOf(tester, _keyB).offstage, isFalse);
+        expect(_slideOf(tester, _keyB).position.value, Offset.zero);
+        expect(_offstageOf(tester, _keyA).offstage, isTrue);
+        expect(_offstageOf(tester, _keyC).offstage, isTrue);
+      },
+    );
 
-      await _pump(tester, index: 0, direction: Axis.vertical);
-      expect(_entryOffset(tester, 0), const Offset(0, -1));
-    });
+    testWidgets(
+      'slides forward when the index increases: the incoming child '
+      'enters from the end',
+      (tester) async {
+        await tester.pumpWidget(_harness(index: 0));
+        await tester.pumpWidget(_harness(index: 2));
 
-    testWidgets('the slide settles back to the at-rest configuration', (
-      tester,
-    ) async {
-      await _pump(tester, index: 0);
-      await _pump(tester, index: 1);
-      await tester.pumpAndSettle();
+        // The sliding pair comes on stage; the bystander stays off.
+        expect(_offstageOf(tester, _keyA).offstage, isFalse);
+        expect(_offstageOf(tester, _keyC).offstage, isFalse);
+        expect(_offstageOf(tester, _keyB).offstage, isTrue);
+        expect(_tickersEnabledAt(tester, _keyB), isFalse);
+        expect(_slideOf(tester, _keyB).position.value, Offset.zero);
 
-      expect(_allTransitions(), findsNothing);
-      expect(_offstageOf(tester, 0).offstage, isTrue);
-      expect(_offstageOf(tester, 2).offstage, isTrue);
-      expect(find.byKey(_kKeys[1]), findsOneWidget);
-    });
+        // At t=0 the incoming child sits fully off the end; the
+        // outgoing child sits at center.
+        expect(_slideOf(tester, _keyC).position.value, const Offset(1, 0));
+        expect(_slideOf(tester, _keyA).position.value, Offset.zero);
 
-    testWidgets('a retarget mid-slide restarts from the new pair', (
-      tester,
-    ) async {
-      await _pump(tester, index: 0);
-      await _pump(tester, index: 1);
-      await tester.pump(_kDuration ~/ 2);
+        // Mid-slide, both remain on stage.
+        await tester.pump(const Duration(milliseconds: 150));
+        expect(_offstageOf(tester, _keyA).offstage, isFalse);
+        expect(_offstageOf(tester, _keyC).offstage, isFalse);
 
-      await _pump(tester, index: 2);
+        // At rest again: the previous child is dropped back offstage
+        // and the new selection holds center.
+        await tester.pumpAndSettle();
+        expect(_offstageOf(tester, _keyC).offstage, isFalse);
+        expect(_slideOf(tester, _keyC).position.value, Offset.zero);
+        expect(_offstageOf(tester, _keyA).offstage, isTrue);
+        expect(_tickersEnabledAt(tester, _keyA), isFalse);
+      },
+    );
 
-      expect(_entryOffset(tester, 2), const Offset(1, 0));
-      expect(_transitionOf(1), findsOneWidget);
-      expect(_offstageOf(tester, 0).offstage, isTrue);
+    testWidgets(
+      'slides backward when the index decreases: the incoming child '
+      'enters from the start',
+      (tester) async {
+        await tester.pumpWidget(_harness(index: 2));
+        await tester.pumpWidget(_harness(index: 0));
 
-      await tester.pumpAndSettle();
-      expect(_allTransitions(), findsNothing);
-    });
+        expect(_slideOf(tester, _keyA).position.value, const Offset(-1, 0));
+        expect(_slideOf(tester, _keyC).position.value, Offset.zero);
 
-    testWidgets('a rebuild with the same index starts no slide', (
-      tester,
-    ) async {
-      await _pump(tester, index: 0);
-      await _pump(
-        tester,
-        index: 0,
-        duration: const Duration(milliseconds: 400),
-      );
+        await tester.pumpAndSettle();
+        expect(_offstageOf(tester, _keyA).offstage, isFalse);
+        expect(_offstageOf(tester, _keyC).offstage, isTrue);
+      },
+    );
 
-      expect(_allTransitions(), findsNothing);
+    testWidgets(
+      'shapes both the incoming and outgoing slides with the '
+      'provided curve',
+      (tester) async {
+        await tester.pumpWidget(_harness(index: 0, curve: Curves.linear));
+        await tester.pumpWidget(_harness(index: 1, curve: Curves.linear));
+
+        // Halfway through a linear slide, both children sit halfway.
+        await tester.pump(const Duration(milliseconds: 150));
+        expect(_slideOf(tester, _keyB).position.value, const Offset(0.5, 0));
+        expect(_slideOf(tester, _keyA).position.value, const Offset(-0.5, 0));
+
+        await tester.pumpAndSettle();
+      },
+    );
+
+    testWidgets(
+      'restarts a mid-slide change from the new previous/current pair',
+      (tester) async {
+        await tester.pumpWidget(_harness(index: 0));
+        await tester.pumpWidget(_harness(index: 1));
+        await tester.pump(const Duration(milliseconds: 100));
+
+        // A tap mid-slide: the pair becomes (previous: b, current: c)
+        // and the controller restarts from zero.
+        await tester.pumpWidget(_harness(index: 2));
+        expect(_slideOf(tester, _keyC).position.value, const Offset(1, 0));
+        expect(_slideOf(tester, _keyB).position.value, Offset.zero);
+        expect(_offstageOf(tester, _keyB).offstage, isFalse);
+        expect(_offstageOf(tester, _keyA).offstage, isTrue);
+
+        await tester.pumpAndSettle();
+        expect(_offstageOf(tester, _keyC).offstage, isFalse);
+        expect(_offstageOf(tester, _keyB).offstage, isTrue);
+      },
+    );
+
+    testWidgets(
+      'applies an updated duration to the next slide',
+      (tester) async {
+        await tester.pumpWidget(_harness(index: 0));
+        await tester.pumpWidget(
+          _harness(index: 1, duration: const Duration(milliseconds: 100)),
+        );
+
+        // At exactly the new duration the slide has visually landed:
+        // completion has not yet dispatched (that takes one more
+        // tick past the end), so both children are still on stage
+        // with the tweens at their end values.
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(_slideOf(tester, _keyB).position.value, Offset.zero);
+        expect(_slideOf(tester, _keyA).position.value, const Offset(-1, 0));
+        expect(_offstageOf(tester, _keyA).offstage, isFalse);
+
+        // One tick past the end dispatches completed and drops the
+        // previous child back offstage.
+        await tester.pump(const Duration(milliseconds: 1));
+        expect(_offstageOf(tester, _keyA).offstage, isTrue);
+        expect(_offstageOf(tester, _keyB).offstage, isFalse);
+        expect(_slideOf(tester, _keyB).position.value, Offset.zero);
+      },
+    );
+
+    testWidgets(
+      'preserves child state across index changes',
+      (tester) async {
+        await tester.pumpWidget(
+          _harness(
+            index: 0,
+            children: const <Widget>[
+              _Counter(key: _keyA),
+              SizedBox(key: _keyB),
+            ],
+          ),
+        );
+
+        await tester.tap(find.byType(TextButton));
+        await tester.pump();
+        expect(find.text('count: 1'), findsOneWidget);
+
+        // Switch away and back; the counter's state must survive.
+        await tester.pumpWidget(
+          _harness(
+            index: 1,
+            children: const <Widget>[
+              _Counter(key: _keyA),
+              SizedBox(key: _keyB),
+            ],
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.pumpWidget(
+          _harness(
+            index: 0,
+            children: const <Widget>[
+              _Counter(key: _keyA),
+              SizedBox(key: _keyB),
+            ],
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.text('count: 1'), findsOneWidget);
+      },
+    );
+
+    testWidgets('disposes its controller cleanly', (tester) async {
+      await tester.pumpWidget(_harness(index: 0));
+      await tester.pumpWidget(const SizedBox());
+      expect(tester.takeException(), isNull);
     });
   });
+}
+
+/// A stateful child used to prove the [IndexedStack] state-keeping
+/// contract survives slides.
+class _Counter extends StatefulWidget {
+  const _Counter({super.key});
+
+  @override
+  State<_Counter> createState() => _CounterState();
+}
+
+/// State for [_Counter]: a tap count that must survive switches.
+class _CounterState extends State<_Counter> {
+  int _count = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () => setState(() => _count++),
+      child: Text('count: $_count'),
+    );
+  }
 }

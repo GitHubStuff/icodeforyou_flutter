@@ -117,7 +117,7 @@ class _TokenSpec {
 /// - `q` — a unit letter (`Y M W D H m s S u`), ignored except for validation.
 /// - `t|singular|plural|q` — plurality: emit `singular` when the value is `1`,
 ///   otherwise `plural`. Inside the arms, `%%` -> `%` and `%|` -> `|` are the
-///   only valid escapes.
+///   only escapes; any other `%` is treated as a literal percent character.
 ///
 /// ## Sign
 ///
@@ -339,7 +339,8 @@ class UnitFormatter {
 
 /// Reads one plurality arm up to the next unescaped `|`.
 ///
-/// Inside an arm only `%%` -> `%` and `%|` -> `|` are valid escapes.
+/// Inside an arm `%%` -> `%` and `%|` -> `|` are the only escapes; any other
+/// `%` is treated as a literal percent character and copied through.
 ({String text, int next}) _readArm(String s, int start) {
   final len = s.length;
   var i = start;
@@ -360,11 +361,7 @@ class UnitFormatter {
         i += 2;
         continue;
       }
-      assert(
-        false,
-        'Inside plurality arms only %% and %| are valid escapes; got "%$n" in: $s',
-      );
-      // Release fallback: treat the stray '%' as a literal.
+      // Not an escape: a lone '%' is a literal percent character.
       buffer.write(_kPercent);
       i++;
       continue;

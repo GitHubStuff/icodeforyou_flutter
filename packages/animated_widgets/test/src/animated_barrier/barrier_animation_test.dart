@@ -1,16 +1,24 @@
-// packages/animated_barrier/test/src/barrier_animation_test.dart
+// packages/animated_widgets/test/src/animated_barrier/barrier_animation_test.dart
 
-import 'package:animated_widgets/animated_widgets.dart' show BarrierAnimation, FadeBarrier, SlideFromBottomBarrier, SlideFromTopBarrier;
+import 'package:animated_widgets/animated_widgets.dart'
+    show
+        BarrierAnimation,
+        FadeBarrier,
+        SlideFromBottomBarrier,
+        SlideFromTopBarrier;
 import 'package:flutter/animation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('BarrierAnimation defaults', () {
-    test('FadeBarrier has 250ms duration and easeOutCubic curve by default', () {
-      const sut = FadeBarrier();
-      expect(sut.duration, const Duration(milliseconds: 250));
-      expect(sut.curve, Curves.easeOutCubic);
-    });
+    test(
+      'FadeBarrier has 250ms duration and easeOutCubic curve by default',
+      () {
+        const sut = FadeBarrier();
+        expect(sut.duration, const Duration(milliseconds: 250));
+        expect(sut.curve, Curves.easeOutCubic);
+      },
+    );
 
     test('SlideFromTopBarrier inherits the same defaults', () {
       const sut = SlideFromTopBarrier();

@@ -15,6 +15,7 @@ dependencies:
   extensions: ^1.0.0   # color.toInt()
   path_provider: ^2.1.6
   random_color_generator: ^1.0.0
+  sincewhen_models: ^1.0.0
 
 dev_dependencies:
   build_runner: ^2.15.1    # dart run build_runner build

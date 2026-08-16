@@ -1,25 +1,19 @@
 name: theme_framework
-description: "Managing light/dart/system themes and brightness"
+description: "Managing light/dart/system themes"
 publish_to: none
 homepage:
 resolution: workspace
 version: 1.0.0
 
+
 environment:
-  sdk: ">=3.12.0 <4.0.0"
+  sdk: ^3.12.0
+
+dev_dependencies:
+  icodeforyou_lints: ^1.0.0
 
 dependencies:
-  flutter:
-    sdk: flutter
   flutter_bloc: ^9.1.1
   gap: ^3.0.1
   settings_widget: ^1.0.0
   shared_preferences: ^2.5.5
-
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  icodeforyou_lints: ^1.0.0
-
-flutter:
-  uses-material-design: true

@@ -6,12 +6,22 @@ import 'package:sincewhen_drift_framework/src/database/database.dart'
     show SinceWhenDatabase;
 import 'package:sincewhen_drift_framework/src/database/database_opening.dart'
     show SinceWhenDatabaseOpening;
+import 'package:sincewhen_drift_framework/src/repositories/drift_glossary_repository.dart'
+    show DriftGlossaryRepository;
+import 'package:sincewhen_drift_framework/src/repositories/drift_since_when_repository.dart'
+    show DriftSinceWhenRepository;
+//+ CHANGED
+import 'package:sincewhen_drift_framework/src/repositories/drift_tag_repository.dart'
+    show DriftTagRepository;
 import 'package:sincewhen_drift_framework/src/tables/glossary_items/glossary_items_dao.dart'
     show GlossaryItemsDao;
 import 'package:sincewhen_drift_framework/src/tables/sincewhen_items/sincewhen_items_dao.dart'
     show SinceWhenItemsDao;
 import 'package:sincewhen_drift_framework/src/tables/tag_items/tag_items_dao.dart'
     show TagItemsDao;
+//+ CHANGED (adds TagRepository)
+import 'package:sincewhen_models/sincewhen_models.dart'
+    show GlossaryRepository, SinceWhenRepository, TagRepository;
 
 /// Registers a database lazily, persisted in the application documents
 /// folder as [fileName].
@@ -63,6 +73,22 @@ Future<void> registerGlossaryItemsDao(DependencyContainer container) async {
   );
 }
 
+/// Registers the persistence-free [GlossaryRepository] contract lazily,
+/// bound to the drift implementation.
+///
+/// Registered against the interface from `sincewhen_models` — not the
+/// concrete [DriftGlossaryRepository] — so consumers resolve and depend
+/// on the contract only. Requires [registerGlossaryItemsDao] to have
+/// been called on the same container.
+///
+/// Takes the full [DependencyContainer] because the factory both
+/// registers (now) and resolves (later, when it runs).
+Future<void> registerGlossaryRepository(DependencyContainer container) async {
+  container.registerLazySingleton<GlossaryRepository>(
+    () => DriftGlossaryRepository(container.get<GlossaryItemsDao>()),
+  );
+}
+
 /// Registers the since-when items DAO lazily, derived from the database.
 ///
 /// Takes the full [DependencyContainer] because the factory both
@@ -73,6 +99,22 @@ Future<void> registerSinceWhenItemsDao(DependencyContainer container) async {
   );
 }
 
+/// Registers the persistence-free [SinceWhenRepository] contract lazily,
+/// bound to the drift implementation.
+///
+/// Registered against the interface from `sincewhen_models` — not the
+/// concrete [DriftSinceWhenRepository] — so consumers resolve and depend
+/// on the contract only. Requires [registerSinceWhenItemsDao] to have
+/// been called on the same container.
+///
+/// Takes the full [DependencyContainer] because the factory both
+/// registers (now) and resolves (later, when it runs).
+Future<void> registerSinceWhenRepository(DependencyContainer container) async {
+  container.registerLazySingleton<SinceWhenRepository>(
+    () => DriftSinceWhenRepository(container.get<SinceWhenItemsDao>()),
+  );
+}
+
 /// Registers the tag items DAO lazily, derived from the database.
 ///
 /// Takes the full [DependencyContainer] because the factory both
@@ -80,6 +122,23 @@ Future<void> registerSinceWhenItemsDao(DependencyContainer container) async {
 Future<void> registerTagItemsDao(DependencyContainer container) async {
   container.registerLazySingleton<TagItemsDao>(
     () => container.get<SinceWhenDatabase>().tagItemsDao,
+  );
+}
+
+//+ CHANGED (new function)
+/// Registers the persistence-free [TagRepository] contract lazily,
+/// bound to the drift implementation.
+///
+/// Registered against the interface from `sincewhen_models` — not the
+/// concrete [DriftTagRepository] — so consumers resolve and depend
+/// on the contract only. Requires [registerTagItemsDao] to have
+/// been called on the same container.
+///
+/// Takes the full [DependencyContainer] because the factory both
+/// registers (now) and resolves (later, when it runs).
+Future<void> registerTagRepository(DependencyContainer container) async {
+  container.registerLazySingleton<TagRepository>(
+    () => DriftTagRepository(container.get<TagItemsDao>()),
   );
 }
 

@@ -4,11 +4,15 @@ import 'package:dependency_resolver/dependency_resolver.dart'
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart'
     show SharedPreferences;
-import 'package:since_when_dev/app/since_when_startup.dart';
+//+ CHANGED (facade imported directly; the app-side forward is gone)
+import 'package:sincewhen_drift_framework/sincewhen_drift_framework.dart'
+    show SinceWhenStartup;
 import 'package:status_bar_chameleon/status_bar_chameleon.dart'
     show StatusBarChameleon;
 import 'package:theme_framework/theme_framework.dart'
     show SharedPreferencesThemeStorage;
+
+import 'app/since_when_configurations.dart' show SinceWhenDevConfigurations;
 
 import 'application_startup.dart' show ApplicationStartup;
 
@@ -27,19 +31,21 @@ Future<void> main() async {
 
   // Service Resolver (aka GetIt or equiv)
   final resolver = InMemoryDependencyResolver();
-  // The Drift database
-  const configuration = SinceWhenStartup.inMemoryConfiguration;
+  // The Since-When Drift database
+  //
+  const configuration = SinceWhenDevConfigurations.inMemory;
 
   ApplicationStartup(
     themeStorage: SharedPreferencesThemeStorage(preferences),
     tasks: [
-      // Registers the Drift database and DAOs, then triggers the lazy
-      // load so the database is alive and ready. Setup and warm are one
-      // task because warm resolves what setup registers; splash tasks
+      // Registers the Drift database, DAOs, and repository contracts of
+      // the since_when framework, then triggers the lazy-load so the
+      // database is alive and ready. Setup and warm are one task because
+      // warm resolves what setup registers: splash tasks
       // run concurrently and must stay independent of each other.
       () async {
-        await SinceWhenStartup.setup(resolver, configuration);
-        await SinceWhenStartup.warm(resolver);
+        //+ CHANGED (calls the framework facade directly)
+        await SinceWhenStartup.start(resolver, configuration);
       },
     ],
   ).runner();

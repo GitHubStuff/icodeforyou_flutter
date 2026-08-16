@@ -1,2 +1,5 @@
 # packages/custom_widgets/analysis_options.yaml
+analyzer:
+  errors:
+    always_use_package_imports: ignore
 include: package:icodeforyou_lints/analysis_options.yaml

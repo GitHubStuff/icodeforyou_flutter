@@ -50,8 +50,9 @@ final class SplashScreen extends StatelessWidget {
   /// Callback invoked when all tasks finish successfully.
   final VoidCallback onComplete;
 
-  /// Callback invoked when any task throws an error.
-  final ValueChanged<Object> onError;
+  /// Callback invoked when any task throws, with the error and the stack
+  /// trace captured at the throw site.
+  final void Function(Object error, StackTrace stackTrace) onError;
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +65,8 @@ final class SplashScreen extends StatelessWidget {
             case SplashComplete():
               onComplete();
 
-            case SplashError(:final error):
-              onError(error);
+            case SplashError(:final error, :final stackTrace):
+              onError(error, stackTrace);
 
             default:
               break;

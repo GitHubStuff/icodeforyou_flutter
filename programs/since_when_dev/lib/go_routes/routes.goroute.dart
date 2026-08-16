@@ -38,6 +38,8 @@ GoRoute _crashRoute() => GoRoute(
 );
 
 /// Splash screens are [no] fun. They display, then transfer to the /app route
+/// on success, or to the terminal /crash route with full failure context on
+/// error.
 GoRoute _splashRoute({required List<Future<void> Function()> tasks}) => GoRoute(
   path: RoutesFramework.splash,
   builder: (context, state) {
@@ -48,7 +50,13 @@ GoRoute _splashRoute({required List<Future<void> Function()> tasks}) => GoRoute(
         context.go(RoutesFramework.app);
         unawaited(StatusBarChameleon.setStatusBarHidden(hidden: false));
       },
-      onError: (_) => context.go(RoutesFramework.crash),
+      onError: (error, stackTrace) {
+        context.go(
+          RoutesFramework.crash,
+          extra: CrashScreenArgs(error: error, stackTrace: stackTrace),
+        );
+        unawaited(StatusBarChameleon.setStatusBarHidden(hidden: false));
+      },
       child: const AnimatedSplashScreen(),
     );
   },

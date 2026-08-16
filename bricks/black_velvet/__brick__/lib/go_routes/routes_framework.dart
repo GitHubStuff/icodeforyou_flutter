@@ -1,4 +1,4 @@
-// programs/since_when_dev/lib/go_routes/routes_framework.dart
+// programs/{{name.snakeCase()}}/lib/go_routes/routes_framework.dart
 
 import 'dart:async' show unawaited;
 
@@ -6,13 +6,18 @@ import 'package:custom_widgets/custom_widgets.dart'
     show CrashScreen, CrashScreenArgs;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider;
 import 'package:go_router/go_router.dart';
 import 'package:splash_framework/splash_framework.dart' show SplashScreen;
 import 'package:status_bar_chameleon/status_bar_chameleon.dart'
     show StatusBarChameleon;
 
+import '../app_dock_navigation/dock_destination_enum.dart'
+    show DockDestinationEnum;
+import '../app_shared_navigation/navigation_chooser.dart'
+    show NavigationChooser;
+import '../app_shared_navigation/navigation_cubit.dart' show NavigationCubit;
 import '../screens/animated_splash_screen.dart' show AnimatedSplashScreen;
-import '../screens/rail_screen.dart' show RailScreen;
 
 part 'routes.goroute.dart';
 
@@ -38,7 +43,7 @@ part 'routes.goroute.dart';
 /// ```
 /// {@endtemplate}
 class RoutesFramework {
-  /// {@macro rail_destination_buttons}
+  /// Route path for the application shell.
   ///
   /// Navigated to once startup work completes and the splash
   /// sequence has finished.

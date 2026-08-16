@@ -1,4 +1,4 @@
-// infinite_scroll_picking_settings/lib/src/widgets/settings_screen.dart
+// packages/infinite_scroll_picking_settings/lib/src/widgets/settings_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

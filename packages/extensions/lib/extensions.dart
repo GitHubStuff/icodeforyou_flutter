@@ -9,6 +9,7 @@ export 'package:extensions/int/int_ext.dart';
 export 'package:extensions/iterable/iterable_ext.dart';
 export 'package:extensions/json/nullable_color_converter.dart'
     show NullableColorConverter;
-export 'package:extensions/orientation/orientation.dart' show OrientationExt;
+export 'package:extensions/orientation/orientation_ext.dart'
+    show OrientationExt;
 export 'package:extensions/string/string_ext.dart' show StringExt;
 export 'package:extensions/widget/widget_ext.dart' show WidgetExt;

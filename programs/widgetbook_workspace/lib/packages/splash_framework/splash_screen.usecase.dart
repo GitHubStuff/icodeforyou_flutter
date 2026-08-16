@@ -113,7 +113,7 @@ class _SplashScreenUseCaseHarnessState
             duration: widget.duration,
             tasks: [_task],
             onComplete: () => showToast('onComplete'),
-            onError: (error) => showToast('onError($error)'),
+            onError: (error, stackTrace) => showToast('onError($error)'),
             child: const Center(
               child: Text(
                 'black_velvet',

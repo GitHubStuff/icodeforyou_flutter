@@ -1,8 +1,8 @@
 # pubspec.yaml
 name: icodeforyou_flutter
 publish_to: none
-description: Collection of flutter packages
-version: 9.4.1
+description: "Collection of flutter packages"
+version: 9.4.2
 
 workspace:
   - packages/abstractions
@@ -33,15 +33,13 @@ workspace:
   - packages/since_when_framework
   - packages/since_when_service
   - packages/since_when_widgets
-  - packages/sincewhen_framework
+  - packages/sincewhen_models
   - packages/sincewhen_widgets
   - packages/sincewhen_drift_framework
   - packages/splash_framework
   - packages/sqlite_viewer
   - packages/stacking_widgets
   - packages/theme_framework
-  - packages/theme_manager
-  - packages/theme_service
   - packages/three_d_sphere
   - packages/time_spans
   - packages/widget_animation_framework
@@ -78,6 +76,23 @@ melos:
       exec: dart run build_runner build --delete-conflicting-outputs
       packageFilters:
         dependsOn: "build_runner"
+
+    # ─── TEST (CWD-SAFE) ─────────────────────────────────────────────────────
+
+    test:
+      description: |
+        Run tests in every workspace member that has a test directory,
+        executed from inside each package so the test compiler resolves
+        the entrypoint against the correct project. Sequential to avoid
+        Flutter tool lock conflicts.
+        Usage: melos test
+        Scoped: melos exec --scope=data_grid -- fvm flutter test
+      exec:
+        concurrency: 1
+        failFast: true
+      run: fvm flutter test
+      packageFilters:
+        dirExists: test
 
     # ─── COVERAGE CLEAN ───────────────────────────────────────────────────────
 

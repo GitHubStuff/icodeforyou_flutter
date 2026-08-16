@@ -59,8 +59,9 @@ void main() {
         expect(find.byType(DirectionalSliderAndButtons), findsNothing);
       });
 
-      testWidgets('renders the only child when given exactly one',
-          (tester) async {
+      testWidgets('renders the only child when given exactly one', (
+        tester,
+      ) async {
         await pumpCrossFade(tester, children: const [Text(firstLabel)]);
 
         expect(find.text(firstLabel), findsOneWidget);
@@ -112,10 +113,10 @@ void main() {
       );
 
       testWidgets(
-        'resolves duration and buttonSize from CrossFadeTheme when omitted',
+        'resolves duration and buttonSize from StepperTheme when omitted',
         (tester) async {
           // No explicit duration/buttonSize: exercises the right-hand side of
-          // both `?? CrossFadeTheme.of(context)` defaults.
+          // both `?? StepperTheme.of(context)` defaults.
           await pumpCrossFade(tester, children: twoChildren);
 
           expect(find.byType(AnimatedSwitcher), findsOneWidget);
@@ -124,8 +125,9 @@ void main() {
         },
       );
 
-      testWidgets('disposes its controller when removed from the tree',
-          (tester) async {
+      testWidgets('disposes its controller when removed from the tree', (
+        tester,
+      ) async {
         await pumpCrossFade(
           tester,
           children: twoChildren,

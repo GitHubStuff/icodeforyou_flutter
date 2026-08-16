@@ -3,5 +3,5 @@
     <!-- Background layer of the adaptive launcher icon
          (mipmap-anydpi-v26/ic_launcher.xml). Restored after accidental
          deletion; black to match the app's launch aesthetic. -->
-    <color name="ic_launcher_background">#000000</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
 </resources>

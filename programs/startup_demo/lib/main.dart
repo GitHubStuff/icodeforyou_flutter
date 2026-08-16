@@ -15,10 +15,6 @@ import 'package:since_when_service/since_when_service.dart'
     show SinceWhenDescriptor, SinceWhenServiceClass;
 import 'package:status_bar_chameleon/status_bar_chameleon.dart'
     show StatusBarChameleon;
-import 'package:theme_manager/theme_manager.dart'
-    show MaterialRoot, MaterialThemeCubit;
-import 'package:theme_service/theme_service.dart'
-    show ThemeDescriptor, ThemeService;
 
 /// A task that succeeds after [delay].
 Future<void> succeedsAfter(Duration delay) async {
@@ -50,8 +46,6 @@ Future<void> main() async {
 
   // Lets the user set the brightness to dark, light, system
   ServiceRegistry.R.stage(const AppPreferencesDescriptor.platform());
-  ServiceRegistry.R.stage(ThemeDescriptor(name: 'Theme'));
-  await ServiceRegistry.R.register('Theme');
 
   // Stage and force-resolve since_when so pages can fetch it synchronously.
   // SinceWhenDescriptor is lazy-async; register() leaves it in `starting`
@@ -74,9 +68,6 @@ Future<void> main() async {
 
 final providers = MultiBlocProvider(
   providers: [
-    BlocProvider<MaterialThemeCubit>.value(
-      value: ServiceRegistry.R.getSync<ThemeService>('Theme').themeCubit,
-    ),
     BlocProvider.value(
       value: SplashCubit(
         splashConfig: const SplashConfig(
@@ -86,7 +77,7 @@ final providers = MultiBlocProvider(
       ),
     ),
   ],
-  child: MaterialRoot(splashWidget),
+  child: splashWidget,
 );
 
 Widget get splashWidget {

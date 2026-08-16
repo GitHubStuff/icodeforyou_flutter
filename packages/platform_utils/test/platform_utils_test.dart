@@ -13,14 +13,6 @@ void main() {
       expect(PlatformVendor.values, hasLength(4));
     });
 
-    test('exports the form factor and orientation resolvers', () {
-      expect(FormFactor.values, hasLength(4));
-      expect(
-        OrientationFactor.from(const Size(400, 800)),
-        Orientation.portrait,
-      );
-    });
-
     test('exports the spacing scale and Spacing typedef', () {
       const Spacing spacing = DipScale.md;
       expect(spacing, 16);

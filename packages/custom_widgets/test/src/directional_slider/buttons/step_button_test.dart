@@ -11,13 +11,15 @@ const Duration _kDelay = Duration(milliseconds: 100);
 /// Deterministic cadence of hold-to-repeat ticks.
 const Duration _kInterval = Duration(milliseconds: 50);
 
-/// Fixed diameter so tests never depend on an ambient CrossFadeTheme.
+/// Fixed diameter so tests never depend on an ambient StepperTheme.
 const double _kButtonSize = 36;
 
 /// Pumps [button] centred inside a Material scaffold.
 Future<void> _pump(WidgetTester tester, StepButton button) {
   return tester.pumpWidget(
-    MaterialApp(home: Scaffold(body: Center(child: button))),
+    MaterialApp(
+      home: Scaffold(body: Center(child: button)),
+    ),
   );
 }
 
@@ -101,8 +103,9 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('null onPressed disables interaction and dims the button',
-        (tester) async {
+    testWidgets('null onPressed disables interaction and dims the button', (
+      tester,
+    ) async {
       await _pump(tester, _button(onPressed: null));
 
       await tester.tap(find.byType(StepButton));
@@ -160,8 +163,7 @@ void main() {
       expect(find.byType(Tooltip), findsNothing);
     });
 
-    testWidgets('wraps in a Tooltip when tooltip is provided',
-        (tester) async {
+    testWidgets('wraps in a Tooltip when tooltip is provided', (tester) async {
       await _pump(tester, _button(onPressed: () {}, tooltip: 'Increase'));
 
       final tooltip = tester.widget<Tooltip>(find.byType(Tooltip));

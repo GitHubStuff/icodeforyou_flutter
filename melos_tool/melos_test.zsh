@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 # melos_tool/melos_test.zsh
 # Unified test/coverage runner for the icodeforyou_flutter monorepo.
-# Version: 1.1.0
+# Version: 1.3.0
 #
 # Usage:
 #   melos_test.zsh test_one      <category> <name>   — single package/plugin/program
@@ -13,11 +13,46 @@
 #
 # Categories: packages | plugins | programs
 # Env flags:  STRICT=true  → fail-fast on first package failure (test_all only)
+#
+# 1.3.0 — coverage completeness and SDK pinning:
+#   * Pure Dart packages now produce coverage/lcov.info. `dart test
+#     --coverage=coverage` emits only VM JSON, which the merge steps never
+#     saw, so every non-Flutter package silently contributed zero lines to
+#     the workspace reports. VM JSON is now converted via
+#     coverage:format_coverage. One-time setup:
+#       fvm dart pub global activate coverage
+#   * All flutter/dart invocations now go through fvm, so tests always run
+#     against the project-pinned SDK instead of whatever is first on PATH.
+#   * run_tests_in_dir aborts if `cd` into the package fails, rather than
+#     running the test command from the workspace root — the exact working-
+#     directory condition that produces "Undefined name 'main'" listener
+#     errors.
+#
+# 1.2.0 — lcov 2.x compatibility:
+#   * Dart/Flutter lcov.info files carry line records only (no FN:/FNDA:).
+#     lcov 2.x enables function-coverage processing by default and hard-fails
+#     with "(empty) function coverage enabled but no corresponding coverpoints"
+#     on every merge. All lcov/genhtml invocations now pass the appropriate
+#     --ignore-errors categories.
+#   * Genuinely empty tracefiles (a package whose tests failed to load) are
+#     skipped with a warning instead of aborting the merge, so one broken
+#     package can no longer torpedo the workspace report.
+#   * Merge failures are surfaced per-file instead of silently discarding
+#     the remainder of the tracefile list.
 
 set -uo pipefail
 
 readonly ACTION="${1:-}"
 readonly VALID_CATEGORIES=(packages plugins programs)
+
+# lcov 2.x error categories that Dart tracefiles legitimately trigger:
+#   empty        — function coverage enabled, zero FN records (every Dart file)
+#   inconsistent — minor record-count mismatches across merged files
+#   format       — tolerant parsing of older tracefile dialects
+#   unused       — --remove patterns that match nothing
+readonly LCOV_IGNORE="empty,inconsistent,format,unused"
+# genhtml 2.x raises its own variants on function-less tracefiles.
+readonly GENHTML_IGNORE="source,empty,inconsistent,category"
 
 # ─── helpers ────────────────────────────────────────────────────────────────
 validate_category() {
@@ -38,6 +73,23 @@ detect_runner() {
   fi
 }
 
+# Convert Dart VM coverage JSON into coverage/lcov.info so the merge steps
+# can see pure Dart packages. Runs from inside the package directory.
+# Requires package:coverage — one-time setup:
+#   fvm dart pub global activate coverage
+convert_dart_coverage() {
+  print "🔁 Converting VM coverage JSON → coverage/lcov.info"
+  if ! fvm dart pub global run coverage:format_coverage \
+      --lcov \
+      --in=coverage \
+      --out=coverage/lcov.info \
+      --report-on=lib; then
+    print -u2 "⚠️  lcov conversion failed. Is package:coverage activated?"
+    print -u2 "   Run once: fvm dart pub global activate coverage"
+    return 1
+  fi
+}
+
 # Run tests in a single directory. Args: <dir> [--coverage]
 run_tests_in_dir() {
   local dir="$1"
@@ -45,23 +97,36 @@ run_tests_in_dir() {
   local runner
   runner=$(detect_runner "$dir")
 
-  cd "$dir"
+  if ! cd "$dir"; then
+    print -u2 "❌ Could not enter ${dir} — aborting rather than testing from the wrong directory"
+    return 1
+  fi
+
+  local rc=0
   if [[ "$runner" == "flutter" ]]; then
-    print "🦋 Flutter package — running flutter test"
+    print "🦋 Flutter package — running fvm flutter test"
     if [[ "$with_coverage" == "--coverage" ]]; then
-      flutter test --coverage
+      fvm flutter test --coverage
+      rc=$?
     else
-      flutter test
+      fvm flutter test
+      rc=$?
     fi
   else
-    print "🎯 Dart package — running dart test"
+    print "🎯 Dart package — running fvm dart test"
     if [[ "$with_coverage" == "--coverage" ]]; then
-      dart test --coverage=coverage
+      fvm dart test --coverage=coverage
+      rc=$?
+      if (( rc == 0 )); then
+        convert_dart_coverage
+        rc=$?
+      fi
     else
-      dart test
+      fvm dart test
+      rc=$?
     fi
   fi
-  local rc=$?
+
   cd - > /dev/null
   return $rc
 }
@@ -213,10 +278,25 @@ _merge_coverage() {
   print "Found coverage files:"
   print "$coverage_files"
 
+  local skipped_items=""
+  local merged_count=0
+
   while IFS= read -r lcov_file; do
     [[ -z "$lcov_file" ]] && continue
     local source_path
     source_path=$(print -- "$lcov_file" | sed 's|^\./||' | sed 's|/coverage/lcov\.info$||')
+
+    # A package whose tests failed to load produces an empty lcov.info.
+    # Skip it with a warning rather than letting lcov abort the merge.
+    if [[ ! -s "$lcov_file" ]]; then
+      print "⚠️  Skipping ${source_path} — empty tracefile (tests likely failed to load)"
+      if [[ -z "$skipped_items" ]]; then
+        skipped_items="$source_path"
+      else
+        skipped_items="$skipped_items, $source_path"
+      fi
+      continue
+    fi
 
     print "Processing coverage for ${source_path}..."
 
@@ -224,26 +304,50 @@ _merge_coverage() {
     sed "s|SF:lib/|SF:${source_path}/lib/|g" "$lcov_file" > "$temp_file"
 
     if [[ -f "$output_file" ]]; then
-      lcov --add-tracefile "$output_file" --add-tracefile "$temp_file" -o "$output_file"
+      if lcov --ignore-errors "$LCOV_IGNORE" \
+          --add-tracefile "$output_file" \
+          --add-tracefile "$temp_file" \
+          --output-file "$output_file"; then
+        merged_count=$((merged_count + 1))
+      else
+        print "⚠️  Merge failed for ${source_path} — skipping this tracefile"
+        if [[ -z "$skipped_items" ]]; then
+          skipped_items="$source_path"
+        else
+          skipped_items="$skipped_items, $source_path"
+        fi
+      fi
     else
       cp "$temp_file" "$output_file"
+      merged_count=$((merged_count + 1))
     fi
 
     rm "$temp_file"
   done <<< "$coverage_files"
 
-  if (( ${#excludes[@]} > 0 )); then
-    lcov --remove "$output_file" "${excludes[@]}" -o "$output_file" --ignore-errors unused
+  if (( merged_count == 0 )); then
+    print "❌ No tracefiles could be merged."
+    return 1
   fi
 
-  genhtml "$output_file" -o "$html_dir" --ignore-errors source
+  if (( ${#excludes[@]} > 0 )); then
+    lcov --ignore-errors "$LCOV_IGNORE" \
+      --remove "$output_file" "${excludes[@]}" \
+      --output-file "$output_file"
+  fi
+
+  genhtml --ignore-errors "$GENHTML_IGNORE" "$output_file" -o "$html_dir"
   print "✅ Merged coverage report: ${html_dir}/index.html"
+  print "   Tracefiles merged: ${merged_count}"
+  if [[ -n "$skipped_items" ]]; then
+    print "⚠️  Skipped: ${skipped_items}"
+  fi
 
   if [[ -f "${html_dir}/index.html" ]]; then
     open "${html_dir}/index.html"
   else
     print "⚠️  HTML file wasn't created"
-    lcov --summary "$output_file"
+    lcov --ignore-errors "$LCOV_IGNORE" --summary "$output_file"
   fi
 }
 

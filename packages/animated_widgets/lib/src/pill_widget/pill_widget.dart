@@ -1,4 +1,4 @@
-// packages/sincewhen_widgets/lib/src/glossary/pill_widget.dart
+// packages/animated_widgets/lib/src/pill_widget/pill_widget.dart
 
 import 'package:flutter/material.dart';
 

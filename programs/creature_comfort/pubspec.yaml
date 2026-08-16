@@ -34,9 +34,7 @@ dependencies:
   scrolling_datetime_pickers: ^1.0.0            # Internal: widget
   service_locator: ^1.0.0                       # Internal: infrastructure
   settings_widget: ^1.0.0                       # Internal: widget
-  theme_manager: ^1.0.0                         # Internal: theme (cubit + descriptor)
-  theme_service: ^1.0.0
-
+  
 dev_dependencies:
   bloc_test: ^10.0.0                            # Test
   build_runner: ^2.15.0

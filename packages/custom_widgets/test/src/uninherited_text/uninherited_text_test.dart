@@ -1,57 +1,68 @@
 // packages/custom_widgets/test/src/uninherited_text/uninherited_text_test.dart
+//
+// Constructed WITHOUT `const` so the constructor line executes at
+// runtime and registers in LCOV; const invocations are canonicalized
+// at compile time and never hit it.
+// ignore_for_file: prefer_const_constructors
 
-import 'package:custom_widgets/custom_widgets.dart' show UninheritedText;
+import 'package:custom_widgets/src/uninherited_text/uninherited_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('UninheritedText', () {
-    testWidgets('renders standalone with no inherited ambient widgets',
-        (tester) async {
-      await tester.pumpWidget(const UninheritedText('Boom'));
+    test('constructor applies documented defaults', () {
+      final widget = UninheritedText('boom');
 
-      expect(find.text('Boom'), findsOneWidget);
+      expect(widget.text, 'boom');
+      expect(widget.backgroundColor, Colors.black);
+      expect(widget.style.color, Colors.redAccent);
+      expect(widget.style.fontSize, 32);
+      expect(widget.style.decoration, TextDecoration.none);
+      expect(widget.style.fontWeight, FontWeight.w700);
+    });
+
+    testWidgets('renders standalone with no MaterialApp above it', (
+      tester,
+    ) async {
+      await tester.pumpWidget(UninheritedText('startup failed'));
+
+      expect(find.text('startup failed'), findsOneWidget);
+      expect(tester.takeException(), isNull);
 
       final directionality = tester.widget<Directionality>(
         find.byType(Directionality).first,
       );
       expect(directionality.textDirection, TextDirection.ltr);
-
-      final box = tester.widget<ColoredBox>(find.byType(ColoredBox));
-      expect(box.color, Colors.black);
-
-      final style = tester
-          .widget<DefaultTextStyle>(find.byType(DefaultTextStyle).last)
-          .style;
-      expect(style.color, Colors.redAccent);
-      expect(style.fontSize, 32);
-      expect(style.fontWeight, FontWeight.w700);
-      expect(style.decoration, TextDecoration.none);
     });
 
-    testWidgets('honours a custom background and style', (tester) async {
-      const style = TextStyle(
-        color: Colors.lime,
-        fontSize: 12,
+    testWidgets('honors a custom background color and style', (tester) async {
+      const customStyle = TextStyle(
+        color: Colors.white,
+        fontSize: 16,
         decoration: TextDecoration.none,
       );
 
       await tester.pumpWidget(
-        const UninheritedText(
-          'Boom',
+        UninheritedText(
+          'custom',
           backgroundColor: Colors.indigo,
-          style: style,
+          style: customStyle,
         ),
       );
 
-      final box = tester.widget<ColoredBox>(find.byType(ColoredBox));
-      expect(box.color, Colors.indigo);
-      expect(
-        tester
-            .widget<DefaultTextStyle>(find.byType(DefaultTextStyle).last)
-            .style,
-        style,
+      final coloredBox = tester.widget<ColoredBox>(find.byType(ColoredBox));
+      expect(coloredBox.color, Colors.indigo);
+
+      final defaultTextStyle = tester.widget<DefaultTextStyle>(
+        find
+            .ancestor(
+              of: find.text('custom'),
+              matching: find.byType(DefaultTextStyle),
+            )
+            .first,
       );
+      expect(defaultTextStyle.style, customStyle);
     });
   });
 }

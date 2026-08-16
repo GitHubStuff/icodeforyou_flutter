@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   gap: ^3.0.1
   random_color_generator: ^1.0.0
-  sincewhen_framework: ^1.0.0
+  sincewhen_drift_framework: ^1.0.0
 
 dev_dependencies:
   flutter_test:

@@ -28,12 +28,6 @@ const List<({String label, MaterialColor color})> _kPanels = [
 
 @widgetbook.UseCase(name: 'Default', type: SlideIndexedStack)
 Widget buildSlideIndexedStackUseCase(BuildContext context) {
-  final direction = context.knobs.object.dropdown(
-    label: 'direction',
-    options: Axis.values,
-    initialOption: Axis.horizontal,
-    labelBuilder: (option) => option.name,
-  );
   final durationMs = context.knobs.int.slider(
     label: 'duration (ms)',
     initialValue: _kDurationInitialMs,
@@ -48,7 +42,6 @@ Widget buildSlideIndexedStackUseCase(BuildContext context) {
   );
 
   return _SlideIndexedStackUseCaseHarness(
-    direction: direction,
     duration: Duration(milliseconds: durationMs),
     curve: curveOption.curve,
   );
@@ -64,13 +57,9 @@ Widget buildSlideIndexedStackUseCase(BuildContext context) {
 /// the behavior under test.
 final class _SlideIndexedStackUseCaseHarness extends StatefulWidget {
   const _SlideIndexedStackUseCaseHarness({
-    required this.direction,
     required this.duration,
     required this.curve,
   });
-
-  /// Forwarded to [SlideIndexedStack.direction].
-  final Axis direction;
 
   /// Forwarded to [SlideIndexedStack.duration].
   final Duration duration;
@@ -109,7 +98,6 @@ class _SlideIndexedStackUseCaseHarnessState
         Expanded(
           child: SlideIndexedStack(
             index: _index,
-            direction: widget.direction,
             duration: widget.duration,
             curve: widget.curve,
             children: [

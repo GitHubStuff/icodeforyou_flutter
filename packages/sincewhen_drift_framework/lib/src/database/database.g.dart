@@ -22,12 +22,12 @@ class $GlossaryItemsTable extends GlossaryItems
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
-  static const VerificationMeta _createdTimeStampMeta = const VerificationMeta(
-    'createdTimeStamp',
+  static const VerificationMeta _createdTimestampMeta = const VerificationMeta(
+    'createdTimestamp',
   );
   @override
-  late final GeneratedColumn<int> createdTimeStamp = GeneratedColumn<int>(
-    'createdTimeStamp',
+  late final GeneratedColumn<int> createdTimestamp = GeneratedColumn<int>(
+    'createdTimestamp',
     aliasedName,
     false,
     type: DriftSqlType.int,
@@ -50,7 +50,7 @@ class $GlossaryItemsTable extends GlossaryItems
   );
   @override
   late final GeneratedColumn<int> colorArgb = GeneratedColumn<int>(
-    'color_argb',
+    'colorArgb',
     aliasedName,
     false,
     type: DriftSqlType.int,
@@ -58,12 +58,12 @@ class $GlossaryItemsTable extends GlossaryItems
     defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
   @override
-  List<GeneratedColumn> get $columns => [id, createdTimeStamp, tag, colorArgb];
+  List<GeneratedColumn> get $columns => [id, createdTimestamp, tag, colorArgb];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'tagGlossary';
+  static const String $name = 'glossary';
   @override
   VerificationContext validateIntegrity(
     Insertable<GlossaryItem> instance, {
@@ -74,16 +74,16 @@ class $GlossaryItemsTable extends GlossaryItems
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('createdTimeStamp')) {
+    if (data.containsKey('createdTimestamp')) {
       context.handle(
-        _createdTimeStampMeta,
-        createdTimeStamp.isAcceptableOrUnknown(
-          data['createdTimeStamp']!,
-          _createdTimeStampMeta,
+        _createdTimestampMeta,
+        createdTimestamp.isAcceptableOrUnknown(
+          data['createdTimestamp']!,
+          _createdTimestampMeta,
         ),
       );
     } else if (isInserting) {
-      context.missing(_createdTimeStampMeta);
+      context.missing(_createdTimestampMeta);
     }
     if (data.containsKey('tag')) {
       context.handle(
@@ -93,10 +93,10 @@ class $GlossaryItemsTable extends GlossaryItems
     } else if (isInserting) {
       context.missing(_tagMeta);
     }
-    if (data.containsKey('color_argb')) {
+    if (data.containsKey('colorArgb')) {
       context.handle(
         _colorArgbMeta,
-        colorArgb.isAcceptableOrUnknown(data['color_argb']!, _colorArgbMeta),
+        colorArgb.isAcceptableOrUnknown(data['colorArgb']!, _colorArgbMeta),
       );
     } else if (isInserting) {
       context.missing(_colorArgbMeta);
@@ -114,9 +114,9 @@ class $GlossaryItemsTable extends GlossaryItems
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
-      createdTimeStamp: attachedDatabase.typeMapping.read(
+      createdTimestamp: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}createdTimeStamp'],
+        data['${effectivePrefix}createdTimestamp'],
       )!,
       tag: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -124,7 +124,7 @@ class $GlossaryItemsTable extends GlossaryItems
       )!,
       colorArgb: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}color_argb'],
+        data['${effectivePrefix}colorArgb'],
       )!,
     );
   }
@@ -135,164 +135,48 @@ class $GlossaryItemsTable extends GlossaryItems
   }
 }
 
-class GlossaryItem extends DataClass implements Insertable<GlossaryItem> {
-  /// Auto-incrementing primary key.
-  final int id;
-
-  /// `createdTimeStamp INTEGER NOT NULL UNIQUE`.
-  ///
-  /// Explicitly named to preserve the camelCase column name from the raw
-  /// SQL schema, since drift would otherwise emit `created_time_stamp`.
-  final int createdTimeStamp;
-
-  /// `tag TEXT NOT NULL UNIQUE CHECK(tag != '')`.
-  ///
-  /// The self-reference inside `check()` is the documented drift pattern:
-  /// the generated table class overrides this getter, so it is never
-  /// executed at runtime — drift's builder only reads it statically to
-  /// emit the CHECK clause. The recursion the analyzer flags cannot occur.
-  final String tag;
-
-  /// `color_argb INTEGER NOT NULL UNIQUE`.
-  ///
-  /// Packed ARGB color value, suitable for `Color(colorArgb)` on the
-  /// Flutter side. Drift derives the column name from the getter.
-  final int colorArgb;
-  const GlossaryItem({
-    required this.id,
-    required this.createdTimeStamp,
-    required this.tag,
-    required this.colorArgb,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['createdTimeStamp'] = Variable<int>(createdTimeStamp);
-    map['tag'] = Variable<String>(tag);
-    map['color_argb'] = Variable<int>(colorArgb);
-    return map;
-  }
-
-  GlossaryItemsCompanion toCompanion(bool nullToAbsent) {
-    return GlossaryItemsCompanion(
-      id: Value(id),
-      createdTimeStamp: Value(createdTimeStamp),
-      tag: Value(tag),
-      colorArgb: Value(colorArgb),
-    );
-  }
-
-  factory GlossaryItem.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return GlossaryItem(
-      id: serializer.fromJson<int>(json['id']),
-      createdTimeStamp: serializer.fromJson<int>(json['createdTimeStamp']),
-      tag: serializer.fromJson<String>(json['tag']),
-      colorArgb: serializer.fromJson<int>(json['colorArgb']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'createdTimeStamp': serializer.toJson<int>(createdTimeStamp),
-      'tag': serializer.toJson<String>(tag),
-      'colorArgb': serializer.toJson<int>(colorArgb),
-    };
-  }
-
-  GlossaryItem copyWith({
-    int? id,
-    int? createdTimeStamp,
-    String? tag,
-    int? colorArgb,
-  }) => GlossaryItem(
-    id: id ?? this.id,
-    createdTimeStamp: createdTimeStamp ?? this.createdTimeStamp,
-    tag: tag ?? this.tag,
-    colorArgb: colorArgb ?? this.colorArgb,
-  );
-  GlossaryItem copyWithCompanion(GlossaryItemsCompanion data) {
-    return GlossaryItem(
-      id: data.id.present ? data.id.value : this.id,
-      createdTimeStamp: data.createdTimeStamp.present
-          ? data.createdTimeStamp.value
-          : this.createdTimeStamp,
-      tag: data.tag.present ? data.tag.value : this.tag,
-      colorArgb: data.colorArgb.present ? data.colorArgb.value : this.colorArgb,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('GlossaryItem(')
-          ..write('id: $id, ')
-          ..write('createdTimeStamp: $createdTimeStamp, ')
-          ..write('tag: $tag, ')
-          ..write('colorArgb: $colorArgb')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, createdTimeStamp, tag, colorArgb);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is GlossaryItem &&
-          other.id == this.id &&
-          other.createdTimeStamp == this.createdTimeStamp &&
-          other.tag == this.tag &&
-          other.colorArgb == this.colorArgb);
-}
-
 class GlossaryItemsCompanion extends UpdateCompanion<GlossaryItem> {
   final Value<int> id;
-  final Value<int> createdTimeStamp;
+  final Value<int> createdTimestamp;
   final Value<String> tag;
   final Value<int> colorArgb;
   const GlossaryItemsCompanion({
     this.id = const Value.absent(),
-    this.createdTimeStamp = const Value.absent(),
+    this.createdTimestamp = const Value.absent(),
     this.tag = const Value.absent(),
     this.colorArgb = const Value.absent(),
   });
   GlossaryItemsCompanion.insert({
     this.id = const Value.absent(),
-    required int createdTimeStamp,
+    required int createdTimestamp,
     required String tag,
     required int colorArgb,
-  }) : createdTimeStamp = Value(createdTimeStamp),
+  }) : createdTimestamp = Value(createdTimestamp),
        tag = Value(tag),
        colorArgb = Value(colorArgb);
   static Insertable<GlossaryItem> custom({
     Expression<int>? id,
-    Expression<int>? createdTimeStamp,
+    Expression<int>? createdTimestamp,
     Expression<String>? tag,
     Expression<int>? colorArgb,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (createdTimeStamp != null) 'createdTimeStamp': createdTimeStamp,
+      if (createdTimestamp != null) 'createdTimestamp': createdTimestamp,
       if (tag != null) 'tag': tag,
-      if (colorArgb != null) 'color_argb': colorArgb,
+      if (colorArgb != null) 'colorArgb': colorArgb,
     });
   }
 
   GlossaryItemsCompanion copyWith({
     Value<int>? id,
-    Value<int>? createdTimeStamp,
+    Value<int>? createdTimestamp,
     Value<String>? tag,
     Value<int>? colorArgb,
   }) {
     return GlossaryItemsCompanion(
       id: id ?? this.id,
-      createdTimeStamp: createdTimeStamp ?? this.createdTimeStamp,
+      createdTimestamp: createdTimestamp ?? this.createdTimestamp,
       tag: tag ?? this.tag,
       colorArgb: colorArgb ?? this.colorArgb,
     );
@@ -304,14 +188,14 @@ class GlossaryItemsCompanion extends UpdateCompanion<GlossaryItem> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (createdTimeStamp.present) {
-      map['createdTimeStamp'] = Variable<int>(createdTimeStamp.value);
+    if (createdTimestamp.present) {
+      map['createdTimestamp'] = Variable<int>(createdTimestamp.value);
     }
     if (tag.present) {
       map['tag'] = Variable<String>(tag.value);
     }
     if (colorArgb.present) {
-      map['color_argb'] = Variable<int>(colorArgb.value);
+      map['colorArgb'] = Variable<int>(colorArgb.value);
     }
     return map;
   }
@@ -320,7 +204,7 @@ class GlossaryItemsCompanion extends UpdateCompanion<GlossaryItem> {
   String toString() {
     return (StringBuffer('GlossaryItemsCompanion(')
           ..write('id: $id, ')
-          ..write('createdTimeStamp: $createdTimeStamp, ')
+          ..write('createdTimestamp: $createdTimestamp, ')
           ..write('tag: $tag, ')
           ..write('colorArgb: $colorArgb')
           ..write(')'))
@@ -347,57 +231,57 @@ class $SinceWhenItemsTable extends SinceWhenItems
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
-  static const VerificationMeta _createdTimeStampMeta = const VerificationMeta(
-    'createdTimeStamp',
+  static const VerificationMeta _createdTimestampMeta = const VerificationMeta(
+    'createdTimestamp',
   );
   @override
-  late final GeneratedColumn<int> createdTimeStamp = GeneratedColumn<int>(
-    'createdTimeStamp',
+  late final GeneratedColumn<int> createdTimestamp = GeneratedColumn<int>(
+    'createdTimestamp',
     aliasedName,
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
-  static const VerificationMeta _reviewedTimeStampMeta = const VerificationMeta(
-    'reviewedTimeStamp',
+  static const VerificationMeta _reviewedTimestampMeta = const VerificationMeta(
+    'reviewedTimestamp',
   );
   @override
-  late final GeneratedColumn<int> reviewedTimeStamp = GeneratedColumn<int>(
-    'reviewedTimeStamp',
+  late final GeneratedColumn<int> reviewedTimestamp = GeneratedColumn<int>(
+    'reviewedTimestamp',
     aliasedName,
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _editedTimeStampMeta = const VerificationMeta(
-    'editedTimeStamp',
+  static const VerificationMeta _editedTimestampMeta = const VerificationMeta(
+    'editedTimestamp',
   );
   @override
-  late final GeneratedColumn<int> editedTimeStamp = GeneratedColumn<int>(
-    'editedTimeStamp',
+  late final GeneratedColumn<int> editedTimestamp = GeneratedColumn<int>(
+    'editedTimestamp',
     aliasedName,
     false,
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _parentTimeStampMeta = const VerificationMeta(
-    'parentTimeStamp',
+  static const VerificationMeta _parentTimestampMeta = const VerificationMeta(
+    'parentTimestamp',
   );
   @override
-  late final GeneratedColumn<int> parentTimeStamp = GeneratedColumn<int>(
-    'parentTimeStamp',
+  late final GeneratedColumn<int> parentTimestamp = GeneratedColumn<int>(
+    'parentTimestamp',
     aliasedName,
     true,
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _eventTimeStampMeta = const VerificationMeta(
-    'eventTimeStamp',
+  static const VerificationMeta _eventTimestampMeta = const VerificationMeta(
+    'eventTimestamp',
   );
   @override
-  late final GeneratedColumn<int> eventTimeStamp = GeneratedColumn<int>(
-    'eventTimeStamp',
+  late final GeneratedColumn<int> eventTimestamp = GeneratedColumn<int>(
+    'eventTimestamp',
     aliasedName,
     true,
     type: DriftSqlType.int,
@@ -426,6 +310,15 @@ class $SinceWhenItemsTable extends SinceWhenItems
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _tldrMeta = const VerificationMeta('tldr');
+  @override
+  late final GeneratedColumn<String> tldr = GeneratedColumn<String>(
+    'tldr',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _contentMeta = const VerificationMeta(
     'content',
   );
@@ -440,13 +333,14 @@ class $SinceWhenItemsTable extends SinceWhenItems
   @override
   List<GeneratedColumn> get $columns => [
     id,
-    createdTimeStamp,
-    reviewedTimeStamp,
-    editedTimeStamp,
-    parentTimeStamp,
-    eventTimeStamp,
+    createdTimestamp,
+    reviewedTimestamp,
+    editedTimestamp,
+    parentTimestamp,
+    eventTimestamp,
     sequenceNumber,
     metaData,
+    tldr,
     content,
   ];
   @override
@@ -464,54 +358,54 @@ class $SinceWhenItemsTable extends SinceWhenItems
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('createdTimeStamp')) {
+    if (data.containsKey('createdTimestamp')) {
       context.handle(
-        _createdTimeStampMeta,
-        createdTimeStamp.isAcceptableOrUnknown(
-          data['createdTimeStamp']!,
-          _createdTimeStampMeta,
+        _createdTimestampMeta,
+        createdTimestamp.isAcceptableOrUnknown(
+          data['createdTimestamp']!,
+          _createdTimestampMeta,
         ),
       );
     } else if (isInserting) {
-      context.missing(_createdTimeStampMeta);
+      context.missing(_createdTimestampMeta);
     }
-    if (data.containsKey('reviewedTimeStamp')) {
+    if (data.containsKey('reviewedTimestamp')) {
       context.handle(
-        _reviewedTimeStampMeta,
-        reviewedTimeStamp.isAcceptableOrUnknown(
-          data['reviewedTimeStamp']!,
-          _reviewedTimeStampMeta,
+        _reviewedTimestampMeta,
+        reviewedTimestamp.isAcceptableOrUnknown(
+          data['reviewedTimestamp']!,
+          _reviewedTimestampMeta,
         ),
       );
     } else if (isInserting) {
-      context.missing(_reviewedTimeStampMeta);
+      context.missing(_reviewedTimestampMeta);
     }
-    if (data.containsKey('editedTimeStamp')) {
+    if (data.containsKey('editedTimestamp')) {
       context.handle(
-        _editedTimeStampMeta,
-        editedTimeStamp.isAcceptableOrUnknown(
-          data['editedTimeStamp']!,
-          _editedTimeStampMeta,
+        _editedTimestampMeta,
+        editedTimestamp.isAcceptableOrUnknown(
+          data['editedTimestamp']!,
+          _editedTimestampMeta,
         ),
       );
     } else if (isInserting) {
-      context.missing(_editedTimeStampMeta);
+      context.missing(_editedTimestampMeta);
     }
-    if (data.containsKey('parentTimeStamp')) {
+    if (data.containsKey('parentTimestamp')) {
       context.handle(
-        _parentTimeStampMeta,
-        parentTimeStamp.isAcceptableOrUnknown(
-          data['parentTimeStamp']!,
-          _parentTimeStampMeta,
+        _parentTimestampMeta,
+        parentTimestamp.isAcceptableOrUnknown(
+          data['parentTimestamp']!,
+          _parentTimestampMeta,
         ),
       );
     }
-    if (data.containsKey('eventTimeStamp')) {
+    if (data.containsKey('eventTimestamp')) {
       context.handle(
-        _eventTimeStampMeta,
-        eventTimeStamp.isAcceptableOrUnknown(
-          data['eventTimeStamp']!,
-          _eventTimeStampMeta,
+        _eventTimestampMeta,
+        eventTimestamp.isAcceptableOrUnknown(
+          data['eventTimestamp']!,
+          _eventTimestampMeta,
         ),
       );
     }
@@ -528,6 +422,12 @@ class $SinceWhenItemsTable extends SinceWhenItems
       context.handle(
         _metaDataMeta,
         metaData.isAcceptableOrUnknown(data['metaData']!, _metaDataMeta),
+      );
+    }
+    if (data.containsKey('tldr')) {
+      context.handle(
+        _tldrMeta,
+        tldr.isAcceptableOrUnknown(data['tldr']!, _tldrMeta),
       );
     }
     if (data.containsKey('content')) {
@@ -551,38 +451,42 @@ class $SinceWhenItemsTable extends SinceWhenItems
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
-      createdTimeStamp: attachedDatabase.typeMapping.read(
+      createdTimestamp: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}createdTimeStamp'],
+        data['${effectivePrefix}createdTimestamp'],
       )!,
-      reviewedTimeStamp: attachedDatabase.typeMapping.read(
+      reviewedTimestamp: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}reviewedTimeStamp'],
+        data['${effectivePrefix}reviewedTimestamp'],
       )!,
-      editedTimeStamp: attachedDatabase.typeMapping.read(
+      editedTimestamp: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}editedTimeStamp'],
+        data['${effectivePrefix}editedTimestamp'],
       )!,
-      parentTimeStamp: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}parentTimeStamp'],
-      ),
-      eventTimeStamp: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}eventTimeStamp'],
-      ),
       sequenceNumber: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}sequenceNumber'],
       )!,
-      metaData: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}metaData'],
-      ),
       content: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}content'],
       )!,
+      parentTimestamp: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}parentTimestamp'],
+      ),
+      eventTimestamp: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}eventTimestamp'],
+      ),
+      metaData: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}metaData'],
+      ),
+      tldr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}tldr'],
+      ),
     );
   }
 
@@ -592,296 +496,92 @@ class $SinceWhenItemsTable extends SinceWhenItems
   }
 }
 
-class SinceWhenItem extends DataClass implements Insertable<SinceWhenItem> {
-  /// Auto-incrementing primary key.
-  final int id;
-
-  /// `createdTimeStamp INTEGER NOT NULL UNIQUE`.
-  ///
-  /// Explicitly named to preserve the camelCase column name from the raw
-  /// SQL schema. This is the foreign key target for `SinceWhenTags`, so
-  /// the `unique()` constraint is required — SQLite rejects foreign keys
-  /// that reference non-uniquely-constrained columns.
-  final int createdTimeStamp;
-
-  /// `reviewedTimeStamp INTEGER NOT NULL`.
-  final int reviewedTimeStamp;
-
-  /// `editedTimeStamp INTEGER NOT NULL`.
-  final int editedTimeStamp;
-
-  /// `parentTimeStamp INTEGER` (nullable).
-  final int? parentTimeStamp;
-
-  /// `eventTimeStamp INTEGER` (nullable).
-  final int? eventTimeStamp;
-
-  /// `sequenceNumber INTEGER NOT NULL DEFAULT 0`.
-  final int sequenceNumber;
-
-  /// `metaData TEXT` (nullable).
-  final String? metaData;
-
-  /// `content TEXT NOT NULL`.
-  final String content;
-  const SinceWhenItem({
-    required this.id,
-    required this.createdTimeStamp,
-    required this.reviewedTimeStamp,
-    required this.editedTimeStamp,
-    this.parentTimeStamp,
-    this.eventTimeStamp,
-    required this.sequenceNumber,
-    this.metaData,
-    required this.content,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['createdTimeStamp'] = Variable<int>(createdTimeStamp);
-    map['reviewedTimeStamp'] = Variable<int>(reviewedTimeStamp);
-    map['editedTimeStamp'] = Variable<int>(editedTimeStamp);
-    if (!nullToAbsent || parentTimeStamp != null) {
-      map['parentTimeStamp'] = Variable<int>(parentTimeStamp);
-    }
-    if (!nullToAbsent || eventTimeStamp != null) {
-      map['eventTimeStamp'] = Variable<int>(eventTimeStamp);
-    }
-    map['sequenceNumber'] = Variable<int>(sequenceNumber);
-    if (!nullToAbsent || metaData != null) {
-      map['metaData'] = Variable<String>(metaData);
-    }
-    map['content'] = Variable<String>(content);
-    return map;
-  }
-
-  SinceWhenItemsCompanion toCompanion(bool nullToAbsent) {
-    return SinceWhenItemsCompanion(
-      id: Value(id),
-      createdTimeStamp: Value(createdTimeStamp),
-      reviewedTimeStamp: Value(reviewedTimeStamp),
-      editedTimeStamp: Value(editedTimeStamp),
-      parentTimeStamp: parentTimeStamp == null && nullToAbsent
-          ? const Value.absent()
-          : Value(parentTimeStamp),
-      eventTimeStamp: eventTimeStamp == null && nullToAbsent
-          ? const Value.absent()
-          : Value(eventTimeStamp),
-      sequenceNumber: Value(sequenceNumber),
-      metaData: metaData == null && nullToAbsent
-          ? const Value.absent()
-          : Value(metaData),
-      content: Value(content),
-    );
-  }
-
-  factory SinceWhenItem.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return SinceWhenItem(
-      id: serializer.fromJson<int>(json['id']),
-      createdTimeStamp: serializer.fromJson<int>(json['createdTimeStamp']),
-      reviewedTimeStamp: serializer.fromJson<int>(json['reviewedTimeStamp']),
-      editedTimeStamp: serializer.fromJson<int>(json['editedTimeStamp']),
-      parentTimeStamp: serializer.fromJson<int?>(json['parentTimeStamp']),
-      eventTimeStamp: serializer.fromJson<int?>(json['eventTimeStamp']),
-      sequenceNumber: serializer.fromJson<int>(json['sequenceNumber']),
-      metaData: serializer.fromJson<String?>(json['metaData']),
-      content: serializer.fromJson<String>(json['content']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'createdTimeStamp': serializer.toJson<int>(createdTimeStamp),
-      'reviewedTimeStamp': serializer.toJson<int>(reviewedTimeStamp),
-      'editedTimeStamp': serializer.toJson<int>(editedTimeStamp),
-      'parentTimeStamp': serializer.toJson<int?>(parentTimeStamp),
-      'eventTimeStamp': serializer.toJson<int?>(eventTimeStamp),
-      'sequenceNumber': serializer.toJson<int>(sequenceNumber),
-      'metaData': serializer.toJson<String?>(metaData),
-      'content': serializer.toJson<String>(content),
-    };
-  }
-
-  SinceWhenItem copyWith({
-    int? id,
-    int? createdTimeStamp,
-    int? reviewedTimeStamp,
-    int? editedTimeStamp,
-    Value<int?> parentTimeStamp = const Value.absent(),
-    Value<int?> eventTimeStamp = const Value.absent(),
-    int? sequenceNumber,
-    Value<String?> metaData = const Value.absent(),
-    String? content,
-  }) => SinceWhenItem(
-    id: id ?? this.id,
-    createdTimeStamp: createdTimeStamp ?? this.createdTimeStamp,
-    reviewedTimeStamp: reviewedTimeStamp ?? this.reviewedTimeStamp,
-    editedTimeStamp: editedTimeStamp ?? this.editedTimeStamp,
-    parentTimeStamp: parentTimeStamp.present
-        ? parentTimeStamp.value
-        : this.parentTimeStamp,
-    eventTimeStamp: eventTimeStamp.present
-        ? eventTimeStamp.value
-        : this.eventTimeStamp,
-    sequenceNumber: sequenceNumber ?? this.sequenceNumber,
-    metaData: metaData.present ? metaData.value : this.metaData,
-    content: content ?? this.content,
-  );
-  SinceWhenItem copyWithCompanion(SinceWhenItemsCompanion data) {
-    return SinceWhenItem(
-      id: data.id.present ? data.id.value : this.id,
-      createdTimeStamp: data.createdTimeStamp.present
-          ? data.createdTimeStamp.value
-          : this.createdTimeStamp,
-      reviewedTimeStamp: data.reviewedTimeStamp.present
-          ? data.reviewedTimeStamp.value
-          : this.reviewedTimeStamp,
-      editedTimeStamp: data.editedTimeStamp.present
-          ? data.editedTimeStamp.value
-          : this.editedTimeStamp,
-      parentTimeStamp: data.parentTimeStamp.present
-          ? data.parentTimeStamp.value
-          : this.parentTimeStamp,
-      eventTimeStamp: data.eventTimeStamp.present
-          ? data.eventTimeStamp.value
-          : this.eventTimeStamp,
-      sequenceNumber: data.sequenceNumber.present
-          ? data.sequenceNumber.value
-          : this.sequenceNumber,
-      metaData: data.metaData.present ? data.metaData.value : this.metaData,
-      content: data.content.present ? data.content.value : this.content,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('SinceWhenItem(')
-          ..write('id: $id, ')
-          ..write('createdTimeStamp: $createdTimeStamp, ')
-          ..write('reviewedTimeStamp: $reviewedTimeStamp, ')
-          ..write('editedTimeStamp: $editedTimeStamp, ')
-          ..write('parentTimeStamp: $parentTimeStamp, ')
-          ..write('eventTimeStamp: $eventTimeStamp, ')
-          ..write('sequenceNumber: $sequenceNumber, ')
-          ..write('metaData: $metaData, ')
-          ..write('content: $content')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(
-    id,
-    createdTimeStamp,
-    reviewedTimeStamp,
-    editedTimeStamp,
-    parentTimeStamp,
-    eventTimeStamp,
-    sequenceNumber,
-    metaData,
-    content,
-  );
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is SinceWhenItem &&
-          other.id == this.id &&
-          other.createdTimeStamp == this.createdTimeStamp &&
-          other.reviewedTimeStamp == this.reviewedTimeStamp &&
-          other.editedTimeStamp == this.editedTimeStamp &&
-          other.parentTimeStamp == this.parentTimeStamp &&
-          other.eventTimeStamp == this.eventTimeStamp &&
-          other.sequenceNumber == this.sequenceNumber &&
-          other.metaData == this.metaData &&
-          other.content == this.content);
-}
-
 class SinceWhenItemsCompanion extends UpdateCompanion<SinceWhenItem> {
   final Value<int> id;
-  final Value<int> createdTimeStamp;
-  final Value<int> reviewedTimeStamp;
-  final Value<int> editedTimeStamp;
-  final Value<int?> parentTimeStamp;
-  final Value<int?> eventTimeStamp;
+  final Value<int> createdTimestamp;
+  final Value<int> reviewedTimestamp;
+  final Value<int> editedTimestamp;
+  final Value<int?> parentTimestamp;
+  final Value<int?> eventTimestamp;
   final Value<int> sequenceNumber;
   final Value<String?> metaData;
+  final Value<String?> tldr;
   final Value<String> content;
   const SinceWhenItemsCompanion({
     this.id = const Value.absent(),
-    this.createdTimeStamp = const Value.absent(),
-    this.reviewedTimeStamp = const Value.absent(),
-    this.editedTimeStamp = const Value.absent(),
-    this.parentTimeStamp = const Value.absent(),
-    this.eventTimeStamp = const Value.absent(),
+    this.createdTimestamp = const Value.absent(),
+    this.reviewedTimestamp = const Value.absent(),
+    this.editedTimestamp = const Value.absent(),
+    this.parentTimestamp = const Value.absent(),
+    this.eventTimestamp = const Value.absent(),
     this.sequenceNumber = const Value.absent(),
     this.metaData = const Value.absent(),
+    this.tldr = const Value.absent(),
     this.content = const Value.absent(),
   });
   SinceWhenItemsCompanion.insert({
     this.id = const Value.absent(),
-    required int createdTimeStamp,
-    required int reviewedTimeStamp,
-    required int editedTimeStamp,
-    this.parentTimeStamp = const Value.absent(),
-    this.eventTimeStamp = const Value.absent(),
+    required int createdTimestamp,
+    required int reviewedTimestamp,
+    required int editedTimestamp,
+    this.parentTimestamp = const Value.absent(),
+    this.eventTimestamp = const Value.absent(),
     this.sequenceNumber = const Value.absent(),
     this.metaData = const Value.absent(),
+    this.tldr = const Value.absent(),
     required String content,
-  }) : createdTimeStamp = Value(createdTimeStamp),
-       reviewedTimeStamp = Value(reviewedTimeStamp),
-       editedTimeStamp = Value(editedTimeStamp),
+  }) : createdTimestamp = Value(createdTimestamp),
+       reviewedTimestamp = Value(reviewedTimestamp),
+       editedTimestamp = Value(editedTimestamp),
        content = Value(content);
   static Insertable<SinceWhenItem> custom({
     Expression<int>? id,
-    Expression<int>? createdTimeStamp,
-    Expression<int>? reviewedTimeStamp,
-    Expression<int>? editedTimeStamp,
-    Expression<int>? parentTimeStamp,
-    Expression<int>? eventTimeStamp,
+    Expression<int>? createdTimestamp,
+    Expression<int>? reviewedTimestamp,
+    Expression<int>? editedTimestamp,
+    Expression<int>? parentTimestamp,
+    Expression<int>? eventTimestamp,
     Expression<int>? sequenceNumber,
     Expression<String>? metaData,
+    Expression<String>? tldr,
     Expression<String>? content,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (createdTimeStamp != null) 'createdTimeStamp': createdTimeStamp,
-      if (reviewedTimeStamp != null) 'reviewedTimeStamp': reviewedTimeStamp,
-      if (editedTimeStamp != null) 'editedTimeStamp': editedTimeStamp,
-      if (parentTimeStamp != null) 'parentTimeStamp': parentTimeStamp,
-      if (eventTimeStamp != null) 'eventTimeStamp': eventTimeStamp,
+      if (createdTimestamp != null) 'createdTimestamp': createdTimestamp,
+      if (reviewedTimestamp != null) 'reviewedTimestamp': reviewedTimestamp,
+      if (editedTimestamp != null) 'editedTimestamp': editedTimestamp,
+      if (parentTimestamp != null) 'parentTimestamp': parentTimestamp,
+      if (eventTimestamp != null) 'eventTimestamp': eventTimestamp,
       if (sequenceNumber != null) 'sequenceNumber': sequenceNumber,
       if (metaData != null) 'metaData': metaData,
+      if (tldr != null) 'tldr': tldr,
       if (content != null) 'content': content,
     });
   }
 
   SinceWhenItemsCompanion copyWith({
     Value<int>? id,
-    Value<int>? createdTimeStamp,
-    Value<int>? reviewedTimeStamp,
-    Value<int>? editedTimeStamp,
-    Value<int?>? parentTimeStamp,
-    Value<int?>? eventTimeStamp,
+    Value<int>? createdTimestamp,
+    Value<int>? reviewedTimestamp,
+    Value<int>? editedTimestamp,
+    Value<int?>? parentTimestamp,
+    Value<int?>? eventTimestamp,
     Value<int>? sequenceNumber,
     Value<String?>? metaData,
+    Value<String?>? tldr,
     Value<String>? content,
   }) {
     return SinceWhenItemsCompanion(
       id: id ?? this.id,
-      createdTimeStamp: createdTimeStamp ?? this.createdTimeStamp,
-      reviewedTimeStamp: reviewedTimeStamp ?? this.reviewedTimeStamp,
-      editedTimeStamp: editedTimeStamp ?? this.editedTimeStamp,
-      parentTimeStamp: parentTimeStamp ?? this.parentTimeStamp,
-      eventTimeStamp: eventTimeStamp ?? this.eventTimeStamp,
+      createdTimestamp: createdTimestamp ?? this.createdTimestamp,
+      reviewedTimestamp: reviewedTimestamp ?? this.reviewedTimestamp,
+      editedTimestamp: editedTimestamp ?? this.editedTimestamp,
+      parentTimestamp: parentTimestamp ?? this.parentTimestamp,
+      eventTimestamp: eventTimestamp ?? this.eventTimestamp,
       sequenceNumber: sequenceNumber ?? this.sequenceNumber,
       metaData: metaData ?? this.metaData,
+      tldr: tldr ?? this.tldr,
       content: content ?? this.content,
     );
   }
@@ -892,26 +592,29 @@ class SinceWhenItemsCompanion extends UpdateCompanion<SinceWhenItem> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (createdTimeStamp.present) {
-      map['createdTimeStamp'] = Variable<int>(createdTimeStamp.value);
+    if (createdTimestamp.present) {
+      map['createdTimestamp'] = Variable<int>(createdTimestamp.value);
     }
-    if (reviewedTimeStamp.present) {
-      map['reviewedTimeStamp'] = Variable<int>(reviewedTimeStamp.value);
+    if (reviewedTimestamp.present) {
+      map['reviewedTimestamp'] = Variable<int>(reviewedTimestamp.value);
     }
-    if (editedTimeStamp.present) {
-      map['editedTimeStamp'] = Variable<int>(editedTimeStamp.value);
+    if (editedTimestamp.present) {
+      map['editedTimestamp'] = Variable<int>(editedTimestamp.value);
     }
-    if (parentTimeStamp.present) {
-      map['parentTimeStamp'] = Variable<int>(parentTimeStamp.value);
+    if (parentTimestamp.present) {
+      map['parentTimestamp'] = Variable<int>(parentTimestamp.value);
     }
-    if (eventTimeStamp.present) {
-      map['eventTimeStamp'] = Variable<int>(eventTimeStamp.value);
+    if (eventTimestamp.present) {
+      map['eventTimestamp'] = Variable<int>(eventTimestamp.value);
     }
     if (sequenceNumber.present) {
       map['sequenceNumber'] = Variable<int>(sequenceNumber.value);
     }
     if (metaData.present) {
       map['metaData'] = Variable<String>(metaData.value);
+    }
+    if (tldr.present) {
+      map['tldr'] = Variable<String>(tldr.value);
     }
     if (content.present) {
       map['content'] = Variable<String>(content.value);
@@ -923,13 +626,14 @@ class SinceWhenItemsCompanion extends UpdateCompanion<SinceWhenItem> {
   String toString() {
     return (StringBuffer('SinceWhenItemsCompanion(')
           ..write('id: $id, ')
-          ..write('createdTimeStamp: $createdTimeStamp, ')
-          ..write('reviewedTimeStamp: $reviewedTimeStamp, ')
-          ..write('editedTimeStamp: $editedTimeStamp, ')
-          ..write('parentTimeStamp: $parentTimeStamp, ')
-          ..write('eventTimeStamp: $eventTimeStamp, ')
+          ..write('createdTimestamp: $createdTimestamp, ')
+          ..write('reviewedTimestamp: $reviewedTimestamp, ')
+          ..write('editedTimestamp: $editedTimestamp, ')
+          ..write('parentTimestamp: $parentTimestamp, ')
+          ..write('eventTimestamp: $eventTimestamp, ')
           ..write('sequenceNumber: $sequenceNumber, ')
           ..write('metaData: $metaData, ')
+          ..write('tldr: $tldr, ')
           ..write('content: $content')
           ..write(')'))
         .toString();
@@ -965,7 +669,7 @@ class $TagItemsTable extends TagItems with TableInfo<$TagItemsTable, TagItem> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES sinceWhen (createdTimeStamp) ON DELETE CASCADE',
+      'REFERENCES sinceWhen (createdTimestamp) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _glossaryTimestampMeta = const VerificationMeta(
@@ -979,7 +683,7 @@ class $TagItemsTable extends TagItems with TableInfo<$TagItemsTable, TagItem> {
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES tagGlossary (createdTimeStamp) ON DELETE CASCADE',
+      'REFERENCES glossary (createdTimestamp) ON DELETE CASCADE',
     ),
   );
   @override
@@ -1057,99 +761,6 @@ class $TagItemsTable extends TagItems with TableInfo<$TagItemsTable, TagItem> {
   $TagItemsTable createAlias(String alias) {
     return $TagItemsTable(attachedDatabase, alias);
   }
-}
-
-class TagItem extends DataClass implements Insertable<TagItem> {
-  /// Auto-incrementing primary key.
-  final int id;
-
-  /// `record_timestamp INTEGER NOT NULL` referencing
-  /// `SinceWhenItems.createdTimeStamp` with `ON DELETE CASCADE`.
-  final int recordTimestamp;
-
-  /// `glossary_timestamp INTEGER NOT NULL` referencing
-  /// `GlossaryItems.createdTimeStamp` with `ON DELETE CASCADE`.
-  final int glossaryTimestamp;
-  const TagItem({
-    required this.id,
-    required this.recordTimestamp,
-    required this.glossaryTimestamp,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['record_timestamp'] = Variable<int>(recordTimestamp);
-    map['glossary_timestamp'] = Variable<int>(glossaryTimestamp);
-    return map;
-  }
-
-  TagItemsCompanion toCompanion(bool nullToAbsent) {
-    return TagItemsCompanion(
-      id: Value(id),
-      recordTimestamp: Value(recordTimestamp),
-      glossaryTimestamp: Value(glossaryTimestamp),
-    );
-  }
-
-  factory TagItem.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return TagItem(
-      id: serializer.fromJson<int>(json['id']),
-      recordTimestamp: serializer.fromJson<int>(json['recordTimestamp']),
-      glossaryTimestamp: serializer.fromJson<int>(json['glossaryTimestamp']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'recordTimestamp': serializer.toJson<int>(recordTimestamp),
-      'glossaryTimestamp': serializer.toJson<int>(glossaryTimestamp),
-    };
-  }
-
-  TagItem copyWith({int? id, int? recordTimestamp, int? glossaryTimestamp}) =>
-      TagItem(
-        id: id ?? this.id,
-        recordTimestamp: recordTimestamp ?? this.recordTimestamp,
-        glossaryTimestamp: glossaryTimestamp ?? this.glossaryTimestamp,
-      );
-  TagItem copyWithCompanion(TagItemsCompanion data) {
-    return TagItem(
-      id: data.id.present ? data.id.value : this.id,
-      recordTimestamp: data.recordTimestamp.present
-          ? data.recordTimestamp.value
-          : this.recordTimestamp,
-      glossaryTimestamp: data.glossaryTimestamp.present
-          ? data.glossaryTimestamp.value
-          : this.glossaryTimestamp,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('TagItem(')
-          ..write('id: $id, ')
-          ..write('recordTimestamp: $recordTimestamp, ')
-          ..write('glossaryTimestamp: $glossaryTimestamp')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, recordTimestamp, glossaryTimestamp);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is TagItem &&
-          other.id == this.id &&
-          other.recordTimestamp == this.recordTimestamp &&
-          other.glossaryTimestamp == this.glossaryTimestamp);
 }
 
 class TagItemsCompanion extends UpdateCompanion<TagItem> {
@@ -1250,7 +861,7 @@ abstract class _$SinceWhenDatabase extends GeneratedDatabase {
     ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
-        'tagGlossary',
+        'glossary',
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('tags', kind: UpdateKind.delete)],
@@ -1261,14 +872,14 @@ abstract class _$SinceWhenDatabase extends GeneratedDatabase {
 typedef $$GlossaryItemsTableCreateCompanionBuilder =
     GlossaryItemsCompanion Function({
       Value<int> id,
-      required int createdTimeStamp,
+      required int createdTimestamp,
       required String tag,
       required int colorArgb,
     });
 typedef $$GlossaryItemsTableUpdateCompanionBuilder =
     GlossaryItemsCompanion Function({
       Value<int> id,
-      Value<int> createdTimeStamp,
+      Value<int> createdTimestamp,
       Value<String> tag,
       Value<int> colorArgb,
     });
@@ -1286,13 +897,13 @@ final class $$GlossaryItemsTableReferences
     _$SinceWhenDatabase db,
   ) => MultiTypedResultKey.fromTable(
     db.tagItems,
-    aliasName: 'tagGlossary__createdTimeStamp__tags__glossary_timestamp',
+    aliasName: 'glossary__createdTimestamp__tags__glossary_timestamp',
   );
 
   $$TagItemsTableProcessedTableManager get tagItemsRefs {
     final manager = $$TagItemsTableTableManager($_db, $_db.tagItems).filter(
-      (f) => f.glossaryTimestamp.createdTimeStamp.sqlEquals(
-        $_itemColumn<int>('createdTimeStamp')!,
+      (f) => f.glossaryTimestamp.createdTimestamp.sqlEquals(
+        $_itemColumn<int>('createdTimestamp')!,
       ),
     );
 
@@ -1317,8 +928,8 @@ class $$GlossaryItemsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get createdTimeStamp => $composableBuilder(
-    column: $table.createdTimeStamp,
+  ColumnFilters<int> get createdTimestamp => $composableBuilder(
+    column: $table.createdTimestamp,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1337,7 +948,7 @@ class $$GlossaryItemsTableFilterComposer
   ) {
     final $$TagItemsTableFilterComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.createdTimeStamp,
+      getCurrentColumn: (t) => t.createdTimestamp,
       referencedTable: $db.tagItems,
       getReferencedColumn: (t) => t.glossaryTimestamp,
       builder:
@@ -1372,8 +983,8 @@ class $$GlossaryItemsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get createdTimeStamp => $composableBuilder(
-    column: $table.createdTimeStamp,
+  ColumnOrderings<int> get createdTimestamp => $composableBuilder(
+    column: $table.createdTimestamp,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -1400,8 +1011,8 @@ class $$GlossaryItemsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get createdTimeStamp => $composableBuilder(
-    column: $table.createdTimeStamp,
+  GeneratedColumn<int> get createdTimestamp => $composableBuilder(
+    column: $table.createdTimestamp,
     builder: (column) => column,
   );
 
@@ -1416,7 +1027,7 @@ class $$GlossaryItemsTableAnnotationComposer
   ) {
     final $$TagItemsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.createdTimeStamp,
+      getCurrentColumn: (t) => t.createdTimestamp,
       referencedTable: $db.tagItems,
       getReferencedColumn: (t) => t.glossaryTimestamp,
       builder:
@@ -1468,24 +1079,24 @@ class $$GlossaryItemsTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<int> createdTimeStamp = const Value.absent(),
+                Value<int> createdTimestamp = const Value.absent(),
                 Value<String> tag = const Value.absent(),
                 Value<int> colorArgb = const Value.absent(),
               }) => GlossaryItemsCompanion(
                 id: id,
-                createdTimeStamp: createdTimeStamp,
+                createdTimestamp: createdTimestamp,
                 tag: tag,
                 colorArgb: colorArgb,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                required int createdTimeStamp,
+                required int createdTimestamp,
                 required String tag,
                 required int colorArgb,
               }) => GlossaryItemsCompanion.insert(
                 id: id,
-                createdTimeStamp: createdTimeStamp,
+                createdTimestamp: createdTimestamp,
                 tag: tag,
                 colorArgb: colorArgb,
               ),
@@ -1521,7 +1132,7 @@ class $$GlossaryItemsTableTableManager
                           ).tagItemsRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
                           referencedItems.where(
-                            (e) => e.glossaryTimestamp == item.createdTimeStamp,
+                            (e) => e.glossaryTimestamp == item.createdTimestamp,
                           ),
                       typedResults: items,
                     ),
@@ -1550,25 +1161,27 @@ typedef $$GlossaryItemsTableProcessedTableManager =
 typedef $$SinceWhenItemsTableCreateCompanionBuilder =
     SinceWhenItemsCompanion Function({
       Value<int> id,
-      required int createdTimeStamp,
-      required int reviewedTimeStamp,
-      required int editedTimeStamp,
-      Value<int?> parentTimeStamp,
-      Value<int?> eventTimeStamp,
+      required int createdTimestamp,
+      required int reviewedTimestamp,
+      required int editedTimestamp,
+      Value<int?> parentTimestamp,
+      Value<int?> eventTimestamp,
       Value<int> sequenceNumber,
       Value<String?> metaData,
+      Value<String?> tldr,
       required String content,
     });
 typedef $$SinceWhenItemsTableUpdateCompanionBuilder =
     SinceWhenItemsCompanion Function({
       Value<int> id,
-      Value<int> createdTimeStamp,
-      Value<int> reviewedTimeStamp,
-      Value<int> editedTimeStamp,
-      Value<int?> parentTimeStamp,
-      Value<int?> eventTimeStamp,
+      Value<int> createdTimestamp,
+      Value<int> reviewedTimestamp,
+      Value<int> editedTimestamp,
+      Value<int?> parentTimestamp,
+      Value<int?> eventTimestamp,
       Value<int> sequenceNumber,
       Value<String?> metaData,
+      Value<String?> tldr,
       Value<String> content,
     });
 
@@ -1589,13 +1202,13 @@ final class $$SinceWhenItemsTableReferences
     _$SinceWhenDatabase db,
   ) => MultiTypedResultKey.fromTable(
     db.tagItems,
-    aliasName: 'sinceWhen__createdTimeStamp__tags__record_timestamp',
+    aliasName: 'sinceWhen__createdTimestamp__tags__record_timestamp',
   );
 
   $$TagItemsTableProcessedTableManager get tagItemsRefs {
     final manager = $$TagItemsTableTableManager($_db, $_db.tagItems).filter(
-      (f) => f.recordTimestamp.createdTimeStamp.sqlEquals(
-        $_itemColumn<int>('createdTimeStamp')!,
+      (f) => f.recordTimestamp.createdTimestamp.sqlEquals(
+        $_itemColumn<int>('createdTimestamp')!,
       ),
     );
 
@@ -1620,28 +1233,28 @@ class $$SinceWhenItemsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get createdTimeStamp => $composableBuilder(
-    column: $table.createdTimeStamp,
+  ColumnFilters<int> get createdTimestamp => $composableBuilder(
+    column: $table.createdTimestamp,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get reviewedTimeStamp => $composableBuilder(
-    column: $table.reviewedTimeStamp,
+  ColumnFilters<int> get reviewedTimestamp => $composableBuilder(
+    column: $table.reviewedTimestamp,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get editedTimeStamp => $composableBuilder(
-    column: $table.editedTimeStamp,
+  ColumnFilters<int> get editedTimestamp => $composableBuilder(
+    column: $table.editedTimestamp,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get parentTimeStamp => $composableBuilder(
-    column: $table.parentTimeStamp,
+  ColumnFilters<int> get parentTimestamp => $composableBuilder(
+    column: $table.parentTimestamp,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<int> get eventTimeStamp => $composableBuilder(
-    column: $table.eventTimeStamp,
+  ColumnFilters<int> get eventTimestamp => $composableBuilder(
+    column: $table.eventTimestamp,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1655,6 +1268,11 @@ class $$SinceWhenItemsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get tldr => $composableBuilder(
+    column: $table.tldr,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get content => $composableBuilder(
     column: $table.content,
     builder: (column) => ColumnFilters(column),
@@ -1665,7 +1283,7 @@ class $$SinceWhenItemsTableFilterComposer
   ) {
     final $$TagItemsTableFilterComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.createdTimeStamp,
+      getCurrentColumn: (t) => t.createdTimestamp,
       referencedTable: $db.tagItems,
       getReferencedColumn: (t) => t.recordTimestamp,
       builder:
@@ -1700,28 +1318,28 @@ class $$SinceWhenItemsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get createdTimeStamp => $composableBuilder(
-    column: $table.createdTimeStamp,
+  ColumnOrderings<int> get createdTimestamp => $composableBuilder(
+    column: $table.createdTimestamp,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get reviewedTimeStamp => $composableBuilder(
-    column: $table.reviewedTimeStamp,
+  ColumnOrderings<int> get reviewedTimestamp => $composableBuilder(
+    column: $table.reviewedTimestamp,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get editedTimeStamp => $composableBuilder(
-    column: $table.editedTimeStamp,
+  ColumnOrderings<int> get editedTimestamp => $composableBuilder(
+    column: $table.editedTimestamp,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get parentTimeStamp => $composableBuilder(
-    column: $table.parentTimeStamp,
+  ColumnOrderings<int> get parentTimestamp => $composableBuilder(
+    column: $table.parentTimestamp,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get eventTimeStamp => $composableBuilder(
-    column: $table.eventTimeStamp,
+  ColumnOrderings<int> get eventTimestamp => $composableBuilder(
+    column: $table.eventTimestamp,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -1732,6 +1350,11 @@ class $$SinceWhenItemsTableOrderingComposer
 
   ColumnOrderings<String> get metaData => $composableBuilder(
     column: $table.metaData,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get tldr => $composableBuilder(
+    column: $table.tldr,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -1753,28 +1376,28 @@ class $$SinceWhenItemsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get createdTimeStamp => $composableBuilder(
-    column: $table.createdTimeStamp,
+  GeneratedColumn<int> get createdTimestamp => $composableBuilder(
+    column: $table.createdTimestamp,
     builder: (column) => column,
   );
 
-  GeneratedColumn<int> get reviewedTimeStamp => $composableBuilder(
-    column: $table.reviewedTimeStamp,
+  GeneratedColumn<int> get reviewedTimestamp => $composableBuilder(
+    column: $table.reviewedTimestamp,
     builder: (column) => column,
   );
 
-  GeneratedColumn<int> get editedTimeStamp => $composableBuilder(
-    column: $table.editedTimeStamp,
+  GeneratedColumn<int> get editedTimestamp => $composableBuilder(
+    column: $table.editedTimestamp,
     builder: (column) => column,
   );
 
-  GeneratedColumn<int> get parentTimeStamp => $composableBuilder(
-    column: $table.parentTimeStamp,
+  GeneratedColumn<int> get parentTimestamp => $composableBuilder(
+    column: $table.parentTimestamp,
     builder: (column) => column,
   );
 
-  GeneratedColumn<int> get eventTimeStamp => $composableBuilder(
-    column: $table.eventTimeStamp,
+  GeneratedColumn<int> get eventTimestamp => $composableBuilder(
+    column: $table.eventTimestamp,
     builder: (column) => column,
   );
 
@@ -1786,6 +1409,9 @@ class $$SinceWhenItemsTableAnnotationComposer
   GeneratedColumn<String> get metaData =>
       $composableBuilder(column: $table.metaData, builder: (column) => column);
 
+  GeneratedColumn<String> get tldr =>
+      $composableBuilder(column: $table.tldr, builder: (column) => column);
+
   GeneratedColumn<String> get content =>
       $composableBuilder(column: $table.content, builder: (column) => column);
 
@@ -1794,7 +1420,7 @@ class $$SinceWhenItemsTableAnnotationComposer
   ) {
     final $$TagItemsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.createdTimeStamp,
+      getCurrentColumn: (t) => t.createdTimestamp,
       referencedTable: $db.tagItems,
       getReferencedColumn: (t) => t.recordTimestamp,
       builder:
@@ -1846,45 +1472,49 @@ class $$SinceWhenItemsTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<int> createdTimeStamp = const Value.absent(),
-                Value<int> reviewedTimeStamp = const Value.absent(),
-                Value<int> editedTimeStamp = const Value.absent(),
-                Value<int?> parentTimeStamp = const Value.absent(),
-                Value<int?> eventTimeStamp = const Value.absent(),
+                Value<int> createdTimestamp = const Value.absent(),
+                Value<int> reviewedTimestamp = const Value.absent(),
+                Value<int> editedTimestamp = const Value.absent(),
+                Value<int?> parentTimestamp = const Value.absent(),
+                Value<int?> eventTimestamp = const Value.absent(),
                 Value<int> sequenceNumber = const Value.absent(),
                 Value<String?> metaData = const Value.absent(),
+                Value<String?> tldr = const Value.absent(),
                 Value<String> content = const Value.absent(),
               }) => SinceWhenItemsCompanion(
                 id: id,
-                createdTimeStamp: createdTimeStamp,
-                reviewedTimeStamp: reviewedTimeStamp,
-                editedTimeStamp: editedTimeStamp,
-                parentTimeStamp: parentTimeStamp,
-                eventTimeStamp: eventTimeStamp,
+                createdTimestamp: createdTimestamp,
+                reviewedTimestamp: reviewedTimestamp,
+                editedTimestamp: editedTimestamp,
+                parentTimestamp: parentTimestamp,
+                eventTimestamp: eventTimestamp,
                 sequenceNumber: sequenceNumber,
                 metaData: metaData,
+                tldr: tldr,
                 content: content,
               ),
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                required int createdTimeStamp,
-                required int reviewedTimeStamp,
-                required int editedTimeStamp,
-                Value<int?> parentTimeStamp = const Value.absent(),
-                Value<int?> eventTimeStamp = const Value.absent(),
+                required int createdTimestamp,
+                required int reviewedTimestamp,
+                required int editedTimestamp,
+                Value<int?> parentTimestamp = const Value.absent(),
+                Value<int?> eventTimestamp = const Value.absent(),
                 Value<int> sequenceNumber = const Value.absent(),
                 Value<String?> metaData = const Value.absent(),
+                Value<String?> tldr = const Value.absent(),
                 required String content,
               }) => SinceWhenItemsCompanion.insert(
                 id: id,
-                createdTimeStamp: createdTimeStamp,
-                reviewedTimeStamp: reviewedTimeStamp,
-                editedTimeStamp: editedTimeStamp,
-                parentTimeStamp: parentTimeStamp,
-                eventTimeStamp: eventTimeStamp,
+                createdTimestamp: createdTimestamp,
+                reviewedTimestamp: reviewedTimestamp,
+                editedTimestamp: editedTimestamp,
+                parentTimestamp: parentTimestamp,
+                eventTimestamp: eventTimestamp,
                 sequenceNumber: sequenceNumber,
                 metaData: metaData,
+                tldr: tldr,
                 content: content,
               ),
           withReferenceMapper: (p0) => p0
@@ -1919,7 +1549,7 @@ class $$SinceWhenItemsTableTableManager
                           ).tagItemsRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
                           referencedItems.where(
-                            (e) => e.recordTimestamp == item.createdTimeStamp,
+                            (e) => e.recordTimestamp == item.createdTimestamp,
                           ),
                       typedResults: items,
                     ),
@@ -1964,7 +1594,7 @@ final class $$TagItemsTableReferences
 
   static $SinceWhenItemsTable _recordTimestampTable(_$SinceWhenDatabase db) =>
       db.sinceWhenItems.createAlias(
-        'tags__record_timestamp__sinceWhen__createdTimeStamp',
+        'tags__record_timestamp__sinceWhen__createdTimestamp',
       );
 
   $$SinceWhenItemsTableProcessedTableManager get recordTimestamp {
@@ -1973,7 +1603,7 @@ final class $$TagItemsTableReferences
     final manager = $$SinceWhenItemsTableTableManager(
       $_db,
       $_db.sinceWhenItems,
-    ).filter((f) => f.createdTimeStamp.sqlEquals($_column));
+    ).filter((f) => f.createdTimestamp.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_recordTimestampTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
@@ -1983,7 +1613,7 @@ final class $$TagItemsTableReferences
 
   static $GlossaryItemsTable _glossaryTimestampTable(_$SinceWhenDatabase db) =>
       db.glossaryItems.createAlias(
-        'tags__glossary_timestamp__tagGlossary__createdTimeStamp',
+        'tags__glossary_timestamp__glossary__createdTimestamp',
       );
 
   $$GlossaryItemsTableProcessedTableManager get glossaryTimestamp {
@@ -1992,7 +1622,7 @@ final class $$TagItemsTableReferences
     final manager = $$GlossaryItemsTableTableManager(
       $_db,
       $_db.glossaryItems,
-    ).filter((f) => f.createdTimeStamp.sqlEquals($_column));
+    ).filter((f) => f.createdTimestamp.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_glossaryTimestampTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
@@ -2020,7 +1650,7 @@ class $$TagItemsTableFilterComposer
       composer: this,
       getCurrentColumn: (t) => t.recordTimestamp,
       referencedTable: $db.sinceWhenItems,
-      getReferencedColumn: (t) => t.createdTimeStamp,
+      getReferencedColumn: (t) => t.createdTimestamp,
       builder:
           (
             joinBuilder, {
@@ -2043,7 +1673,7 @@ class $$TagItemsTableFilterComposer
       composer: this,
       getCurrentColumn: (t) => t.glossaryTimestamp,
       referencedTable: $db.glossaryItems,
-      getReferencedColumn: (t) => t.createdTimeStamp,
+      getReferencedColumn: (t) => t.createdTimestamp,
       builder:
           (
             joinBuilder, {
@@ -2081,7 +1711,7 @@ class $$TagItemsTableOrderingComposer
       composer: this,
       getCurrentColumn: (t) => t.recordTimestamp,
       referencedTable: $db.sinceWhenItems,
-      getReferencedColumn: (t) => t.createdTimeStamp,
+      getReferencedColumn: (t) => t.createdTimestamp,
       builder:
           (
             joinBuilder, {
@@ -2104,7 +1734,7 @@ class $$TagItemsTableOrderingComposer
       composer: this,
       getCurrentColumn: (t) => t.glossaryTimestamp,
       referencedTable: $db.glossaryItems,
-      getReferencedColumn: (t) => t.createdTimeStamp,
+      getReferencedColumn: (t) => t.createdTimestamp,
       builder:
           (
             joinBuilder, {
@@ -2140,7 +1770,7 @@ class $$TagItemsTableAnnotationComposer
       composer: this,
       getCurrentColumn: (t) => t.recordTimestamp,
       referencedTable: $db.sinceWhenItems,
-      getReferencedColumn: (t) => t.createdTimeStamp,
+      getReferencedColumn: (t) => t.createdTimestamp,
       builder:
           (
             joinBuilder, {
@@ -2163,7 +1793,7 @@ class $$TagItemsTableAnnotationComposer
       composer: this,
       getCurrentColumn: (t) => t.glossaryTimestamp,
       referencedTable: $db.glossaryItems,
-      getReferencedColumn: (t) => t.createdTimeStamp,
+      getReferencedColumn: (t) => t.createdTimestamp,
       builder:
           (
             joinBuilder, {
@@ -2266,7 +1896,7 @@ class $$TagItemsTableTableManager
                                         ._recordTimestampTable(db),
                                     referencedColumn: $$TagItemsTableReferences
                                         ._recordTimestampTable(db)
-                                        .createdTimeStamp,
+                                        .createdTimestamp,
                                   )
                                   as T;
                         }
@@ -2279,7 +1909,7 @@ class $$TagItemsTableTableManager
                                         ._glossaryTimestampTable(db),
                                     referencedColumn: $$TagItemsTableReferences
                                         ._glossaryTimestampTable(db)
-                                        .createdTimeStamp,
+                                        .createdTimestamp,
                                   )
                                   as T;
                         }

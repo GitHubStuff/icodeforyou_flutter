@@ -1,7 +1,5 @@
 // infinite_scroll_picking_settings/lib/src/picker_visual_settings/picker_visual_settings.dart
 
-// ignore_for_file: public_member_api_docs, always_use_package_imports
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../wheel_settings/wheel_settings.dart';
@@ -30,6 +28,7 @@ abstract class PickerVisualSettings with _$PickerVisualSettings {
     'frameHorizontalPadding must be >= 0',
   )
   @Assert('frameVerticalPadding >= 0', 'frameVerticalPadding must be >= 0')
+  ///
   const factory PickerVisualSettings({
     /// Visual and behavioral configuration for the wheel itself.
     @Default(WheelSettings()) WheelSettings wheel,

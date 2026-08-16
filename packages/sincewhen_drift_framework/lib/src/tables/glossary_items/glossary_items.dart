@@ -1,24 +1,28 @@
-// packages/since_when/lib/src/tables/glossary_items.dart
+// packages/sincewhen_drift_framework/lib/src/tables/glossary_items/glossary_items.dart
 
 import 'package:drift/drift.dart';
+import 'package:sincewhen_models/sincewhen_models.dart';
 
 /// Tag glossary table: the canonical definition of every tag.
 ///
 /// Auto-incrementing primary key, a unique creation timestamp, a unique
 /// non-empty tag, and a unique color.
+@UseRowClass(GlossaryItem) //Connects to the pure dart model
 class GlossaryItems extends Table {
   @override
-  String get tableName => 'tagGlossary';
+  String get tableName => 'glossary';
 
   /// Auto-incrementing primary key.
   IntColumn get id => integer().autoIncrement()();
 
-  /// `createdTimeStamp INTEGER NOT NULL UNIQUE`.
+  /// `createdTimestamp INTEGER NOT NULL UNIQUE`.
   ///
-  /// Explicitly named to preserve the camelCase column name from the raw
-  /// SQL schema, since drift would otherwise emit `created_time_stamp`.
-  IntColumn get createdTimeStamp =>
-      integer().named('createdTimeStamp').unique()();
+  /// Explicitly named to keep the column camelCase. This is the foreign
+  /// key target for `TagItems`, so the `unique()` constraint is
+  /// required — SQLite rejects foreign keys that reference
+  /// non-uniquely-constrained columns.
+  IntColumn get createdTimestamp =>
+      integer().named('createdTimestamp').unique()();
 
   /// `tag TEXT NOT NULL UNIQUE CHECK(tag != '')`.
   ///
@@ -29,9 +33,10 @@ class GlossaryItems extends Table {
   // ignore: recursive_getters
   TextColumn get tag => text().unique().check(tag.isNotValue(''))();
 
-  /// `color_argb INTEGER NOT NULL UNIQUE`.
+  /// `colorArgb INTEGER NOT NULL UNIQUE`.
   ///
   /// Packed ARGB color value, suitable for `Color(colorArgb)` on the
-  /// Flutter side. Drift derives the column name from the getter.
-  IntColumn get colorArgb => integer().unique()();
+  /// Flutter side. Explicitly named to keep the column camelCase,
+  /// consistent with the rest of the table.
+  IntColumn get colorArgb => integer().named('colorArgb').unique()();
 }

@@ -7,7 +7,7 @@ import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
 import '../app_rail_navigation/rail_destination_enum.dart'
     show RailDestinationEnum;
-import '../app_rail_navigation/rail_destintation_buttons.dart'
+import '../app_rail_navigation/rail_destination_buttons.dart'
     show RailDestinationButtons;
 
 /// The destination shown when the app screen first appears.

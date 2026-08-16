@@ -12,6 +12,7 @@ export 'src/orientation_flex/orientation_flex.dart'
 export 'src/sized_spinner/sized_spinner.dart' show SizedSpinner;
 export 'src/slide_index_stack/slide_index_stack.dart' show SlideIndexedStack;
 export 'src/solid_screen_color/sollid_screen_color.dart' show SolidScreenColor;
+export 'src/stepper_theme/stepper_theme.dart' show StepperTheme;
 export 'src/textfield/textfield.dart' show InputField, PasswordField;
 export 'src/uniform_cluster/button_pair.dart' show ButtonPair;
 export 'src/uniform_cluster/uniform_cluster.dart' show UniformCluster;

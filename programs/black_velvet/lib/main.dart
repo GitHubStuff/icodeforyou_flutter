@@ -1,4 +1,6 @@
 // programs/since_when_dev/lib/main.dart
+import 'package:dependency_resolver/dependency_resolver.dart'
+    show GetItDependencyResolver, InMemoryDependencyResolver;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart'
     show SharedPreferences;
@@ -13,10 +15,6 @@ import 'application_startup.dart' show ApplicationStartup;
 // So there is a small 'flash' of the screen status bar.
 // CONCLUSION: Avoid Android
 
-// COOKBOOK: Brief check list of making custom actions/buttons
-// [] Create background tasks that run 'under' the splash screen (this file)
-// [] EDIT: programs/{new app}/lib/app_rail_navigation/rail_destination_enum.dart
-// [] EDIT: programs/{new app}/lib/screens/rail_screen.dart and screen(s)
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -26,11 +24,28 @@ Future<void> main() async {
   // Preferenes are created here because it is an async task.
   final preferences = await SharedPreferences.getInstance();
 
+  /// TODO: And any background tasks to run while the splash screen is displayed
+  final List<Future<void> Function()> tasks = [];
+
+  /// TODO: There are two available services providers (aka resolvers) that
+  /// can be use to register services that become accessable using:
+  ///   context.read<DependencyResolver>()
+  ///
+  /// Below the default is to use the InMemoryDependencyResolver, this is good
+  /// for testing/development
+  /// The 'get_it' package back GetItDependencyResolver() can be used for
+  /// production.
+
+  // Service Resolvers:
+  //- Custom GetIt like resolver that uses Map<>, (for testing)
+  final resolver = InMemoryDependencyResolver();
+  //- This is true GetIt packed resolover, (for production)
+  // change "_" to resolover and delete/comment the above 'resolver'
+  final _ = GetItDependencyResolver();
+
   ApplicationStartup(
     themeStorage: SharedPreferencesThemeStorage(preferences),
-    tasks: const [
-      // TODO: Add any background tasks
-      //() => SinceWhenStartup.setup(SinceWhenStartup.inmemoryConfiguration),
-    ],
+    resolver: resolver,
+    tasks: tasks,
   ).runner();
 }

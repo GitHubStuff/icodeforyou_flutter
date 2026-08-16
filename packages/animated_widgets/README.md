@@ -16,7 +16,7 @@ Beyond the Flutter SDK, the package depends on:
 - `equatable` — value equality for animation specs and ramp models
 - `custom_widgets` — `DirectionalController`, `DirectionalSliderAndButtons`,
   `UninheritedText`
-- `theme_manager` — `CrossFadeTheme`
+- `theme_manager` — `StepperTheme`
 
 ## Library structure
 

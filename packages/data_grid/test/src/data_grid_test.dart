@@ -1,4 +1,4 @@
-// packages/data_grid/test/data_grid_test.dart
+// packages/data_grid/test/src/data_grid_test.dart
 
 import 'package:data_grid/data_grid.dart' show DataDensity, DataGrid;
 import 'package:extensions/extensions.dart' show HapticIntensity;
@@ -201,8 +201,7 @@ void main() {
       Map<String, Object?>? tappedRow;
       final grid = DataGrid(
         data: _sortRows(),
-        onRowTap: (rowNumber, rowData) =>
-            tappedRow = rowData,
+        onRowTap: (rowNumber, rowData) => tappedRow = rowData,
       );
       await _pumpGrid(tester, grid);
 
@@ -223,8 +222,7 @@ void main() {
         Map<String, Object?>? tappedRow;
         final grid = DataGrid(
           data: _sortRows(),
-          onRowTap: (rowNumber, rowData) =>
-              tappedRow = rowData,
+          onRowTap: (rowNumber, rowData) => tappedRow = rowData,
         );
         await _pumpGrid(tester, grid);
 
@@ -253,8 +251,7 @@ void main() {
       final grid = DataGrid(
         data: _sortRows(),
         isCaseSensitive: false,
-        onRowTap: (rowNumber, rowData) =>
-            tappedRow = rowData,
+        onRowTap: (rowNumber, rowData) => tappedRow = rowData,
       );
       await _pumpGrid(tester, grid);
 

@@ -1,17 +1,18 @@
-// packages/slider_stepper/lib/src/step_button.dart
-// ignore_for_file: comment_references
+// packages/custom_widgets/lib/src/directional_slider/buttons/step_button.dart
+
 import 'dart:async';
 
+import 'package:custom_widgets/custom_widgets.dart' show StepperTheme;
 import 'package:extensions/extensions.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
-import 'package:theme_manager/theme_manager.dart' show CrossFadeTheme;
 
 /// A circular icon button that fires [onPressed] once on tap and
 /// auto-repeats while the pointer remains pressed (long-press).
 ///
-/// Tap → 1 step. Hold → initial delay, then repeat at [repeatInterval]
-/// until release. Used by [SliderStepper] for the `(−)` / `(+)` controls,
-/// but exposed publicly so callers can compose their own steppers.
+/// Tap → 1 step. Hold → [initialDelay], then repeat at [repeatInterval]
+/// until release. Used by `DirectionalSliderAndButtons` for the `(−)` /
+/// `(+)` controls, but exposed publicly so callers can compose their own
+/// steppers.
 class StepButton extends StatefulWidget {
   /// Creates a [StepButton].
   const StepButton({
@@ -34,7 +35,9 @@ class StepButton extends StatefulWidget {
   /// Pass `null` to disable the button.
   final VoidCallback? onPressed;
 
-  /// Diameter of the circular button. Defaults to 36 logical pixels.
+  /// Diameter of the circular button.
+  ///
+  /// When null, resolves from [StepperTheme.buttonSize].
   final double? buttonSize;
 
   /// Background colour. Defaults to the theme's primary container colour.
@@ -107,9 +110,14 @@ class _StepButtonState extends State<StepButton> {
     final bg = widget.color ?? scheme.primaryContainer;
     final fg = widget.iconColor ?? scheme.onPrimaryContainer;
 
+    // Resolve once so the outer box and the icon can never disagree: a null
+    // buttonSize previously left the SizedBox unconstrained while the icon
+    // fell back to the theme.
+    final buttonSize = widget.buttonSize ?? StepperTheme.of(context).buttonSize;
+
     final Widget child = SizedBox(
-      width: widget.buttonSize,
-      height: widget.buttonSize,
+      width: buttonSize,
+      height: buttonSize,
       child: Material(
         color: _isEnabled ? bg : bg.withValues(alpha: 0.4),
         shape: const CircleBorder(),
@@ -121,9 +129,7 @@ class _StepButtonState extends State<StepButton> {
           child: Center(
             child: Icon(
               widget.icon,
-              size:
-                  (widget.buttonSize ?? CrossFadeTheme.of(context).buttonSize) *
-                  0.55,
+              size: buttonSize * 0.55,
               color: _isEnabled ? fg : fg.withValues(alpha: 0.4),
             ),
           ),

@@ -33,7 +33,7 @@ class DefaultSplashArt extends StatelessWidget {
     child: Center(
       child: SizedBox.square(
         dimension: 240,
-        child: ClipOval(child: Assets.iconer.image(fit: BoxFit.cover)),
+        child: ClipOval(child: Assets.splashScreen.image(fit: BoxFit.cover)),
       ),
     ),
   );

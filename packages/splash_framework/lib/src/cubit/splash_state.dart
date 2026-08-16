@@ -8,7 +8,7 @@
 /// - [SplashWaiting] — emitted when the minimum duration has elapsed but tasks
 ///   are still running.
 /// - [SplashComplete] — emitted when all tasks finish successfully.
-/// - [SplashError] — emitted when any task throws an exception.
+/// - [SplashError] — emitted when any task throws.
 ///
 /// All splash states are immutable and represent a snapshot of the current
 /// initialization progress.
@@ -44,14 +44,18 @@ final class SplashComplete extends SplashState {
   const SplashComplete();
 }
 
-/// State emitted when one or more startup tasks throw an exception.
+/// State emitted when one or more startup tasks throw.
 ///
-/// The [error] property contains the thrown object, allowing the UI or caller
-/// to handle or display the failure.
+/// Carries the thrown [error] and the [stackTrace] at the throw site so the
+/// failure can be displayed and reported with full context.
 final class SplashError extends SplashState {
-  /// Creates a new [SplashError] state containing the thrown [error].
-  const SplashError(this.error);
+  /// Creates a new [SplashError] state containing the thrown [error] and its
+  /// [stackTrace].
+  const SplashError(this.error, this.stackTrace);
 
   /// The error thrown by a failing startup task.
   final Object error;
+
+  /// The stack trace captured where [error] was thrown.
+  final StackTrace stackTrace;
 }

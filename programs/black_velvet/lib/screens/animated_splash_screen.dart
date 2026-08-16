@@ -1,4 +1,4 @@
-// programs/template_app/lib/framework/default_splash_screen.dart
+// programs/black_velvet/lib/screens/animated_splash_screen.dart
 
 import 'dart:async' show unawaited;
 

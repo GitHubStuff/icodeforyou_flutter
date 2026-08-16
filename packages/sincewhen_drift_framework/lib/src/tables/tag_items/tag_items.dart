@@ -5,12 +5,14 @@ import 'package:sincewhen_drift_framework/src/tables/glossary_items/glossary_ite
     show GlossaryItems;
 import 'package:sincewhen_drift_framework/src/tables/sincewhen_items/sincewhen_items.dart'
     show SinceWhenItems;
+import 'package:sincewhen_models/sincewhen_models.dart';
 
 /// Join table linking [SinceWhenItems] records to [GlossaryItems] entries.
 ///
 /// Auto-incrementing primary key, two cascading foreign keys keyed on
-/// `createdTimeStamp`, and a composite unique constraint across both
+/// `createdTimestamp`, and a composite unique constraint across both
 /// foreign key columns.
+@UseRowClass(TagItem) //Connects to the pure dart model
 class TagItems extends Table {
   @override
   String get tableName => 'tags';
@@ -19,18 +21,18 @@ class TagItems extends Table {
   IntColumn get id => integer().autoIncrement()();
 
   /// `record_timestamp INTEGER NOT NULL` referencing
-  /// `SinceWhenItems.createdTimeStamp` with `ON DELETE CASCADE`.
+  /// `SinceWhenItems.createdTimestamp` with `ON DELETE CASCADE`.
   IntColumn get recordTimestamp => integer().references(
     SinceWhenItems,
-    #createdTimeStamp,
+    #createdTimestamp,
     onDelete: KeyAction.cascade,
   )();
 
   /// `glossary_timestamp INTEGER NOT NULL` referencing
-  /// `GlossaryItems.createdTimeStamp` with `ON DELETE CASCADE`.
+  /// `GlossaryItems.createdTimestamp` with `ON DELETE CASCADE`.
   IntColumn get glossaryTimestamp => integer().references(
     GlossaryItems,
-    #createdTimeStamp,
+    #createdTimestamp,
     onDelete: KeyAction.cascade,
   )();
 

@@ -1,0 +1,141 @@
+#!/usr/bin/env zsh
+# melos_tool/melos_audit
+# Workspace hygiene audit for the icodeforyou_flutter monorepo.
+# Version: 1.0.0
+#
+# Usage:
+#   melos_audit          — run all checks across packages | plugins | programs
+#
+# Takes no arguments. Must be run from the workspace root.
+# Exit status: 0 clean, 1 failures found, 64 wrong directory.
+#
+# Checks — the three failure classes that produce "Undefined name 'main'"
+# listener errors and misleading debugging sessions:
+#
+#   1. Test entrypoints — every *_test.dart under a test/ tree must declare
+#      a top-level main(). A main-less test file is discovered by the test
+#      glob and fails compilation at load time.
+#   2. Header truth — a first-line header of the form `// path/to/file.dart`
+#      must match the file's actual repo-relative path. Lying headers hide
+#      duplicates and misdirect debugging. Files with no path header are
+#      reported as warnings, not failures. Generated files are exempt.
+#   3. Duplicate basenames — the same *_test.dart basename appearing more
+#      than once within a single package's test/ tree almost always means
+#      a stray scaffold stub shadowing the real test in test/src/.
+
+set -uo pipefail
+
+readonly TIERS=(packages plugins programs)
+
+# Generated files are exempt from header checks.
+readonly -a GENERATED_NAME_FILTERS=(
+  -not -name '*.g.dart'
+  -not -name '*.freezed.dart'
+  -not -name '*.mocks.dart'
+  -not -name '*.drift.dart'
+  -not -name '*.gr.dart'
+  -not -name '*.config.dart'
+)
+
+readonly -a PATH_FILTERS=(
+  -not -path '*/.dart_tool/*'
+  -not -path '*/build/*'
+)
+
+# ─── preconditions ──────────────────────────────────────────────────────────
+
+if [[ ! -f pubspec.yaml ]] || ! grep -q '^name: icodeforyou_flutter' pubspec.yaml; then
+  print -u2 "❌ Run this from the icodeforyou_flutter workspace root."
+  exit 64
+fi
+
+typeset -i failures=0
+typeset -i warnings=0
+
+# ─── check 1: every *_test.dart declares a top-level main ──────────────────
+
+check_test_entrypoints() {
+  print "🔍 [1/3] Test entrypoints — top-level main() in every *_test.dart"
+
+  local f
+  while IFS= read -r f; do
+    if ! grep -qE '^(void|Future<void>) main\s*\(' "$f"; then
+      print "  ❌ no top-level main: $f"
+      failures=$((failures + 1))
+    fi
+  done < <(find $TIERS -path '*/test/*' -name '*_test.dart' -type f \
+    $PATH_FILTERS 2>/dev/null)
+}
+
+# ─── check 2: first-line path headers must tell the truth ──────────────────
+
+check_header_truth() {
+  print "🔍 [2/3] Header truth — first-line path comments match real paths"
+
+  local f first_line claimed
+  while IFS= read -r f; do
+    first_line=$(head -n 1 "$f")
+    if [[ "$first_line" == '// '* ]]; then
+      claimed="${first_line#// }"
+      # Only treat it as a path header if it looks like one: contains a
+      # slash and ends in .dart. Prose comments on line 1 are left alone.
+      if [[ "$claimed" == */*.dart ]]; then
+        if [[ "$claimed" != "$f" ]]; then
+          print "  ❌ lying header: $f"
+          print "     claims: $claimed"
+          failures=$((failures + 1))
+        fi
+      fi
+    else
+      print "  ⚠️  no path header: $f"
+      warnings=$((warnings + 1))
+    fi
+  done < <(find $TIERS -type f -name '*.dart' \
+    \( -path '*/lib/*' -o -path '*/test/*' \) \
+    $PATH_FILTERS $GENERATED_NAME_FILTERS 2>/dev/null)
+}
+
+# ─── check 3: duplicate *_test.dart basenames within one package ───────────
+
+check_duplicate_basenames() {
+  print "🔍 [3/3] Duplicates — repeated test basenames inside a package"
+
+  local tier test_dir dupes base hit
+  for tier in $TIERS; do
+    for test_dir in ${tier}/*/test(N/); do
+      dupes=$(find "$test_dir" -name '*_test.dart' -type f \
+        $PATH_FILTERS 2>/dev/null | awk -F/ '{print $NF}' | sort | uniq -d)
+      [[ -z "$dupes" ]] && continue
+
+      while IFS= read -r base; do
+        print "  ❌ duplicate test basename in ${test_dir%/}: $base"
+        find "$test_dir" -name "$base" -type f $PATH_FILTERS 2>/dev/null \
+          | while IFS= read -r hit; do print "     → $hit"; done
+        failures=$((failures + 1))
+      done <<< "$dupes"
+    done
+  done
+}
+
+# ─── run ────────────────────────────────────────────────────────────────────
+
+check_test_entrypoints
+check_header_truth
+check_duplicate_basenames
+
+print ""
+print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+print "📊 AUDIT SUMMARY"
+print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+print "Failures: ${failures}"
+print "Warnings: ${warnings} (missing path headers)"
+
+if (( failures > 0 )); then
+  print "❌ Audit failed."
+  print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  exit 1
+fi
+
+print "✅ Audit passed."
+print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+exit 0
