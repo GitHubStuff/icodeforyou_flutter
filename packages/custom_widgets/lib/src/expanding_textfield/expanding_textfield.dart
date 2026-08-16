@@ -1,4 +1,4 @@
-// packages/custom_widgets/lib/src/expanding_textfield.dart
+// packages/custom_widgets/lib/src/expanding_textfield/expanding_textfield.dart
 
 // ignore_for_file: public_member_api_docs
 

@@ -1,4 +1,4 @@
-// app_preferences_service/lib/src/app_preferences_descriptor.dart
+// packages/app_preferences_service/lib/src/app_preferences_descriptor.dart
 // ignore_for_file: always_use_package_imports, public_member_api_docs
 import 'dart:async';
 

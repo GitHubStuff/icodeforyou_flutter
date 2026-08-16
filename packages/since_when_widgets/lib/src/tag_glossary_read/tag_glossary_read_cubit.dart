@@ -1,4 +1,4 @@
-// since_when_widgets/lib/src/tag_glossary_read/tag_glossary_read_cubit.dart
+// packages/since_when_widgets/lib/src/tag_glossary_read/tag_glossary_read_cubit.dart
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ice_chips/ice_chips.dart' show GlossaryReader;

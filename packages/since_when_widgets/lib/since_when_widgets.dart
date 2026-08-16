@@ -1,4 +1,4 @@
-// since_when_widgets/lib/since_when_widgets.dart
+// packages/since_when_widgets/lib/since_when_widgets.dart
 
 // Glossary types (`GlossaryReader`/`Writer`/`Deleter`/`Repository`,
 // `RecordTagDefinition`, `SinceWhenFailure`) are NOT re-exported here.

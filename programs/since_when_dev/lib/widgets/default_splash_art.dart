@@ -1,4 +1,4 @@
-// programs/template_app/lib/framework/default_splash_child.dart
+// programs/since_when_dev/lib/widgets/default_splash_art.dart
 import 'package:flutter/widgets.dart';
 import 'package:widget_animation_framework/widget_animation_framework.dart'
     show AnimationCombinerOnWidget;

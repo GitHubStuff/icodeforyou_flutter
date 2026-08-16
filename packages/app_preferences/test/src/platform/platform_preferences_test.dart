@@ -1,4 +1,4 @@
-// app_preferences/test/src/platform/platform_preferences_test.dart
+// packages/app_preferences/test/src/platform/platform_preferences_test.dart
 
 import 'package:app_preferences/app_preferences.dart';
 import 'package:flutter_test/flutter_test.dart';

@@ -1,4 +1,4 @@
-// packages/animated_widgets/lib/src/fader/fader_cubit.dart
+// packages/animated_widgets/lib/src/fader_widget/src/cubit/fader_cubit.dart
 
 // ignore_for_file: comment_references
 

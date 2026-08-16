@@ -1,4 +1,4 @@
-// test/analog_clock_integration_test.dart
+// packages/analog_clock_widget/test/analog_clock_integration_test.dart
 
 // ignore_for_file: document_ignores
 

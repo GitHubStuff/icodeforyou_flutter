@@ -1,4 +1,4 @@
-// packages/services_locator/lib/src/service_descriptor/service_descriptor.dart
+// packages/service_locator/lib/src/service_descriptor/service_descriptor.dart
 //
 // Descriptor hierarchy declaring how a service is registered with a
 // [ServiceLocator]. The sealed base [ServiceDescriptor] and its two

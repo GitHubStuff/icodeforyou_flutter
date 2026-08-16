@@ -1,4 +1,4 @@
-// lib/src/pages/help_page.dart
+// programs/startup_demo/lib/src/pages/help_page.dart
 
 // ignore_for_file: lines_longer_than_80_chars
 

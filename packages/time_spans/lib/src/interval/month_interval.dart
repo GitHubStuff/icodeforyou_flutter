@@ -1,4 +1,4 @@
-// packages/time_spans/lib/src/duration/month_duration.dart
+// packages/time_spans/lib/src/interval/month_interval.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:time_spans/src/policy/month_policy.dart' show MonthPolicy;

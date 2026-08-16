@@ -1,4 +1,4 @@
-// app_preferences_service/test/src/app_preferences_service_class_test.dart
+// packages/app_preferences_service/test/src/app_preferences_test.dart
 
 import 'package:app_preferences/app_preferences.dart'
     show AbstractPreferencesInterface;

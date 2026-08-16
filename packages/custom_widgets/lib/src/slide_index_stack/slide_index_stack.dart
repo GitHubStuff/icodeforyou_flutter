@@ -1,4 +1,4 @@
-// packages/custom_widgets/lib/src/slide_indexed_stack.dart
+// packages/custom_widgets/lib/src/slide_index_stack/slide_index_stack.dart
 
 import 'dart:async';
 

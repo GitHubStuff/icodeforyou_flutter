@@ -1,4 +1,4 @@
-// packages/animated_barrier/lib/src/popover_position.dart
+// packages/animated_widgets/lib/src/animated_barrier/src/popover_position.dart
 
 part of '../animated_barrier.dart';
 

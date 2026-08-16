@@ -1,4 +1,4 @@
-// packages/services_locator/lib/src/service_locator/getit_service_locator.dart
+// packages/service_locator/lib/src/service_locator/getit_service_locator.dart
 //
 // Adapter that implements [ServiceLocator] on top of the get_it package.
 // Accepts an injected [GetIt] instance so tests can use a fresh registry

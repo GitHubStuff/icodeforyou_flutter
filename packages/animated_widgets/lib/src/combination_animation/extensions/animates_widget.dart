@@ -1,4 +1,4 @@
-// packages/animated_widgets/lib/src/combination_animation/widgets/animates_widget.dart
+// packages/animated_widgets/lib/src/combination_animation/extensions/animates_widget.dart
 
 import 'dart:async' show unawaited;
 

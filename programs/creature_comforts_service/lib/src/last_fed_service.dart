@@ -1,4 +1,4 @@
-// packages/creature_comforts_service/lib/src/last_fed_service.dart
+// programs/creature_comforts_service/lib/src/last_fed_service.dart
 // ignore_for_file: always_use_package_imports
 
 import 'package:fpdart/fpdart.dart';

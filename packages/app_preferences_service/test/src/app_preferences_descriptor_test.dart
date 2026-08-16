@@ -1,4 +1,4 @@
-// app_preferences_service/test/src/app_preferences_descriptor_test.dart
+// packages/app_preferences_service/test/src/app_preferences_descriptor_test.dart
 import 'dart:io';
 
 import 'package:app_preferences/app_preferences.dart' show HiveInitMode;

@@ -1,4 +1,4 @@
-// lib/src/pages/analytics_page.dart
+// programs/startup_demo/lib/src/pages/analytics_page.dart
 
 // ignore_for_file: public_member_api_docs
 

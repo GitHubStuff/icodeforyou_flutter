@@ -1,4 +1,4 @@
-// lib/packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_page/sqlite_viewer_page.usecase.dart
+// programs/widgetbook_workspace/lib/packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_page/sqlite_viewer_page.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';

@@ -1,4 +1,4 @@
-// animated_widgets/lib/src/animated_checkbox/animated_checkbox.dart
+// packages/animated_widgets/lib/src/animated_checkbox/src/animated_checkbox.dart
 // ignore_for_file: always_use_package_imports
 
 import 'dart:async';

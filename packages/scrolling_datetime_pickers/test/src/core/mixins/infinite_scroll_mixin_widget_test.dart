@@ -1,4 +1,4 @@
-// test/src/core/mixins/infinite_scroll_mixin_widget_test.dart
+// packages/scrolling_datetime_pickers/test/src/core/mixins/infinite_scroll_mixin_widget_test.dart
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-// extensions/lib/src/datetime_unit.dart
+// packages/extensions/lib/datetime/src/datetime_unit.dart
 
 /// DateTime unit enumeration with time conversion constants and
 /// utility methods.

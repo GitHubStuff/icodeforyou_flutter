@@ -1,4 +1,4 @@
-// preferences/lib/src/hive/hive_init_mode.dart
+// packages/app_preferences/lib/src/hive/hive_init_mode.dart
 
 // ignore_for_file: comment_references
 

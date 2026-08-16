@@ -1,4 +1,4 @@
-// programs/widgetbook/lib/usecases/theme_framework/settings_screen.usecase.dart
+// programs/widgetbook_workspace/lib/packages/theme_framework/settings_screen.usecase.dart
 
 import 'dart:async' show unawaited;
 

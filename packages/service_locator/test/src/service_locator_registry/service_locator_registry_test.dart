@@ -1,4 +1,4 @@
-// packages/services_locator/test/src/service_locator_registry/service_locator_registry_test.dart
+// packages/service_locator/test/src/service_locator_registry/service_locator_registry_test.dart
 //
 // Full-coverage test suite for [ServiceLocatorRegistry]. Uses a scripted
 // fake ServiceLocator so tests can drive state-change callbacks

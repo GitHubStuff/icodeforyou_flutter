@@ -1,4 +1,4 @@
-// widgetbook_workspace/lib/packages/animated_barrier/centered.usecase.dart
+// programs/widgetbook_workspace/lib/packages/animated_widgets/animated_barrier/centered.usecase.dart
 
 import 'package:animated_widgets/animated_widgets.dart' show AnimatedBarrier;
 import 'package:flutter/material.dart';

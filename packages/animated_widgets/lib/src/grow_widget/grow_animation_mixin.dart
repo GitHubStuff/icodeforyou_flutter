@@ -1,4 +1,4 @@
-// animated_widgets/lib/src/grow_widget/_grow_animation_mixin.dart
+// packages/animated_widgets/lib/src/grow_widget/grow_animation_mixin.dart
 import 'package:animated_widgets/src/grow_and_fade_widget/_fade_animation_mixin.dart'
     show FadeAnimationMixin;
 import 'package:flutter/widgets.dart';

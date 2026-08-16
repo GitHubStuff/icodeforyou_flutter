@@ -1,4 +1,4 @@
-// lib/src/animated_checkbox/_checkmark_path_builder.dart
+// packages/animated_widgets/lib/src/animated_checkbox/src/checkmark_path_builder.dart
 
 import 'dart:ui';
 

@@ -1,4 +1,4 @@
-// infinite_scroll_picking_settings/lib/src/widgets/settings_screen_sections.dart
+// packages/infinite_scroll_picking_settings/lib/src/widgets/settings_screen_sections.dart
 
 part of 'settings_screen.dart';
 

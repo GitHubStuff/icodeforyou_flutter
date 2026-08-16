@@ -1,4 +1,4 @@
-// programs/black_velvet/lib/app_navigation/navigation_cubit.dart
+// programs/black_velvet/lib/app_shared_navigation/navigation_cubit.dart
 
 import 'package:black_velvet/app_shared_navigation/navigation_state.dart'
     show NavigationState;

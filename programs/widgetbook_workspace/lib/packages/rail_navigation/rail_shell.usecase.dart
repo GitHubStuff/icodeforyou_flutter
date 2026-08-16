@@ -1,4 +1,4 @@
-// programs/widgetbook_workspace/lib/rail_navigation/rail_shell.usecase.dart
+// programs/widgetbook_workspace/lib/packages/rail_navigation/rail_shell.usecase.dart
 // ignore_for_file: public_member_api_docs
 import 'package:flutter/material.dart';
 import 'package:rail_navigation/rail_navigation.dart'

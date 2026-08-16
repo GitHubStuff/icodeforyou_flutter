@@ -1,4 +1,4 @@
-// lib/src/animated_checkbox/_animated_checkbox_state.dart
+// packages/animated_widgets/lib/src/animated_checkbox/src/animated_checkbox_state.dart
 
 part of 'animated_checkbox.dart';
 

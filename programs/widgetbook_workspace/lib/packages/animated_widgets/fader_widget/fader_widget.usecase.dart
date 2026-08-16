@@ -1,4 +1,4 @@
-// lib/packages/animated_widgets/lib/src/fader_widget/src/fader_widget.usecase.dart
+// programs/widgetbook_workspace/lib/packages/animated_widgets/fader_widget/fader_widget.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:animated_widgets/animated_widgets.dart';

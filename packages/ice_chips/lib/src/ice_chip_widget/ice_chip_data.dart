@@ -1,4 +1,4 @@
-// packages/ice_chips_tray/lib/src/ice_chip_data.dart
+// packages/ice_chips/lib/src/ice_chip_widget/ice_chip_data.dart
 // ignore_for_file: comment_references, public_member_api_docs
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart' show immutable;

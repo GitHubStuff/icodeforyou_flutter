@@ -1,4 +1,4 @@
-// lib/src/library.dart
+// packages/infinite_scroll_picking/lib/src/library.dart
 
 library;
 

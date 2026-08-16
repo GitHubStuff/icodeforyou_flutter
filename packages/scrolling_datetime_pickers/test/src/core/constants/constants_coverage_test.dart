@@ -1,4 +1,4 @@
-// test/src/core/constants/constants_coverage_test.dart
+// packages/scrolling_datetime_pickers/test/src/core/constants/constants_coverage_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scrolling_datetime_pickers/src/core/constants/dimensions_constants.dart';

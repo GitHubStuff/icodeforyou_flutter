@@ -1,3 +1,5 @@
+// packages/service_locator/lib/src/errors.dart
+
 // ignore_for_file: comment_references, public_member_api_docs
 
 /// Base class for all service-locator-related errors.

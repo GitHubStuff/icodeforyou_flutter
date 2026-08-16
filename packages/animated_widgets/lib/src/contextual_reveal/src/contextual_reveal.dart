@@ -1,4 +1,4 @@
-// animated_widgets/lib/src/contextual_reveal/contextual_reveal.dart
+// packages/animated_widgets/lib/src/contextual_reveal/src/contextual_reveal.dart
 import 'dart:async';
 
 import 'package:animated_widgets/src/contextual_reveal/src/contextual_position.dart';

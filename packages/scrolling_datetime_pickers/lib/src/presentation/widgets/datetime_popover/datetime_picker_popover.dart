@@ -1,4 +1,4 @@
-// lib/src/presentation/widgets/datetime_popover/datetime_picker_popover.dart
+// packages/scrolling_datetime_pickers/lib/src/presentation/widgets/datetime_popover/datetime_picker_popover.dart
 
 // ignore_for_file: document_ignores
 

@@ -1,4 +1,4 @@
-// since_when_widgets/lib/src/tag_glossary_read/tag_glossary_read_view.dart
+// packages/since_when_widgets/lib/src/tag_glossary_read/tag_glossary_read_view.dart
 
 import 'dart:async' show unawaited;
 

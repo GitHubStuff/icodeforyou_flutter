@@ -1,4 +1,4 @@
-// lib/packages/ice_chips/lib/src/ice_chip_widget/ice_chip.usecase.dart
+// programs/widgetbook_workspace/lib/packages/ice_chips/ice_chip_widget/ice_chip.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:flutter/material.dart';

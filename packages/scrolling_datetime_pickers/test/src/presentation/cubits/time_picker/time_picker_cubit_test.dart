@@ -1,4 +1,4 @@
-// test/src/presentation/cubits/time_picker/time_picker_cubit_test.dart
+// packages/scrolling_datetime_pickers/test/src/presentation/cubits/time_picker/time_picker_cubit_test.dart
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';

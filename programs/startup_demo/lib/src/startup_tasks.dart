@@ -1,4 +1,4 @@
-// startup_demo/lib/src/startup_tasks.dart
+// programs/startup_demo/lib/src/startup_tasks.dart
 
 // ignore_for_file: public_member_api_docs
 

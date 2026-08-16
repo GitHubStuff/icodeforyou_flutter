@@ -1,4 +1,4 @@
-// packages/ice_chips_tray/lib/src/ice_chips_tray.dart
+// packages/ice_chips/lib/src/ice_chip_tray/ice_chip_tray.dart
 // ignore_for_file: comment_references, public_member_api_docs
 
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-// packages/custom_widgets/lib/src/uniform_cluster/save_cancel_bar.dart
+// packages/custom_widgets/lib/src/uniform_cluster/button_pair.dart
 
 import 'package:custom_widgets/src/uniform_cluster/uniform_cluster.dart'
     show UniformCluster;

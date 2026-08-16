@@ -1,4 +1,4 @@
-// packages/services_locator/test/src/service_descriptor/service_descriptor_test.dart
+// packages/service_locator/test/src/service_descriptor/service_descriptor_test.dart
 //
 // Full-coverage test suite for [ServiceDescriptor], [SyncServiceDescriptor],
 // and [LazyAsyncServiceDescriptor]. Uses a recording fake locator so the

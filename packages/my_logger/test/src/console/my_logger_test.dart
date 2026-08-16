@@ -1,4 +1,4 @@
-// test/src/console/my_logger_test.dart
+// packages/my_logger/test/src/console/my_logger_test.dart
 
 // ignore_for_file: unnecessary_lambdas
 

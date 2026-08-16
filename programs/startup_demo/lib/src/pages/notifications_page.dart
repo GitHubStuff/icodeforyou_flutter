@@ -1,4 +1,4 @@
-// lib/src/pages/notifications_page.dart
+// programs/startup_demo/lib/src/pages/notifications_page.dart
 
 import 'package:flutter/material.dart';
 

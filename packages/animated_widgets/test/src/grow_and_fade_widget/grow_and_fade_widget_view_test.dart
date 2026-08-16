@@ -1,4 +1,4 @@
-// animated_widgets/test/src/grow_and_fade_widget/grow_and_fade_widget_view_test.dart
+// packages/animated_widgets/test/src/grow_and_fade_widget/grow_and_fade_widget_view_test.dart
 import 'package:animated_widgets/src/grow_and_fade_widget/grow_and_fade_widget_view.dart'
     show GrowAndFadeWidgetView;
 import 'package:flutter/widgets.dart';

@@ -1,4 +1,4 @@
-// animated_widgets/test/src/splash_widget/src/splash_cubit_test.dart
+// packages/animated_widgets/test/src/splash_widget/src/splash_cubit_test.dart
 import 'dart:async';
 
 import 'package:animated_widgets/src/splash_widget/src/splash_cubit.dart';

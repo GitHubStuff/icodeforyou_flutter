@@ -1,4 +1,4 @@
-// test/enum/src/window_size_category_test.dart
+// packages/extensions/test/enum/src/window_size_category_test.dart
 
 import 'package:extensions/enum/src/window_size_category.dart'
     show WindowSizeCategory;

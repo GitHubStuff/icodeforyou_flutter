@@ -1,4 +1,4 @@
-// package/lib/src/utils/trace_color.dart
+// packages/my_logger/lib/src/trace_color.dart
 // ignore_for_file: comment_references, public_member_api_docs
 
 import 'dart:io';

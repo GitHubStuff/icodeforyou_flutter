@@ -1,3 +1,5 @@
+// packages/extensions/lib/build_context/build_context_ext.dart
+
 import 'package:extensions/enum/enum.dart' show WindowSizeCategory;
 import 'package:flutter/widgets.dart';
 

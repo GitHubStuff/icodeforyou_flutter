@@ -1,4 +1,4 @@
-// lib/src/pages/profile_page.dart
+// programs/startup_demo/lib/src/pages/fader_page.dart
 
 import 'package:animated_widgets/animated_widgets.dart'
     show FaderCubit, FaderWidget;

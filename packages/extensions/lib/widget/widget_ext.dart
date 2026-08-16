@@ -1,4 +1,4 @@
-// packages/extensions/lib/widget_ext/widget_ext.dart
+// packages/extensions/lib/widget/widget_ext.dart
 
 // Improves readability in both definition and usage
 // ignore_for_file: avoid_positional_boolean_parameters

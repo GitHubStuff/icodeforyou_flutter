@@ -1,4 +1,4 @@
-// since_when_widgets/lib/src/tag_glossary_edit/tag_glossary_edit_state.dart
+// packages/since_when_widgets/lib/src/tag_glossary_edit/tag_glossary_edit_state.dart
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/painting.dart';

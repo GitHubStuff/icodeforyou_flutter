@@ -1,4 +1,4 @@
-// packages/rail_navigation/lib/src/widgets/rail_shell.dart
+// packages/rail_navigation/lib/src/widgets/rail_shell_stack.dart
 
 part of 'rail_shell.dart';
 

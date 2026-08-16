@@ -1,4 +1,4 @@
-// lib/packages/custom_widgets/lib/src/directional_slider/slider/directional_slider.usecase.dart
+// programs/widgetbook_workspace/lib/packages/custom_widgets/directional_slider/slider/directional_slider.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:custom_widgets/custom_widgets.dart';

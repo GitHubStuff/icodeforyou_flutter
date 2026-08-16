@@ -1,4 +1,4 @@
-// packages/splash_framework/lib/src/splash_cubit.dart
+// packages/splash_framework/lib/src/cubit/splash_cubit.dart
 
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_bloc/flutter_bloc.dart';

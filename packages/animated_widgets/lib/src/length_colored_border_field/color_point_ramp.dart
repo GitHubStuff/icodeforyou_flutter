@@ -1,4 +1,4 @@
-// animated_widgets/lib/src/length_colored_border_field/color_point_ramp.dart
+// packages/animated_widgets/lib/src/length_colored_border_field/color_point_ramp.dart
 
 import 'package:animated_widgets/src/length_colored_border_field/color_point.dart';
 import 'package:equatable/equatable.dart';

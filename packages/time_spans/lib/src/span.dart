@@ -1,4 +1,4 @@
-// packages/time_spans/lib/src/spans.dart
+// packages/time_spans/lib/src/span.dart
 
 class Span {
   /// February, the only month whose length varies between years.

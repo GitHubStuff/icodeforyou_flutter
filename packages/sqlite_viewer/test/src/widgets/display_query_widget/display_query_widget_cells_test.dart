@@ -1,4 +1,4 @@
-// test/src/widgets/display_query_widget/display_query_widget_cells_test.dart
+// packages/sqlite_viewer/test/src/widgets/display_query_widget/display_query_widget_cells_test.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

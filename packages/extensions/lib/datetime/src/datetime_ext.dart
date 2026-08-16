@@ -1,4 +1,4 @@
-// extensions/lib/src/datetime_ext/datetime_extension.dart
+// packages/extensions/lib/datetime/src/datetime_ext.dart
 import 'package:extensions/datetime/src/datetime_unit.dart' show DateTimeUnit;
 import 'package:flutter/foundation.dart';
 

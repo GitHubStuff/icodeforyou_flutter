@@ -1,4 +1,4 @@
-// programs/widgetbook_workspace/lib/sincewhen_widgets/glossary/pill_widget.usecase.dart
+// programs/widgetbook_workspace/lib/packages/animated_widgets/pill_widget/pill_widget.usecase.dart
 // ignore_for_file: public_member_api_docs
 import 'package:animated_widgets/animated_widgets.dart' show PillWidget;
 import 'package:flutter/material.dart';

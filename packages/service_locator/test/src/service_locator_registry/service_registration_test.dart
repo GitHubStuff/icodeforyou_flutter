@@ -1,4 +1,4 @@
-// packages/services_locator/test/src/service_locator_registry/service_registration_test.dart
+// packages/service_locator/test/src/service_locator_registry/service_registration_test.dart
 //
 // Unit tests for [ServiceRegistration]. No mocks required — the class is
 // pure state. Tests are structured by public member so coverage gaps are

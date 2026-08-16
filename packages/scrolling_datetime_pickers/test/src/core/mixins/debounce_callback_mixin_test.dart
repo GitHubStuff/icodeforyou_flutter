@@ -1,4 +1,4 @@
-// test/src/core/mixins/debounce_callback_mixin_test.dart
+// packages/scrolling_datetime_pickers/test/src/core/mixins/debounce_callback_mixin_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scrolling_datetime_pickers/src/core/constants/timing_constants.dart';

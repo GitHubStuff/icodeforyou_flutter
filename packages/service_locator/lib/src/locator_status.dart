@@ -1,4 +1,4 @@
-// packages/services_locator/lib/src/locator_status.dart
+// packages/service_locator/lib/src/locator_status.dart
 //
 // The four lifecycle states a `ServiceRegistration` can occupy. Drives
 // exhaustive switches throughout the registry and locator adapters —

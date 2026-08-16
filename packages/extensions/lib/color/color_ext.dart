@@ -1,4 +1,4 @@
-// packages/extensions/lib/color_ext/color_ext.dart
+// packages/extensions/lib/color/color_ext.dart
 import 'package:flutter/painting.dart';
 
 /// Extensions on [Color] providing equality, contrast, and integer conversion.

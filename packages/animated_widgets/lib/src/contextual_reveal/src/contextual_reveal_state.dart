@@ -1,4 +1,4 @@
-// animated_widgets/lib/src/contextual_reveal/contextual_reveal_state.dart
+// packages/animated_widgets/lib/src/contextual_reveal/src/contextual_reveal_state.dart
 
 part of 'contextual_reveal.dart';
 

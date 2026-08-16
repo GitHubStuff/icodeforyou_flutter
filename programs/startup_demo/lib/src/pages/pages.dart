@@ -1,4 +1,4 @@
-// startup_demo/lib/src/pages/pages.dart
+// programs/startup_demo/lib/src/pages/pages.dart
 
 export 'about_page.dart';
 export 'analytics_page.dart';

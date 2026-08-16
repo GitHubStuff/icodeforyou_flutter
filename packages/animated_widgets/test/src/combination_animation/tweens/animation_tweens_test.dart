@@ -1,4 +1,4 @@
-// packages/animated_widgets/test/src/combination_animation/tweens/animation_tween_test.dart
+// packages/animated_widgets/test/src/combination_animation/tweens/animation_tweens_test.dart
 
 import 'package:animated_widgets/src/combination_animation/tweens/animation_tween.dart'
     show AnimationTween;

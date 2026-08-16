@@ -1,4 +1,4 @@
-// packages/custom_widgets/lib/src/directional_slider/src/slider/directional_controller.dart
+// packages/custom_widgets/lib/src/directional_slider/slider/directional_controller.dart
 // ignore_for_file: comment_references
 
 import 'package:flutter/foundation.dart';

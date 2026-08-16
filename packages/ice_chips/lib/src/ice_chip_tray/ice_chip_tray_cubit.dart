@@ -1,3 +1,5 @@
+// packages/ice_chips/lib/src/ice_chip_tray/ice_chip_tray_cubit.dart
+
 // ignore_for_file: comment_references, public_member_api_docs
 
 import 'package:flutter_bloc/flutter_bloc.dart';

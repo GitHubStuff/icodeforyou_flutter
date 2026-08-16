@@ -1,4 +1,4 @@
-// programs/widgetbook_workspace/lib/custom_widgets/slide_indexed_stack.usecase.dart
+// programs/widgetbook_workspace/lib/packages/custom_widgets/slide_index_stack/slide_index_stack.usecase.dart
 // ignore_for_file: public_member_api_docs
 import 'package:custom_widgets/custom_widgets.dart' show SlideIndexedStack;
 import 'package:flutter/material.dart';

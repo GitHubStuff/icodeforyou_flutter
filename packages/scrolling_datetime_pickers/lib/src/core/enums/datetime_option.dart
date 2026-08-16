@@ -1,4 +1,4 @@
-// lib/src/core/enums/date_time_option.dart
+// packages/scrolling_datetime_pickers/lib/src/core/enums/datetime_option.dart
 
 // ignore_for_file: document_ignores, public_member_api_docs
 

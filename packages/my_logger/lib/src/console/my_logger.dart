@@ -1,4 +1,4 @@
-// my_logger/lib/src/console/my_logger.dart
+// packages/my_logger/lib/src/console/my_logger.dart
 
 import 'dart:developer' as developer;
 

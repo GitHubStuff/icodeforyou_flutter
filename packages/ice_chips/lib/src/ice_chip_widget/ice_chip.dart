@@ -1,4 +1,4 @@
-// packages/ice_chip/lib/src/ice_chip.dart
+// packages/ice_chips/lib/src/ice_chip_widget/ice_chip.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:extensions/color/color_ext.dart' show ColorExt;

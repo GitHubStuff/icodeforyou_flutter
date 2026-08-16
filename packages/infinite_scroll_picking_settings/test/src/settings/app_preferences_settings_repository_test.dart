@@ -1,4 +1,4 @@
-// infinite_scroll_picking_settings/test/src/settings/app_preferences_settings_repository_test.dart
+// packages/infinite_scroll_picking_settings/test/src/settings/app_preferences_settings_repository_test.dart
 
 import 'dart:convert' show jsonDecode, jsonEncode;
 

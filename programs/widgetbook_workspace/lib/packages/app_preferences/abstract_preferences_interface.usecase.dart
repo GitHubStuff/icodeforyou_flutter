@@ -1,4 +1,4 @@
-// lib/packages/app_preferences/src/abstract_preferences_interface.usecase.dart
+// programs/widgetbook_workspace/lib/packages/app_preferences/abstract_preferences_interface.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:app_preferences/app_preferences.dart'

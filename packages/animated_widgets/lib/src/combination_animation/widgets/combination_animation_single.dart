@@ -1,4 +1,4 @@
-// // packages/animated_widgets/lib/src/combination_animation/widgets/combination_animation_single.dart
+// packages/animated_widgets/lib/src/combination_animation/widgets/combination_animation_single.dart
 // // ignore_for_file: public_member_api_docs
 
 // import 'package:animated_widgets/src/combination_animation/constants/combination_animation_constants.dart'

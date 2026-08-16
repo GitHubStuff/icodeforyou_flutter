@@ -1,4 +1,4 @@
-// programs/widgetbook_workspace/lib/custom_widgets/full_screen_color/solid_screen_color.usecase.dart
+// programs/widgetbook_workspace/lib/packages/custom_widgets/solid_screen_color/solid_screen_color.usecase.dart
 // ignore_for_file: public_member_api_docs
 import 'package:custom_widgets/custom_widgets.dart' show SolidScreenColor;
 import 'package:flutter/material.dart';

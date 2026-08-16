@@ -1,4 +1,4 @@
-// lib/packages/since_when_widgets/lib/src/tag_glossary_read/tag_glossary_read_view.usecase.dart
+// programs/widgetbook_workspace/lib/packages/since_when_widgets/tag_glossary_read_view.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:flutter/material.dart';

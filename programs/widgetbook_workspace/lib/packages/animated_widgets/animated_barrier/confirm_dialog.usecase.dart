@@ -1,4 +1,4 @@
-// widgetbook_workspace/lib/packages/animated_barrier/confirm_dialog.usecase.dart
+// programs/widgetbook_workspace/lib/packages/animated_widgets/animated_barrier/confirm_dialog.usecase.dart
 
 // ignore_for_file: comment_references
 

@@ -1,4 +1,4 @@
-// time_spans/lib/src/calendar/year.dart
+// packages/time_spans/lib/src/calendar/year.dart
 
 /// A single proleptic Gregorian calendar year, identified by its [year]
 /// number, that resolves its own leapness and length.

@@ -1,4 +1,4 @@
-// test/src/abstract/sqlite_viewer_abstract_test.dart
+// packages/sqlite_viewer/test/src/abstract/sqlite_viewer_abstract_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';

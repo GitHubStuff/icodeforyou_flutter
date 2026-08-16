@@ -1,4 +1,4 @@
-// animated_widgets/test/src/length_colored_border_field/color_point_test.dart
+// packages/animated_widgets/test/src/length_colored_border_field/color_point_test.dart
 import 'package:animated_widgets/src/length_colored_border_field/color_point.dart'
     show ColorPoint;
 import 'package:flutter/painting.dart';

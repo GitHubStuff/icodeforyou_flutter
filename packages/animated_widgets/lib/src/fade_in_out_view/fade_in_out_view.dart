@@ -1,4 +1,4 @@
-// animated_widgets/lib/src/fade_in_out_view/fade_in_out_view.dart
+// packages/animated_widgets/lib/src/fade_in_out_view/fade_in_out_view.dart
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';

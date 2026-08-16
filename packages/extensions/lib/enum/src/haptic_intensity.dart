@@ -1,4 +1,4 @@
-// packages/extensions/lib/haptics/haptic_intensity.dart
+// packages/extensions/lib/enum/src/haptic_intensity.dart
 import 'dart:async' show unawaited;
 
 import 'package:flutter/services.dart' show HapticFeedback;

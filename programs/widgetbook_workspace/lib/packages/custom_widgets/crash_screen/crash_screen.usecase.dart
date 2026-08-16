@@ -1,4 +1,4 @@
-// programs/widgetbook_workspace/lib/crash_framework/crash_screen.usecase.dart
+// programs/widgetbook_workspace/lib/packages/custom_widgets/crash_screen/crash_screen.usecase.dart
 // ignore_for_file: public_member_api_docs
 import 'package:custom_widgets/custom_widgets.dart' show CrashScreen;
 import 'package:flutter/material.dart';

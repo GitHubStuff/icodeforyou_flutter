@@ -1,4 +1,4 @@
-// packages/extensions/lib/enum/src/window_category.dart
+// packages/extensions/lib/enum/src/window_size_category.dart
 import 'package:flutter/widgets.dart';
 
 /// Material window size classes.

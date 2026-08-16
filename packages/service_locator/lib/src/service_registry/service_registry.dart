@@ -1,4 +1,4 @@
-// packages/services_locator/lib/src/service_locator_registry/service_locator_registry.dart
+// packages/service_locator/lib/src/service_registry/service_registry.dart
 //
 // Registry of staged [ServiceDescriptor]s keyed by name, orchestrating
 // their registration with an underlying [ServiceLocator]. Enforces

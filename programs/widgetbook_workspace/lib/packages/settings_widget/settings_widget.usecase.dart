@@ -1,4 +1,4 @@
-// lib/packages/settings_widget/lib/src/settings_widget.usecase.dart
+// programs/widgetbook_workspace/lib/packages/settings_widget/settings_widget.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:flutter/material.dart';

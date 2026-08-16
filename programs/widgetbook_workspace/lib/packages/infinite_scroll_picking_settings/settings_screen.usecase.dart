@@ -1,4 +1,4 @@
-// widgetbook_workspace/lib/packages/infinite_scroll_picking_settings/settings_screen.usecase.dart
+// programs/widgetbook_workspace/lib/packages/infinite_scroll_picking_settings/settings_screen.usecase.dart
 
 // Not needed for widget-demo
 // ignore_for_file: public_member_api_docs

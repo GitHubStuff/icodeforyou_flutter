@@ -1,3 +1,5 @@
+// packages/dependency_resolver/lib/src/start_resolver.dart
+
 import 'package:dependency_resolver/src/dependency_container.dart'
     show DependencyContainer;
 import 'package:dependency_resolver/src/dependency_resolver.dart'

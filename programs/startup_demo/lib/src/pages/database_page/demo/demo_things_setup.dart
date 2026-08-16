@@ -1,4 +1,4 @@
-// startup_demo/lib/src/pages/database_page/demo/demo_things_setup.dart
+// programs/startup_demo/lib/src/pages/database_page/demo/demo_things_setup.dart
 
 import 'package:since_when_framework/database.dart'
     show DatabaseHandle, DatabaseSetup;

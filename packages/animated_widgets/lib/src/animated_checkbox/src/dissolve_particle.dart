@@ -1,4 +1,4 @@
-// animated_widgets/lib/src/animated_checkbox/_dissolve_particle.dart
+// packages/animated_widgets/lib/src/animated_checkbox/src/dissolve_particle.dart
 import 'dart:ui';
 
 /// Represents a single particle in the dissolve animation.

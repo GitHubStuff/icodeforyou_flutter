@@ -1,4 +1,4 @@
-// animated_widgets/lib/src/length_colored_border_field/length_colored_border_field.dart
+// packages/animated_widgets/lib/src/length_colored_border_field/length_colored_border_field.dart
 
 import 'package:animated_widgets/src/length_colored_border_field/color_point_ramp.dart';
 import 'package:flutter/material.dart';

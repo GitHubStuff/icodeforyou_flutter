@@ -1,4 +1,4 @@
-// lib/src/widgets/scrollable_content_widget.dart
+// programs/startup_demo/lib/src/pages/analytics_page/scrollable_content_widget.dart
 // ignore_for_file: public_member_api_docs
 import 'package:flutter/material.dart';
 

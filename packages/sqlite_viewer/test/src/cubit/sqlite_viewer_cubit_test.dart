@@ -1,4 +1,4 @@
-// test/src/cubit/sqlite_viewer_cubit_test.dart
+// packages/sqlite_viewer/test/src/cubit/sqlite_viewer_cubit_test.dart
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';

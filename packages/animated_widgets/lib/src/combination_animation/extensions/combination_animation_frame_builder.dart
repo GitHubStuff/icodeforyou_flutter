@@ -1,4 +1,4 @@
-// packages/animated_widgets/lib/src/combination_animation/steps/combination_animation_frame_builder.dart
+// packages/animated_widgets/lib/src/combination_animation/extensions/combination_animation_frame_builder.dart
 
 part of 'animates_widget.dart';
 

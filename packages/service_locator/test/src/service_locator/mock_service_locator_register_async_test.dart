@@ -1,4 +1,4 @@
-// service_locator/test/src/service_locator/mock_service_locator_register_async_test.dart
+// packages/service_locator/test/src/service_locator/mock_service_locator_register_async_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:service_locator/src/errors.dart' show DuplicateServiceEntry;

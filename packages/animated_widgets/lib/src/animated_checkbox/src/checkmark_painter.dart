@@ -1,4 +1,4 @@
-// lib/src/animated_checkbox/_checkmark_painter.dart
+// packages/animated_widgets/lib/src/animated_checkbox/src/checkmark_painter.dart
 
 // ignore_for_file: public_member_api_docs, always_use_package_imports
 

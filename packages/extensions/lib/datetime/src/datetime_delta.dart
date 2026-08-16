@@ -1,4 +1,4 @@
-// extensions/lib/src/datetime_delta.dart
+// packages/extensions/lib/datetime/src/datetime_delta.dart
 import 'package:extensions/datetime/src/datetime_unit.dart';
 import 'package:flutter/foundation.dart' show immutable;
 

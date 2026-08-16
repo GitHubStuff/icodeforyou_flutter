@@ -1,4 +1,4 @@
-// lib/src/infinite_scroll_picker_controller.dart
+// packages/infinite_scroll_picking/lib/src/infinite_scroll_picker_controller.dart
 
 // ignore_for_file: comment_references
 

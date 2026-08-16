@@ -1,4 +1,4 @@
-// test/src/core/models/divider_configuration_copywith_test.dart
+// packages/scrolling_datetime_pickers/test/src/core/models/divider_configuration_copywith_test.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

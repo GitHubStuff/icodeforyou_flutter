@@ -1,3 +1,5 @@
+// packages/abstractions/test/extended_stateful_widget/abstractions_test.dart
+
 // observing_stateful_widget_test.dart
 // Flutter 3.32.8 / Dart ">3.10.0"
 // ignore_for_file: cascade_invocations, lines_longer_than_80_chars, prefer_foreach

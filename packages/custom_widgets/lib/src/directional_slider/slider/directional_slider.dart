@@ -1,4 +1,4 @@
-// packages/custom_widgets/lib/src/directional_slider/src/slider/directional.dart
+// packages/custom_widgets/lib/src/directional_slider/slider/directional_slider.dart
 // ignore_for_file: always_use_package_imports, comment_references
 
 import 'package:extensions/extensions.dart' show HapticIntensity;

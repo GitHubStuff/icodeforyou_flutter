@@ -1,4 +1,4 @@
-// app_preferences_service/test/app_preferences_service_test.dart
+// packages/app_preferences_service/test/app_preferences_service_test.dart
 
 import 'package:app_preferences_service/app_preferences_service.dart';
 import 'package:flutter_test/flutter_test.dart';

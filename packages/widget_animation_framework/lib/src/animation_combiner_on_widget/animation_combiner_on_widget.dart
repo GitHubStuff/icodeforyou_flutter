@@ -1,4 +1,4 @@
-// packages/widget_animation_framework/lib/src/animation_combiner_on_widget.dart
+// packages/widget_animation_framework/lib/src/animation_combiner_on_widget/animation_combiner_on_widget.dart
 
 import 'package:flutter/widgets.dart';
 

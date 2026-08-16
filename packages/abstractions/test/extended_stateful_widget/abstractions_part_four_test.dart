@@ -1,3 +1,5 @@
+// packages/abstractions/test/extended_stateful_widget/abstractions_part_four_test.dart
+
 // abstractions_part_four_test.dart
 // Critical edge cases and failure modes that could break the widget in production
 // ignore_for_file: cascade_invocations, avoid_catches_without_on_clauses, lines_longer_than_80_chars

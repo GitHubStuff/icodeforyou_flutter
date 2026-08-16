@@ -1,4 +1,4 @@
-// lib/src/presentation/widgets/datetime_popover/_datetime_popover_header.dart
+// packages/scrolling_datetime_pickers/lib/src/presentation/widgets/datetime_popover/_datetime_popover_header.dart
 part of 'datetime_picker_popover.dart';
 
 class _DateTimePopoverHeader extends StatelessWidget {

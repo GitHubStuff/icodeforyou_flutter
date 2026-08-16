@@ -1,4 +1,4 @@
-// lib/packages/remind_me/src/notification_permission_status.usecase.dart
+// programs/widgetbook_workspace/lib/packages/remind_me/notification_permission_status.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:flutter/material.dart';

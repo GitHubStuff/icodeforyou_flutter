@@ -1,4 +1,4 @@
-// packages/services_locator/lib/src/service_locator_registry/service_locator_registry_state_change.dart
+// packages/service_locator/lib/src/service_registry/service_registry_state_change.dart
 //
 // Locator-to-registry state-change dispatch. Split into a `part` file to
 // keep the main registry body within the per-file line budget; kept

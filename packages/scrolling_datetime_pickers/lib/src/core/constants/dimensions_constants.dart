@@ -1,4 +1,4 @@
-// lib/src/core/constants/dimensions_constants.dart
+// packages/scrolling_datetime_pickers/lib/src/core/constants/dimensions_constants.dart
 
 /// Default dimensions for picker widgets
 class DimensionConstants {

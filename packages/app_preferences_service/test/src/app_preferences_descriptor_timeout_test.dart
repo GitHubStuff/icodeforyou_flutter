@@ -1,4 +1,4 @@
-// app_preferences_service/test/src/app_preferences_descriptor_timeout_test.dart
+// packages/app_preferences_service/test/src/app_preferences_descriptor_timeout_test.dart
 
 // ignore_for_file: always_use_package_imports
 

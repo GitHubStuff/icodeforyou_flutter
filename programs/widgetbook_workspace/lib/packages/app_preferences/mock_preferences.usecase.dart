@@ -1,4 +1,4 @@
-// lib/packages/app_preferences/src/mock/mock_preferences.usecase.dart
+// programs/widgetbook_workspace/lib/packages/app_preferences/mock_preferences.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:app_preferences/app_preferences.dart'

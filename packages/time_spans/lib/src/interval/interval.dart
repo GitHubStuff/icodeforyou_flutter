@@ -1,3 +1,5 @@
+// packages/time_spans/lib/src/interval/interval.dart
+
 /// An anchored span defined by two endpoints.
 ///
 /// Unlike a [Duration] (a length with no position), an [Interval] knows

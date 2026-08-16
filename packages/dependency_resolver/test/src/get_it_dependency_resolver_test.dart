@@ -1,4 +1,4 @@
-// packages/dependency_resolver/test/get_it_dependency_resolver_test.dart
+// packages/dependency_resolver/test/src/get_it_dependency_resolver_test.dart
 
 import 'package:dependency_resolver/dependency_resolver.dart';
 import 'package:dependency_resolver/src/dependency_resolver.dart' show DependencyResolver;

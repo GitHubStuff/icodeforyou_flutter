@@ -1,4 +1,4 @@
-// preferences/lib/src/abstract_preferences.dart
+// packages/app_preferences/lib/src/abstract_preferences_interface.dart
 
 /// Abstract contract for an asynchronous key/value preferences store.
 ///

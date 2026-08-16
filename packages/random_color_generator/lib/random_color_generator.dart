@@ -1,4 +1,4 @@
-// random_color_generator/lib/src/random_color_generator.dart
+// packages/random_color_generator/lib/random_color_generator.dart
 
 import 'dart:math';
 

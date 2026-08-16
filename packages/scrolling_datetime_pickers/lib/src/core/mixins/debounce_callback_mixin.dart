@@ -1,4 +1,4 @@
-// lib/src/core/mixins/debounce_callback_mixin.dart
+// packages/scrolling_datetime_pickers/lib/src/core/mixins/debounce_callback_mixin.dart
 
 import 'dart:async';
 

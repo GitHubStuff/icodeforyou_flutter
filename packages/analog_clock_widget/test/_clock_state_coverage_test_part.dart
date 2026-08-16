@@ -1,4 +1,4 @@
-// test/_clock_state_coverage_test_part.dart
+// packages/analog_clock_widget/test/_clock_state_coverage_test_part.dart
 
 part of 'clock_state_coverage_test.dart';
 

@@ -1,4 +1,4 @@
-// packages/animated_barrier/test/src/popover_position_test.dart
+// packages/animated_widgets/test/src/animated_barrier/popover_position_test.dart
 
 import 'package:animated_widgets/animated_widgets.dart' show PopoverPosition;
 import 'package:flutter/widgets.dart';

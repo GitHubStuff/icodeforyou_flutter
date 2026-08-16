@@ -1,3 +1,5 @@
+// packages/rail_navigation/lib/src/widgets/rail_button_main.dart
+
 // ppackages/rail_navigation/lib/src/widgets/rail_button_main.dartshow
 
 import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;

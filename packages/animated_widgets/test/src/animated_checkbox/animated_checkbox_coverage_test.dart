@@ -1,4 +1,4 @@
-// animated_widgets/test/src/animated_checkbox/animated_checkbox_coverage_test.dart
+// packages/animated_widgets/test/src/animated_checkbox/animated_checkbox_coverage_test.dart
 
 import 'package:animated_widgets/animated_widgets.dart';
 import 'package:flutter/material.dart';

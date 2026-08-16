@@ -1,4 +1,4 @@
-// infinite_scroll_picking_settings/lib/src/picker_visual_settings/picker_visual_settings.dart
+// packages/infinite_scroll_picking_settings/lib/src/picker_visual_settings/picker_visual_settings.dart
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 

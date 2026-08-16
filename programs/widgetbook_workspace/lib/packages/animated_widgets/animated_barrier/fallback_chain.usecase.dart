@@ -1,4 +1,4 @@
-// widgetbook_workspace/lib/packages/animated_barrier/fallback_chain.usecase.dart
+// programs/widgetbook_workspace/lib/packages/animated_widgets/animated_barrier/fallback_chain.usecase.dart
 
 // ignore_for_file: comment_references
 

@@ -1,4 +1,4 @@
-// test/duration/duration_ext_test.dart
+// packages/extensions/test/duration/duration_ext_test.dart
 
 import 'package:extensions/duration/duration_ext.dart' show DurationExt;
 import 'package:flutter_test/flutter_test.dart';

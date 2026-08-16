@@ -1,4 +1,4 @@
-// test/enum/src/haptic_intensity_test.dart
+// packages/extensions/test/enum/src/haptic_intensity_test.dart
 
 import 'package:extensions/enum/src/haptic_intensity.dart'
     show HapticIntensity;

@@ -1,4 +1,4 @@
-// test/src/core/mixins/picker_transform_opacity_test.dart
+// packages/scrolling_datetime_pickers/test/src/core/mixins/picker_transform_opacity_test.dart
 
 import 'dart:math' as math;
 

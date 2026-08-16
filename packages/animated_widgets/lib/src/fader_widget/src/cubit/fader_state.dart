@@ -1,4 +1,4 @@
-// packages/animated_widgets/lib/src/fader/fader_state.dart
+// packages/animated_widgets/lib/src/fader_widget/src/cubit/fader_state.dart
 
 part of 'fader_cubit.dart';
 

@@ -1,4 +1,4 @@
-// lib/packages/app_preferences/src/hive/hive_init_mode.usecase.dart
+// programs/widgetbook_workspace/lib/packages/app_preferences/hive_init_mode.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:app_preferences/app_preferences.dart' show HiveInitMode;

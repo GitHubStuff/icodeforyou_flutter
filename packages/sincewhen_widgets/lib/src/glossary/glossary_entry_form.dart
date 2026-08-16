@@ -1,3 +1,5 @@
+// packages/sincewhen_widgets/lib/src/glossary/glossary_entry_form.dart
+
 /*
 // packages/sincewhen_widgets/lib/src/glossary/glossay_entry_form.dart
 

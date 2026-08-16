@@ -1,4 +1,4 @@
-// packages/custom_widgets/lib/src/anchored.dart
+// packages/custom_widgets/lib/src/anchored/anchored.dart
 
 import 'package:extensions/enum/src/placement.dart' show Placement;
 import 'package:flutter/widgets.dart';

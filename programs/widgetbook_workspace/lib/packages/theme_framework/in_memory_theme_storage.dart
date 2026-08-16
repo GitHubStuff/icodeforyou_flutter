@@ -1,4 +1,4 @@
-// programs/widgetbook/lib/usecases/theme_framework/in_memory_theme_storage.dart
+// programs/widgetbook_workspace/lib/packages/theme_framework/in_memory_theme_storage.dart
 
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:theme_framework/theme_framework.dart' show ThemeStorageAbstract;

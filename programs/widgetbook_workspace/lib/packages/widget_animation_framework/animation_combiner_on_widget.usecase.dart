@@ -1,4 +1,4 @@
-// programs/widgetbook/lib/usecases/widget_animation_framework/animation_combiner_on_widget.usecase.dart
+// programs/widgetbook_workspace/lib/packages/widget_animation_framework/animation_combiner_on_widget.usecase.dart
 
 import 'package:flutter/material.dart';
 import 'package:widget_animation_framework/widget_animation_framework.dart'

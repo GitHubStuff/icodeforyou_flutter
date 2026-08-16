@@ -1,4 +1,4 @@
-// widgetbook_workspace/lib/animated_widgets/timed_widget.usecase.dart
+// programs/widgetbook_workspace/lib/packages/animated_widgets/timed_widget/timed_widget.usecase.dart
 
 import 'package:animated_widgets/animated_widgets.dart';
 import 'package:flutter/material.dart';

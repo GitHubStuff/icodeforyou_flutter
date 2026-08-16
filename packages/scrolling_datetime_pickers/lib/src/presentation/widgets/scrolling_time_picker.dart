@@ -1,4 +1,4 @@
-// lib/src/presentation/widgets/scrolling_time_picker.dart
+// packages/scrolling_datetime_pickers/lib/src/presentation/widgets/scrolling_time_picker.dart
 
 import 'dart:async';
 

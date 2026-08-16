@@ -1,4 +1,4 @@
-// lib/src/console/_release_log_output.dart
+// packages/my_logger/lib/src/console/_release_log_output.dart
 
 part of 'my_logger.dart';
 

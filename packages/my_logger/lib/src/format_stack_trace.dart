@@ -1,4 +1,4 @@
-// package/lib/src/utils/format_stack_trace.dart
+// packages/my_logger/lib/src/format_stack_trace.dart
 // ignore_for_file: comment_references, public_member_api_docs
 import 'package:stack_trace/stack_trace.dart';
 

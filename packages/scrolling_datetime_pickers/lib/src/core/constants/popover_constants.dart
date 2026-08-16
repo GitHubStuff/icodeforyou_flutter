@@ -1,4 +1,4 @@
-// lib/src/core/constants/popover_constants.dart
+// packages/scrolling_datetime_pickers/lib/src/core/constants/popover_constants.dart
 
 // ignore_for_file: document_ignores, public_member_api_docs
 

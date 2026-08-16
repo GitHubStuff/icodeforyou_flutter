@@ -1,4 +1,4 @@
-// packages/creature_comforts_service/lib/src/failures/last_fed_failure.dart
+// programs/creature_comforts_service/lib/src/failures/last_fed_failure.dart
 // ignore_for_file: public_member_api_docs, no_runtimetype_tostring, comment_references
 
 import 'package:meta/meta.dart';

@@ -1,3 +1,5 @@
+// packages/animated_widgets/lib/src/contextual_reveal/src/theme/_contextual_reveal_dark_copy.dart
+
 part of 'contextual_reveal_dark.dart';
 
 class _ContextualRevealDarkCopy extends ContextualRevealDark {

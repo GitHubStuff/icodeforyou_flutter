@@ -1,4 +1,4 @@
-// programs/widgetbook/lib/usecases/three_d_sphere/three_d_sphere.usecase.dart
+// programs/widgetbook_workspace/lib/packages/three_d_sphere/three_d_sphere.usecase.dart
 
 import 'package:flutter/material.dart';
 import 'package:three_d_sphere/three_d_sphere.dart' show Quadrant, ThreeDSphere;

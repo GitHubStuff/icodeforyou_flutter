@@ -1,4 +1,4 @@
-// packages/animated_barrier/lib/src/animated_barrier.dart
+// packages/animated_widgets/lib/src/animated_barrier/src/animated_barrier.dart
 
 part of '../animated_barrier.dart';
 

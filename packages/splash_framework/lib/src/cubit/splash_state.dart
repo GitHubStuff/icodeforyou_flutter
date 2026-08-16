@@ -1,4 +1,4 @@
-// packages/splash_framework/lib/src/splash_state.dart
+// packages/splash_framework/lib/src/cubit/splash_state.dart
 
 /// Base class for all splash lifecycle states emitted by [SplashCubit].
 ///

@@ -1,4 +1,4 @@
-// since_when_widgets/lib/src/tag_glossary_edit/tag_glossary_edit_cubit.dart
+// packages/since_when_widgets/lib/src/tag_glossary_edit/tag_glossary_edit_cubit.dart
 
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

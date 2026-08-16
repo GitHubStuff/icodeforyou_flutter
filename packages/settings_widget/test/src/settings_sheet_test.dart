@@ -1,4 +1,4 @@
-// test/src/_settings_sheet_test.dart
+// packages/settings_widget/test/src/settings_sheet_test.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

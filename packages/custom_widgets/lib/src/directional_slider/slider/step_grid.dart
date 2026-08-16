@@ -1,4 +1,4 @@
-// packages/custom_widgets/lib/src/directional_slider/src/slider/step_grid.dart
+// packages/custom_widgets/lib/src/directional_slider/slider/step_grid.dart
 import 'package:flutter/foundation.dart';
 
 /// An immutable description of a discrete step grid on a continuous range.

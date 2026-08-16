@@ -1,3 +1,5 @@
+// packages/theme_framework/lib/src/default_material_app_router.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:theme_framework/src/state/theme_cubit.dart' show ThemeCubit;

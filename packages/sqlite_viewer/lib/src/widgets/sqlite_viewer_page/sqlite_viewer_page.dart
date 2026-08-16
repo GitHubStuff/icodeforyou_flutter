@@ -1,4 +1,4 @@
-// packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_page.dart
+// packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_page/sqlite_viewer_page.dart
 
 // ignore_for_file: document_ignores, comment_references
 

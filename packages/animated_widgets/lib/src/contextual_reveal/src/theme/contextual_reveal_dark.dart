@@ -1,4 +1,4 @@
-// animated_widgets/lib/src/contextual_reveal/src/theme/contextual_reveal_dark.dart
+// packages/animated_widgets/lib/src/contextual_reveal/src/theme/contextual_reveal_dark.dart
 import 'dart:ui' show lerpDouble;
 
 import 'package:animated_widgets/src/contextual_reveal/src/theme/_contextual_reveal_defaults.dart';

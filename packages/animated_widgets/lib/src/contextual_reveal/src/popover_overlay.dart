@@ -1,4 +1,4 @@
-// animated_widgets/lib/src/contextual_reveal/popover_overlay.dart
+// packages/animated_widgets/lib/src/contextual_reveal/src/popover_overlay.dart
 
 part of 'contextual_reveal.dart';
 

@@ -1,4 +1,4 @@
-// packages/extensions/lib/datetime_ext/boundary_timer.dart
+// packages/extensions/lib/datetime/src/boundary_timer.dart
 import 'dart:async';
 
 import 'package:extensions/datetime/src/datetime_ext.dart' show DateTimeExt;

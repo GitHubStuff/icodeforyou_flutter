@@ -1,4 +1,4 @@
-// test/clock_state_coverage_test.dart
+// packages/analog_clock_widget/test/clock_state_coverage_test.dart
 
 // ignore_for_file: document_ignores, avoid_setters_without_getters
 

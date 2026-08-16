@@ -1,4 +1,4 @@
-// test/helpers/test_helpers.dart
+// packages/sqlite_viewer/test/helpers/test_helpers.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

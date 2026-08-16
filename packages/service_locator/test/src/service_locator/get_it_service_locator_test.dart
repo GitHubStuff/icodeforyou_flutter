@@ -1,4 +1,4 @@
-// packages/services_locator/test/src/service_locator/get_it_service_locator_test.dart
+// packages/service_locator/test/src/service_locator/get_it_service_locator_test.dart
 //
 // Full-coverage test suite for [GetItServiceLocator]. Uses a fresh GetIt
 // instance per test (no global singleton touched) to keep tests isolated

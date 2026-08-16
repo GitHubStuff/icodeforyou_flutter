@@ -1,4 +1,4 @@
-// lib/src/presentation/widgets/scrolling_time_picker_column.dart
+// packages/scrolling_datetime_pickers/lib/src/presentation/widgets/scrolling_time_picker_column.dart
 
 part of 'scrolling_time_picker.dart';
 

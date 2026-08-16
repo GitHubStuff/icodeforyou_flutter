@@ -1,4 +1,4 @@
-// packages/creature_comforts_service/lib/src/critters_status.dart
+// programs/creature_comforts_service/lib/src/critters_status.dart
 
 /// The lifecycle status of the household critters, derived from how
 /// long it has been since they were last fed.

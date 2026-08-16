@@ -1,4 +1,4 @@
-// programs/whatever/lib/src/widgets_page.dart
+// programs/startup_demo/lib/src/pages/widgets_page.dart
 /*
 import 'dart:async';
 

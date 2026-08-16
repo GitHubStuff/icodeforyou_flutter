@@ -1,4 +1,4 @@
-// test/src/animated_checkbox/checkmark_painter_test.dart
+// packages/animated_widgets/test/src/animated_checkbox/checkmark_painter_test.dart
 
 import 'dart:ui' as ui;
 

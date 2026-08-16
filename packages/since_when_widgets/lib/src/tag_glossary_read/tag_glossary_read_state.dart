@@ -1,4 +1,4 @@
-// since_when_widgets/lib/src/tag_glossary_read/tag_glossary_read_state.dart
+// packages/since_when_widgets/lib/src/tag_glossary_read/tag_glossary_read_state.dart
 
 import 'package:equatable/equatable.dart';
 import 'package:ice_chips/ice_chips.dart'

@@ -1,4 +1,4 @@
-// preferences/lib/src/hive/hive_preferences.dart
+// packages/app_preferences/lib/src/hive/hive_preferences.dart
 // ignore_for_file: always_use_package_imports, comment_references
 
 import 'dart:io';

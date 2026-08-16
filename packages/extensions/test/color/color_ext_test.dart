@@ -1,4 +1,4 @@
-// test/color/color_ext_test.dart
+// packages/extensions/test/color/color_ext_test.dart
 
 import 'package:extensions/color/color_ext.dart' show ColorExt;
 import 'package:flutter/painting.dart';

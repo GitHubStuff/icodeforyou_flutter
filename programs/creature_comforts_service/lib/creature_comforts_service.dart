@@ -1,4 +1,4 @@
-// packages/creature_comforts_service/lib/creature_comforts_service.dart
+// programs/creature_comforts_service/lib/creature_comforts_service.dart
 // ignore_for_file: comment_references
 
 /// Shared "last fed" timestamp service.

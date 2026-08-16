@@ -1,4 +1,4 @@
-// my_logger/lib/src/console/_log_abstracts.dart
+// packages/my_logger/lib/src/console/_log_abstracts.dart
 // ignore_for_file: one_member_abstracts
 
 part of 'my_logger.dart';

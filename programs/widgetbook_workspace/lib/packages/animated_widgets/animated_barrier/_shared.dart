@@ -1,4 +1,4 @@
-// widgetbook_workspace/lib/packages/animated_barrier/_shared.dart
+// programs/widgetbook_workspace/lib/packages/animated_widgets/animated_barrier/_shared.dart
 
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
