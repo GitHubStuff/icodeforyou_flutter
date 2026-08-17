@@ -69,9 +69,7 @@ void main() {
     });
 
     testWidgets('respects custom nullValueDisplay', (tester) async {
-      await tester.pumpWidget(
-        buildWidget(nullValueDisplay: '(empty)'),
-      );
+      await tester.pumpWidget(buildWidget(nullValueDisplay: '(empty)'));
       expect(find.text('(empty)'), findsAtLeastNWidgets(1));
       expect(find.text('NULL'), findsNothing);
     });
@@ -113,9 +111,7 @@ void main() {
     testWidgets(
       'returns SizedBox.shrink when columns empty and no emptyWidget',
       (tester) async {
-        await tester.pumpWidget(
-          buildWidget(columns: const [], rows: const []),
-        );
+        await tester.pumpWidget(buildWidget(columns: const [], rows: const []));
         // Just make sure it doesn't crash and renders empty
         expect(find.text('id'), findsNothing);
         expect(find.text('name'), findsNothing);
@@ -125,18 +121,13 @@ void main() {
     testWidgets('renders "No data available" when rows empty no emptyWidget', (
       tester,
     ) async {
-      await tester.pumpWidget(
-        buildWidget(rows: const []),
-      );
+      await tester.pumpWidget(buildWidget(rows: const []));
       expect(find.text('No data available'), findsOneWidget);
     });
 
     testWidgets('renders custom empty widget when rows empty', (tester) async {
       await tester.pumpWidget(
-        buildWidget(
-          rows: const [],
-          emptyWidget: const Text('Nothing here'),
-        ),
+        buildWidget(rows: const [], emptyWidget: const Text('Nothing here')),
       );
       expect(find.text('Nothing here'), findsOneWidget);
     });
@@ -195,9 +186,7 @@ void main() {
       await tester.pumpWidget(buildWidget());
       expect(find.text('id'), findsOneWidget);
 
-      await tester.pumpWidget(
-        buildWidget(columns: const ['a', 'b']),
-      );
+      await tester.pumpWidget(buildWidget(columns: const ['a', 'b']));
       expect(find.text('a'), findsOneWidget);
       expect(find.text('b'), findsOneWidget);
       expect(find.text('id'), findsNothing);
@@ -235,43 +224,40 @@ void main() {
       expect(find.text('id'), findsOneWidget);
     });
 
-    testWidgets(
-      'invalidates cached widths on didChangeDependencies '
-      '(text scaler change)',
-      (tester) async {
-        const widget = SizedBox(
-          width: 600,
-          height: 400,
-          child: DisplayQueryWidget(
-            columns: ['id', 'name'],
-            rows: testRows,
-            evenRowStyle: evenStyle,
-            oddRowStyle: oddStyle,
-          ),
-        );
+    testWidgets('invalidates cached widths on didChangeDependencies '
+        '(text scaler change)', (tester) async {
+      const widget = SizedBox(
+        width: 600,
+        height: 400,
+        child: DisplayQueryWidget(
+          columns: ['id', 'name'],
+          rows: testRows,
+          evenRowStyle: evenStyle,
+          oddRowStyle: oddStyle,
+        ),
+      );
 
-        await tester.pumpWidget(
-          const MaterialApp(
-            home: MediaQuery(
-              data: MediaQueryData(textScaler: TextScaler.noScaling),
-              child: widget,
-            ),
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: MediaQuery(
+            data: MediaQueryData(textScaler: TextScaler.noScaling),
+            child: widget,
           ),
-        );
+        ),
+      );
 
-        // Change MediaQuery text scaler — triggers didChangeDependencies
-        await tester.pumpWidget(
-          const MaterialApp(
-            home: MediaQuery(
-              data: MediaQueryData(textScaler: TextScaler.linear(1.5)),
-              child: widget,
-            ),
+      // Change MediaQuery text scaler — triggers didChangeDependencies
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: MediaQuery(
+            data: MediaQueryData(textScaler: TextScaler.linear(1.5)),
+            child: widget,
           ),
-        );
+        ),
+      );
 
-        expect(find.text('id'), findsOneWidget);
-      },
-    );
+      expect(find.text('id'), findsOneWidget);
+    });
 
     testWidgets('dispose tears down without error', (tester) async {
       await tester.pumpWidget(buildWidget());
@@ -282,8 +268,42 @@ void main() {
   });
 
   group('horizontal scroll sync', () {
+    testWidgets('header and body scroll controllers sync (no exceptions)', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        buildWidget(
+          columns: List.generate(20, (i) => 'col_$i'),
+          rows: List.generate(
+            5,
+            (rowIndex) => {
+              for (var i = 0; i < 20; i++) 'col_$i': 'r${rowIndex}_c$i',
+            },
+          ),
+        ),
+      );
+
+      // Drag the header horizontally — first listener (header → body) fires.
+      // First-drag target is on-screen; subsequent drags use fixed
+      // on-screen offsets since the original targets may have scrolled
+      // out of the hit-testable area.
+      await tester.drag(
+        find.text('col_0'),
+        const Offset(-200, 0),
+        warnIfMissed: false,
+      );
+      await tester.pump();
+
+      // Drag from a fixed on-screen offset inside the body — second
+      // listener (body → header) fires. warnIfMissed: false because we
+      // only need the gesture to reach the body's scroll view; we don't
+      // care which cell receives it.
+      await tester.dragFrom(const Offset(400, 300), const Offset(-100, 0));
+      await tester.pump();
+    });
+
     testWidgets(
-      'header and body scroll controllers sync (no exceptions)',
+      'jumping the body controller directly syncs the header offset',
       (tester) async {
         await tester.pumpWidget(
           buildWidget(
@@ -297,26 +317,29 @@ void main() {
           ),
         );
 
-        // Drag the header horizontally — first listener (header → body) fires.
-        // First-drag target is on-screen; subsequent drags use fixed
-        // on-screen offsets since the original targets may have scrolled
-        // out of the hit-testable area.
-        await tester.drag(
-          find.text('col_0'),
-          const Offset(-200, 0),
-          warnIfMissed: false,
-        );
+        final horizontals = tester
+            .widgetList<Scrollable>(find.byType(Scrollable))
+            .where(
+              (scrollable) =>
+                  axisDirectionToAxis(scrollable.axisDirection) ==
+                  Axis.horizontal,
+            )
+            .toList();
+
+        expect(horizontals, hasLength(2));
+
+        // buildHeader() precedes buildBody() in the Column, so the first
+        // horizontal Scrollable is the header, the second is the body.
+        final headerController = horizontals.first.controller!;
+        final bodyController = horizontals.last.controller!;
+
+        // Jump the body directly — this drives the body listener while
+        // the header still sits at 0, forcing the body → header jumpTo
+        // branch to execute.
+        bodyController.jumpTo(80);
         await tester.pump();
 
-        // Drag from a fixed on-screen offset inside the body — second
-        // listener (body → header) fires. warnIfMissed: false because we
-        // only need the gesture to reach the body's scroll view; we don't
-        // care which cell receives it.
-        await tester.dragFrom(
-          const Offset(400, 300),
-          const Offset(-100, 0),
-        );
-        await tester.pump();
+        expect(headerController.offset, 80);
       },
     );
   });

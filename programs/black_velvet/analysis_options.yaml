@@ -7,3 +7,10 @@ analyzer:
 
   exclude:
     - '/ios/Runner/StatusBarFlutterViewController.swift'
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**

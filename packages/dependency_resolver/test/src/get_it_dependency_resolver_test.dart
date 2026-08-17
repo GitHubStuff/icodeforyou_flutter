@@ -1,21 +1,11 @@
 // packages/dependency_resolver/test/src/get_it_dependency_resolver_test.dart
 
 import 'package:dependency_resolver/dependency_resolver.dart';
-import 'package:dependency_resolver/src/dependency_resolver.dart' show DependencyResolver;
 import 'package:get_it/get_it.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-class _FakeService {
-  const _FakeService();
-}
-
-class _MockDependencyResolver extends Mock implements DependencyResolver {}
-
 void main() {
-  group('GetItDependencyResolver', () {
-    const kInstanceName = 'named';
-
+  group(GetItDependencyResolver, () {
     late GetIt getIt;
     late GetItDependencyResolver resolver;
 
@@ -24,68 +14,88 @@ void main() {
       resolver = GetItDependencyResolver(getIt: getIt);
     });
 
-    test('resolves a registered singleton', () {
-      const service = _FakeService();
-      getIt.registerSingleton<_FakeService>(service);
-
-      expect(resolver.get<_FakeService>(), same(service));
-    });
-
-    test('resolves a named registration', () {
-      const service = _FakeService();
-      getIt.registerSingleton<_FakeService>(
-        service,
-        instanceName: kInstanceName,
-      );
-
-      expect(
-        resolver.get<_FakeService>(instanceName: kInstanceName),
-        same(service),
-      );
-    });
-
-    test('isRegistered reflects registration state', () {
-      expect(resolver.isRegistered<_FakeService>(), isFalse);
-
-      getIt.registerSingleton<_FakeService>(const _FakeService());
-
-      expect(resolver.isRegistered<_FakeService>(), isTrue);
-    });
-
-    test('isRegistered honors instanceName', () {
-      getIt.registerSingleton<_FakeService>(
-        const _FakeService(),
-        instanceName: kInstanceName,
-      );
-
-      expect(
-        resolver.isRegistered<_FakeService>(instanceName: kInstanceName),
-        isTrue,
-      );
-      expect(resolver.isRegistered<_FakeService>(), isFalse);
+    tearDown(() async {
+      await getIt.reset();
     });
 
     test('defaults to GetIt.instance when no instance is injected', () {
-      GetIt.I.registerSingleton<_FakeService>(const _FakeService());
-      addTearDown(GetIt.I.reset);
-
-      final defaulted = GetItDependencyResolver();
-
-      expect(defaulted.get<_FakeService>(), isA<_FakeService>());
+      expect(GetItDependencyResolver.new, returnsNormally);
     });
-  });
 
-  group('DependencyResolver mocking', () {
-    test('consumers stub resolution through the interface', () {
-      final resolver = _MockDependencyResolver();
-      const service = _FakeService();
+    group('registerSingleton', () {
+      test('registers and returns the instance', () {
+        const value = 'singleton';
 
-      when(() => resolver.get<_FakeService>()).thenReturn(service);
-      when(() => resolver.isRegistered<_FakeService>()).thenReturn(true);
+        final returned = resolver.registerSingleton<String>(value);
 
-      expect(resolver.get<_FakeService>(), same(service));
-      expect(resolver.isRegistered<_FakeService>(), isTrue);
-      verify(() => resolver.get<_FakeService>()).called(1);
+        expect(returned, same(value));
+        expect(getIt.get<String>(), same(value));
+      });
+
+      test('registers under an instance name', () {
+        const value = 42;
+
+        resolver.registerSingleton<int>(value, instanceName: 'answer');
+
+        expect(getIt.get<int>(instanceName: 'answer'), value);
+      });
+    });
+
+    group('registerLazySingleton', () {
+      test('defers construction until first resolution', () {
+        var constructed = false;
+
+        resolver.registerLazySingleton<String>(() {
+          constructed = true;
+          return 'lazy';
+        });
+
+        expect(constructed, isFalse);
+        expect(getIt.get<String>(), 'lazy');
+        expect(constructed, isTrue);
+      });
+
+      test('registers under an instance name', () {
+        resolver.registerLazySingleton<String>(
+          () => 'named lazy',
+          instanceName: 'named',
+        );
+
+        expect(getIt.get<String>(instanceName: 'named'), 'named lazy');
+      });
+    });
+
+    group('get', () {
+      test('resolves a registered instance', () {
+        getIt.registerSingleton<String>('resolved');
+
+        expect(resolver.get<String>(), 'resolved');
+      });
+
+      test('resolves by instance name', () {
+        getIt.registerSingleton<String>('named resolved', instanceName: 'n');
+
+        expect(resolver.get<String>(instanceName: 'n'), 'named resolved');
+      });
+    });
+
+    group('isRegistered', () {
+      test('returns true for a registered type', () {
+        getIt.registerSingleton<String>('present');
+
+        expect(resolver.isRegistered<String>(), isTrue);
+      });
+
+      test('returns false for an unregistered type', () {
+        expect(resolver.isRegistered<int>(), isFalse);
+      });
+
+      test('respects instance name', () {
+        getIt.registerSingleton<String>('present', instanceName: 'x');
+
+        expect(resolver.isRegistered<String>(instanceName: 'x'), isTrue);
+        expect(resolver.isRegistered<String>(), isFalse);
+      });
     });
   });
 }

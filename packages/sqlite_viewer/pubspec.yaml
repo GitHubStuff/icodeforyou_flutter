@@ -1,11 +1,11 @@
 name: sqlite_viewer
-description: A Flutter widget for displaying SQLite query results in a spreadsheet-style view.
+description: "A Flutter widget for displaying SQLite query results in a spreadsheet-style view."
 version: 1.0.0+1
 resolution: workspace
 publish_to: "none"
 
 environment:
-  sdk: ">=3.12.0 <4.0.0"
+  sdk: ^3.12.0
 
 dependencies:
   animated_widgets: ^1.0.0
@@ -23,6 +23,3 @@ dev_dependencies:
     sdk: flutter
   mocktail: ^1.0.5
   icodeforyou_lints: ^1.0.0
- 
-flutter:
-  uses-material-design: true

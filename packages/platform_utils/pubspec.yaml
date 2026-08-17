@@ -1,21 +1,12 @@
 name: platform_utils
-description: "A new Flutter package project."
+description: "Gets information about the platform an app is running on"
 version: 1.0.0
 publish_to: none
 homepage:
 resolution: workspace
 
 environment:
-  sdk: ">=3.12.0 <4.0.0"
+  sdk: ^3.12.0
  
-dependencies:
-  flutter:
-    sdk: flutter
-
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   icodeforyou_lints: ^1.0.0
-
-flutter:
-  uses-material-design: true

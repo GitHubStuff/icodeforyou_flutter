@@ -1,12 +1,12 @@
 name: splash_framework
-description: Manages the display of a splash screen will performing background/startup tasks.
+description: "Manages the display of a splash screen will performing background/startup tasks."
 publish_to: none
 homepage:
 resolution: workspace
 version: 1.0.0
 
 environment:
-  sdk: ">=3.12.0 <4.0.0"
+  sdk: ^3.12.0
 
 dependencies:
   custom_widgets: ^1.0.0
@@ -18,6 +18,3 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   icodeforyou_lints: ^1.0.0
-
-flutter:
-  uses-material-design: true

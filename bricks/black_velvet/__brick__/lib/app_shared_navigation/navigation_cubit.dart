@@ -1,4 +1,4 @@
-// programs/{{name.snakeCase()}}/lib/app_navigation/navigation_cubit.dart
+// programs/{{name.snakeCase()}}/lib/app_shared_navigation/navigation_cubit.dart
 
 import 'package:{{name.snakeCase()}}/app_shared_navigation/navigation_state.dart'
     show NavigationState;

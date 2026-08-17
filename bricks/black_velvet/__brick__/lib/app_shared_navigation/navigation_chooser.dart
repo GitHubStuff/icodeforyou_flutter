@@ -1,4 +1,4 @@
-// programs/{{name.snakeCase()}}/lib/navigation_chooser.dart
+// programs/{{name.snakeCase()}}/lib/app_shared_navigation/navigation_chooser.dart
 
 import 'package:flutter/material.dart';
 

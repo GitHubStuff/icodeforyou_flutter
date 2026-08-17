@@ -1,13 +1,12 @@
 name: stacking_widgets
-description: Stacks an array of 'Piled Widgets' on a stack for bubble effect
+description: "Stacks an array of 'Piled Widgets' on a stack for bubble effect."
 version: 1.0.0
 publish_to: none
+resolution: workspace
 
 environment:
-  sdk: ^3.5.0
-  flutter: ">=3.24.0"
+  sdk: ^3.12.0
 
-resolution: workspace
 dependencies:
   flutter:
     sdk: flutter

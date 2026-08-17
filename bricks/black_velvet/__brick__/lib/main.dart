@@ -1,4 +1,4 @@
-// programs/since_when_dev/lib/main.dart
+// programs/{{name.snakeCase()}}/lib/main.dart
 import 'package:dependency_resolver/dependency_resolver.dart'
     show GetItDependencyResolver, InMemoryDependencyResolver;
 import 'package:flutter/material.dart';

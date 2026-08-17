@@ -52,7 +52,7 @@ workspace:
   - programs/widgetbook_workspace
 
 environment:
-  sdk: ">=3.12.0 <4.0.0"
+  sdk: ^3.12.0
 
 dev_dependencies:
   mason_cli: ^0.1.3
@@ -98,7 +98,7 @@ melos:
 
     coverage_clean:
       description: Clean all coverage data from entire workspace
-      run: ./melos_tool/melos_test.zsh coverage_clean
+      run: ./melos_tool/melos_test coverage_clean
 
     # ─── PACKAGES ─────────────────────────────────────────────────────────────
 
@@ -107,22 +107,22 @@ melos:
         Run tests and coverage for a single package.
         Usage: PKG=package_name melos test_package
         Example: PKG=since_when melos test_package
-      run: ./melos_tool/melos_test.zsh test_one packages "$PKG"
+      run: ./melos_tool/melos_test test_one packages "$PKG"
 
     test_all:
       description: |
         Run tests in all packages sequentially to avoid Flutter lock conflicts.
         Usage: melos test_all
         Fail-fast: STRICT=true melos test_all
-      run: ./melos_tool/melos_test.zsh test_all packages
+      run: ./melos_tool/melos_test test_all packages
 
     test_coverage:
       description: Run tests with coverage in all packages (auto-detects Flutter vs Dart)
-      run: ./melos_tool/melos_test.zsh test_coverage packages
+      run: ./melos_tool/melos_test test_coverage packages
 
     coverage_merge:
       description: Merge coverage reports from all packages into coverage/html/
-      run: ./melos_tool/melos_test.zsh coverage_merge packages
+      run: ./melos_tool/melos_test coverage_merge packages
 
     # ─── PLUGINS ─────────────────────────────────────────────────────────────
 
@@ -131,22 +131,22 @@ melos:
         Run tests and coverage for a single plugin.
         Usage: PRG=plugin_name melos test_plugin
         Example: PRG=status_bar_chameleon melos test_plugin
-      run: ./melos_tool/melos_test.zsh test_one plugins "$PRG"
+      run: ./melos_tool/melos_test test_one plugins "$PRG"
 
     test_plugins:
       description: |
         Run tests in all plugins sequentially.
         Usage: melos test_plugins
         Fail-fast: STRICT=true melos test_plugins
-      run: ./melos_tool/melos_test.zsh test_all plugins
+      run: ./melos_tool/melos_test test_all plugins
 
     test_plugin_coverage:
       description: Run tests with coverage in all plugins
-      run: ./melos_tool/melos_test.zsh test_coverage plugins
+      run: ./melos_tool/melos_test test_coverage plugins
 
     coverage_merge_plugins:
       description: Merge coverage reports from all plugins into coverage/plugins_html/
-      run: ./melos_tool/melos_test.zsh coverage_merge plugins
+      run: ./melos_tool/melos_test coverage_merge plugins
 
     # ─── PROGRAMS ─────────────────────────────────────────────────────────────
 
@@ -155,28 +155,28 @@ melos:
         Run tests and coverage for a single program.
         Usage: PRG=program_name melos test_program
         Example: PRG=startup_demo melos test_program
-      run: ./melos_tool/melos_test.zsh test_one programs "$PRG"
+      run: ./melos_tool/melos_test test_one programs "$PRG"
 
     test_programs:
       description: |
         Run tests in all programs sequentially (excludes widgetbook_workspace).
         Usage: melos test_programs
         Fail-fast: STRICT=true melos test_programs
-      run: ./melos_tool/melos_test.zsh test_all programs
+      run: ./melos_tool/melos_test test_all programs
 
     test_programs_coverage:
       description: Run tests with coverage in all programs (excludes widgetbook_workspace)
-      run: ./melos_tool/melos_test.zsh test_coverage programs
+      run: ./melos_tool/melos_test test_coverage programs
 
     coverage_merge_programs:
       description: Merge coverage reports from all programs into coverage/programs_html/
-      run: ./melos_tool/melos_test.zsh coverage_merge programs
+      run: ./melos_tool/melos_test coverage_merge programs
 
     # ─── COVERAGE ─────────────────────────────────────────────────────────────
 
     coverage_merge_all:
       description: Merge coverage from all packages + plugins + programs into coverage/all_html/
-      run: ./melos_tool/melos_test.zsh coverage_merge_all
+      run: ./melos_tool/melos_test coverage_merge_all
 
     # ─── WIDGETBOOK ───────────────────────────────────────────────────────────
 

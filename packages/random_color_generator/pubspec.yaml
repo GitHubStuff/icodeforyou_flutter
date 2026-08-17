@@ -5,16 +5,7 @@ resolution: workspace
 publish_to: none
 
 environment:
-  sdk: ">=3.12.0 <4.0.0"
-
-dependencies:
-  flutter:
-    sdk: flutter
+  sdk: ^3.12.0
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  very_good_analysis: ^10.3.0
-
-flutter:
-  uses-material-design: true
+  icodeforyou_lints: ^1.0.0

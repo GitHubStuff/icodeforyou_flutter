@@ -2,4 +2,12 @@
 analyzer:
   errors:
     use_super_parameters: ignore
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 include: package:icodeforyou_lints/analysis_options.yaml

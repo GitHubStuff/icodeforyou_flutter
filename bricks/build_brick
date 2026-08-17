@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 # bricks/build_brick
-readonly _kVersion='0.0.11'
+readonly _kVersion='1.0.1'
 #
 # General-purpose Mason brick builder for the icodeforyou_flutter monorepo.
 #
