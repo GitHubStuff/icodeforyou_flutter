@@ -1,7 +1,5 @@
 // packages/infinite_scroll_picking/lib/src/infinite_scroll_picker.dart
 
-// ignore_for_file: avoid_positional_boolean_parameters, public_member_api_docs
-
 part of 'library.dart';
 
 /// An Apple-style infinite scrolling picker.

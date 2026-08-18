@@ -12,4 +12,6 @@ dependencies:
   equatable: ^2.1.0
 
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
   icodeforyou_lints: ^1.0.0

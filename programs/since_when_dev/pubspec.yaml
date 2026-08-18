@@ -15,7 +15,6 @@ dependencies:
     sdk: flutter
   rail_navigation: ^1.0.0
   shared_preferences: ^2.5.5
-  since_when_framework: ^1.0.0
   splash_framework: ^1.0.0
   status_bar_chameleon: ^1.0.1
   theme_framework: ^1.0.0

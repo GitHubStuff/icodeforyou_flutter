@@ -1,12 +1,7 @@
 // packages/dependency_resolver/test/src/in_memory_dependency_resolver_test.dart
 
-import 'package:dependency_resolver/dependency_resolver.dart';
-import 'package:dependency_resolver/src/dependency_container.dart'
-    show DependencyContainer;
-import 'package:dependency_resolver/src/dependency_resolver.dart'
-    show DependencyResolver;
-import 'package:dependency_resolver/src/in_memory_dependency_resolver.dart'
-    show InMemoryDependencyResolver;
+import 'package:dependency_resolver/dependency_resolver.dart'
+    show DependencyContainer, DependencyResolver, InMemoryDependencyResolver;
 import 'package:test/test.dart';
 
 class _FakeService {

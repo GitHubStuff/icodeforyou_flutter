@@ -834,6 +834,26 @@ abstract class _$SinceWhenDatabase extends GeneratedDatabase {
   late final $GlossaryItemsTable glossaryItems = $GlossaryItemsTable(this);
   late final $SinceWhenItemsTable sinceWhenItems = $SinceWhenItemsTable(this);
   late final $TagItemsTable tagItems = $TagItemsTable(this);
+  late final Index idxSinceWhenParent = Index(
+    'idx_since_when_parent',
+    'CREATE INDEX idx_since_when_parent ON sinceWhen (parentTimestamp)',
+  );
+  late final Index idxSinceWhenEvent = Index(
+    'idx_since_when_event',
+    'CREATE INDEX idx_since_when_event ON sinceWhen (eventTimestamp)',
+  );
+  late final Index idxSinceWhenEdited = Index(
+    'idx_since_when_edited',
+    'CREATE INDEX idx_since_when_edited ON sinceWhen (editedTimestamp)',
+  );
+  late final Index idxSinceWhenReviewed = Index(
+    'idx_since_when_reviewed',
+    'CREATE INDEX idx_since_when_reviewed ON sinceWhen (reviewedTimestamp)',
+  );
+  late final Index idxTagsGlossary = Index(
+    'idx_tags_glossary',
+    'CREATE INDEX idx_tags_glossary ON tags (glossary_timestamp)',
+  );
   late final GlossaryItemsDao glossaryItemsDao = GlossaryItemsDao(
     this as SinceWhenDatabase,
   );
@@ -849,6 +869,11 @@ abstract class _$SinceWhenDatabase extends GeneratedDatabase {
     glossaryItems,
     sinceWhenItems,
     tagItems,
+    idxSinceWhenParent,
+    idxSinceWhenEvent,
+    idxSinceWhenEdited,
+    idxSinceWhenReviewed,
+    idxTagsGlossary,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([

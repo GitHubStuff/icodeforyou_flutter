@@ -1,5 +1,8 @@
 # packages/splash_framework/analysis_options.yaml
+include: package:icodeforyou_lints/analysis_options.yaml
 analyzer:
+  errors:
+    always_use_package_imports: ignore
   exclude:
     - build/**
     - android/**
@@ -8,4 +11,3 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
-include: package:icodeforyou_lints/analysis_options.yaml

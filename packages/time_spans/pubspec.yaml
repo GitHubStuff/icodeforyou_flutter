@@ -13,4 +13,6 @@ dependencies:
   meta: ^1.18.0
 
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
   icodeforyou_lints: ^1.0.0

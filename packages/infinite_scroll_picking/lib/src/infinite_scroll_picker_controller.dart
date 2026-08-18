@@ -1,7 +1,5 @@
 // packages/infinite_scroll_picking/lib/src/infinite_scroll_picker_controller.dart
 
-// ignore_for_file: comment_references
-
 part of 'library.dart';
 
 /// A handle for imperatively controlling an [InfiniteScrollPicker].

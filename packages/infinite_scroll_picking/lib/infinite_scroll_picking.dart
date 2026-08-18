@@ -1,7 +1,5 @@
 // packages/infinite_scroll_picking/lib/infinite_scroll_picking.dart
 
-// ignore_for_file: comment_references
-
 /// A Flutter widget for an Apple-style infinite scrolling picker wheel.
 ///
 /// Provides [InfiniteScrollPicker], a labeled picker that wraps an infinite

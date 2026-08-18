@@ -1,7 +1,7 @@
 // packages/dependency_resolver/lib/src/dependency_container.dart
 
-import 'package:dependency_resolver/src/dependency_registrar.dart';
-import 'package:dependency_resolver/src/dependency_resolver.dart';
+import 'package:dependency_resolver/dependency_resolver.dart'
+    show DependencyRegistrar, DependencyResolver;
 
 /// A full dependency container: resolves and registers.
 ///

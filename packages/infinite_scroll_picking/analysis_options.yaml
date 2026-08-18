@@ -1,4 +1,6 @@
 analyzer:
+  errors:
+    avoid_positional_boolean_parameters: ignore
   exclude:
     - build/**
     - android/**

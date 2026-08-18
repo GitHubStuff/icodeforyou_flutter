@@ -12,6 +12,10 @@ import 'package:sincewhen_models/sincewhen_models.dart';
 /// content.
 /// {@endtemplate}
 @UseRowClass(SinceWhenItem) //Connects to the pure dart model
+@TableIndex(name: 'idx_since_when_parent', columns: {#parentTimestamp})
+@TableIndex(name: 'idx_since_when_event', columns: {#eventTimestamp})
+@TableIndex(name: 'idx_since_when_edited', columns: {#editedTimestamp})
+@TableIndex(name: 'idx_since_when_reviewed', columns: {#reviewedTimestamp})
 class SinceWhenItems extends Table {
   @override
   String get tableName => 'sinceWhen';

@@ -111,12 +111,10 @@ import 'package:widgetbook_workspace/packages/custom_widgets/uninhertied_text/un
     as _widgetbook_workspace_packages_custom_widgets_uninhertied_text_uninherited_text_usecase;
 import 'package:widgetbook_workspace/packages/data_grid/data_grid.usecase.dart'
     as _widgetbook_workspace_packages_data_grid_data_grid_usecase;
+import 'package:widgetbook_workspace/packages/extensions/color_ext/color_pair.usecase.dart'
+    as _widgetbook_workspace_packages_extensions_color_ext_color_pair_usecase;
 import 'package:widgetbook_workspace/packages/extensions/widget_ext/widget_ext.usecase.dart'
     as _widgetbook_workspace_packages_extensions_widget_ext_widget_ext_usecase;
-import 'package:widgetbook_workspace/packages/ice_chips/ice_chip_tray/ice_chip_tray.usecase.dart'
-    as _widgetbook_workspace_packages_ice_chips_ice_chip_tray_ice_chip_tray_usecase;
-import 'package:widgetbook_workspace/packages/ice_chips/ice_chip_widget/ice_chip.usecase.dart'
-    as _widgetbook_workspace_packages_ice_chips_ice_chip_widget_ice_chip_usecase;
 import 'package:widgetbook_workspace/packages/infinite_scroll_picking/lib/src/infinite_scroll_picker.usecase.dart'
     as _widgetbook_workspace_packages_infinite_scroll_picking_lib_src_infinite_scroll_picker_usecase;
 import 'package:widgetbook_workspace/packages/infinite_scroll_picking_settings/settings_screen.usecase.dart'
@@ -149,10 +147,6 @@ import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/lib/src
     as _widgetbook_workspace_packages_scrolling_datetime_pickers_lib_src_presentation_widgets_scrolling_time_picker_usecase;
 import 'package:widgetbook_workspace/packages/settings_widget/settings_widget.usecase.dart'
     as _widgetbook_workspace_packages_settings_widget_settings_widget_usecase;
-import 'package:widgetbook_workspace/packages/since_when_widgets/tag_glossary_edit_screen.usecase.dart'
-    as _widgetbook_workspace_packages_since_when_widgets_tag_glossary_edit_screen_usecase;
-import 'package:widgetbook_workspace/packages/since_when_widgets/tag_glossary_read_view.usecase.dart'
-    as _widgetbook_workspace_packages_since_when_widgets_tag_glossary_read_view_usecase;
 import 'package:widgetbook_workspace/packages/splash_framework/splash_screen.usecase.dart'
     as _widgetbook_workspace_packages_splash_framework_splash_screen_usecase;
 import 'package:widgetbook_workspace/packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_page/sqlite_viewer_page.usecase.dart'
@@ -167,17 +161,11 @@ import 'package:widgetbook_workspace/packages/theme_framework/theme_mode_entry.u
     as _widgetbook_workspace_packages_theme_framework_theme_mode_entry_usecase;
 import 'package:widgetbook_workspace/packages/theme_framework/theme_setting_screen.usecase.dart'
     as _widgetbook_workspace_packages_theme_framework_theme_setting_screen_usecase;
-import 'package:widgetbook_workspace/packages/theme_manager/material_preference.usecase.dart'
-    as _widgetbook_workspace_packages_theme_manager_material_preference_usecase;
-import 'package:widgetbook_workspace/packages/theme_manager/theme_radio_row.usecase.dart'
-    as _widgetbook_workspace_packages_theme_manager_theme_radio_row_usecase;
-import 'package:widgetbook_workspace/packages/theme_manager/theme_selection_body.usecase.dart'
-    as _widgetbook_workspace_packages_theme_manager_theme_selection_body_usecase;
 import 'package:widgetbook_workspace/packages/three_d_sphere/three_d_sphere.usecase.dart'
     as _widgetbook_workspace_packages_three_d_sphere_three_d_sphere_usecase;
 import 'package:widgetbook_workspace/packages/widget_animation_framework/animation_combiner_on_widget.usecase.dart'
     as _widgetbook_workspace_packages_widget_animation_framework_animation_combiner_on_widget_usecase;
-import 'package:widgetbook_workspace/packages/widget_animation_framework/animation_controller_widget.usecase.dart.dart'
+import 'package:widgetbook_workspace/packages/widget_animation_framework/animation_controller_widget.usecase.dart'
     as _widgetbook_workspace_packages_widget_animation_framework_animation_controller_widget_usecase;
 
 final directories = <_widgetbook.WidgetbookNode>[
@@ -443,6 +431,22 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookFolder(
+    name: 'color',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'ColorPair',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Interactive',
+            builder:
+                _widgetbook_workspace_packages_extensions_color_ext_color_pair_usecase
+                    .buildColorPairUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
     name: 'contextual_reveal',
     children: [
       _widgetbook.WidgetbookFolder(
@@ -628,38 +632,6 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder:
                 _widgetbook_workspace_packages_animated_widgets_grow_widget_grow_widget_view_usecase
                     .growWidgetViewUseCase,
-          ),
-        ],
-      ),
-    ],
-  ),
-  _widgetbook.WidgetbookFolder(
-    name: 'ice_chip_tray',
-    children: [
-      _widgetbook.WidgetbookComponent(
-        name: 'IceChipsTray',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder:
-                _widgetbook_workspace_packages_ice_chips_ice_chip_tray_ice_chip_tray_usecase
-                    .iceChipsTrayUseCase,
-          ),
-        ],
-      ),
-    ],
-  ),
-  _widgetbook.WidgetbookFolder(
-    name: 'ice_chip_widget',
-    children: [
-      _widgetbook.WidgetbookComponent(
-        name: 'IceChip',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder:
-                _widgetbook_workspace_packages_ice_chips_ice_chip_widget_ice_chip_usecase
-                    .iceChipUseCase,
           ),
         ],
       ),
@@ -1048,38 +1020,6 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookFolder(
-    name: 'tag_glossary_edit',
-    children: [
-      _widgetbook.WidgetbookComponent(
-        name: 'TagGlossaryEditScreen',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder:
-                _widgetbook_workspace_packages_since_when_widgets_tag_glossary_edit_screen_usecase
-                    .tagGlossaryEditScreenUseCase,
-          ),
-        ],
-      ),
-    ],
-  ),
-  _widgetbook.WidgetbookFolder(
-    name: 'tag_glossary_read',
-    children: [
-      _widgetbook.WidgetbookComponent(
-        name: 'TagGlossaryReadView',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder:
-                _widgetbook_workspace_packages_since_when_widgets_tag_glossary_read_view_usecase
-                    .tagGlossaryReadViewUseCase,
-          ),
-        ],
-      ),
-    ],
-  ),
-  _widgetbook.WidgetbookFolder(
     name: 'textfield',
     children: [
       _widgetbook.WidgetbookComponent(
@@ -1309,44 +1249,6 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder:
                 _widgetbook_workspace_packages_extensions_widget_ext_widget_ext_usecase
                     .buildWidgetExtUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookFolder(
-        name: 'preference',
-        children: [
-          _widgetbook.WidgetbookComponent(
-            name: 'MaterialPreference',
-            useCases: [
-              _widgetbook.WidgetbookUseCase(
-                name: 'Live',
-                builder:
-                    _widgetbook_workspace_packages_theme_manager_material_preference_usecase
-                        .buildMaterialPreferenceUseCase,
-              ),
-            ],
-          ),
-          _widgetbook.WidgetbookComponent(
-            name: 'ThemeRadioRow',
-            useCases: [
-              _widgetbook.WidgetbookUseCase(
-                name: 'Controlled',
-                builder:
-                    _widgetbook_workspace_packages_theme_manager_theme_radio_row_usecase
-                        .buildThemeRadioRowUseCase,
-              ),
-            ],
-          ),
-          _widgetbook.WidgetbookComponent(
-            name: 'ThemeSelectionBody',
-            useCases: [
-              _widgetbook.WidgetbookUseCase(
-                name: 'Controlled',
-                builder:
-                    _widgetbook_workspace_packages_theme_manager_theme_selection_body_usecase
-                        .buildThemeSelectionBodyUseCase,
-              ),
-            ],
           ),
         ],
       ),

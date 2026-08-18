@@ -3,9 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart' show Gap;
-import 'package:theme_framework/theme_framework.dart' show ThemeCubit;
-
-import 'theme_mode_card.dart';
+import 'package:theme_framework/theme_framework.dart'
+    show ThemeCubit, ThemeModeCard;
 
 /// The default title shown in the screen's app bar.
 const String _kTitle = 'Settings';

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:theme_framework/src/preferences/theme_storage_abstract.dart';
+import 'package:theme_framework/theme_framework.dart' show ThemeStorageAbstract;
 
 const String _kThemeModeKey = 'theme_framework.theme_mode';
 

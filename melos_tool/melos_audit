@@ -193,11 +193,13 @@ fi
 # Suspenders: the derived `name:` must match REPO_NAME.
 
 if [[ ! -f pubspec.yaml ]]; then
+  print -u2 ""
   print -u2 "❌ No pubspec.yaml here. Run this from the ${REPO_NAME} workspace root."
   exit 64
 fi
 
 if ! grep -qE '^workspace:' pubspec.yaml; then
+  print -u2 ""
   print -u2 "❌ This pubspec.yaml has no \`workspace:\` key — not a workspace root."
   print -u2 "   Run this from the ${REPO_NAME} workspace root."
   exit 64
@@ -206,6 +208,7 @@ fi
 derived_name=$(grep -E '^name:' pubspec.yaml | head -n 1 | sed 's/^name:[[:space:]]*//' | tr -d '[:space:]')
 
 if [[ "$derived_name" != "$REPO_NAME" ]]; then
+  print -u2 ""
   print -u2 "❌ Workspace root found, but wrong repo."
   print -u2 "   expected: ${REPO_NAME}"
   print -u2 "   found:    ${derived_name:-<no name>}"
@@ -213,6 +216,7 @@ if [[ "$derived_name" != "$REPO_NAME" ]]; then
 fi
 
 if (( run_dependencies )) && ! command -v jq >/dev/null 2>&1; then
+  print -u2 ""
   print -u2 "❌ Dependency triage requires jq (brew install jq)."
   exit 69
 fi
@@ -256,6 +260,7 @@ check_test_presence() {
 
       # a. test/ directory exists. Missing → cascade: skip b and c.
       if [[ ! -d "${pkg}/test" ]]; then
+        print ""
         print "  ❌ no test/ directory: ${pkg}"
         failures=$((failures + 1))
         check_fail_fast
@@ -265,6 +270,7 @@ check_test_presence() {
       # b. test/analysis_options.yaml exists with exact first two lines.
       yaml="${pkg}/test/analysis_options.yaml"
       if [[ ! -f "$yaml" ]]; then
+        print ""
         print "  ❌ missing: ${yaml}"
         failures=$((failures + 1))
         check_fail_fast
@@ -274,6 +280,7 @@ check_test_presence() {
         line2=$(sed -n '2p' "$yaml")
 
         if [[ "$line1" != "$expected_header" ]]; then
+          print ""
           print "  ❌ lying/missing header: ${yaml}"
           print "     expected: ${expected_header}"
           print "     found:    ${line1:-<empty>}"
@@ -282,6 +289,7 @@ check_test_presence() {
         fi
 
         if [[ "$line2" != "include: ../analysis_options.yaml" ]]; then
+          print ""
           print "  ❌ wrong include: ${yaml}"
           print "     expected: include: ../analysis_options.yaml"
           print "     found:    ${line2:-<empty>}"
@@ -294,6 +302,7 @@ check_test_presence() {
       first_test=$(find "${pkg}/test" -name '*_test.dart' -type f \
         $PATH_FILTERS 2>/dev/null | head -n 1)
       if [[ -z "$first_test" ]]; then
+        print ""
         print "  ❌ no *_test.dart under: ${pkg}/test — package has no tests"
         failures=$((failures + 1))
         check_fail_fast
@@ -334,6 +343,7 @@ check_header_truth() {
       # slash and ends in .dart. Prose comments on line 1 are left alone.
       if [[ "$claimed" == */*.dart ]]; then
         if [[ "$claimed" != "$f" ]]; then
+          print ""
           print "  ❌ lying header: $f"
           print "     claims: $claimed"
           failures=$((failures + 1))
@@ -363,6 +373,7 @@ check_duplicate_basenames() {
       [[ -z "$dupes" ]] && continue
 
       while IFS= read -r base; do
+        print ""
         print "  ❌ duplicate test basename in ${test_dir%/}: $base"
         find "$test_dir" -name "$base" -type f $PATH_FILTERS 2>/dev/null \
           | while IFS= read -r hit; do print "     → $hit"; done
@@ -383,6 +394,7 @@ check_nested_sdk_pins() {
   while IFS= read -r f; do
     pinned=$(grep -o '"flutter"[[:space:]]*:[[:space:]]*"[^"]*"' "$f" \
       | sed 's/.*:[[:space:]]*"\(.*\)"/\1/')
+    print ""
     print "  ❌ nested SDK pin: $f"
     print "     pins: ${pinned:-<unreadable>}"
     failures=$((failures + 1))
@@ -391,6 +403,7 @@ check_nested_sdk_pins() {
 
   local d
   while IFS= read -r d; do
+    print ""
     print "  ❌ nested .fvm directory: $d"
     failures=$((failures + 1))
     check_fail_fast
@@ -405,6 +418,7 @@ check_dependencies() {
 
   local json
   if ! json=$(fvm dart pub outdated --json 2>/dev/null); then
+    print ""
     print "  ⚠️  pub outdated failed — offline or pub.dev unreachable; check skipped"
     warnings=$((warnings + 1))
     return

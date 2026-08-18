@@ -1,9 +1,14 @@
 // packages/time_spans/lib/src/interval/month_interval.dart
-// ignore_for_file: public_member_api_docs
 
 import 'package:time_spans/src/policy/month_policy.dart' show MonthPolicy;
 import 'package:time_spans/src/span.dart' show Span;
 
+/// A collenction of methods for doing date/time processing including:
+/// - microsecondsMonths
+/// - completedMonths
+/// - completedYears
+/// - monthCounter
+/// - averageDaysPerMonth
 class MonthInterval {
   /// interval [start]..[finish].
   ///

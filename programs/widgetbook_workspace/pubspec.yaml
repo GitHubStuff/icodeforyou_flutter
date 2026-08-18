@@ -21,7 +21,6 @@ dependencies:
   fpdart: ^1.2.0
   gap: ^3.0.1
   go_router: ^17.5.0
-  ice_chips: ^1.0.0
   infinite_scroll_picking_settings: ^1.0.0
   infinite_scroll_picking: ^1.0.0
   oktoast: ^3.4.0    # instead of debugPrint  
@@ -30,8 +29,6 @@ dependencies:
   remind_me: ^1.0.0
   scrolling_datetime_pickers: ^1.0.0
   settings_widget: ^1.0.0
-  since_when_framework: ^1.0.0
-  since_when_widgets: ^1.0.0
   splash_framework: ^1.0.0
   sqlite_viewer: ^1.0.0
   stacking_widgets: ^1.0.0

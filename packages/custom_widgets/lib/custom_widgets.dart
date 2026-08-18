@@ -7,6 +7,7 @@ export 'src/default_welcome_screen/default_welcome_screen.dart'
 export 'src/directional_slider/directional_slider.dart';
 export 'src/expanding_textfield/expanding_textfield.dart'
     show ExpandingTextField;
+export 'src/ice_chip/ice_chip.dart' show IceChip;
 export 'src/orientation_flex/orientation_flex.dart'
     show AspectShape, OrientationFlex;
 export 'src/sized_spinner/sized_spinner.dart' show SizedSpinner;

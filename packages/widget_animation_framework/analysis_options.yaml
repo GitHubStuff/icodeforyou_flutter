@@ -1,4 +1,5 @@
 # packages/widget_animation_framework/analysis_options.yaml
+include: package:icodeforyou_lints/analysis_options.yaml
 analyzer:
   exclude:
     - build/**
@@ -8,4 +9,3 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
-include: package:icodeforyou_lints/analysis_options.yaml

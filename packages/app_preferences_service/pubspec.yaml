@@ -12,5 +12,7 @@ dependencies:
   service_locator: ^1.0.0
 
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
   icodeforyou_lints: ^1.0.0
   shared_preferences_platform_interface: ^2.4.0

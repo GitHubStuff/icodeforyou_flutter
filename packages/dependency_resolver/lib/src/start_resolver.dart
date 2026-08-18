@@ -1,9 +1,7 @@
 // packages/dependency_resolver/lib/src/start_resolver.dart
 
-import 'package:dependency_resolver/src/dependency_container.dart'
-    show DependencyContainer;
-import 'package:dependency_resolver/src/dependency_resolver.dart'
-    show DependencyResolver;
+import 'package:dependency_resolver/dependency_resolver.dart'
+    show DependencyContainer, DependencyResolver;
 
 /// Starts the resolver: registers [container] under the
 /// [DependencyResolver] interface so downstream code resolves the

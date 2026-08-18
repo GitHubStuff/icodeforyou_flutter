@@ -9,4 +9,6 @@ environment:
   sdk: ^3.12.0
 
 dependencies:
+  flutter_test:
+    sdk: flutter
   very_good_analysis: ^10.3.0   # 18-Jun-2026

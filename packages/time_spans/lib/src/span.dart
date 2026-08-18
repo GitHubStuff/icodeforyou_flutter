@@ -1,5 +1,11 @@
 // packages/time_spans/lib/src/span.dart
 
+/// A collection of foundational time constants used for calendar mechanics,
+/// duration conversions, and span calculations.
+///
+/// This class serves as a namespace for standard temporal values, including
+/// specific calendar indices, offset rules for leap year handling, and highly
+/// precise average month lengths across various calendar cycles.
 class Span {
   /// February, the only month whose length varies between years.
   static const int kFebruary = 2;
@@ -55,13 +61,24 @@ class Span {
   /// months; every other span wobbles around it by leap-day placement.
   static const double kGregorianCycleAvg = 30.436875;
 
-  /// Number of months in a year
+  /// The number of months in a standard calendar year.
   static const int kMonthsPerYear = 12;
 
+  /// The number of days in a standard week.
   static const int kDaysPerWeek = 7;
+
+  /// The number of hours in a standard calendar day.
   static const int kHoursPerDay = 24;
+
+  /// The number of minutes in a standard hour.
   static const int kMinutesPerHour = 60;
+
+  /// The number of seconds in a standard minute.
   static const int kSecondsPerMinute = 60;
+
+  /// The number of milliseconds in a standard second.
   static const int kMillisecondsPerSecond = 1000;
+
+  /// The number of microseconds in a standard millisecond.
   static const int kMicrosecondsPerMillisecond = 1000;
 }

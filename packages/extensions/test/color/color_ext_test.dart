@@ -46,14 +46,14 @@ void main() {
     group('contrastingTextColor', () {
       test('returns black on a light color', () {
         expect(
-          const Color(0xFFFFFFFF).contrastingTextColor(),
+          const Color(0xFFFFFFFF).contrastingColor(),
           const Color(0xFF000000),
         );
       });
 
       test('returns white on a dark color', () {
         expect(
-          const Color(0xFF000000).contrastingTextColor(),
+          const Color(0xFF000000).contrastingColor(),
           const Color(0xFFFFFFFF),
         );
       });

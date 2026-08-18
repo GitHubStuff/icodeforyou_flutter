@@ -12,7 +12,13 @@ import 'package:sincewhen_models/sincewhen_models.dart';
 /// Auto-incrementing primary key, two cascading foreign keys keyed on
 /// `createdTimestamp`, and a composite unique constraint across both
 /// foreign key columns.
+///
+/// The composite `UNIQUE(record_timestamp, glossary_timestamp)` creates an
+/// implicit index whose leading column serves "tags for this record"
+/// lookups, replacing the legacy `idx_tags_record`. The reverse direction
+/// ("records with this tag") needs its own index, declared below.
 @UseRowClass(TagItem) //Connects to the pure dart model
+@TableIndex(name: 'idx_tags_glossary', columns: {#glossaryTimestamp})
 class TagItems extends Table {
   @override
   String get tableName => 'tags';

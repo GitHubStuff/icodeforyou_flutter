@@ -2,9 +2,25 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:theme_framework/src/state/theme_cubit.dart' show ThemeCubit;
+import 'package:theme_framework/src/cubit/theme_cubit.dart' show ThemeCubit;
 
+/// A root application widget that binds a [MaterialApp.router] to
+/// a [ThemeCubit].
+///
+/// [DefaultMaterialAppRouter] ensures that the application responds dynamically
+/// to [ThemeMode] changes. It wraps the app in a [BlocProvider] to make the
+/// [themeCubit] available to the rest of the widget tree, and uses a
+/// [BlocBuilder] to rebuild the [MaterialApp] whenever the theme state changes.
+///
+/// This is typically used as the top-most widget in your application tree,
+/// passed directly to `runApp` or nested just below your localization
+/// providers.
 final class DefaultMaterialAppRouter extends StatelessWidget {
+  /// Creates a [DefaultMaterialAppRouter].
+  ///
+  /// The [themeCubit] and [routerConfig] are required. If theme data arguments
+  /// are omitted, fallback [ThemeData] configurations are automatically
+  /// applied.
   const DefaultMaterialAppRouter({
     required this.themeCubit,
     required this.routerConfig,
