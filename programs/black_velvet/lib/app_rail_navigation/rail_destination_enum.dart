@@ -1,12 +1,20 @@
 // programs/black_velvet/lib/app_rail_navigation/rail_destination_enum.dart
 
-import 'package:custom_widgets/custom_widgets.dart' show DefaultWelcomeScreen;
+import 'package:custom_widgets/custom_widgets.dart'
+    show DefaultWelcomeScreen, IceChip;
 import 'package:flutter/material.dart';
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
 /// Placeholder view for the search destination.
 /// TODO: Replace with the real screen, then delete this function.
-Widget _searchView() => const Center(child: Text('Search'));
+Widget _searchView() => Center(
+  child: IceChip(
+    const Text('Sample'),
+    backgroundColor: Colors.purpleAccent,
+    showBorder: true,
+    onPress: () {},
+  ),
+);
 
 /// Placeholder view for the library destination.
 /// TODO: Replace with the real screen, then delete this function.

@@ -1,5 +1,4 @@
 // packages/extensions/lib/color/color_pair.dart
-import 'package:extensions/color/color_ext.dart';
 import 'package:flutter/material.dart';
 
 /// Managers color as a pair, for a single truth for dart and light colors
@@ -22,15 +21,4 @@ class ColorPair {
 
   /// Depending on theme returns true/false based on Brightness
   bool isLight(BuildContext context) => !isDark(context);
-
-  /// Return the contrasting Color for the current theme
-  Color contrastingColor(
-    BuildContext context, {
-    Color? forDark,
-    Color? forLight,
-  }) {
-    return isDark(context)
-        ? dark.contrastingColor(forDark: forDark)
-        : light.contrastingColor(forLight: forLight);
-  }
 }

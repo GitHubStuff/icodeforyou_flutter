@@ -2,7 +2,7 @@
 name: icodeforyou_flutter
 publish_to: none
 description: "Collection of flutter packages"
-version: 9.4.2
+version: 9.4.3
 
 workspace:
   - packages/abstractions

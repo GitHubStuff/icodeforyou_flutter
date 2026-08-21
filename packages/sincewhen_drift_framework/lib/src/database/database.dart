@@ -13,6 +13,8 @@ import 'package:sincewhen_drift_framework/src/tables/tag_items/tag_items.dart'
     show TagItems;
 import 'package:sincewhen_drift_framework/src/tables/tag_items/tag_items_dao.dart'
     show TagItemsDao;
+import 'package:sincewhen_models/sincewhen_models.dart'
+    show GlossaryItem, SinceWhenItem, TagItem;
 
 // NOTE  To generate '% dart run build_runner build'
 part 'database.g.dart';

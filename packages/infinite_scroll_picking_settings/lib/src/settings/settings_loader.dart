@@ -3,10 +3,8 @@
 import 'dart:async' show FutureOr;
 
 import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
-
-import '../picker_visual_settings/picker_visual_settings.dart';
-import 'settings_holder.dart';
-import 'settings_repository.dart';
+import 'package:infinite_scroll_picking_settings/infinite_scroll_picking_settings.dart'
+    show PickerVisualSettings, SettingsHolder, SettingsRepository;
 
 /// Sink for [SettingsLoader] diagnostics.
 ///

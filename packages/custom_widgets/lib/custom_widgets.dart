@@ -4,7 +4,8 @@ export 'src/crash_screen/crash_screen.dart' show CrashScreen;
 export 'src/crash_screen/crash_screen_args.dart' show CrashScreenArgs;
 export 'src/default_welcome_screen/default_welcome_screen.dart'
     show DefaultWelcomeScreen;
-export 'src/directional_slider/directional_slider.dart';
+export 'src/directional_slider/directional_slider.dart'
+    show DirectionalController, DirectionalSlider, DirectionalSliderAndButtons;
 export 'src/expanding_textfield/expanding_textfield.dart'
     show ExpandingTextField;
 export 'src/ice_chip/ice_chip.dart' show IceChip;

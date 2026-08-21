@@ -1,70 +1,137 @@
 // programs/widgetbook_workspace/lib/packages/extensions/color_ext/color_pair.usecase.dart
 
-import 'package:extensions/extensions.dart' show ColorPair;
+import 'package:extensions/color/color_pair.dart';
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart';
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
-@UseCase(name: 'Interactive', type: ColorPair)
-Widget buildColorPairUseCase(BuildContext context) {
-  // 1. Define Knobs to allow users to change colors in the Widgetbook UI
-  final lightColor = context.knobs.color(
-    label: 'Light Theme Color',
-    initialValue: Colors.grey.shade200,
+/// Named preset pairs for the interactive dropdown.
+///
+/// Records give structural equality for free, which is what
+/// `object.dropdown` needs to track the selected option; [ColorPair]
+/// itself has identity equality only.
+const List<({String label, ColorPair pair})> _kPresets = [
+  (
+    label: 'Black / White',
+    pair: ColorPair(dark: Colors.black, light: Colors.white),
+  ),
+  (
+    label: 'Indigo / Amber',
+    pair: ColorPair(dark: Colors.indigo, light: Colors.amber),
+  ),
+  (
+    label: 'Teal / Deep Orange',
+    pair: ColorPair(dark: Colors.teal, light: Colors.deepOrange),
+  ),
+  (
+    label: 'Grey 900 / Grey 100',
+    pair: ColorPair(dark: Color(0xFF212121), light: Color(0xFFF5F5F5)),
+  ),
+];
+
+/// Interactive playground: pick a preset pair, then flip the theme
+/// addon between light and dark to watch [ColorPair.current] resolve.
+@widgetbook.UseCase(name: 'Interactive', type: ColorPair)
+Widget colorPairInteractive(BuildContext context) {
+  final preset = context.knobs.object
+      .dropdown<({String label, ColorPair pair})>(
+        label: 'Preset',
+        options: _kPresets,
+        initialOption: _kPresets.first,
+        labelBuilder: (option) => option.label,
+      );
+
+  return _ColorPairDemo(pair: preset.pair);
+}
+
+/// Static gallery of every preset at once, for side-by-side contrast
+/// checks under either brightness.
+@widgetbook.UseCase(name: 'Preset Gallery', type: ColorPair)
+Widget colorPairGallery(BuildContext context) {
+  return ListView(
+    padding: const EdgeInsets.all(16),
+    children: [
+      for (final preset in _kPresets)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: _ColorPairDemo(pair: preset.pair, title: preset.label),
+        ),
+    ],
   );
+}
 
-  final darkColor = context.knobs.color(
-    label: 'Dark Theme Color',
-    initialValue: Colors.grey.shade800,
-  );
+/// Renders one [ColorPair]: both endpoint swatches, the theme-resolved
+/// [ColorPair.current] swatch, and the [ColorPair.isDark] /
+/// [ColorPair.isLight] readouts.
+class _ColorPairDemo extends StatelessWidget {
+  const _ColorPairDemo({required this.pair, this.title});
 
-  // 2. Instantiate the ColorPair with the knob values
-  final colorPair = ColorPair(
-    dark: darkColor,
-    light: lightColor,
-  );
+  final ColorPair pair;
+  final String? title;
 
-  // 3. Build a widget that reacts to the Theme's brightness
-  // (Assuming you have Widgetbook configured to toggle Light/Dark themes)
-  return Scaffold(
-    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-    body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 250,
-            height: 150,
-            decoration: BoxDecoration(
-              // Resolves to either lightColor or darkColor based on context
-              color: colorPair.current(context),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 10,
-                  offset: Offset(0, 4),
-                ),
+  @override
+  Widget build(BuildContext context) {
+    final titleText = title;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (titleText != null) ...[
+              Text(titleText, style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 12),
+            ],
+            Row(
+              children: [
+                _Swatch(label: 'dark', color: pair.dark),
+                const SizedBox(width: 12),
+                _Swatch(label: 'light', color: pair.light),
+                const SizedBox(width: 12),
+                _Swatch(label: 'current', color: pair.current(context)),
               ],
             ),
-            alignment: Alignment.center,
-            child: Text(
-              colorPair.isDark(context) ? 'Dark Mode' : 'Light Mode',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                // Automatically gets the contrasting color for readable text
-                color: colorPair.contrastingColor(context),
-              ),
+            const SizedBox(height: 12),
+            Text(
+              'isDark: ${pair.isDark(context)}   '
+              'isLight: ${pair.isLight(context)}',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A labeled color square.
+class _Swatch extends StatelessWidget {
+  const _Swatch({required this.label, required this.color});
+
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 64,
+          height: 64,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.outlineVariant,
             ),
           ),
-          const SizedBox(height: 24),
-          Text(
-            'Toggle your Widgetbook theme to see the ColorPair update!',
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ],
-      ),
-    ),
-  );
+        ),
+        const SizedBox(height: 4),
+        Text(label, style: Theme.of(context).textTheme.labelSmall),
+      ],
+    );
+  }
 }

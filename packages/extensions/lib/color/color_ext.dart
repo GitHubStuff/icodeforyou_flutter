@@ -11,8 +11,8 @@ extension ColorExt on Color {
   /// against this color.
   Color contrastingColor({Color? forDark, Color? forLight}) =>
       computeLuminance() > 0.5
-      ? forDark ?? const Color(0xFF000000)
-      : forLight ?? const Color(0xFFFFFFFF);
+      ? forLight ?? const Color(0xFF000000)
+      : forDark ?? const Color(0xFFFFFFFF);
 
   /// Returns the color as a 32-bit ARGB integer.
   int toInt() =>

@@ -91,6 +91,8 @@ import 'package:widgetbook_workspace/packages/custom_widgets/directional_slider/
     as _widgetbook_workspace_packages_custom_widgets_directional_slider_slider_directional_slider_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/expanding_textfield/expanding_textfield.usecase.dart'
     as _widgetbook_workspace_packages_custom_widgets_expanding_textfield_expanding_textfield_usecase;
+import 'package:widgetbook_workspace/packages/custom_widgets/ice_chip/ice_chip/ice_chip.usecase.dart'
+    as _widgetbook_workspace_packages_custom_widgets_ice_chip_ice_chip_ice_chip_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/orientation_flex/orientation_flex.usecase.dart'
     as _widgetbook_workspace_packages_custom_widgets_orientation_flex_orientation_flex_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/sized_spinner/sized_spinner.usecase.dart'
@@ -632,6 +634,28 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder:
                 _widgetbook_workspace_packages_animated_widgets_grow_widget_grow_widget_view_usecase
                     .growWidgetViewUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
+    name: 'ice_chip',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'IceChip',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default (widget child)',
+            builder:
+                _widgetbook_workspace_packages_custom_widgets_ice_chip_ice_chip_ice_chip_usecase
+                    .buildIceChipDefaultUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Text',
+            builder:
+                _widgetbook_workspace_packages_custom_widgets_ice_chip_ice_chip_ice_chip_usecase
+                    .buildIceChipTextUseCase,
           ),
         ],
       ),

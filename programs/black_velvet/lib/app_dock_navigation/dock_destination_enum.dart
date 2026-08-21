@@ -1,12 +1,20 @@
 // programs/black_velvet/lib/app_dock_navigation/dock_destination_enum.dart
 
-import 'package:custom_widgets/custom_widgets.dart' show DefaultWelcomeScreen;
+import 'package:custom_widgets/custom_widgets.dart'
+    show DefaultWelcomeScreen, IceChip;
 import 'package:flutter/material.dart';
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
 /// Placeholder view for the search destination.
 /// TODO: Replace with the real screen, then delete this function.
-Widget _searchView() => const Center(child: Text('Search'));
+Widget _searchView() => Center(
+  child: IceChip.text(
+    'Demo',
+    backgroundColor: Colors.purpleAccent,
+    showBorder: false,
+    onPress: () {},
+  ),
+);
 
 /// Placeholder view for the library destination.
 /// TODO: Replace with the real screen, then delete this function.
@@ -103,6 +111,7 @@ enum DockDestinationEnum {
   static const List<DockDestinationEnum> visible = [
     home,
     settings,
+    search,
   ];
 
   /// The destinations folded into the overflow popover, in tile order.
