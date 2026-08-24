@@ -71,9 +71,9 @@ void main() {
         MaterialApp(
           home: SplashScreen(
             duration: const Duration(milliseconds: 10),
-            tasks: [() => Future<void>.value()],
+            tasks: const [Future<void>.value],
             onComplete: () => onCompleteCalled = true,
-            onError: (_, __) => fail('onError should not be called'),
+            onError: (_, _) => fail('onError should not be called'),
             child: const SizedBox(),
           ),
         ),

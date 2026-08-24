@@ -8,7 +8,7 @@ void main() {
   group('SplashScreenArgs', () {
     test('can be instantiated and retains its fields', () {
       const duration = Duration(milliseconds: 500);
-      final tasks = <Future<void> Function()>[() => Future<void>.value()];
+      final tasks = <Future<void> Function()>[Future<void>.value];
       const child = SizedBox();
       void onComplete() {}
       void onError(Object error) {}

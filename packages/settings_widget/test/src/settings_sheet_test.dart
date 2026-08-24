@@ -9,7 +9,6 @@ class _StubEntry extends AppSettingsEntry {
   const _StubEntry({required this.label});
   final String label;
 
-  @override
   Widget get title => Text(label);
 
   @override
@@ -17,23 +16,24 @@ class _StubEntry extends AppSettingsEntry {
 }
 
 Widget _wrap(double screenWidth, double breakpoint) => MaterialApp(
-      home: MediaQuery(
-        data: MediaQueryData(size: Size(screenWidth, 800)),
-        child: Scaffold(
-          body: SettingsSheet(
-            title: const Text('Title'),
-            entries: const [_StubEntry(label: 'Entry')],
-            onDismiss: () {},
-            breakpoint: breakpoint,
-          ),
-        ),
+  home: MediaQuery(
+    data: MediaQueryData(size: Size(screenWidth, 800)),
+    child: Scaffold(
+      body: SettingsSheet(
+        title: const Text('Title'),
+        entries: const [_StubEntry(label: 'Entry')],
+        onDismiss: () {},
+        breakpoint: breakpoint,
       ),
-    );
+    ),
+  ),
+);
 
 void main() {
   group('SettingsSheet', () {
-    testWidgets('uses phone layout when width is below breakpoint',
-        (tester) async {
+    testWidgets('uses phone layout when width is below breakpoint', (
+      tester,
+    ) async {
       await tester.pumpWidget(_wrap(400, 600));
 
       // Phone layout wraps in SafeArea
@@ -44,19 +44,15 @@ void main() {
           .where(
             (p) =>
                 p.padding ==
-                const EdgeInsets.only(
-                  left: 48,
-                  right: 48,
-                  top: 48,
-                  bottom: 96,
-                ),
+                const EdgeInsets.only(left: 48, right: 48, top: 48, bottom: 96),
           )
           .toList();
       expect(paddings, isEmpty);
     });
 
-    testWidgets('uses tablet layout when width meets breakpoint',
-        (tester) async {
+    testWidgets('uses tablet layout when width meets breakpoint', (
+      tester,
+    ) async {
       await tester.pumpWidget(_wrap(800, 600));
 
       // Tablet layout applies specific padding
@@ -65,12 +61,7 @@ void main() {
           .where(
             (p) =>
                 p.padding ==
-                const EdgeInsets.only(
-                  left: 48,
-                  right: 48,
-                  top: 48,
-                  bottom: 96,
-                ),
+                const EdgeInsets.only(left: 48, right: 48, top: 48, bottom: 96),
           )
           .toList();
       expect(paddings, isNotEmpty);

@@ -70,14 +70,15 @@ class IceChip extends StatelessWidget {
   ///
   /// [child] is initialized to `null`, upholding the invariant that exactly
   /// one of [child] / `_label` is non-null.
-  const IceChip.text(
+  IceChip.text(
     String label, {
     required this.backgroundColor,
     required this.showBorder,
     required this.onPress,
     super.key,
   }) : _label = label,
-       child = null;
+       child = null,
+       assert(label.isNotEmpty, 'Empty string not allowed');
 
   /// The widget rendered as the chip's label content.
   ///

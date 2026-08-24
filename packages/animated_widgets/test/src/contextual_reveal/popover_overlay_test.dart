@@ -1,7 +1,7 @@
 // packages/animated_widgets/test/src/contextual_reveal/popover_overlay_test.dart
 
-import 'package:animated_widgets/src/contextual_reveal/contextual_reveal.dart';
-import 'package:animated_widgets/src/contextual_reveal/src/contextual_position.dart';
+import 'package:animated_widgets/animated_widgets.dart'
+    show ContextualPosition, ContextualReveal;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

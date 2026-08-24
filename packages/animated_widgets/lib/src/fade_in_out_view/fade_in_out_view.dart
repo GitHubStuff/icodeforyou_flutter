@@ -1,6 +1,4 @@
 // packages/animated_widgets/lib/src/fade_in_out_view/fade_in_out_view.dart
-import 'dart:async';
-
 import 'package:flutter/widgets.dart';
 
 /// Animates [child] from [startOpacity] to [endOpacity] over [duration].
@@ -94,19 +92,20 @@ class _FadeInOutViewState extends State<_FadeInOutView>
       vsync: this,
       duration: widget.duration,
     );
-    _opacity = Tween<double>(
-      begin: widget.startOpacity,
-      end: widget.endOpacity,
-    ).animate(
-      CurvedAnimation(parent: _controller, curve: widget.curve),
-    );
+    _opacity =
+        Tween<double>(
+          begin: widget.startOpacity,
+          end: widget.endOpacity,
+        ).animate(
+          CurvedAnimation(parent: _controller, curve: widget.curve),
+        );
     final onComplete = widget.onComplete;
     if (onComplete != null) {
       _controller.addStatusListener((status) {
         if (status == AnimationStatus.completed) onComplete();
       });
     }
-    unawaited(_controller.forward());
+    _controller.forward();
   }
 
   @override

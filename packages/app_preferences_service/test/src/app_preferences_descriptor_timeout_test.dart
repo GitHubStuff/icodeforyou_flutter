@@ -1,7 +1,5 @@
 // packages/app_preferences_service/test/src/app_preferences_descriptor_timeout_test.dart
 
-// ignore_for_file: always_use_package_imports
-
 import 'package:app_preferences/app_preferences.dart'
     show AbstractPreferencesInterface, MockPreferences;
 import 'package:app_preferences_service/src/app_preferences_descriptor.dart';
@@ -28,8 +26,11 @@ void main() {
       await expectLater(
         descriptor.builder(),
         throwsA(
-          isA<ServiceItemTimeout>()
-              .having((e) => e.toString(), 'toString', contains('AppPreferences')),
+          isA<ServiceItemTimeout>().having(
+            (e) => e.toString(),
+            'toString',
+            contains('AppPreferences'),
+          ),
         ),
       );
     });

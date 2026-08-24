@@ -4,20 +4,14 @@ part of 'contextual_reveal_light.dart';
 
 class _ContextualRevealLightCopy extends ContextualRevealLight {
   _ContextualRevealLightCopy({
-    required Color barrierColor,
-    required Color popoverBackgroundShade,
-    required double popoverGap,
-    required Duration fadeInDuration,
-    required Duration fadeOutDuration,
-    required Duration showDuration,
+    required this._barrierColor,
+    required this._popoverBackgroundShade,
+    required this._popoverGap,
+    required this._fadeInDuration,
+    required this._fadeOutDuration,
+    required this._showDuration,
     required Widget? backButton,
-  }) : _barrierColor = barrierColor,
-       _popoverBackgroundShade = popoverBackgroundShade,
-       _popoverGap = popoverGap,
-       _fadeInDuration = fadeInDuration,
-       _fadeOutDuration = fadeOutDuration,
-       _showDuration = showDuration,
-       _backbutton = backButton;
+  }) : _backbutton = backButton;
 
   final Color _barrierColor;
   final Color _popoverBackgroundShade;

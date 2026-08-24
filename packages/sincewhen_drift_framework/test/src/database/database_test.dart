@@ -1,6 +1,5 @@
 // packages/sincewhen_drift_framework/test/src/database/database_test.dart
 
-import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sincewhen_drift_framework/src/database/database.dart';

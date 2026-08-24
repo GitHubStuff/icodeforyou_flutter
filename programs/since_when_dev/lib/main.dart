@@ -37,6 +37,7 @@ Future<void> main() async {
 
   ApplicationStartup(
     themeStorage: SharedPreferencesThemeStorage(preferences),
+    resolver: resolver,
     tasks: [
       // Registers the Drift database, DAOs, and repository contracts of
       // the since_when framework, then triggers the lazy-load so the

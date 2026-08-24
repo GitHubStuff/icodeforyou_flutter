@@ -1,7 +1,5 @@
 // packages/app_preferences/lib/src/hive/hive_init_mode.dart
 
-// ignore_for_file: comment_references
-
 /// Storage location strategy for [HivePreferences.init].
 enum HiveInitMode {
   /// System temp directory, auto-reclaimed by the OS. For tests.

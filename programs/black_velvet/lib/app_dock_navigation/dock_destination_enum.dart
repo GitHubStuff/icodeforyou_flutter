@@ -1,20 +1,11 @@
 // programs/black_velvet/lib/app_dock_navigation/dock_destination_enum.dart
 
+import 'package:black_velvet/app_shared_navigation/_bodys/shared_search_body.dart'
+    show SharedSearchBody;
 import 'package:custom_widgets/custom_widgets.dart'
     show DefaultWelcomeScreen, IceChip;
 import 'package:flutter/material.dart';
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
-
-/// Placeholder view for the search destination.
-/// TODO: Replace with the real screen, then delete this function.
-Widget _searchView() => Center(
-  child: IceChip.text(
-    'Demo',
-    backgroundColor: Colors.purpleAccent,
-    showBorder: false,
-    onPress: () {},
-  ),
-);
 
 /// Placeholder view for the library destination.
 /// TODO: Replace with the real screen, then delete this function.
@@ -65,7 +56,7 @@ enum DockDestinationEnum {
   search(
     iconData: Icons.search,
     caption: 'Search',
-    viewBuilder: _searchView,
+    viewBuilder: SharedSearchBody.new,
   ),
 
   /// The library destination.

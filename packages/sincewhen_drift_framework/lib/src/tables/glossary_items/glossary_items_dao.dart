@@ -3,6 +3,8 @@
 import 'package:drift/drift.dart';
 import 'package:sincewhen_drift_framework/src/database/database.dart';
 import 'package:sincewhen_drift_framework/src/tables/glossary_items/glossary_items.dart';
+import 'package:sincewhen_drift_framework/src/tables/glossary_items/glossary_items_dao_abstract.dart'
+    show GlossaryItemsDaoAbstract;
 import 'package:sincewhen_models/sincewhen_models.dart';
 
 // NOTE To generate : '% dart run build_runner build'
@@ -11,7 +13,8 @@ part 'glossary_items_dao.g.dart';
 /// Data access for [GlossaryItems].
 @DriftAccessor(tables: [GlossaryItems])
 class GlossaryItemsDao extends DatabaseAccessor<SinceWhenDatabase>
-    with _$GlossaryItemsDaoMixin {
+    with _$GlossaryItemsDaoMixin
+    implements GlossaryItemsDaoAbstract {
   /// Creates the accessor over the attached database.
   GlossaryItemsDao(super.attachedDatabase);
 
@@ -22,6 +25,7 @@ class GlossaryItemsDao extends DatabaseAccessor<SinceWhenDatabase>
   Stream<List<GlossaryItem>> watchAllItems() => _orderedByTag().watch();
 
   /// Returns the packed ARGB color values of all glossary items.
+  @override
   Future<Set<int>> allColorArgbValues() async {
     final query = selectOnly(glossaryItems)
       ..addColumns([glossaryItems.colorArgb]);
@@ -81,6 +85,7 @@ class GlossaryItemsDao extends DatabaseAccessor<SinceWhenDatabase>
         createdTimestamp: item.createdTimestamp,
         tag: item.tag,
         colorArgb: item.colorArgb,
+        descr: item.descr,
       );
 
   /// Maps [item] to an update companion covering every non-key column.
@@ -89,5 +94,6 @@ class GlossaryItemsDao extends DatabaseAccessor<SinceWhenDatabase>
         createdTimestamp: Value(item.createdTimestamp),
         tag: Value(item.tag),
         colorArgb: Value(item.colorArgb),
+        descr: Value(item.descr),
       );
 }

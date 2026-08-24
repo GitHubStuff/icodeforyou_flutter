@@ -9,9 +9,9 @@ import 'package:sincewhen_models/sincewhen_models.dart';
 /// Builds a tag link for insertion; the database assigns the real
 /// primary key, so [id] only matters for delete matching.
 TagItem _item({
-  int id = 0,
   required int recordTimestamp,
   required int glossaryTimestamp,
+  int id = 0,
 }) => TagItem(
   id: id,
   recordTimestamp: recordTimestamp,
@@ -44,8 +44,7 @@ void main() {
       await database.close();
     });
 
-    test('insertItem returns the persisted row with its assigned id',
-        () async {
+    test('insertItem returns the persisted row with its assigned id', () async {
       final inserted = await dao.insertItem(
         _item(recordTimestamp: 10, glossaryTimestamp: 100),
       );
@@ -80,18 +79,16 @@ void main() {
       );
     });
 
-    test('watchItemsForRecord emits only the links for that record',
-        () async {
+    test('watchItemsForRecord emits only the links for that record', () async {
       await dao.insertItem(_item(recordTimestamp: 10, glossaryTimestamp: 100));
       await dao.insertItem(_item(recordTimestamp: 20, glossaryTimestamp: 200));
 
-      final items = await dao.watchItemsForRecord(10);
+      final items = dao.watchItemsForRecord(10);
 
       expect(await items.first, hasLength(1));
     });
 
-    test('itemsForGlossary returns only the links using that entry',
-        () async {
+    test('itemsForGlossary returns only the links using that entry', () async {
       await dao.insertItem(_item(recordTimestamp: 10, glossaryTimestamp: 100));
       await dao.insertItem(_item(recordTimestamp: 20, glossaryTimestamp: 100));
       await dao.insertItem(_item(recordTimestamp: 20, glossaryTimestamp: 200));

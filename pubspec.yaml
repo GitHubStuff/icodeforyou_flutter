@@ -22,14 +22,16 @@ workspace:
   - packages/infinite_scroll_picking_settings
   - packages/my_logger
   - packages/platform_utils
+  - packages/prism_bubble_widget
   - packages/rail_navigation
   - packages/random_color_generator
   - packages/remind_me
   - packages/scrolling_datetime_pickers
   - packages/service_locator
   - packages/settings_widget
-  - packages/sincewhen_models
   - packages/sincewhen_drift_framework
+  - packages/sincewhen_models
+  - packages/sincewhen_widgets
   - packages/splash_framework
   - packages/sqlite_viewer
   - packages/stacking_widgets
@@ -47,7 +49,7 @@ environment:
 
 dev_dependencies:
   mason_cli: ^0.1.3
-  melos: ^7.7.0
+  melos: ">=7.7.0 <8.3.0"
   very_good_analysis: ^10.3.0
 
 melos:

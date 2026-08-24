@@ -10,6 +10,9 @@ environment:
 
 dependencies:
   equatable: ^2.1.0
+  extensions: ^1.0.4
+  flutter:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:

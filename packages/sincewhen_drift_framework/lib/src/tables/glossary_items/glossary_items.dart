@@ -1,7 +1,7 @@
 // packages/sincewhen_drift_framework/lib/src/tables/glossary_items/glossary_items.dart
 
 import 'package:drift/drift.dart';
-import 'package:sincewhen_models/sincewhen_models.dart';
+import 'package:sincewhen_models/sincewhen_models.dart' show GlossaryItem;
 
 /// Tag glossary table: the canonical definition of every tag.
 ///
@@ -39,4 +39,11 @@ class GlossaryItems extends Table {
   /// Flutter side. Explicitly named to keep the column camelCase,
   /// consistent with the rest of the table.
   IntColumn get colorArgb => integer().named('colorArgb').unique()();
+
+  /// 'descr NOT NULL UNIQUE CHECK(descr != '')'.
+  ///
+  /// Descriptor of what the tag represents. Simple description for details
+  /// views of the tag value meaning.
+  // ignore: recursive_getters
+  TextColumn get descr => text().unique().check(descr.isNotValue(''))();
 }

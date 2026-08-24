@@ -7,7 +7,9 @@ analyzer:
     avoid_types_on_closure_parameters: ignore
     comment_references: ignore
     depend_on_referenced_packages: ignore
+    invalid_use_of_visible_for_testing_member: ignore
     omit_local_variable_types: ignore
+    prefer_int_literals: ignore
     public_member_api_docs: ignore
 
   exclude:

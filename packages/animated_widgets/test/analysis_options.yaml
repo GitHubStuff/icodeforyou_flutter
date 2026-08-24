@@ -5,6 +5,7 @@ analyzer:
   errors:
     avoid_positional_boolean_parameters: ignore
     cascade_invocations: ignore
+    discarded_futures: ignore
     document_ignores: ignore
     lines_longer_than_80_chars: ignore
     prefer_int_literals: ignore

@@ -9,9 +9,9 @@ import 'package:sincewhen_models/sincewhen_models.dart';
 /// Builds a tag link; the database assigns the real primary key, so [id]
 /// only matters for delete matching.
 TagItem _item({
-  int id = 0,
   required int recordTimestamp,
   required int glossaryTimestamp,
+  int id = 0,
 }) => TagItem(
   id: id,
   recordTimestamp: recordTimestamp,
@@ -70,18 +70,20 @@ void main() {
       expect(await repository.watchAllItems().first, hasLength(2));
     });
 
-    test('itemsForRecord and watchItemsForRecord delegate the record view',
-        () async {
-      await repository.insertItem(
-        _item(recordTimestamp: 10, glossaryTimestamp: 100),
-      );
-      await repository.insertItem(
-        _item(recordTimestamp: 20, glossaryTimestamp: 200),
-      );
+    test(
+      'itemsForRecord and watchItemsForRecord delegate the record view',
+      () async {
+        await repository.insertItem(
+          _item(recordTimestamp: 10, glossaryTimestamp: 100),
+        );
+        await repository.insertItem(
+          _item(recordTimestamp: 20, glossaryTimestamp: 200),
+        );
 
-      expect(await repository.itemsForRecord(10), hasLength(1));
-      expect(await repository.watchItemsForRecord(10).first, hasLength(1));
-    });
+        expect(await repository.itemsForRecord(10), hasLength(1));
+        expect(await repository.watchItemsForRecord(10).first, hasLength(1));
+      },
+    );
 
     test('itemsForGlossary delegates the glossary view', () async {
       await repository.insertItem(

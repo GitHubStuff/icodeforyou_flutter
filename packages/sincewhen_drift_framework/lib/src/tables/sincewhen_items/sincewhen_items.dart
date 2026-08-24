@@ -1,7 +1,7 @@
 // packages/sincewhen_drift_framework/lib/src/tables/sincewhen_items/sincewhen_items.dart
 
 import 'package:drift/drift.dart';
-import 'package:sincewhen_models/sincewhen_models.dart';
+import 'package:sincewhen_models/sincewhen_models.dart' show SinceWhenItem;
 
 /// {@template sincewhen_items.dart}
 /// Core record table: one row per since-when entry.

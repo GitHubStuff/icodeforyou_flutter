@@ -1,7 +1,5 @@
 // packages/animated_widgets/lib/src/combination_animation/extensions/animates_widget.dart
 
-import 'dart:async' show unawaited;
-
 import 'package:animated_widgets/src/combination_animation/constants/combination_animation_constants.dart'
     show
         kCombinationAnimationDefaultCurve,
@@ -45,6 +43,9 @@ part 'combination_animation_sequenced.dart';
 ///```
 ///
 extension AnimatesWidgetExt on Widget {
+  /// Takes a list of steps and applies all the animations against it.
+  ///
+  /// It is a 'super-command' for CombinationAnimationSequenced()
   Widget combinationAnimationSequenced(
     List<CombinationAnimationStep> steps, {
     VoidCallback? onComplete,

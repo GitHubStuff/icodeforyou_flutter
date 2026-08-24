@@ -130,7 +130,7 @@ class _SplashScreenState extends State<SplashScreen> {
       fit: StackFit.expand,
       children: <Widget>[
         ...previousChildren,
-        if (currentChild != null) currentChild,
+        ?currentChild,
       ],
     );
   }

@@ -4,11 +4,11 @@ part of 'contextual_reveal.dart';
 
 class _PopoverOverlay {
   _PopoverOverlay({
-    required Widget child,
+    required this._child,
     required this.parentKey,
     required this.opacity,
     required this.theme,
-  }) : _child = child;
+  });
 
   final GlobalKey parentKey;
   final Animation<double> opacity;

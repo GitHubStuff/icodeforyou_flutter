@@ -168,7 +168,7 @@ class _AnimatedBarrierLayerState extends State<_AnimatedBarrierLayer>
       unawaited(StatusBarChameleon.setStatusBarHidden(hidden: true));
     }
 
-    unawaited(_controller.forward());
+    _controller.forward();
   }
 
   @override
@@ -201,7 +201,7 @@ class _AnimatedBarrierLayerState extends State<_AnimatedBarrierLayer>
   /// smooth exit.
   void _handleDismiss(VoidCallback? onComplete) {
     _pendingOnDismissed = onComplete;
-    unawaited(_controller.reverse());
+    _controller.reverse();
   }
 
   void _onBarrierTap() {

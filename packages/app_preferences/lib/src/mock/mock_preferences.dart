@@ -5,7 +5,8 @@ import 'package:meta/meta.dart';
 
 import '../abstract_preferences_interface.dart';
 
-/// In-memory implementation of [AbstractPreferencesInterface] for tests and dev.
+/// In-memory implementation of [AbstractPreferencesInterface] for
+/// tests and dev.
 ///
 /// Stores values in a `Map<String, Object?>`. Type checks on read mirror
 /// the contract of the real backends — a value stored as `int` returns

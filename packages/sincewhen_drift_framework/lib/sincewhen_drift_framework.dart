@@ -21,3 +21,5 @@ export 'src/sincewhen_startup.dart'
 export 'src/tables/glossary_items/glossary_items.dart' show GlossaryItems;
 export 'src/tables/glossary_items/glossary_items_dao.dart'
     show GlossaryItemsDao;
+export 'src/tables/glossary_items/glossary_items_dao_abstract.dart'
+    show GlossaryItemsDaoAbstract;

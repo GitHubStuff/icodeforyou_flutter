@@ -24,6 +24,7 @@ final class GlossaryItem extends Equatable {
     required this.createdTimestamp,
     required this.tag,
     required this.colorArgb,
+    required this.descr,
   });
 
   /// Auto-incrementing primary key.
@@ -39,23 +40,28 @@ final class GlossaryItem extends Equatable {
   /// the Flutter side.
   final int colorArgb;
 
+  /// The description of what the tag means
+  final String descr;
+
   /// Returns a copy with the given fields replaced.
   GlossaryItem copyWith({
     int? id,
     int? createdTimestamp,
     String? tag,
     int? colorArgb,
+    String? descr,
   }) {
     return GlossaryItem(
       id: id ?? this.id,
       createdTimestamp: createdTimestamp ?? this.createdTimestamp,
       tag: tag ?? this.tag,
       colorArgb: colorArgb ?? this.colorArgb,
+      descr: descr ?? this.descr,
     );
   }
 
   @override
-  List<Object?> get props => [id, createdTimestamp, tag, colorArgb];
+  List<Object?> get props => [id, createdTimestamp, tag, colorArgb, descr];
 
   @override
   bool get stringify => true;

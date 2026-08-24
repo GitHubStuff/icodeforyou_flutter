@@ -57,8 +57,25 @@ class $GlossaryItemsTable extends GlossaryItems
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
   );
+  static const VerificationMeta _descrMeta = const VerificationMeta('descr');
   @override
-  List<GeneratedColumn> get $columns => [id, createdTimestamp, tag, colorArgb];
+  late final GeneratedColumn<String> descr = GeneratedColumn<String>(
+    'descr',
+    aliasedName,
+    false,
+    check: () => descr.isNotValue(''),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdTimestamp,
+    tag,
+    colorArgb,
+    descr,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -101,6 +118,14 @@ class $GlossaryItemsTable extends GlossaryItems
     } else if (isInserting) {
       context.missing(_colorArgbMeta);
     }
+    if (data.containsKey('descr')) {
+      context.handle(
+        _descrMeta,
+        descr.isAcceptableOrUnknown(data['descr']!, _descrMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_descrMeta);
+    }
     return context;
   }
 
@@ -126,6 +151,10 @@ class $GlossaryItemsTable extends GlossaryItems
         DriftSqlType.int,
         data['${effectivePrefix}colorArgb'],
       )!,
+      descr: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}descr'],
+      )!,
     );
   }
 
@@ -140,31 +169,37 @@ class GlossaryItemsCompanion extends UpdateCompanion<GlossaryItem> {
   final Value<int> createdTimestamp;
   final Value<String> tag;
   final Value<int> colorArgb;
+  final Value<String> descr;
   const GlossaryItemsCompanion({
     this.id = const Value.absent(),
     this.createdTimestamp = const Value.absent(),
     this.tag = const Value.absent(),
     this.colorArgb = const Value.absent(),
+    this.descr = const Value.absent(),
   });
   GlossaryItemsCompanion.insert({
     this.id = const Value.absent(),
     required int createdTimestamp,
     required String tag,
     required int colorArgb,
+    required String descr,
   }) : createdTimestamp = Value(createdTimestamp),
        tag = Value(tag),
-       colorArgb = Value(colorArgb);
+       colorArgb = Value(colorArgb),
+       descr = Value(descr);
   static Insertable<GlossaryItem> custom({
     Expression<int>? id,
     Expression<int>? createdTimestamp,
     Expression<String>? tag,
     Expression<int>? colorArgb,
+    Expression<String>? descr,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (createdTimestamp != null) 'createdTimestamp': createdTimestamp,
       if (tag != null) 'tag': tag,
       if (colorArgb != null) 'colorArgb': colorArgb,
+      if (descr != null) 'descr': descr,
     });
   }
 
@@ -173,12 +208,14 @@ class GlossaryItemsCompanion extends UpdateCompanion<GlossaryItem> {
     Value<int>? createdTimestamp,
     Value<String>? tag,
     Value<int>? colorArgb,
+    Value<String>? descr,
   }) {
     return GlossaryItemsCompanion(
       id: id ?? this.id,
       createdTimestamp: createdTimestamp ?? this.createdTimestamp,
       tag: tag ?? this.tag,
       colorArgb: colorArgb ?? this.colorArgb,
+      descr: descr ?? this.descr,
     );
   }
 
@@ -197,6 +234,9 @@ class GlossaryItemsCompanion extends UpdateCompanion<GlossaryItem> {
     if (colorArgb.present) {
       map['colorArgb'] = Variable<int>(colorArgb.value);
     }
+    if (descr.present) {
+      map['descr'] = Variable<String>(descr.value);
+    }
     return map;
   }
 
@@ -206,7 +246,8 @@ class GlossaryItemsCompanion extends UpdateCompanion<GlossaryItem> {
           ..write('id: $id, ')
           ..write('createdTimestamp: $createdTimestamp, ')
           ..write('tag: $tag, ')
-          ..write('colorArgb: $colorArgb')
+          ..write('colorArgb: $colorArgb, ')
+          ..write('descr: $descr')
           ..write(')'))
         .toString();
   }
@@ -900,6 +941,7 @@ typedef $$GlossaryItemsTableCreateCompanionBuilder =
       required int createdTimestamp,
       required String tag,
       required int colorArgb,
+      required String descr,
     });
 typedef $$GlossaryItemsTableUpdateCompanionBuilder =
     GlossaryItemsCompanion Function({
@@ -907,6 +949,7 @@ typedef $$GlossaryItemsTableUpdateCompanionBuilder =
       Value<int> createdTimestamp,
       Value<String> tag,
       Value<int> colorArgb,
+      Value<String> descr,
     });
 
 final class $$GlossaryItemsTableReferences
@@ -968,6 +1011,11 @@ class $$GlossaryItemsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<String> get descr => $composableBuilder(
+    column: $table.descr,
+    builder: (column) => ColumnFilters(column),
+  );
+
   Expression<bool> tagItemsRefs(
     Expression<bool> Function($$TagItemsTableFilterComposer f) f,
   ) {
@@ -1022,6 +1070,11 @@ class $$GlossaryItemsTableOrderingComposer
     column: $table.colorArgb,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get descr => $composableBuilder(
+    column: $table.descr,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$GlossaryItemsTableAnnotationComposer
@@ -1046,6 +1099,9 @@ class $$GlossaryItemsTableAnnotationComposer
 
   GeneratedColumn<int> get colorArgb =>
       $composableBuilder(column: $table.colorArgb, builder: (column) => column);
+
+  GeneratedColumn<String> get descr =>
+      $composableBuilder(column: $table.descr, builder: (column) => column);
 
   Expression<T> tagItemsRefs<T extends Object>(
     Expression<T> Function($$TagItemsTableAnnotationComposer a) f,
@@ -1107,11 +1163,13 @@ class $$GlossaryItemsTableTableManager
                 Value<int> createdTimestamp = const Value.absent(),
                 Value<String> tag = const Value.absent(),
                 Value<int> colorArgb = const Value.absent(),
+                Value<String> descr = const Value.absent(),
               }) => GlossaryItemsCompanion(
                 id: id,
                 createdTimestamp: createdTimestamp,
                 tag: tag,
                 colorArgb: colorArgb,
+                descr: descr,
               ),
           createCompanionCallback:
               ({
@@ -1119,11 +1177,13 @@ class $$GlossaryItemsTableTableManager
                 required int createdTimestamp,
                 required String tag,
                 required int colorArgb,
+                required String descr,
               }) => GlossaryItemsCompanion.insert(
                 id: id,
                 createdTimestamp: createdTimestamp,
                 tag: tag,
                 colorArgb: colorArgb,
+                descr: descr,
               ),
           withReferenceMapper: (p0) => p0
               .map(

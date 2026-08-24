@@ -9,8 +9,8 @@ import 'package:sincewhen_models/sincewhen_models.dart';
 /// Builds a record for insertion; the database assigns the real primary
 /// key, so [id] only matters for update/delete matching.
 SinceWhenItem _item({
-  int id = 0,
   required int createdTimestamp,
+  int id = 0,
   int reviewedTimestamp = 1,
   int editedTimestamp = 1,
   int sequenceNumber = 0,
@@ -46,8 +46,7 @@ void main() {
       await database.close();
     });
 
-    test('insertItem returns the persisted row with its assigned id',
-        () async {
+    test('insertItem returns the persisted row with its assigned id', () async {
       final inserted = await dao.insertItem(
         _item(
           createdTimestamp: 10,
@@ -83,8 +82,7 @@ void main() {
       expect(inserted.tldr, isNull);
     });
 
-    test('allItems returns every row ordered by creation timestamp',
-        () async {
+    test('allItems returns every row ordered by creation timestamp', () async {
       await dao.insertItem(_item(createdTimestamp: 20));
       await dao.insertItem(_item(createdTimestamp: 10));
 
@@ -96,21 +94,22 @@ void main() {
       ]);
     });
 
-    test('watchAllItems emits every row ordered by creation timestamp',
-        () async {
-      await dao.insertItem(_item(createdTimestamp: 20));
-      await dao.insertItem(_item(createdTimestamp: 10));
+    test(
+      'watchAllItems emits every row ordered by creation timestamp',
+      () async {
+        await dao.insertItem(_item(createdTimestamp: 20));
+        await dao.insertItem(_item(createdTimestamp: 10));
 
-      final items = await dao.watchAllItems().first;
+        final items = await dao.watchAllItems().first;
 
-      expect(items.map((item) => item.createdTimestamp).toList(), <int>[
-        10,
-        20,
-      ]);
-    });
+        expect(items.map((item) => item.createdTimestamp).toList(), <int>[
+          10,
+          20,
+        ]);
+      },
+    );
 
-    test('itemByCreatedTimestamp returns the matching row or null',
-        () async {
+    test('itemByCreatedTimestamp returns the matching row or null', () async {
       await dao.insertItem(_item(createdTimestamp: 10));
 
       final found = await dao.itemByCreatedTimestamp(10);
@@ -130,37 +129,39 @@ void main() {
       expect(await dao.watchItemCount().first, 1);
     });
 
-    test('updateItem rewrites every non-key column and reports success',
-        () async {
-      final inserted = await dao.insertItem(_item(createdTimestamp: 10));
+    test(
+      'updateItem rewrites every non-key column and reports success',
+      () async {
+        final inserted = await dao.insertItem(_item(createdTimestamp: 10));
 
-      final updated = await dao.updateItem(
-        _item(
-          id: inserted.id,
-          createdTimestamp: 20,
-          reviewedTimestamp: 21,
-          editedTimestamp: 22,
-          sequenceNumber: 4,
-          parentTimestamp: 7,
-          eventTimestamp: 8,
-          metaData: 'new meta',
-          tldr: 'new summary',
-          content: 'new body',
-        ),
-      );
+        final updated = await dao.updateItem(
+          _item(
+            id: inserted.id,
+            createdTimestamp: 20,
+            reviewedTimestamp: 21,
+            editedTimestamp: 22,
+            sequenceNumber: 4,
+            parentTimestamp: 7,
+            eventTimestamp: 8,
+            metaData: 'new meta',
+            tldr: 'new summary',
+            content: 'new body',
+          ),
+        );
 
-      expect(updated, isTrue);
-      final reloaded = await dao.itemByCreatedTimestamp(20);
-      expect(reloaded?.id, inserted.id);
-      expect(reloaded?.reviewedTimestamp, 21);
-      expect(reloaded?.editedTimestamp, 22);
-      expect(reloaded?.sequenceNumber, 4);
-      expect(reloaded?.parentTimestamp, 7);
-      expect(reloaded?.eventTimestamp, 8);
-      expect(reloaded?.metaData, 'new meta');
-      expect(reloaded?.tldr, 'new summary');
-      expect(reloaded?.content, 'new body');
-    });
+        expect(updated, isTrue);
+        final reloaded = await dao.itemByCreatedTimestamp(20);
+        expect(reloaded?.id, inserted.id);
+        expect(reloaded?.reviewedTimestamp, 21);
+        expect(reloaded?.editedTimestamp, 22);
+        expect(reloaded?.sequenceNumber, 4);
+        expect(reloaded?.parentTimestamp, 7);
+        expect(reloaded?.eventTimestamp, 8);
+        expect(reloaded?.metaData, 'new meta');
+        expect(reloaded?.tldr, 'new summary');
+        expect(reloaded?.content, 'new body');
+      },
+    );
 
     test('updateItem returns false when no row matches the id', () async {
       final updated = await dao.updateItem(

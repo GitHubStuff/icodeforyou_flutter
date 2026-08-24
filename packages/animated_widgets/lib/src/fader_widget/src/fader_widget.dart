@@ -1,19 +1,22 @@
 // packages/animated_widgets/lib/src/fader_widget/src/fader_widget.dart
-// ignore_for_file: public_member_api_docs, comment_references
 
 import 'package:animated_widgets/src/fader_widget/src/cubit/fader_cubit.dart'
     show FaderCubit, FaderState;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// Renders [FaderCubit]'s current string, fading on every change, and reports
-/// the fade lifecycle back to the cubit.
+/// Renders [FaderCubit]'s current string, fading on every change, and
+/// reports the fade lifecycle back to the cubit.
 ///
-/// The widget holds no traffic-control logic: it fades in whatever string the
-/// cubit emits, tells the cubit when that fade starts ([FaderCubit.fadeStarted])
-/// and when it finishes ([FaderCubit.fadeComplete]). The cubit decides what to
-/// emit next.
+/// The widget holds no traffic-control logic: it fades in whatever string
+/// the cubit emits, tells the cubit when that fade starts
+/// ([FaderCubit.fadeStarted]) and when it finishes
+/// ([FaderCubit.fadeComplete]). The cubit decides what to emit next.
 class FaderWidget extends StatelessWidget {
+  /// Creates a [FaderWidget] driven by the provided [cubit].
+  ///
+  /// The [duration], [curve], and [style] dictate the visual presentation
+  /// of the crossfade effect.
   const FaderWidget({
     required this.cubit,
     this.duration = const Duration(milliseconds: 1500),
@@ -22,9 +25,16 @@ class FaderWidget extends StatelessWidget {
     super.key,
   });
 
+  /// The state management object controlling the strings to be displayed.
   final FaderCubit cubit;
+
+  /// The length of time the crossfade transition takes to complete.
   final Duration duration;
+
+  /// The easing curve applied to the crossfade animation.
   final Curve curve;
+
+  /// The text style applied to the displayed string.
   final TextStyle? style;
 
   @override
@@ -75,19 +85,25 @@ class FaderWidget extends StatelessWidget {
 /// Fades [child] using [animation] and calls [onFadeIn] once the incoming
 /// fade has fully completed.
 ///
-/// [AnimatedSwitcher] runs the incoming child's animation forward to enter, so
-/// [AnimationStatus.completed] marks the moment the new string is fully shown —
-/// the point at which the cubit should be told the fade is done. The outgoing
-/// child animates in reverse and is ignored here.
+/// [AnimatedSwitcher] runs the incoming child's animation forward to enter,
+/// so [AnimationStatus.completed] marks the moment the new string is fully
+/// shown — the point at which the cubit should be told the fade is done.
+/// The outgoing child animates in reverse and is ignored here.
 class _FadeReporter extends StatefulWidget {
+  /// Creates an internal fade reporter to track animation completion.
   const _FadeReporter({
     required this.animation,
     required this.onFadeIn,
     required this.child,
   });
 
+  /// The animation driving the opacity of the child.
   final Animation<double> animation;
+
+  /// Callback triggered exactly once when the animation completes.
   final VoidCallback onFadeIn;
+
+  /// The widget being faded in or out.
   final Widget child;
 
   @override

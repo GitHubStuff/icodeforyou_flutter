@@ -9,12 +9,14 @@ void main() {
     const createdTimestamp = 1672531200000;
     const tag = 'Health';
     const colorArgb = 0xFFE53935;
+    const descr = 'For Health Data';
 
     const item = GlossaryItem(
       id: id,
       createdTimestamp: createdTimestamp,
       tag: tag,
       colorArgb: colorArgb,
+      descr: descr,
     );
 
     test('can be instantiated', () {
@@ -22,6 +24,7 @@ void main() {
       expect(item.createdTimestamp, equals(createdTimestamp));
       expect(item.tag, equals(tag));
       expect(item.colorArgb, equals(colorArgb));
+      expect(item.descr, equals(descr));
     });
 
     test('supports value equality', () {
@@ -30,6 +33,7 @@ void main() {
         createdTimestamp: createdTimestamp,
         tag: tag,
         colorArgb: colorArgb,
+        descr: descr,
       );
 
       expect(item, equals(item2));
@@ -39,7 +43,7 @@ void main() {
     test('props contains all fields in order', () {
       expect(
         item.props,
-        equals([id, createdTimestamp, tag, colorArgb]),
+        equals([id, createdTimestamp, tag, colorArgb, descr]),
       );
     });
 
@@ -47,7 +51,9 @@ void main() {
       expect(item.stringify, isTrue);
       expect(
         item.toString(),
-        equals('GlossaryItem($id, $createdTimestamp, $tag, $colorArgb)'),
+        equals(
+          'GlossaryItem($id, $createdTimestamp, $tag, $colorArgb, $descr)',
+        ),
       );
     });
 
@@ -60,6 +66,7 @@ void main() {
         expect(copiedItem.createdTimestamp, equals(createdTimestamp));
         expect(copiedItem.tag, equals(tag));
         expect(copiedItem.colorArgb, equals(colorArgb));
+        expect(copiedItem.descr, equals(descr));
       });
 
       test(
@@ -69,12 +76,14 @@ void main() {
           const newTimestamp = 1672617600000;
           const newTag = 'Work';
           const newColor = 0xFF1E88E5;
+          const newDescr = 'Work Stuff';
 
           final copiedItem = item.copyWith(
             id: newId,
             createdTimestamp: newTimestamp,
             tag: newTag,
             colorArgb: newColor,
+            descr: newDescr,
           );
 
           expect(
@@ -85,6 +94,7 @@ void main() {
                 createdTimestamp: newTimestamp,
                 tag: newTag,
                 colorArgb: newColor,
+                descr: newDescr,
               ),
             ),
           );
@@ -94,6 +104,7 @@ void main() {
           expect(copiedItem.createdTimestamp, equals(newTimestamp));
           expect(copiedItem.tag, equals(newTag));
           expect(copiedItem.colorArgb, equals(newColor));
+          expect(copiedItem.descr, equals(newDescr));
         },
       );
     });

@@ -1,0 +1,23 @@
+# packages/prism_bubble_widget/pubspec.yaml
+name: prism_bubble_widget
+description: "Creates 3-D transparent bubble (aka a soap bubble)"
+publish_to: none
+resolution: workspace
+version: 1.0.0
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0
+
+flutter:
+  shaders:
+    - shaders/bubble_dark.frag
+    - shaders/bubble_light.frag

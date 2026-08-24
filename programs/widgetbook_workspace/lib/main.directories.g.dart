@@ -121,6 +121,12 @@ import 'package:widgetbook_workspace/packages/infinite_scroll_picking/lib/src/in
     as _widgetbook_workspace_packages_infinite_scroll_picking_lib_src_infinite_scroll_picker_usecase;
 import 'package:widgetbook_workspace/packages/infinite_scroll_picking_settings/settings_screen.usecase.dart'
     as _widgetbook_workspace_packages_infinite_scroll_picking_settings_settings_screen_usecase;
+import 'package:widgetbook_workspace/packages/prism_bubble_widget/animated_prism_bubble.usecase.dart'
+    as _widgetbook_workspace_packages_prism_bubble_widget_animated_prism_bubble_usecase;
+import 'package:widgetbook_workspace/packages/prism_bubble_widget/dynamic_prism_bubble.usecase.dart'
+    as _widgetbook_workspace_packages_prism_bubble_widget_dynamic_prism_bubble_usecase;
+import 'package:widgetbook_workspace/packages/prism_bubble_widget/prism_bubble_widget.usecase.dart'
+    as _widgetbook_workspace_packages_prism_bubble_widget_prism_bubble_widget_usecase;
 import 'package:widgetbook_workspace/packages/rail_navigation/rail_button.usecase.dart'
     as _widgetbook_workspace_packages_rail_navigation_rail_button_usecase;
 import 'package:widgetbook_workspace/packages/rail_navigation/rail_button_presets.usecase.dart'
@@ -219,6 +225,17 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookComponent(
+    name: 'AnimatedPrismBubble',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Default',
+        builder:
+            _widgetbook_workspace_packages_prism_bubble_widget_animated_prism_bubble_usecase
+                .buildAnimatedPrismBubbleUseCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
     name: 'ColorGrid',
     useCases: [
       _widgetbook.WidgetbookUseCase(
@@ -239,6 +256,17 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookComponent(
+    name: 'DynamicPrismBubble',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Default',
+        builder:
+            _widgetbook_workspace_packages_prism_bubble_widget_dynamic_prism_bubble_usecase
+                .buildDynamicPrismBubbleUseCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
     name: 'InfiniteScrollPicker<dynamic, dynamic>',
     useCases: [
       _widgetbook.WidgetbookUseCase(
@@ -246,6 +274,29 @@ final directories = <_widgetbook.WidgetbookNode>[
         builder:
             _widgetbook_workspace_packages_infinite_scroll_picking_lib_src_infinite_scroll_picker_usecase
                 .infiniteScrollPickerUseCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
+    name: 'PrismBubbleWidget',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Custom (Knobs)',
+        builder:
+            _widgetbook_workspace_packages_prism_bubble_widget_prism_bubble_widget_usecase
+                .buildCustomPrismBubbleUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Factory Dark',
+        builder:
+            _widgetbook_workspace_packages_prism_bubble_widget_prism_bubble_widget_usecase
+                .buildDarkFactoryPrismBubbleUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Factory Light',
+        builder:
+            _widgetbook_workspace_packages_prism_bubble_widget_prism_bubble_widget_usecase
+                .buildLightFactoryPrismBubbleUseCase,
       ),
     ],
   ),
@@ -442,7 +493,13 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Interactive',
             builder:
                 _widgetbook_workspace_packages_extensions_color_ext_color_pair_usecase
-                    .buildColorPairUseCase,
+                    .colorPairInteractive,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Preset Gallery',
+            builder:
+                _widgetbook_workspace_packages_extensions_color_ext_color_pair_usecase
+                    .colorPairGallery,
           ),
         ],
       ),

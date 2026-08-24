@@ -87,7 +87,7 @@ class _AnimatedCheckboxState extends State<AnimatedCheckbox>
     if (!widget.draw) {
       _generateDissolveParticles();
     }
-    unawaited(_controller!.forward(from: 0));
+    _controller!.forward(from: 0);
   }
 
   void _generateDissolveParticles() {

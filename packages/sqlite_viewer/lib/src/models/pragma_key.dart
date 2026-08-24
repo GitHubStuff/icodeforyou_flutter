@@ -1,7 +1,5 @@
 // packages/sqlite_viewer/lib/src/models/pragma_key.dart
 
-// ignore_for_file: lines_longer_than_80_chars
-
 /// Supported SQLite PRAGMA metadata queries.
 ///
 /// Used with 'SqliteViewerAbstract.getPragma' to retrieve
@@ -14,8 +12,10 @@ enum PragmaKey {
   /// Returns:
   /// ```dart
   /// [
-  ///   {'cid': 0, 'name': 'id', 'type': 'INTEGER', 'notnull': 1, 'dflt_value': null, 'pk': 1},
-  ///   {'cid': 1, 'name': 'title', 'type': 'TEXT', 'notnull': 0, 'dflt_value': null, 'pk': 0},
+  ///   {'cid': 0, 'name': 'id', 'type': 'INTEGER', 'notnull': 1,
+  ///       'dflt_value': null, 'pk': 1},
+  ///   {'cid': 1, 'name': 'title', 'type': 'TEXT', 'notnull': 0,
+  ///       'dflt_value': null, 'pk': 0},
   /// ]
   /// ```
   tableInfo,
@@ -27,7 +27,8 @@ enum PragmaKey {
   /// Returns:
   /// ```dart
   /// [
-  ///   {'seq': 0, 'name': 'idx_users_email', 'unique': 1, 'origin': 'c', 'partial': 0},
+  ///   {'seq': 0, 'name': 'idx_users_email', 'unique': 1, 'origin': 'c',
+  ///      'partial': 0},
   /// ]
   /// ```
   indexList,
@@ -39,7 +40,8 @@ enum PragmaKey {
   /// Returns:
   /// ```dart
   /// [
-  ///   {'id': 0, 'seq': 0, 'table': 'users', 'from': 'user_id', 'to': 'id', 'on_update': 'NO ACTION', 'on_delete': 'CASCADE', 'match': 'NONE'},
+  ///   {'id': 0, 'seq': 0, 'table': 'users', 'from': 'user_id', 'to': 'id', 
+  ///       'on_update': 'NO ACTION', 'on_delete': 'CASCADE', 'match': 'NONE'},
   /// ]
   /// ```
   foreignKeyList,

@@ -1,6 +1,5 @@
 // packages/platform_utils/test/platform_utils_test.dart
 
-import 'package:flutter/widgets.dart' show Orientation, Size;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:platform_utils/platform_utils.dart';
 

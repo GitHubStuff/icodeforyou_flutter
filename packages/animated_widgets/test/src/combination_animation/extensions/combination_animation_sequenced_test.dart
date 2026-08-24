@@ -27,7 +27,7 @@ void main() {
     test('asserts that steps is not empty', () {
       expect(
         () => CombinationAnimationSequenced(
-          steps: <CombinationAnimationStep>[],
+          steps: const <CombinationAnimationStep>[],
           child: child,
         ),
         throwsAssertionError,

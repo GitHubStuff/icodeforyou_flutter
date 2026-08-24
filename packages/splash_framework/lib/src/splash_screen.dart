@@ -57,7 +57,6 @@ final class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SplashCubit>(
-      // ignore: discarded_futures
       create: (_) => SplashCubit(duration: duration, tasks: tasks)..start(),
       child: BlocConsumer<SplashCubit, SplashState>(
         listener: (context, state) {

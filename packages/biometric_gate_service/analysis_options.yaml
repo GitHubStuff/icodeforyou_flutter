@@ -1,4 +1,6 @@
 analyzer:
+  errors:
+    no_runtimetype_tostring: ignore
   exclude:
     - build/**
     - android/**

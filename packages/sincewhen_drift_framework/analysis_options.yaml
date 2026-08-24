@@ -1,6 +1,8 @@
 # packages/sincewhen_drift_framework/analysis_options.yaml
 include: package:icodeforyou_lints/analysis_options.yaml
 analyzer:
+  errors:
+    use_super_parameters: ignore
   exclude:
     - build/**
     - android/**

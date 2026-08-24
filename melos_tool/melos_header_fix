@@ -34,12 +34,13 @@ readonly MODE="${1:-}"
 readonly TIERS=(packages plugins programs)
 
 readonly -a GENERATED_NAME_FILTERS=(
-  -not -name '*.g.dart'
-  -not -name '*.freezed.dart'
-  -not -name '*.mocks.dart'
-  -not -name '*.drift.dart'
-  -not -name '*.gr.dart'
   -not -name '*.config.dart'
+  -not -name '*.directories.dart'
+  -not -name '*.drift.dart'
+  -not -name '*.freezed.dart'
+  -not -name '*.g.dart'
+  -not -name '*.gr.dart'
+  -not -name '*.mocks.dart'
 )
 
 readonly -a PATH_FILTERS=(

@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:settings_widget/settings_widget.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(name: 'Default', type: SettingsWidgetShowcase)
 Widget settingsWidgetUseCase(BuildContext context) {
@@ -40,8 +39,8 @@ class SettingsWidgetShowcase extends StatelessWidget {
   final SettingsDirection direction;
   final double edgeGap;
 
-  void _open(BuildContext context) {
-    SettingsWidget.show(
+  Future<void> _open(BuildContext context) async {
+    await SettingsWidget.show(
       context,
       direction: direction,
       edgeGap: edgeGap,
@@ -73,7 +72,6 @@ class _ToggleEntry extends AppSettingsEntry {
   final String label;
   final bool initial;
 
-  @override
   Widget get title => Text(label);
 
   @override
@@ -101,10 +99,12 @@ class _ToggleEntryViewState extends State<_ToggleEntryView> {
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Row(
         children: [
-          Expanded(child: DefaultTextStyle.merge(
-            style: const TextStyle(fontSize: 16),
-            child: widget.title,
-          )),
+          Expanded(
+            child: DefaultTextStyle.merge(
+              style: const TextStyle(fontSize: 16),
+              child: widget.title,
+            ),
+          ),
           const Gap(12),
           Switch(
             value: _value,
@@ -121,7 +121,6 @@ class _LinkEntry extends AppSettingsEntry {
 
   final String label;
 
-  @override
   Widget get title => Text(label);
 
   @override
@@ -132,10 +131,12 @@ class _LinkEntry extends AppSettingsEntry {
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         child: Row(
           children: [
-            Expanded(child: DefaultTextStyle.merge(
-              style: const TextStyle(fontSize: 16),
-              child: title,
-            )),
+            Expanded(
+              child: DefaultTextStyle.merge(
+                style: const TextStyle(fontSize: 16),
+                child: title,
+              ),
+            ),
             const Icon(Icons.chevron_right, color: Colors.grey),
           ],
         ),

@@ -6,8 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:sincewhen_drift_framework/src/database/database.dart';
-import 'package:sincewhen_drift_framework/src/database/database_opening.dart';
+import 'package:sincewhen_drift_framework/sincewhen_drift_framework.dart' show SinceWhenDatabaseOpening;
 
 /// Fake platform routing both persisted folders to a test-owned
 /// directory, so the persisted opening paths run against the real file

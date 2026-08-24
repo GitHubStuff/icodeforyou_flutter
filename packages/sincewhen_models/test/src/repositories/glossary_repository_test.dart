@@ -48,6 +48,7 @@ void main() {
         createdTimestamp: 1672531200000,
         tag: 'Test',
         colorArgb: 0xFFFFFFFF,
+        descr: 'Test Description',
       );
 
       // Verify all method signatures resolve correctly

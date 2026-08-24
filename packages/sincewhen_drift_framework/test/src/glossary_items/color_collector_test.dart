@@ -24,8 +24,7 @@ void main() {
       expect(collector.dao, same(database.glossaryItemsDao));
     });
 
-    test('getList returns the requested number of distinct colors',
-        () async {
+    test('getList returns the requested number of distinct colors', () async {
       final colors = await collector.getList(count: 5);
 
       expect(colors, hasLength(5));
@@ -34,10 +33,22 @@ void main() {
 
     test('getList excludes colors already used by glossary items', () async {
       await database.glossaryItemsDao.insertItem(
-        GlossaryItem(id: 0, createdTimestamp: 1, tag: 'alpha', colorArgb: 100),
+        const GlossaryItem(
+          id: 0,
+          createdTimestamp: 1,
+          tag: 'alpha',
+          colorArgb: 100,
+          descr: 'alpah description',
+        ),
       );
       await database.glossaryItemsDao.insertItem(
-        GlossaryItem(id: 0, createdTimestamp: 2, tag: 'beta', colorArgb: 200),
+        const GlossaryItem(
+          id: 0,
+          createdTimestamp: 2,
+          tag: 'beta',
+          colorArgb: 200,
+          descr: 'beta description',
+        ),
       );
 
       final colors = await collector.getList(count: 3);

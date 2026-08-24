@@ -13,11 +13,13 @@ GlossaryItem _item({
   required int createdTimestamp,
   required String tag,
   required int colorArgb,
+  required String descr,
 }) => GlossaryItem(
   id: id,
   createdTimestamp: createdTimestamp,
   tag: tag,
   colorArgb: colorArgb,
+  descr: descr,
 );
 
 void main() {
@@ -40,19 +42,35 @@ void main() {
 
     test('insertItem persists through the dao', () async {
       final inserted = await repository.insertItem(
-        _item(createdTimestamp: 1, tag: 'alpha', colorArgb: 100),
+        _item(
+          createdTimestamp: 1,
+          tag: 'alpha',
+          colorArgb: 100,
+          descr: 'alpha description',
+        ),
       );
 
       expect(inserted.id, greaterThan(0));
       expect(inserted.tag, 'alpha');
+      expect(inserted.descr, 'alpha description');
     });
 
     test('allItems and watchAllItems delegate ordered reads', () async {
       await repository.insertItem(
-        _item(createdTimestamp: 1, tag: 'zulu', colorArgb: 100),
+        _item(
+          createdTimestamp: 1,
+          tag: 'zulu',
+          colorArgb: 100,
+          descr: 'zulu description',
+        ),
       );
       await repository.insertItem(
-        _item(createdTimestamp: 2, tag: 'alpha', colorArgb: 200),
+        _item(
+          createdTimestamp: 2,
+          tag: 'alpha',
+          colorArgb: 200,
+          descr: 'alpha description',
+        ),
       );
 
       final items = await repository.allItems();
@@ -70,7 +88,12 @@ void main() {
 
     test('allColorArgbValues delegates the color set', () async {
       await repository.insertItem(
-        _item(createdTimestamp: 1, tag: 'alpha', colorArgb: 100),
+        _item(
+          createdTimestamp: 1,
+          tag: 'alpha',
+          colorArgb: 100,
+          descr: 'alpha description',
+        ),
       );
 
       expect(await repository.allColorArgbValues(), <int>{100});
@@ -78,7 +101,12 @@ void main() {
 
     test('itemByTag delegates the tag lookup', () async {
       await repository.insertItem(
-        _item(createdTimestamp: 1, tag: 'alpha', colorArgb: 100),
+        _item(
+          createdTimestamp: 1,
+          tag: 'alpha',
+          colorArgb: 100,
+          descr: 'alpha description',
+        ),
       );
 
       expect((await repository.itemByTag('alpha'))?.colorArgb, 100);
@@ -87,7 +115,12 @@ void main() {
 
     test('itemWithColor delegates the color lookup', () async {
       await repository.insertItem(
-        _item(createdTimestamp: 1, tag: 'alpha', colorArgb: 100),
+        _item(
+          createdTimestamp: 1,
+          tag: 'alpha',
+          colorArgb: 100,
+          descr: 'alpha description',
+        ),
       );
 
       expect((await repository.itemWithColor(100))?.tag, 'alpha');
@@ -96,7 +129,12 @@ void main() {
 
     test('itemCount and watchItemCount delegate the totals', () async {
       await repository.insertItem(
-        _item(createdTimestamp: 1, tag: 'alpha', colorArgb: 100),
+        _item(
+          createdTimestamp: 1,
+          tag: 'alpha',
+          colorArgb: 100,
+          descr: 'alpha description',
+        ),
       );
 
       expect(await repository.itemCount(), 1);
@@ -105,7 +143,12 @@ void main() {
 
     test('updateItem delegates and reports the outcome', () async {
       final inserted = await repository.insertItem(
-        _item(createdTimestamp: 1, tag: 'alpha', colorArgb: 100),
+        _item(
+          createdTimestamp: 1,
+          tag: 'alpha',
+          colorArgb: 100,
+          descr: 'alpha description',
+        ),
       );
 
       final updated = await repository.updateItem(
@@ -114,6 +157,7 @@ void main() {
           createdTimestamp: 2,
           tag: 'beta',
           colorArgb: 200,
+          descr: 'beta description',
         ),
       );
 
@@ -123,7 +167,12 @@ void main() {
 
     test('deleteItem delegates and reports the outcome', () async {
       final inserted = await repository.insertItem(
-        _item(createdTimestamp: 1, tag: 'alpha', colorArgb: 100),
+        _item(
+          createdTimestamp: 1,
+          tag: 'alpha',
+          colorArgb: 100,
+          descr: 'alpha description',
+        ),
       );
 
       expect(await repository.deleteItem(inserted), isTrue);
