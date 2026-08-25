@@ -32,9 +32,10 @@ extension BuildContextExt on BuildContext {
 
   /// The [WindowSizeCategory] for the current layout width.
   ///
-  /// Resolution selects the first category whose [WindowSizeCategory.upperBound]
-  /// strictly exceeds the available width; the widest category uses
-  /// [double.infinity], so every width resolves to exactly one category.
+  /// Resolution selects the first category whose
+  /// [WindowSizeCategory.upperBound]  strictly exceeds the available width;
+  /// the widest category uses [double.infinity], so every width resolves
+  /// to exactly one category.
   WindowSizeCategory get windowSizeCategory {
     final width = MediaQuery.sizeOf(this).width;
     return WindowSizeCategory.values.firstWhere((c) => width < c.upperBound);

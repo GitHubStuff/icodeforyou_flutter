@@ -1,11 +1,9 @@
 // programs/widgetbook_workspace/lib/packages/app_preferences/abstract_preferences_interface.usecase.dart
-// ignore_for_file: public_member_api_docs
 
 import 'package:app_preferences/app_preferences.dart'
     show AbstractPreferencesInterface, MockPreferences;
 import 'package:flutter/material.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(
   name: 'Contract — type filtering',
@@ -13,7 +11,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart'
 )
 Widget abstractPreferencesContractTyping(BuildContext context) {
   return const AbstractPreferencesInterfaceShowcase(
-    mode: _Mode.typeFiltering,
+    mode: Mode.typeFiltering,
   );
 }
 
@@ -22,7 +20,7 @@ Widget abstractPreferencesContractTyping(BuildContext context) {
   type: AbstractPreferencesInterfaceShowcase,
 )
 Widget abstractPreferencesContractAbsent(BuildContext context) {
-  return const AbstractPreferencesInterfaceShowcase(mode: _Mode.absentKeys);
+  return const AbstractPreferencesInterfaceShowcase(mode: Mode.absentKeys);
 }
 
 @widgetbook.UseCase(
@@ -30,7 +28,7 @@ Widget abstractPreferencesContractAbsent(BuildContext context) {
   type: AbstractPreferencesInterfaceShowcase,
 )
 Widget abstractPreferencesContractStructural(BuildContext context) {
-  return const AbstractPreferencesInterfaceShowcase(mode: _Mode.structural);
+  return const AbstractPreferencesInterfaceShowcase(mode: Mode.structural);
 }
 
 /// Showcase for the [AbstractPreferencesInterface] contract. Asserts the
@@ -41,14 +39,14 @@ Widget abstractPreferencesContractStructural(BuildContext context) {
 class AbstractPreferencesInterfaceShowcase extends StatefulWidget {
   const AbstractPreferencesInterfaceShowcase({required this.mode, super.key});
 
-  final _Mode mode;
+  final Mode mode;
 
   @override
   State<AbstractPreferencesInterfaceShowcase> createState() =>
       _AbstractPreferencesInterfaceShowcaseState();
 }
 
-enum _Mode { typeFiltering, absentKeys, structural }
+enum Mode { typeFiltering, absentKeys, structural }
 
 class _Check {
   _Check(this.label, this.pass, this.detail);
@@ -78,11 +76,11 @@ class _AbstractPreferencesInterfaceShowcaseState
   Future<List<_Check>> _run() async {
     final AbstractPreferencesInterface p = MockPreferences();
     switch (widget.mode) {
-      case _Mode.typeFiltering:
+      case Mode.typeFiltering:
         return _runTypeFiltering(p);
-      case _Mode.absentKeys:
+      case Mode.absentKeys:
         return _runAbsentKeys(p);
-      case _Mode.structural:
+      case Mode.structural:
         return _runStructural(p);
     }
   }
@@ -136,7 +134,7 @@ class _AbstractPreferencesInterfaceShowcaseState
       _Check('getDouble on absent key → null', d == null, 'got: $d'),
       _Check('getBool on absent key → null', b == null, 'got: $b'),
       _Check('getStringList on absent key → null', l == null, 'got: $l'),
-      _Check('contains absent key → false', has == false, 'got: $has'),
+      _Check('contains absent key → false', !has, 'got: $has'),
     ];
   }
 
@@ -217,7 +215,7 @@ class _AbstractPreferencesInterfaceShowcaseState
                     final checks = snapshot.data!;
                     return ListView.separated(
                       itemCount: checks.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 6),
+                      separatorBuilder: (_, _) => const SizedBox(height: 6),
                       itemBuilder: (_, i) => _CheckTile(check: checks[i]),
                     );
                   },
@@ -230,11 +228,11 @@ class _AbstractPreferencesInterfaceShowcaseState
     );
   }
 
-  String _titleFor(_Mode mode) => switch (mode) {
-        _Mode.typeFiltering => 'type filtering',
-        _Mode.absentKeys => 'absent keys',
-        _Mode.structural => 'structural ops',
-      };
+  String _titleFor(Mode mode) => switch (mode) {
+    Mode.typeFiltering => 'type filtering',
+    Mode.absentKeys => 'absent keys',
+    Mode.structural => 'structural ops',
+  };
 }
 
 class _CheckTile extends StatelessWidget {

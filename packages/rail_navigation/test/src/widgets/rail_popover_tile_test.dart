@@ -220,7 +220,7 @@ void main() {
 
       expect(
         tester.getSemantics(find.byType(RailPopoverTile<String>)),
-        containsSemantics(isButton: true, isSelected: true),
+        isSemantics(isButton: true, isSelected: true),
       );
     });
   });

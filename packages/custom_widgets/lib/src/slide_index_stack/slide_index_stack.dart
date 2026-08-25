@@ -1,7 +1,5 @@
 // packages/custom_widgets/lib/src/slide_index_stack/slide_index_stack.dart
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 /// The default duration of the slide between children.
@@ -102,7 +100,7 @@ class _SlideIndexedStackState extends State<SlideIndexedStack>
         _previous = _current;
         _current = widget.index;
       });
-      unawaited(_controller.forward(from: 0));
+      _controller.forward(from: 0);
     }
   }
 

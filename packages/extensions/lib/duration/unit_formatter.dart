@@ -5,9 +5,9 @@
 /// The formatter takes one non-negative [int] and a template string, formats
 /// the FIRST `%...q` token against that value, and returns the formatted prefix
 /// followed by the remainder of the template untouched. Text before the token
-/// is copied verbatim (with `%%` -> `%`); everything after the token is returned
-/// raw, so a caller can feed the tail back in with the next value to render a
-/// multi-unit display one token at a time.
+/// is copied verbatim (with `%%` -> `%`); everything after the token is
+/// returned raw, so a caller can feed the tail back in with the next value
+/// to render a multi-unit display one token at a time.
 /// {@endtemplate}
 library;
 
@@ -121,9 +121,10 @@ class _TokenSpec {
 ///
 /// ## Sign
 ///
-/// [doFormat] expects a **non-negative** value. In debug builds a negative value
-/// trips an assertion; in release builds the value is coerced with [int.abs].
-/// The sign is *dropped*, never rendered — directionality (before / now / after)
+/// [doFormat] expects a **non-negative** value. In debug builds a negative
+/// value trips an assertion; in release builds the value is coerced with
+/// [int.abs].
+/// The sign is *dropped*, never rendered — directionality (before/now/ after)
 /// is the caller's concern, expressed with a `t` token or surrounding literal
 /// text.
 ///

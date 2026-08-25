@@ -1,5 +1,4 @@
-# pubspec.yaml
-
+# packages/scrolling_datetime_pickers/pubspec.yaml
 name: scrolling_datetime_pickers
 description: Apple-style scrolling datetime picker widgets for Flutter with smooth animations and customizable styling.
 version: 1.0.0
@@ -24,6 +23,6 @@ dev_dependencies:
   coverage: ^1.7.2
   flutter_test:
     sdk: flutter
+  icodeforyou_lints: ^1.0.0
   mockito: ^5.6.4
   test: ^1.25.0
-  icodeforyou_lints: ^1.0.0

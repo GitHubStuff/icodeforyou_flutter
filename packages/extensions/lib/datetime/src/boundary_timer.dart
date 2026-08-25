@@ -26,7 +26,8 @@ class BoundaryTimer {
   /// [_onTick] runs on each boundary; returning `false` stops the timer. It may
   /// be synchronous or asynchronous. [_now] supplies the current time and is
   /// injectable so the timer can be driven by a fake clock in tests. [_onError]
-  /// receives any error thrown by [_onTick]; the timer stops when a tick throws.
+  /// receives any error thrown by [_onTick]; the timer stops when a
+  /// tick throws.
   BoundaryTimer({
     required this.unit,
     required this._onTick,

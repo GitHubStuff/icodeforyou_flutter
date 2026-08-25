@@ -4,8 +4,7 @@
 import 'package:app_preferences/app_preferences.dart' show HiveInitMode;
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(name: 'Overview', type: HiveInitModeShowcase)
 Widget hiveInitModeOverview(BuildContext context) {
@@ -65,7 +64,7 @@ class HiveInitModeShowcase extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: ListView.separated(
             itemCount: _entries.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            separatorBuilder: (_, _) => const SizedBox(height: 12),
             itemBuilder: (_, i) {
               final (mode, location, blurb, icon) = _entries[i];
               final isSelected = mode == selected;

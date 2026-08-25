@@ -1,4 +1,4 @@
-// packages/prism_bubble_widget/lib/src/dynamic_prism_bubble.usecase.dart
+// programs/widgetbook_workspace/lib/packages/prism_bubble_widget/dynamic_prism_bubble.usecase.dart
 import 'package:flutter/material.dart';
 import 'package:prism_bubble_widget/prism_bubble_widget.dart'
     show BubbleFluidDynamicEnum, DynamicPrismBubble;

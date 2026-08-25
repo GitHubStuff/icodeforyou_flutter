@@ -4,8 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:remind_me/remind_me.dart' show RemindMe;
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(name: 'API reference', type: RemindMeShowcase)
 Widget remindMeApiReference(BuildContext context) {
@@ -111,7 +110,8 @@ const _groups = <_Group>[
       _Method(
         id: _ApiMethod.init,
         signature: 'Future<void> init()',
-        summary: 'Initializes timezones and the underlying notifications '
+        summary:
+            'Initializes timezones and the underlying notifications '
             'plugin. Must be called once at app start before any other '
             'method.',
         platforms: 'iOS · Android',
@@ -125,7 +125,8 @@ const _groups = <_Group>[
       _Method(
         id: _ApiMethod.requestPermissions,
         signature: 'Future<bool> requestPermissions()',
-        summary: 'Shows the OS notification permission prompt. Returns '
+        summary:
+            'Shows the OS notification permission prompt. Returns '
             'true if the user granted on every platform that asked. iOS '
             'asks for alert/badge/sound; Android (13+) asks for POST_'
             'NOTIFICATIONS.',
@@ -134,7 +135,8 @@ const _groups = <_Group>[
       _Method(
         id: _ApiMethod.currentStatus,
         signature: 'Future<NotificationPermissionStatus> currentStatus()',
-        summary: 'Reads the current permission state without prompting. '
+        summary:
+            'Reads the current permission state without prompting. '
             'Maps permission_handler\'s PermissionStatus to the package-'
             'native NotificationPermissionStatus enum.',
         platforms: 'iOS · Android',
@@ -142,7 +144,8 @@ const _groups = <_Group>[
       _Method(
         id: _ApiMethod.openSettings,
         signature: 'Future<bool> openSettings()',
-        summary: 'Launches the OS app-settings screen. Use when '
+        summary:
+            'Launches the OS app-settings screen. Use when '
             'currentStatus() returns permanentlyDenied — the user can '
             'no longer be prompted in-app.',
         platforms: 'iOS · Android',
@@ -155,14 +158,16 @@ const _groups = <_Group>[
       _Method(
         id: _ApiMethod.canScheduleExactAlarms,
         signature: 'Future<bool> canScheduleExactAlarms()',
-        summary: 'Whether SCHEDULE_EXACT_ALARM has been granted. Returns '
+        summary:
+            'Whether SCHEDULE_EXACT_ALARM has been granted. Returns '
             'true on iOS (the concept does not apply).',
         platforms: 'Android 12+ (always true on iOS)',
       ),
       _Method(
         id: _ApiMethod.requestExactAlarmsPermission,
         signature: 'Future<bool> requestExactAlarmsPermission()',
-        summary: 'Requests SCHEDULE_EXACT_ALARM if not already granted. '
+        summary:
+            'Requests SCHEDULE_EXACT_ALARM if not already granted. '
             'Required for AndroidScheduleMode.exactAllowWhileIdle on '
             'Android 12+. No-op on iOS.',
         platforms: 'Android 12+',
@@ -174,23 +179,27 @@ const _groups = <_Group>[
     methods: [
       _Method(
         id: _ApiMethod.scheduleInMinutes,
-        signature: 'Future<int> scheduleInMinutes({\n'
+        signature:
+            'Future<int> scheduleInMinutes({\n'
             '  required String title,\n'
             '  required String body,\n'
             '  Duration duration = const Duration(minutes: 5),\n'
             '})',
-        summary: 'Schedules a local notification at now + duration. '
+        summary:
+            'Schedules a local notification at now + duration. '
             'Returns the platform-stable notification id that can be '
             'passed to cancel().',
         platforms: 'iOS · Android',
-        notes: 'Asserts duration < 24h. Uses exactAllowWhileIdle on '
+        notes:
+            'Asserts duration < 24h. Uses exactAllowWhileIdle on '
             'Android — pair with requestExactAlarmsPermission() on '
             'Android 12+.',
       ),
       _Method(
         id: _ApiMethod.cancel,
         signature: 'Future<void> cancel(int id)',
-        summary: 'Cancels the scheduled notification with the given id. '
+        summary:
+            'Cancels the scheduled notification with the given id. '
             'No-op if the id does not correspond to a pending '
             'notification.',
         platforms: 'iOS · Android',

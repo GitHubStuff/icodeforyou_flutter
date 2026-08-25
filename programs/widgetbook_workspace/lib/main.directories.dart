@@ -149,6 +149,8 @@ import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/lib/src
     as _widgetbook_workspace_packages_scrolling_datetime_pickers_lib_src_presentation_widgets_scrolling_time_picker_usecase;
 import 'package:widgetbook_workspace/packages/settings_widget/settings_widget.usecase.dart'
     as _widgetbook_workspace_packages_settings_widget_settings_widget_usecase;
+import 'package:widgetbook_workspace/packages/sincewhen_widgets/glossary_card.usecase.dart'
+    as _widgetbook_workspace_packages_sincewhen_widgets_glossary_card_usecase;
 import 'package:widgetbook_workspace/packages/splash_framework/splash_screen.usecase.dart'
     as _widgetbook_workspace_packages_splash_framework_splash_screen_usecase;
 import 'package:widgetbook_workspace/packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_page/sqlite_viewer_page.usecase.dart'
@@ -1204,6 +1206,22 @@ final directories = <_widgetbook.WidgetbookNode>[
                 builder:
                     _widgetbook_workspace_packages_settings_widget_settings_widget_usecase
                         .settingsWidgetUseCase,
+              ),
+            ],
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookFolder(
+        name: 'sincewhen_widgets',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'GlossaryCard',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder:
+                    _widgetbook_workspace_packages_sincewhen_widgets_glossary_card_usecase
+                        .defaultGlossaryCard,
               ),
             ],
           ),

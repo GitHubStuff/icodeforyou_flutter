@@ -1,7 +1,5 @@
 // programs/widgetbook_workspace/lib/packages/animated_widgets/animated_barrier/imperative_control.usecase.dart
 
-// ignore_for_file: comment_references
-
 import 'dart:async';
 
 import 'package:animated_widgets/animated_widgets.dart'

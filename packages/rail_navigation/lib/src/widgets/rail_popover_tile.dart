@@ -98,7 +98,7 @@ class RailPopoverTile<T> extends StatelessWidget {
               child: Row(
                 spacing: _kIconLabelGap,
                 children: [
-                  if (icon != null) icon!,
+                  ?icon,
                   Expanded(child: label),
                 ],
               ),

@@ -1,12 +1,13 @@
 // programs/widgetbook_workspace/lib/packages/animated_widgets/fader_widget/fader_widget.usecase.dart
 // ignore_for_file: public_member_api_docs
 
+import 'dart:async';
+
 import 'package:animated_widgets/animated_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(name: 'Default', type: FaderWidget)
 Widget faderWidgetUseCase(BuildContext context) {
@@ -50,7 +51,7 @@ class _FaderShowcaseState extends State<_FaderShowcase> {
 
   @override
   void dispose() {
-    _cubit.close();
+    unawaited(_cubit.close());
     super.dispose();
   }
 

@@ -4,8 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:random_color_generator/random_color_generator.dart'
     show RandomColorGenerator;
-import 'package:sincewhen_drift_framework/sincewhen_drift_framework.dart'
-    show GlossaryItemsDaoAbstract;
+import 'package:sincewhen_models/sincewhen_models.dart' show GlossaryRepository;
 import 'package:sincewhen_widgets/src/glossary_edits/glossary_edit_state.dart'
     show
         GlossaryEditColorList,
@@ -18,14 +17,14 @@ import 'package:sincewhen_widgets/src/glossary_edits/glossary_edit_state.dart'
 class GlossaryEditCubit extends Cubit<GlossaryEditState> {
   /// Constructor
   GlossaryEditCubit({
-    required this.dao,
+    required this._glossaryRepo,
     Color Function()? colorGenerator,
   }) : _generateColor = colorGenerator ?? RandomColorGenerator.generate,
        super(const GlossaryEditInitial());
 
   /// To keep items de-coupled a resolver (like get_it) is used to access the
   /// database DAOs.
-  final GlossaryItemsDaoAbstract dao;
+  final GlossaryRepository _glossaryRepo;
 
   /// Function used to generate a random color.
   /// Defaults to [RandomColorGenerator.generate] if none is provided.
@@ -35,7 +34,7 @@ class GlossaryEditCubit extends Cubit<GlossaryEditState> {
   Future<void> requestRandomColors({required int count}) async {
     emit(const GlossaryEditColorRequest());
 
-    final colorSet = await dao.allColorArgbValues();
+    final colorSet = await _glossaryRepo.allColorArgbValues();
     final List<Color> colorList = [];
 
     while (colorList.length < count) {

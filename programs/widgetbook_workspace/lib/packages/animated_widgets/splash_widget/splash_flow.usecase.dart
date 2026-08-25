@@ -1,5 +1,4 @@
 // programs/widgetbook_workspace/lib/packages/animated_widgets/splash_widget/splash_flow.usecase.dart
-// ignore_for_file: comment_references, public_member_api_docs
 
 import 'dart:async';
 

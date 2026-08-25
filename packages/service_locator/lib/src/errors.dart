@@ -1,27 +1,30 @@
 // packages/service_locator/lib/src/errors.dart
 
-// ignore_for_file: comment_references, public_member_api_docs
-
 /// Base class for all service-locator-related errors.
 ///
 /// Extends [StateError] because every failure mode here represents the
 /// service registry being in an unexpected state relative to the caller's
 /// request.
 sealed class ServiceError extends StateError {
+  /// Creates a [ServiceError] with the given [message].
   ServiceError(super.message);
 }
 
 /// Thrown when a service name is blank or whitespace-only.
 class BlankServiceName extends ServiceError {
+  /// Creates a [BlankServiceName] error with a default descriptive message.
   BlankServiceName() : super('An empty string is not a valid service name');
 }
 
 /// Thrown when attempting to register a service whose name is already taken.
 class DuplicateServiceEntry extends ServiceError {
+  /// Creates a [DuplicateServiceEntry] error for the specified [name].
   DuplicateServiceEntry(String name) : super('"$name" is already registered');
 }
 
+/// Thrown when a service generic type is too generic or invalid.
 class BadServiceClass extends StateError {
+  /// Creates a [BadServiceClass] error for the given service [name].
   BadServiceClass(String name)
     : super(
         'Generic type must be a concrete subtype of ServiceClass. '
@@ -37,6 +40,8 @@ class BadServiceClass extends StateError {
 /// Staging two services of the same type would make that lookup ambiguous,
 /// so it is rejected at stage time.
 class DuplicateServiceType extends ServiceError {
+  /// Creates a [DuplicateServiceType] error when [attemptedName] conflicts
+  /// with [existingName] for the given [type].
   DuplicateServiceType({
     required Type type,
     required String existingName,
@@ -49,6 +54,7 @@ class DuplicateServiceType extends ServiceError {
 
 /// Thrown when a service is requested by a name that has never been staged.
 class ServiceNotRegistered extends ServiceError {
+  /// Creates a [ServiceNotRegistered] error for the unresolved [name].
   ServiceNotRegistered(String name) : super('"$name" is not registered');
 }
 
@@ -57,6 +63,7 @@ class ServiceNotRegistered extends ServiceError {
 /// Distinct from [ServiceNotRegistered]: that one means the name was never
 /// staged at all; this one means the registry has an entry it can't interpret.
 class UnknownServiceEntry extends ServiceError {
+  /// Creates an [UnknownServiceEntry] error for the unrecognized [name].
   UnknownServiceEntry(String name) : super('Unknown service entry "$name"');
 }
 
@@ -65,6 +72,8 @@ class UnknownServiceEntry extends ServiceError {
 /// Example: `registrationFor<FooService>('bar')` when `'bar'` was staged
 /// as `ServiceDescriptor<BarService>`.
 class ServiceTypeMismatch extends ServiceError {
+  /// Creates a [ServiceTypeMismatch] error for [name] with [expected] and
+  /// [actual] types.
   ServiceTypeMismatch(
     String name, {
     required Type expected,
@@ -77,6 +86,7 @@ class ServiceTypeMismatch extends ServiceError {
 /// Thrown when a service is requested but its registration isn't in a
 /// ready state (i.e. status is still `waiting`, `starting`, etc.).
 class ServiceNotReady extends ServiceError {
+  /// Creates a [ServiceNotReady] error for [name] in [status].
   ServiceNotReady(String name, {required String status})
     : super('"$name" is not ready (status: $status)');
 }
@@ -88,6 +98,7 @@ class ServiceNotReady extends ServiceError {
 /// `WaitingTimeOutException`'s `notReadyYet` and `areWaitedBy` maps here).
 /// Both default to empty collections so the fields are always safe to read.
 class ServiceItemTimeout extends ServiceError {
+  /// Creates a [ServiceItemTimeout] error for [name] after [timeout].
   ServiceItemTimeout(
     String name,
     Duration timeout, {
@@ -126,6 +137,8 @@ class ServiceItemTimeout extends ServiceError {
 /// Thrown when staging/registering a descriptor fails for a reason other
 /// than duplicate or blank name.
 class ServiceRegistrationError extends ServiceError {
+  /// Creates a [ServiceRegistrationError] for [name] with an underlying
+  /// [cause].
   ServiceRegistrationError(String name, {required Object cause})
     : super('"$name" registration error: $cause');
 }
@@ -138,14 +151,21 @@ class ServiceRegistrationError extends ServiceError {
 /// (e.g. a dependency's startup failure wrapped by its dependent's) render
 /// as a readable cause chain rather than a flattened single line.
 class ServiceStartupFailed extends ServiceError {
+  /// Creates a [ServiceStartupFailed] error for [serviceName] with the
+  /// underlying [cause] and [causeStackTrace].
   ServiceStartupFailed(
     this.serviceName, {
     required this.cause,
     required this.causeStackTrace,
   }) : super('"$serviceName" failed to start');
 
+  /// The name of the service that failed to initialize.
   final String serviceName;
+
+  /// The underlying exception or error thrown during startup.
   final Object cause;
+
+  /// The stack trace captured where the builder failed.
   final StackTrace causeStackTrace;
 
   @override
@@ -175,6 +195,8 @@ class ServiceStartupFailed extends ServiceError {
 /// Example: transitioning from `ready` back to `waiting`, or from `failed`
 /// to `ready` without passing through a reset.
 class InvalidStatusTransition extends ServiceError {
+  /// Creates an [InvalidStatusTransition] error for [name] from [from] to
+  /// [to].
   InvalidStatusTransition(
     String name, {
     required String from,
@@ -185,6 +207,8 @@ class InvalidStatusTransition extends ServiceError {
 /// Thrown when a registration is found in a status value that the locator
 /// doesn't know how to handle (i.e. enum value added but switch not updated).
 class UnknownServiceStatus extends ServiceError {
+  /// Creates an [UnknownServiceStatus] error for [name] with the unhandled
+  /// [status].
   UnknownServiceStatus(String name, {required String status})
     : super('"$name" is in unhandled status: "$status"');
 }
@@ -192,7 +216,7 @@ class UnknownServiceStatus extends ServiceError {
 /// Thrown when resolving a service's dependency graph encounters a cycle.
 ///
 /// The registry walks `ServiceDescriptor.dependencies` recursively during
-/// [ServiceLocatorRegistry.register]; a cycle (e.g. A → B → A) would cause
+/// `ServiceLocatorRegistry.register`; a cycle (e.g. A → B → A) would cause
 /// the two registrations to indefinitely await each other's `pendingStart`.
 /// Detected and rejected at registration time rather than at stage time —
 /// stage order is independent, and a cycle only matters when edges are
@@ -202,9 +226,12 @@ class UnknownServiceStatus extends ServiceError {
 /// repeated name appended at the end to make the loop visually explicit:
 /// `['a', 'b', 'a']` reads as "a depends on b which depends on a".
 class CircularDependency extends ServiceError {
+  /// Creates a [CircularDependency] error for the detected dependency
+  /// [chain].
   CircularDependency(this.chain)
     : super('Circular dependency detected: ${chain.join(" → ")}');
 
+  /// The sequence of service names forming the dependency loop.
   final List<String> chain;
 }
 
@@ -218,6 +245,7 @@ class CircularDependency extends ServiceError {
 /// (e.g. `class Foo extends SyncServiceDescriptor<ServiceClass>`)
 /// cannot be expressed as a dependency target and is rejected at stage time.
 class InvalidServiceType extends ServiceError {
+  /// Creates an [InvalidServiceType] error for the given service [name].
   InvalidServiceType(String name)
     : super(
         '"$name" has an invalid service type: the descriptor\'s type '

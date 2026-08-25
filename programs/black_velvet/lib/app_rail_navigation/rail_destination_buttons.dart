@@ -9,7 +9,7 @@ import 'rail_destination_enum.dart' show RailDestinationEnum;
 /// The default footprint used for every destination button, including
 /// the overflow button.
 ///
-/// 80x60 rather than the [RailButton] default of 48x48 because every
+/// 64x64 rather than the [RailButton] default of 48x48 because every
 /// destination renders both an icon and a caption. The overflow button
 /// uses the same size so the rail's geometry stays uniform whether or
 /// not it appears. A visible destination escapes this footprint only
@@ -27,18 +27,18 @@ const Size _kButtonSize = Size(80, 60);
 /// an overflow button exists at all are stated explicitly through
 /// [visible] and [overflowed]; this widget measures nothing and
 /// guesses nothing. When [overflowed] is empty, the rail is exactly a
-/// column of [RailButton]s. When it is non-empty, the
+/// row (or column) of [RailButton]s. When it is non-empty, the
 /// overflow button always occupies the last slot, after every visible
 /// button.
 ///
-/// The caller also owns distribution. The rail fills its height and
-/// places the buttons per [mainAxisAlignment]; the default
-/// [MainAxisAlignment.start] gives the standard side-rail layout,
-/// with the buttons clustered at the top rather than spread across
-/// the full screen height.
+/// The caller also owns distribution. The rail fills its main axis
+/// and spreads the buttons per [mainAxisAlignment] — [Axis.horizontal]
+/// with the default [MainAxisAlignment.spaceEvenly] gives the standard
+/// bottom-navigation layout, with equal breathing room around every
+/// button at any screen width.
 ///
 /// The caller owns sizing too. Every button defaults to the uniform
-/// 80x60 footprint; a visible destination that genuinely needs a
+/// 64x64 footprint; a visible destination that genuinely needs a
 /// different footprint gets one through an explicit [sizeOverrides]
 /// entry, declared as const data exactly like the partition itself.
 ///
@@ -66,14 +66,22 @@ const Size _kButtonSize = Size(80, 60);
 class RailDestinationButtons extends StatelessWidget {
   /// {@macro rail_destination_buttons}
   const RailDestinationButtons({
+    required this.direction,
     required this.visible,
     required this.selected,
     required this.onSelect,
     super.key,
     this.overflowed = const <RailDestinationEnum>[],
     this.sizeOverrides = const <RailDestinationEnum, Size>{},
-    this.mainAxisAlignment = MainAxisAlignment.start,
+    this.mainAxisAlignment = MainAxisAlignment.spaceEvenly,
   });
+
+  /// The axis along which the buttons are laid out.
+  ///
+  /// Required rather than defaulted: the rail's placement dictates the
+  /// axis, and this widget has no basis for guessing it. A bottom rail
+  /// is [Axis.horizontal]; a side rail is [Axis.vertical].
+  final Axis direction;
 
   /// The destinations rendered as rail buttons, in this order.
   ///
@@ -92,7 +100,7 @@ class RailDestinationButtons extends StatelessWidget {
   /// Per-destination size overrides for visible rail buttons.
   ///
   /// Defaults to empty: every button, including the overflow button,
-  /// renders at the uniform 80x60 footprint. An entry replaces that
+  /// renders at the uniform 64x64 footprint. An entry replaces that
   /// footprint for its destination's rail button only — popover tiles
   /// size themselves, and the overflow button always keeps the uniform
   /// footprint — so every key must be a member of [visible].
@@ -118,15 +126,16 @@ class RailDestinationButtons extends StatelessWidget {
   /// nothing.
   final ValueChanged<RailDestinationEnum> onSelect;
 
-  /// How the buttons are placed along the rail's height.
+  /// How the buttons are distributed along the rail's main axis.
   ///
-  /// The rail fills its height, so alignments have room to work with.
-  /// Defaults to [MainAxisAlignment.start], the standard side-rail
-  /// placement: buttons clustered at the top, per Material's
-  /// `NavigationRail` convention. [MainAxisAlignment.center] is the
-  /// usual alternative; the distribution alignments
-  /// ([MainAxisAlignment.spaceEvenly] and friends) spread the buttons
-  /// across the full screen height, which side rails rarely want.
+  /// The rail fills its main axis, so distribution alignments have
+  /// room to work with. Defaults to [MainAxisAlignment.spaceEvenly],
+  /// the standard bottom-navigation distribution: equal space before,
+  /// between, and after the buttons. [MainAxisAlignment.spaceAround]
+  /// and [MainAxisAlignment.spaceBetween] are the usual alternatives;
+  /// [MainAxisAlignment.start] or [MainAxisAlignment.center] cluster
+  /// the buttons for side rails that shouldn't spread across the full
+  /// screen height.
   final MainAxisAlignment mainAxisAlignment;
 
   /// The rail button for [destination], sized by its [sizeOverrides]
@@ -165,7 +174,8 @@ class RailDestinationButtons extends StatelessWidget {
 
     final selectedOverflowIndex = overflowed.indexOf(selected);
 
-    return Column(
+    return Flex(
+      direction: direction,
       mainAxisAlignment: mainAxisAlignment,
       children: [
         for (final destination in visible) _railButton(destination),

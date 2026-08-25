@@ -133,7 +133,7 @@ _LayerAnimations _layerAnimationsFor({
       };
 
     case RailTransition.sharedAxis:
-      final distance = _kSharedAxisDistance;
+      const distance = _kSharedAxisDistance;
       final enterFrom = axis == Axis.horizontal
           ? Offset(forward ? distance : -distance, 0)
           : Offset(0, forward ? distance : -distance);

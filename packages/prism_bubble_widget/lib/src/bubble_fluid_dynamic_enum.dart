@@ -1,4 +1,4 @@
-// packages/prism_bubble_widget/lib/src/bubble_fluid_dynamic.dart
+// packages/prism_bubble_widget/lib/src/bubble_fluid_dynamic_enum.dart
 /// Fluid dynamics profile presets for `DynamicPrismBubble`.
 enum BubbleFluidDynamicEnum {
   /// Calm, subtle floating film with gentle speed variations.

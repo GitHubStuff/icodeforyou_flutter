@@ -205,7 +205,7 @@ void main() {
 
       expect(
         tester.getSemantics(find.byType(RailButton)),
-        containsSemantics(isButton: true, isSelected: true),
+        isSemantics(isButton: true, isSelected: true),
       );
     });
   });

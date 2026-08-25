@@ -60,7 +60,7 @@ extension DateTimeExt on DateTime {
   ///
   /// "Next" means the first instant at which the requested [unit] rolls over:
   /// `DateTimeUnit.second` counts to the upcoming `.000000` of the next
-  /// second, `DateTimeUnit.hour` to the top of the next hour, `DateTimeUnit.day`
+  /// second, `DateTimeUnit.hour` to the top of next hour, `DateTimeUnit.day`
   /// to the next midnight in this instant's zone, and so on. All finer units
   /// are treated as zero, so the result is always strictly greater than zero —
   /// an instant already sitting exactly on a boundary reports one full unit,

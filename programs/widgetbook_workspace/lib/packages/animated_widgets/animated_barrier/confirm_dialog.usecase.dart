@@ -1,7 +1,5 @@
 // programs/widgetbook_workspace/lib/packages/animated_widgets/animated_barrier/confirm_dialog.usecase.dart
 
-// ignore_for_file: comment_references
-
 import 'package:animated_widgets/animated_widgets.dart'
     show AnimatedBarrier, FadeBarrier, PopoverHandle;
 import 'package:flutter/material.dart';

@@ -5,8 +5,7 @@ import 'package:app_preferences/app_preferences.dart'
     show AbstractPreferencesInterface, MockPreferences;
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(name: 'Playground', type: MockPreferencesShowcase)
 Widget mockPreferencesPlayground(BuildContext context) {
@@ -63,16 +62,16 @@ class _MockPreferencesShowcaseState extends State<MockPreferencesShowcase> {
   }
 
   MockPreferences _build(bool seeded) => MockPreferences(
-        initialValues: seeded
-            ? <String, Object?>{
-                'theme': 'dark',
-                'fontSize': 14,
-                'opacity': 0.85,
-                'analytics': true,
-                'recents': <String>['inbox', 'archive', 'spam'],
-              }
-            : null,
-      );
+    initialValues: seeded
+        ? <String, Object?>{
+            'theme': 'dark',
+            'fontSize': 14,
+            'opacity': 0.85,
+            'analytics': true,
+            'recents': <String>['inbox', 'archive', 'spam'],
+          }
+        : null,
+  );
 
   Future<void> _run(
     String label,
@@ -136,7 +135,8 @@ class _OperationsCard extends StatelessWidget {
   final Future<void> Function(
     String label,
     Future<Object?> Function(AbstractPreferencesInterface),
-  ) onRun;
+  )
+  onRun;
   final bool showTestHelpers;
   final MockPreferences prefs;
   final VoidCallback onReset;
@@ -145,47 +145,70 @@ class _OperationsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final reads = <(String, Future<Object?> Function(AbstractPreferencesInterface))>[
-      ('getString("theme")', (p) => p.getString('theme')),
-      ('getInt("fontSize")', (p) => p.getInt('fontSize')),
-      ('getDouble("opacity")', (p) => p.getDouble('opacity')),
-      ('getBool("analytics")', (p) => p.getBool('analytics')),
-      ('getStringList("recents")', (p) => p.getStringList('recents')),
-    ];
-    final writes = <(String, Future<Object?> Function(AbstractPreferencesInterface))>[
-      ('setString("theme","light")', (p) async {
-        await p.setString('theme', 'light');
-        return 'ok';
-      }),
-      ('setInt("fontSize",18)', (p) async {
-        await p.setInt('fontSize', 18);
-        return 'ok';
-      }),
-      ('setDouble("opacity",1.0)', (p) async {
-        await p.setDouble('opacity', 1);
-        return 'ok';
-      }),
-      ('setBool("analytics",false)', (p) async {
-        await p.setBool('analytics', false);
-        return 'ok';
-      }),
-      ('setStringList("recents",[…])', (p) async {
-        await p.setStringList('recents', const ['drafts', 'starred']);
-        return 'ok';
-      }),
-    ];
+    final reads =
+        <(String, Future<Object?> Function(AbstractPreferencesInterface))>[
+          ('getString("theme")', (p) => p.getString('theme')),
+          ('getInt("fontSize")', (p) => p.getInt('fontSize')),
+          ('getDouble("opacity")', (p) => p.getDouble('opacity')),
+          ('getBool("analytics")', (p) => p.getBool('analytics')),
+          ('getStringList("recents")', (p) => p.getStringList('recents')),
+        ];
+    final writes =
+        <(String, Future<Object?> Function(AbstractPreferencesInterface))>[
+          (
+            'setString("theme","light")',
+            (p) async {
+              await p.setString('theme', 'light');
+              return 'ok';
+            },
+          ),
+          (
+            'setInt("fontSize",18)',
+            (p) async {
+              await p.setInt('fontSize', 18);
+              return 'ok';
+            },
+          ),
+          (
+            'setDouble("opacity",1.0)',
+            (p) async {
+              await p.setDouble('opacity', 1);
+              return 'ok';
+            },
+          ),
+          (
+            'setBool("analytics",false)',
+            (p) async {
+              await p.setBool('analytics', false);
+              return 'ok';
+            },
+          ),
+          (
+            'setStringList("recents",[…])',
+            (p) async {
+              await p.setStringList('recents', const ['drafts', 'starred']);
+              return 'ok';
+            },
+          ),
+        ];
     final structural =
         <(String, Future<Object?> Function(AbstractPreferencesInterface))>[
-      ('contains("theme")', (p) => p.contains('theme')),
-      ('remove("opacity")', (p) async {
-        await p.remove('opacity');
-        return 'ok';
-      }),
-      ('clear()', (p) async {
-        await p.clear();
-        return 'ok';
-      }),
-    ];
+          ('contains("theme")', (p) => p.contains('theme')),
+          (
+            'remove("opacity")',
+            (p) async {
+              await p.remove('opacity');
+              return 'ok';
+            },
+          ),
+          (
+            'clear()',
+            (p) async {
+              await p.clear();
+              return 'ok';
+            },
+          ),
+        ];
 
     return Card(
       margin: EdgeInsets.zero,
@@ -210,7 +233,10 @@ class _OperationsCard extends StatelessWidget {
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  OutlinedButton(onPressed: onReset, child: const Text('reset()')),
+                  OutlinedButton(
+                    onPressed: onReset,
+                    child: const Text('reset()'),
+                  ),
                   OutlinedButton(
                     onPressed: onSnapshot,
                     child: const Text('snapshot()'),
@@ -238,11 +264,12 @@ class _Group extends StatelessWidget {
 
   final String title;
   final List<(String, Future<Object?> Function(AbstractPreferencesInterface))>
-      items;
+  items;
   final Future<void> Function(
     String,
     Future<Object?> Function(AbstractPreferencesInterface),
-  ) onRun;
+  )
+  onRun;
 
   @override
   Widget build(BuildContext context) {

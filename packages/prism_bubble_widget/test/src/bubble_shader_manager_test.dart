@@ -1,5 +1,4 @@
 // packages/prism_bubble_widget/test/src/bubble_shader_manager_test.dart
-import 'dart:ui' as ui;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:prism_bubble_widget/src/bubble_shader_manager.dart';
 import 'package:prism_bubble_widget/src/shader_load_exception.dart';
@@ -8,7 +7,14 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('BubbleShaderManager', () {
-    test('verifies uniform slot index constants', () {
+    late BubbleShaderManager manager;
+
+    setUp(() {
+      manager = BubbleShaderManager.instance;
+      manager.resetForTesting();
+    });
+
+    test('constants are correctly assigned', () {
       expect(BubbleShaderManager.uSizeXPos, 0);
       expect(BubbleShaderManager.uSizeYPos, 1);
       expect(BubbleShaderManager.uTintRPos, 2);
@@ -20,33 +26,63 @@ void main() {
       expect(BubbleShaderManager.uPhaseAnglePos, 8);
     });
 
-    test('throws ShaderLoadException when accessing shader before init', () {
-      final manager = BubbleShaderManager.instance;
-      if (!manager.isLoaded) {
-        expect(
-          () => manager.shader,
-          throwsA(isA<ShaderLoadException>()),
-        );
-      }
+    test('throws ShaderLoadException before init', () {
+      expect(manager.isLoaded, isFalse);
+
+      expect(
+        () => manager.darkShader,
+        throwsA(
+          isA<ShaderLoadException>().having(
+            (e) => e.toString(),
+            'message',
+            contains(
+              'Dark bubble shader not loaded. Call init() first.',
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        () => manager.lightShader,
+        throwsA(
+          isA<ShaderLoadException>().having(
+            (e) => e.toString(),
+            'message',
+            contains(
+              'Light bubble shader not loaded. Call init() first.',
+            ),
+          ),
+        ),
+      );
     });
 
-    test(
-      'handles initialization failure gracefully with ShaderLoadException',
-      () async {
-        final manager = BubbleShaderManager.instance;
-        // In default headless test environments without compiled spir-v assets,
-        // init() triggers the catch block and throws ShaderLoadException.
-        try {
-          await manager.init();
-          expect(manager.isLoaded, isTrue);
-          expect(manager.shader, isA<ui.FragmentShader>());
-          // Subsequent call triggers early return branch
-          await manager.init();
-        } on ShaderLoadException catch (e) {
-          expect(e.message, contains('Failed to load shader asset'));
-          expect(manager.isLoaded, isFalse);
-        }
-      },
-    );
+    test('throws ShaderLoadException on asset load failure', () async {
+      BubbleShaderManager.programLoader = (String path) async {
+        throw Exception('Simulated asset failure');
+      };
+
+      expect(
+        manager.init(),
+        throwsA(
+          isA<ShaderLoadException>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Failed to load bubble shader assets:'),
+          ),
+        ),
+      );
+    });
+
+    test('inits successfully, exposes shaders, and handles rerun', () async {
+      await manager.init();
+
+      expect(manager.isLoaded, isTrue);
+      expect(manager.darkShader, isNotNull);
+      expect(manager.lightShader, isNotNull);
+
+      // Verify early return branch when isLoaded == true
+      await manager.init();
+      expect(manager.isLoaded, isTrue);
+    });
   });
 }

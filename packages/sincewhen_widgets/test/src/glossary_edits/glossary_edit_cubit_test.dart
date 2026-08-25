@@ -1,4 +1,4 @@
-// test/src/glossary_edits/glossary_edit_cubit_test.dart
+// packages/sincewhen_widgets/test/src/glossary_edits/glossary_edit_cubit_test.dart
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/widgets.dart';

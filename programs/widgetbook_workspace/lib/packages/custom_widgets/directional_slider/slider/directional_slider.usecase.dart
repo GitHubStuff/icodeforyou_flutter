@@ -5,8 +5,7 @@ import 'package:custom_widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(name: 'Default', type: DirectionalSlider)
 Widget directionalSliderUseCase(BuildContext context) {
@@ -77,7 +76,7 @@ class _DirectionalSliderShowcaseState
   @override
   void didUpdateWidget(_DirectionalSliderShowcase old) {
     super.didUpdateWidget(old);
-    final clamped = _controller.value.clamp(widget.min, widget.max).toDouble();
+    final clamped = _controller.value.clamp(widget.min, widget.max);
     if (clamped != _controller.value) _controller.value = clamped;
   }
 
@@ -97,7 +96,7 @@ class _DirectionalSliderShowcaseState
         children: [
           ValueListenableBuilder<double>(
             valueListenable: _controller,
-            builder: (_, value, __) => Text(
+            builder: (_, value, _) => Text(
               'value: ${value.toStringAsFixed(1)}',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,

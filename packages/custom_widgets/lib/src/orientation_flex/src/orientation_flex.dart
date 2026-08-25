@@ -21,9 +21,9 @@ import 'aspect_shape.dart';
 /// * [AspectShape.square] uses [forSquare]. A viewport counts as square when
 ///   its long-to-short side ratio is within [squareTolerance] of `1:1`.
 ///
-/// Because the trigger (viewport shape) is decoupled from the result (the [Axis]
-/// to lay out along), a portrait-style layout can be requested even in
-/// landscape — for example `forLandscape: Axis.vertical`.
+/// Because the trigger (viewport shape) is decoupled from the result
+/// (the [Axis]  to lay out along), a portrait-style layout can be requested
+/// even in landscape — for example `forLandscape: Axis.vertical`.
 ///
 /// All remaining parameters are passed straight through to the underlying
 /// [Flex] and therefore behave identically regardless of the resolved

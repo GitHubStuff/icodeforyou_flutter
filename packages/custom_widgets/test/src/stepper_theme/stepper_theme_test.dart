@@ -36,7 +36,9 @@ void main() {
       expect(copy1.crossFadeDuration, original.crossFadeDuration);
       expect(copy1.buttonSize, original.buttonSize);
 
-      final copy2 = original.copyWith(crossFadeDuration: Duration(seconds: 2));
+      final copy2 = original.copyWith(
+        crossFadeDuration: const Duration(seconds: 2),
+      );
       expect(copy2.crossFadeDuration, const Duration(seconds: 2));
       expect(copy2.buttonSize, 60);
 

@@ -30,6 +30,8 @@ dependencies:
   remind_me: ^1.0.0
   scrolling_datetime_pickers: ^1.0.0
   settings_widget: ^1.0.0
+  sincewhen_models: ^1.0.0
+  sincewhen_widgets: ^1.0.0
   splash_framework: ^1.0.0
   sqlite_viewer: ^1.0.0
   stacking_widgets: ^1.0.0

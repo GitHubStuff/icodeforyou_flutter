@@ -4,8 +4,7 @@
 import 'package:app_preferences/app_preferences.dart'
     show AbstractPreferencesInterface, HiveInitMode, HivePreferences;
 import 'package:flutter/material.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(name: 'Playground', type: HivePreferencesShowcase)
 Widget hivePreferencesPlayground(BuildContext context) {
@@ -94,7 +93,7 @@ class _HivePreferencesShowcaseState extends State<HivePreferencesShowcase> {
     if (d != null) return d;
     final b = await p.getBool(key);
     if (b != null) return b;
-    return await p.getStringList(key);
+    return p.getStringList(key);
   }
 
   Future<void> _run(
@@ -155,51 +154,75 @@ class _OperationsCard extends StatelessWidget {
   final Future<void> Function(
     String,
     Future<Object?> Function(AbstractPreferencesInterface),
-  ) onRun;
+  )
+  onRun;
 
   @override
   Widget build(BuildContext context) {
-    final reads = <(String, Future<Object?> Function(AbstractPreferencesInterface))>[
-      ('getString("theme")', (p) => p.getString('theme')),
-      ('getInt("fontSize")', (p) => p.getInt('fontSize')),
-      ('getDouble("opacity")', (p) => p.getDouble('opacity')),
-      ('getBool("analytics")', (p) => p.getBool('analytics')),
-      ('getStringList("recents")', (p) => p.getStringList('recents')),
-    ];
-    final writes = <(String, Future<Object?> Function(AbstractPreferencesInterface))>[
-      ('setString("theme","light")', (p) async {
-        await p.setString('theme', 'light');
-        return 'ok';
-      }),
-      ('setInt("fontSize",18)', (p) async {
-        await p.setInt('fontSize', 18);
-        return 'ok';
-      }),
-      ('setDouble("opacity",1.0)', (p) async {
-        await p.setDouble('opacity', 1);
-        return 'ok';
-      }),
-      ('setBool("analytics",false)', (p) async {
-        await p.setBool('analytics', false);
-        return 'ok';
-      }),
-      ('setStringList("recents",[…])', (p) async {
-        await p.setStringList('recents', const ['drafts', 'starred']);
-        return 'ok';
-      }),
-    ];
+    final reads =
+        <(String, Future<Object?> Function(AbstractPreferencesInterface))>[
+          ('getString("theme")', (p) => p.getString('theme')),
+          ('getInt("fontSize")', (p) => p.getInt('fontSize')),
+          ('getDouble("opacity")', (p) => p.getDouble('opacity')),
+          ('getBool("analytics")', (p) => p.getBool('analytics')),
+          ('getStringList("recents")', (p) => p.getStringList('recents')),
+        ];
+    final writes =
+        <(String, Future<Object?> Function(AbstractPreferencesInterface))>[
+          (
+            'setString("theme","light")',
+            (p) async {
+              await p.setString('theme', 'light');
+              return 'ok';
+            },
+          ),
+          (
+            'setInt("fontSize",18)',
+            (p) async {
+              await p.setInt('fontSize', 18);
+              return 'ok';
+            },
+          ),
+          (
+            'setDouble("opacity",1.0)',
+            (p) async {
+              await p.setDouble('opacity', 1);
+              return 'ok';
+            },
+          ),
+          (
+            'setBool("analytics",false)',
+            (p) async {
+              await p.setBool('analytics', false);
+              return 'ok';
+            },
+          ),
+          (
+            'setStringList("recents",[…])',
+            (p) async {
+              await p.setStringList('recents', const ['drafts', 'starred']);
+              return 'ok';
+            },
+          ),
+        ];
     final structural =
         <(String, Future<Object?> Function(AbstractPreferencesInterface))>[
-      ('contains("theme")', (p) => p.contains('theme')),
-      ('remove("opacity")', (p) async {
-        await p.remove('opacity');
-        return 'ok';
-      }),
-      ('clear()', (p) async {
-        await p.clear();
-        return 'ok';
-      }),
-    ];
+          ('contains("theme")', (p) => p.contains('theme')),
+          (
+            'remove("opacity")',
+            (p) async {
+              await p.remove('opacity');
+              return 'ok';
+            },
+          ),
+          (
+            'clear()',
+            (p) async {
+              await p.clear();
+              return 'ok';
+            },
+          ),
+        ];
 
     return Card(
       margin: EdgeInsets.zero,
@@ -229,11 +252,12 @@ class _Group extends StatelessWidget {
 
   final String title;
   final List<(String, Future<Object?> Function(AbstractPreferencesInterface))>
-      items;
+  items;
   final Future<void> Function(
     String,
     Future<Object?> Function(AbstractPreferencesInterface),
-  ) onRun;
+  )
+  onRun;
 
   @override
   Widget build(BuildContext context) {

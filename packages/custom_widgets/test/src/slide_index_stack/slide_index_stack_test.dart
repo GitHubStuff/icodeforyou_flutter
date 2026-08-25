@@ -70,10 +70,13 @@ Offstage _offstageOf(WidgetTester tester, Key key) {
 
 /// Whether tickers are enabled at the child at [key].
 bool _tickersEnabledAt(WidgetTester tester, Key key) {
-  return TickerMode.of(tester.element(find.byKey(key, skipOffstage: false)));
+  final element = tester.element(find.byKey(key, skipOffstage: false));
+  return TickerMode.valuesOf(element).enabled;
 }
 
 void main() {
+  /// Test suite verifying [SlideIndexedStack] layout, transitions,
+  /// animations, and state preservation.
   group(SlideIndexedStack, () {
     test('exposes the documented defaults', () {
       const stack = SlideIndexedStack(index: 0, children: <Widget>[]);
@@ -291,6 +294,7 @@ void main() {
 /// A stateful child used to prove the [IndexedStack] state-keeping
 /// contract survives slides.
 class _Counter extends StatefulWidget {
+  /// Creates a test counter widget.
   const _Counter({super.key});
 
   @override

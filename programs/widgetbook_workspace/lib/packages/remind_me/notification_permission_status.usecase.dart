@@ -4,16 +4,14 @@
 import 'package:flutter/material.dart';
 import 'package:remind_me/remind_me.dart' show NotificationPermissionStatus;
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(
   name: 'State picker',
   type: NotificationPermissionStatusShowcase,
 )
 Widget notificationPermissionStatusPicker(BuildContext context) {
-  final selected =
-      context.knobs.object.dropdown<NotificationPermissionStatus>(
+  final selected = context.knobs.object.dropdown<NotificationPermissionStatus>(
     label: 'Selected status',
     options: NotificationPermissionStatus.values,
     initialOption: NotificationPermissionStatus.notDetermined,
@@ -46,48 +44,48 @@ class NotificationPermissionStatusShowcase extends StatelessWidget {
 
   static const _entries =
       <(NotificationPermissionStatus, String, String, IconData, Color)>[
-    (
-      NotificationPermissionStatus.granted,
-      'Permission granted',
-      'Notifications can be scheduled and delivered. No further user '
-          'action is required.',
-      Icons.check_circle,
-      Colors.green,
-    ),
-    (
-      NotificationPermissionStatus.denied,
-      'Denied — re-promptable',
-      'User declined the prompt but can still be asked again. Show a '
-          '"Request" button that calls RemindMe.requestPermissions().',
-      Icons.help_outline,
-      Colors.orange,
-    ),
-    (
-      NotificationPermissionStatus.permanentlyDenied,
-      'Permanently denied',
-      'Re-prompting is not possible. The only path forward is to send '
-          'the user to OS settings — call RemindMe.openSettings().',
-      Icons.do_disturb_on,
-      Colors.red,
-    ),
-    (
-      NotificationPermissionStatus.restricted,
-      'Restricted by policy',
-      'Parental controls or device-management policy is blocking '
-          'notifications. The user cannot grant from settings alone; an '
-          'administrator must intervene.',
-      Icons.shield,
-      Colors.deepPurple,
-    ),
-    (
-      NotificationPermissionStatus.notDetermined,
-      'Not yet requested',
-      'No prompt has been shown yet. The first call to '
-          'RemindMe.requestPermissions() will display the OS dialog.',
-      Icons.help_center,
-      Colors.blueGrey,
-    ),
-  ];
+        (
+          NotificationPermissionStatus.granted,
+          'Permission granted',
+          'Notifications can be scheduled and delivered. No further user '
+              'action is required.',
+          Icons.check_circle,
+          Colors.green,
+        ),
+        (
+          NotificationPermissionStatus.denied,
+          'Denied — re-promptable',
+          'User declined the prompt but can still be asked again. Show a '
+              '"Request" button that calls RemindMe.requestPermissions().',
+          Icons.help_outline,
+          Colors.orange,
+        ),
+        (
+          NotificationPermissionStatus.permanentlyDenied,
+          'Permanently denied',
+          'Re-prompting is not possible. The only path forward is to send '
+              'the user to OS settings — call RemindMe.openSettings().',
+          Icons.do_disturb_on,
+          Colors.red,
+        ),
+        (
+          NotificationPermissionStatus.restricted,
+          'Restricted by policy',
+          'Parental controls or device-management policy is blocking '
+              'notifications. The user cannot grant from settings alone; an '
+              'administrator must intervene.',
+          Icons.shield,
+          Colors.deepPurple,
+        ),
+        (
+          NotificationPermissionStatus.notDetermined,
+          'Not yet requested',
+          'No prompt has been shown yet. The first call to '
+              'RemindMe.requestPermissions() will display the OS dialog.',
+          Icons.help_center,
+          Colors.blueGrey,
+        ),
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +187,8 @@ class _StatusCard extends StatelessWidget {
 class _SwitchArmsCard extends StatelessWidget {
   const _SwitchArmsCard();
 
-  static const _code = '''switch (await RemindMe.instance.currentStatus()) {
+  static const _code = '''
+switch (await RemindMe.instance.currentStatus()) {
   NotificationPermissionStatus.granted =>
     // ready to schedule
     null,
@@ -216,9 +215,9 @@ class _SwitchArmsCard extends StatelessWidget {
               style: Theme.of(context).textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
-            SelectableText(
+            const SelectableText(
               _code,
-              style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+              style: TextStyle(fontFamily: 'monospace', fontSize: 12),
             ),
           ],
         ),
