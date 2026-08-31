@@ -1,5 +1,5 @@
 // packages/theme_framework/lib/theme_framework.dart
-export 'src/cubit/theme_cubit.dart' show ThemeCubit;
+export 'src/cubit/theme_cubit.dart' show ThemeCubit, ThemeCubitInterface;
 export 'src/default_material_app_router.dart' show DefaultMaterialAppRouter;
 export 'src/preferences/shared_preferences_theme_storage.dart'
     show SharedPreferencesThemeStorage;

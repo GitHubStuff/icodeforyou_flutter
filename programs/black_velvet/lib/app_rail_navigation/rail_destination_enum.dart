@@ -1,5 +1,7 @@
 // programs/black_velvet/lib/app_rail_navigation/rail_destination_enum.dart
 
+import 'package:app_navigation/app_navigation.dart'
+    show NavigableDestinationAbstract;
 import 'package:custom_widgets/custom_widgets.dart'
     show DefaultWelcomeScreen, IceChip;
 import 'package:flutter/material.dart';
@@ -53,7 +55,7 @@ Widget _databaseView() => const Center(child: Text('Database'));
 /// Nothing else in the app needs to be touched.
 /// {@endtemplate}
 /// TODO: Add/remove/reorder members and adjust the statics below.
-enum RailDestinationEnum {
+enum RailDestinationEnum implements NavigableDestinationAbstract {
   /// The home destination.
   home(
     iconData: Icons.home_outlined,

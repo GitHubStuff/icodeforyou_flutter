@@ -1,5 +1,7 @@
 # packages/extensions/analysis_options.yaml
 analyzer:
+  errors:
+    deprecated_consistency: ignore
   exclude:
     - build/**
     - android/**

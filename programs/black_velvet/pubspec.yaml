@@ -10,13 +10,13 @@ environment:
 
 dependencies:
   analog_clock_widget: ^1.0.0
+  app_navigation: ^1.0.0
   custom_widgets: ^1.0.0
   dependency_resolver: ^1.0.0
   flutter:
     sdk: flutter
   gap: ^3.0.1
   prism_bubble_widget: ^1.0.0
-  rail_navigation: ^1.0.0
   shared_preferences: ^2.5.5
   splash_framework: ^1.0.0
   status_bar_chameleon: ^1.0.1

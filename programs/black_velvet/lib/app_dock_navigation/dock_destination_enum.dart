@@ -1,9 +1,10 @@
 // programs/black_velvet/lib/app_dock_navigation/dock_destination_enum.dart
 
-import 'package:black_velvet/app_shared_navigation/_bodys/shared_search_body.dart'
+import 'package:app_navigation/app_navigation.dart'
+    show NavigableDestinationAbstract;
+import 'package:black_velvet/app_screens/shared_search_body.dart'
     show SharedSearchBody;
-import 'package:custom_widgets/custom_widgets.dart'
-    show DefaultWelcomeScreen;
+import 'package:custom_widgets/custom_widgets.dart' show DefaultWelcomeScreen;
 import 'package:flutter/material.dart';
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
@@ -44,7 +45,7 @@ Widget _databaseView() => const Center(child: Text('Database'));
 /// Nothing else in the app needs to be touched.
 /// {@endtemplate}
 /// TODO: Add/remove/reorder members and adjust the statics below.
-enum DockDestinationEnum {
+enum DockDestinationEnum implements NavigableDestinationAbstract {
   /// The home destination.
   home(
     iconData: Icons.home_outlined,
@@ -88,10 +89,6 @@ enum DockDestinationEnum {
     required this.viewBuilder,
   });
 
-  /// The destination shown when the app screen first appears.
-  /// TODO: Change the first DOCK-Button to appear.
-  static const DockDestinationEnum initial = home;
-
   /// The destinations shown as dock buttons, in dock order.
   ///
   /// This is the dock's partition policy, together with [overflowed]:
@@ -122,6 +119,7 @@ enum DockDestinationEnum {
   /// Stored as [IconData] rather than a widget so members remain
   /// const; `DockDestinationButtons` wraps it in an [Icon] with
   /// whatever styling the dock owns.
+  @override
   final IconData iconData;
 
   /// The text rendered as this destination's button caption.
@@ -129,6 +127,7 @@ enum DockDestinationEnum {
   /// Stored as a plain [String] for the same const reason;
   /// `DockDestinationButtons` wraps it in a [Text] with the dock's
   /// caption style.
+  @override
   final String caption;
 
   /// Builds this destination's view.
@@ -136,5 +135,6 @@ enum DockDestinationEnum {
   /// A constant tear-off so the member stays const. Invoked once per
   /// destination inside `DockScreen`'s build; the returned widget is
   /// kept alive in the view stack for the screen's lifetime.
+  @override
   final Widget Function() viewBuilder;
 }

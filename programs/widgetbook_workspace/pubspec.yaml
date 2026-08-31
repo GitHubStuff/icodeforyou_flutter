@@ -25,7 +25,6 @@ dependencies:
   infinite_scroll_picking: ^1.0.0
   oktoast: ^3.4.0    # instead of debugPrint  
   prism_bubble_widget: ^1.0.0
-  rail_navigation: ^1.0.0
   random_color_generator: ^1.0.0
   remind_me: ^1.0.0
   scrolling_datetime_pickers: ^1.0.0

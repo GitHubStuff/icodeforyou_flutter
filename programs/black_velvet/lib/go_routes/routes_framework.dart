@@ -2,6 +2,13 @@
 
 import 'dart:async' show unawaited;
 
+import 'package:app_navigation/app_navigation.dart'
+    show DockScreen, NavigationChooser, NavigationCubit, RailScreen;
+import 'package:black_velvet/app_dock_navigation/dock_destination_enum.dart'
+    show DockDestinationEnum;
+import 'package:black_velvet/app_rail_navigation/rail_destination_enum.dart';
+import 'package:black_velvet/splash/animated_splash_screen.dart'
+    show AnimatedSplashScreen;
 import 'package:custom_widgets/custom_widgets.dart'
     show CrashScreen, CrashScreenArgs;
 import 'package:flutter/services.dart';
@@ -11,13 +18,6 @@ import 'package:go_router/go_router.dart';
 import 'package:splash_framework/splash_framework.dart' show SplashScreen;
 import 'package:status_bar_chameleon/status_bar_chameleon.dart'
     show StatusBarChameleon;
-
-import '../app_dock_navigation/dock_destination_enum.dart'
-    show DockDestinationEnum;
-import '../app_shared_navigation/navigation_chooser.dart'
-    show NavigationChooser;
-import '../app_shared_navigation/navigation_cubit.dart' show NavigationCubit;
-import '../screens/animated_splash_screen.dart' show AnimatedSplashScreen;
 
 part 'routes.goroute.dart';
 

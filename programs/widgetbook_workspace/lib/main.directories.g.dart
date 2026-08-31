@@ -127,18 +127,6 @@ import 'package:widgetbook_workspace/packages/prism_bubble_widget/dynamic_prism_
     as _widgetbook_workspace_packages_prism_bubble_widget_dynamic_prism_bubble_usecase;
 import 'package:widgetbook_workspace/packages/prism_bubble_widget/prism_bubble_widget.usecase.dart'
     as _widgetbook_workspace_packages_prism_bubble_widget_prism_bubble_widget_usecase;
-import 'package:widgetbook_workspace/packages/rail_navigation/rail_button.usecase.dart'
-    as _widgetbook_workspace_packages_rail_navigation_rail_button_usecase;
-import 'package:widgetbook_workspace/packages/rail_navigation/rail_button_presets.usecase.dart'
-    as _widgetbook_workspace_packages_rail_navigation_rail_button_presets_usecase;
-import 'package:widgetbook_workspace/packages/rail_navigation/rail_overflow_button.usecase.dart'
-    as _widgetbook_workspace_packages_rail_navigation_rail_overflow_button_usecase;
-import 'package:widgetbook_workspace/packages/rail_navigation/rail_popover_tile.usecase.dart'
-    as _widgetbook_workspace_packages_rail_navigation_rail_popover_tile_usecase;
-import 'package:widgetbook_workspace/packages/rail_navigation/rail_shell.usecase.dart'
-    as _widgetbook_workspace_packages_rail_navigation_rail_shell_usecase;
-import 'package:widgetbook_workspace/packages/rail_navigation/rail_widget.usecase.dart'
-    as _widgetbook_workspace_packages_rail_navigation_rail_widget_usecase;
 import 'package:widgetbook_workspace/packages/random_color_generator/random_color_generator.usecase.dart'
     as _widgetbook_workspace_packages_random_color_generator_random_color_generator_usecase;
 import 'package:widgetbook_workspace/packages/remind_me/notification_permission_status.usecase.dart'
@@ -157,6 +145,8 @@ import 'package:widgetbook_workspace/packages/settings_widget/settings_widget.us
     as _widgetbook_workspace_packages_settings_widget_settings_widget_usecase;
 import 'package:widgetbook_workspace/packages/sincewhen_widgets/glossary_card.usecase.dart'
     as _widgetbook_workspace_packages_sincewhen_widgets_glossary_card_usecase;
+import 'package:widgetbook_workspace/packages/sincewhen_widgets/glossary_item_create_dialog.usecase.dart'
+    as _widgetbook_workspace_packages_sincewhen_widgets_glossary_item_create_dialog_usecase;
 import 'package:widgetbook_workspace/packages/splash_framework/splash_screen.usecase.dart'
     as _widgetbook_workspace_packages_splash_framework_splash_screen_usecase;
 import 'package:widgetbook_workspace/packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_page/sqlite_viewer_page.usecase.dart'
@@ -669,14 +659,36 @@ final directories = <_widgetbook.WidgetbookNode>[
   _widgetbook.WidgetbookFolder(
     name: 'glossary_edits',
     children: [
-      _widgetbook.WidgetbookComponent(
-        name: 'GlossaryCard',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder:
-                _widgetbook_workspace_packages_sincewhen_widgets_glossary_card_usecase
-                    .defaultGlossaryCard,
+      _widgetbook.WidgetbookFolder(
+        name: 'widgets',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'GlossaryCard',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder:
+                    _widgetbook_workspace_packages_sincewhen_widgets_glossary_card_usecase
+                        .defaultGlossaryCard,
+              ),
+            ],
+          ),
+          _widgetbook.WidgetbookComponent(
+            name: 'GlossaryItemCreateDialog',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Default',
+                builder:
+                    _widgetbook_workspace_packages_sincewhen_widgets_glossary_item_create_dialog_usecase
+                        .glossaryItemCreateDialogDefaultUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Inline Presentation',
+                builder:
+                    _widgetbook_workspace_packages_sincewhen_widgets_glossary_item_create_dialog_usecase
+                        .glossaryItemCreateDialogInlineUseCase,
+              ),
+            ],
           ),
         ],
       ),
@@ -1207,94 +1219,6 @@ final directories = <_widgetbook.WidgetbookNode>[
   _widgetbook.WidgetbookFolder(
     name: 'widgets',
     children: [
-      _widgetbook.WidgetbookComponent(
-        name: 'MainRailButton',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder:
-                _widgetbook_workspace_packages_rail_navigation_rail_button_presets_usecase
-                    .buildMainRailButtonUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'MoreRailButton',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder:
-                _widgetbook_workspace_packages_rail_navigation_rail_button_presets_usecase
-                    .buildMoreRailButtonUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'RailButton',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder:
-                _widgetbook_workspace_packages_rail_navigation_rail_button_usecase
-                    .buildRailButtonUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'RailOverflowButton',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder:
-                _widgetbook_workspace_packages_rail_navigation_rail_overflow_button_usecase
-                    .buildRailOverflowButtonUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'RailPopoverTile',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder:
-                _widgetbook_workspace_packages_rail_navigation_rail_popover_tile_usecase
-                    .buildRailPopoverTileUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'RailShell',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder:
-                _widgetbook_workspace_packages_rail_navigation_rail_shell_usecase
-                    .buildRailShellUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'RailWidget',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder:
-                _widgetbook_workspace_packages_rail_navigation_rail_widget_usecase
-                    .buildRailWidgetUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'SettingsRailButton',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder:
-                _widgetbook_workspace_packages_rail_navigation_rail_button_presets_usecase
-                    .buildSettingsRailButtonUseCase,
-          ),
-        ],
-      ),
       _widgetbook.WidgetbookComponent(
         name: 'SettingsScreen',
         useCases: [

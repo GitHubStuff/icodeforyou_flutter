@@ -6,10 +6,10 @@ import 'package:gap/gap.dart' show Gap;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:three_d_sphere/three_d_sphere.dart' show ThreeDSphere;
 
-/// Horizontal gap between the clock and the welcome text.
+/// Horizontal gap between elements.
 const _kSpacing = 16.0;
 
-/// Font size for the welcome text, proportioned against the 100x100 clock.
+/// Font size for the welcome text.
 const _kWelcomeFontSize = 24.0;
 
 /// Deep purple screen background.
@@ -20,7 +20,7 @@ const Color _kTextColor = Colors.white;
 
 /// {@template default_welcome_screen.dart}
 /// A full-screen welcome surface showing the analog clock beside a
-/// 'Welcome' label, centered on a deep purple background.
+/// 'Welcome' label and 3D sphere, centered on a deep purple background.
 /// {@endtemplate}
 class DefaultWelcomeScreen extends StatelessWidget {
   /// {@macro default_welcome_screen.dart}
@@ -32,31 +32,37 @@ class DefaultWelcomeScreen extends StatelessWidget {
     return ColoredBox(
       color: _kBackgroundColor,
       child: Center(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AnalogClock(
-              radius: 75,
-              style: const ClockStyle(
-                hourHandColor: _kBackgroundColor,
-                minuteHandColor: _kBackgroundColor,
-              ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AnalogClock(
+                  radius: 75,
+                  style: const ClockStyle(
+                    hourHandColor: _kBackgroundColor,
+                    minuteHandColor: _kBackgroundColor,
+                  ),
+                ),
+                const Gap(_kSpacing),
+                Text(
+                  'Welcome',
+                  style: GoogleFonts.archivoBlack(
+                    color: _kTextColor,
+                    fontSize: _kWelcomeFontSize,
+                  ),
+                ),
+                const Gap(_kSpacing),
+                ThreeDSphere(
+                  width: 24,
+                  height: 24,
+                  color: Colors.amber[900]!,
+                ),
+              ],
             ),
-            const Gap(_kSpacing),
-            Text(
-              'Welcome',
-              style: GoogleFonts.archivoBlack(
-                color: _kTextColor,
-                fontSize: _kWelcomeFontSize,
-              ),
-            ),
-            const Gap(_kSpacing),
-            ThreeDSphere(
-              width: 24,
-              height: 24,
-              color: Colors.amber[900]!,
-            ),
-          ],
+          ),
         ),
       ),
     );

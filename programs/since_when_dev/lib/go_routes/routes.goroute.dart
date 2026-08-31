@@ -3,8 +3,13 @@ part of 'routes_framework.dart';
 
 //+ COLLECTION OF STARTER/DEFAULT ROUTES +//
 
-/// The route to the app after the splash completes {currently a rail-based
-/// navigation app}
+/// The route to the app after the splash completes. The
+/// [NavigationCubit] is provided here — above [NavigationChooser] and
+/// therefore above both navigation screens — so selection and rail
+/// visibility survive the dock↔rail swaps that rotation and window
+/// resizing trigger. The cubit is seeded with the dock's initial
+/// destination name; both enums name their shared members
+/// identically, so either enum's `initial` seeds correctly.
 GoRoute _appRoute() => GoRoute(
   path: RoutesFramework.app,
   pageBuilder: (context, state) => CustomTransitionPage<void>(
@@ -15,9 +20,29 @@ GoRoute _appRoute() => GoRoute(
           opacity: animation.drive(CurveTween(curve: Curves.easeInOut)),
           child: child,
         ),
-    child: const AnnotatedRegion<SystemUiOverlayStyle>(
+    child: AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light, // white status icons
-      child: RailScreen(),
+      child: BlocProvider<NavigationCubit>(
+        create: (_) => NavigationCubit(),
+        child: NavigationChooser(
+          chooser: (context) {
+            if (MediaQuery.sizeOf(context).width < 600) {
+              return const DockScreen<DockDestinationEnum>(
+                values: DockDestinationEnum.values,
+                visible: DockDestinationEnum.visible,
+                initial: DockDestinationEnum.home,
+                overflowed: DockDestinationEnum.overflowed,
+              );
+            }
+            return const RailScreen<RailDestinationEnum>(
+              values: RailDestinationEnum.values,
+              visible: RailDestinationEnum.visible,
+              initial: RailDestinationEnum.home,
+              overflowed: RailDestinationEnum.overflowed,
+            );
+          },
+        ),
+      ),
     ),
   ),
 );

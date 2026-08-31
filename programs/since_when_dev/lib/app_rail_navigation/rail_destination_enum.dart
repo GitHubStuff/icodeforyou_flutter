@@ -1,8 +1,11 @@
 // programs/since_when_dev/lib/app_rail_navigation/rail_destination_enum.dart
 
+import 'package:app_navigation/app_navigation.dart'
+    show NavigableDestinationAbstract;
 import 'package:custom_widgets/custom_widgets.dart'
     show DefaultWelcomeScreen, IceChip;
 import 'package:flutter/material.dart';
+import 'package:sincewhen_widgets/sincewhen_widgets.dart';
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
 /// Placeholder view for the search destination.
@@ -19,10 +22,6 @@ Widget _searchView() => Center(
 /// Placeholder view for the library destination.
 /// TODO: Replace with the real screen, then delete this function.
 Widget _libraryView() => const Center(child: Text('Library'));
-
-/// Placeholder view for the database destination.
-/// TODO: Replace with the real screen, then delete this function.
-Widget _databaseView() => const Center(child: Text('Database'));
 
 /// {@template rail_destination_enum}
 /// The set of destinations available in the rail — and the only file
@@ -53,7 +52,7 @@ Widget _databaseView() => const Center(child: Text('Database'));
 /// Nothing else in the app needs to be touched.
 /// {@endtemplate}
 /// TODO: Add/remove/reorder members and adjust the statics below.
-enum RailDestinationEnum {
+enum RailDestinationEnum implements NavigableDestinationAbstract {
   /// The home destination.
   home(
     iconData: Icons.home_outlined,
@@ -86,7 +85,7 @@ enum RailDestinationEnum {
   database(
     iconData: Icons.storage,
     caption: 'Database',
-    viewBuilder: _databaseView,
+    viewBuilder: GlossaryEditPage.new,
   );
 
   // CODE:
@@ -97,10 +96,6 @@ enum RailDestinationEnum {
     required this.viewBuilder,
   });
 
-  /// The destination shown when the app screen first appears.
-  /// TODO: Change the first RAIL-Button to appear.
-  static const RailDestinationEnum initial = home;
-
   /// The destinations shown as rail buttons, in rail order.
   ///
   /// This is the rail's partition policy, together with [overflowed]:
@@ -110,6 +105,7 @@ enum RailDestinationEnum {
   /// TODO: Control the order of the RAIL buttons.
   static const List<RailDestinationEnum> visible = [
     home,
+    database,
     settings,
   ];
 
@@ -122,7 +118,6 @@ enum RailDestinationEnum {
   /// TODO: Control the order of the RAIL-OVERFLOW buttons.
   static const List<RailDestinationEnum> overflowed = [
     library,
-    database,
   ];
 
   /// The glyph rendered as this destination's button icon.

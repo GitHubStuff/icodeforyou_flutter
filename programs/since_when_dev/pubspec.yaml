@@ -9,12 +9,13 @@ environment:
 
 dependencies:
   analog_clock_widget: ^1.0.0
+  app_navigation: ^1.0.0
   custom_widgets: ^1.0.0
   dependency_resolver: ^1.0.0
   flutter:
     sdk: flutter
-  rail_navigation: ^1.0.0
   shared_preferences: ^2.5.5
+  sincewhen_widgets: ^1.0.0
   splash_framework: ^1.0.0
   status_bar_chameleon: ^1.0.1
   theme_framework: ^1.0.0

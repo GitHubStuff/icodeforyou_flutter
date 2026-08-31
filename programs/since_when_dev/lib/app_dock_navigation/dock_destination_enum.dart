@@ -1,19 +1,17 @@
-// programs/black_velvet/lib/app_dock_navigation/dock_destination_enum.dart
+// programs/since_when_dev/lib/app_dock_navigation/dock_destination_enum.dart
 
-import 'package:black_velvet/app_shared_navigation/_bodys/shared_search_body.dart'
+import 'package:app_navigation/app_navigation.dart'
+    show NavigableDestinationAbstract;
+import 'package:black_velvet/app_screens/shared_search_body.dart'
     show SharedSearchBody;
-import 'package:custom_widgets/custom_widgets.dart'
-    show DefaultWelcomeScreen;
+import 'package:custom_widgets/custom_widgets.dart' show DefaultWelcomeScreen;
 import 'package:flutter/material.dart';
+import 'package:sincewhen_widgets/sincewhen_widgets.dart' show GlossaryEditPage;
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
 /// Placeholder view for the library destination.
 /// TODO: Replace with the real screen, then delete this function.
 Widget _libraryView() => const Center(child: Text('Library'));
-
-/// Placeholder view for the database destination.
-/// TODO: Replace with the real screen, then delete this function.
-Widget _databaseView() => const Center(child: Text('Database'));
 
 /// {@template dock_destination_enum}
 /// The set of destinations available in the dock — and the only file
@@ -44,7 +42,7 @@ Widget _databaseView() => const Center(child: Text('Database'));
 /// Nothing else in the app needs to be touched.
 /// {@endtemplate}
 /// TODO: Add/remove/reorder members and adjust the statics below.
-enum DockDestinationEnum {
+enum DockDestinationEnum implements NavigableDestinationAbstract {
   /// The home destination.
   home(
     iconData: Icons.home_outlined,
@@ -77,7 +75,7 @@ enum DockDestinationEnum {
   database(
     iconData: Icons.storage,
     caption: 'Database',
-    viewBuilder: _databaseView,
+    viewBuilder: GlossaryEditPage.new,
   );
 
   // CODE:
@@ -102,7 +100,7 @@ enum DockDestinationEnum {
   static const List<DockDestinationEnum> visible = [
     home,
     settings,
-    search,
+    database,
   ];
 
   /// The destinations folded into the overflow popover, in tile order.
@@ -113,8 +111,8 @@ enum DockDestinationEnum {
   /// [visible].
   /// TODO: Control the order of the DOCK-OVERFLOW buttons.
   static const List<DockDestinationEnum> overflowed = [
+    search,
     library,
-    database,
   ];
 
   /// The glyph rendered as this destination's button icon.

@@ -23,10 +23,25 @@ GoRoute _appRoute() => GoRoute(
     child: AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light, // white status icons
       child: BlocProvider<NavigationCubit>(
-        create: (_) => NavigationCubit(
-          initialDestinationName: DockDestinationEnum.initial.name,
+        create: (_) => NavigationCubit(),
+        child: NavigationChooser(
+          chooser: (context) {
+            if (MediaQuery.sizeOf(context).width < 600) {
+              return const DockScreen<DockDestinationEnum>(
+                values: DockDestinationEnum.values,
+                visible: DockDestinationEnum.visible,
+                initial: DockDestinationEnum.home,
+                overflowed: DockDestinationEnum.overflowed,
+              );
+            }
+            return const RailScreen<RailDestinationEnum>(
+              values: RailDestinationEnum.values,
+              visible: RailDestinationEnum.visible,
+              initial: RailDestinationEnum.home,
+              overflowed: RailDestinationEnum.overflowed,
+            );
+          },
         ),
-        child: const NavigationChooser(),
       ),
     ),
   ),

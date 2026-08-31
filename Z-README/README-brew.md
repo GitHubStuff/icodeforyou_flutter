@@ -11,6 +11,9 @@
 **15-Aug-2026**
 - Updated README.brew.md
 
+** 30-Aug-2026**
+- Ran update/check
+
 ## Brew maintence and housekeeping
 Steps:
 

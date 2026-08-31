@@ -1,3 +1,4 @@
+// programs/widgetbook_workspace/lib/packages/sincewhen_widgets/glossary_card.usecase.dart
 import 'package:flutter/material.dart';
 import 'package:sincewhen_models/sincewhen_models.dart' show GlossaryItem;
 import 'package:sincewhen_widgets/sincewhen_widgets.dart' show GlossaryCard;
