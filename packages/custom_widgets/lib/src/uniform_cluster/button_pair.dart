@@ -1,10 +1,10 @@
-// packages/custom_widgets/lib/src/uniform_cluster/save_cancel_bar.dart
-// ignore_for_file: public_member_api_docs
+// packages/custom_widgets/lib/src/uniform_cluster/button_pair.dart
 
 import 'package:custom_widgets/src/uniform_cluster/uniform_cluster.dart'
     show UniformCluster;
 import 'package:flutter/material.dart';
 
+/// {@template save_cancel_bar.dart}
 /// A Save / Cancel action pair with equal-width buttons.
 ///
 /// - **Horizontal**: Cancel (outlined) leading, Save (filled) trailing,
@@ -16,7 +16,9 @@ import 'package:flutter/material.dart';
 /// Save is the emphasized (filled) action; Cancel steps down (outlined).
 /// [UniformCluster] equalizes the two buttons, so their differing label
 /// lengths produce no width mismatch.
+/// {@endtemplate}
 class ButtonPair extends StatelessWidget {
+  /// {@macro save_cancel_bar.dart}
   const ButtonPair({
     required this.onPrimary,
     required this.onSecondary,
@@ -26,10 +28,27 @@ class ButtonPair extends StatelessWidget {
     super.key,
   });
 
+  /// Label for the emphasized (filled) action. Defaults to `'Save'`.
   final String primaryText;
+
+  /// Label for the de-emphasized (outlined) action. Defaults to `'Cancel'`.
   final String secondaryText;
+
+  /// Called when the primary (filled) button is pressed.
+  ///
+  /// Pass `null` to disable the button.
   final VoidCallback? onPrimary;
+
+  /// Called when the secondary (outlined) button is pressed.
+  ///
+  /// Pass `null` to disable the button.
   final VoidCallback? onSecondary;
+
+  /// Layout direction of the pair.
+  ///
+  /// [Axis.horizontal] places Cancel leading and Save trailing;
+  /// [Axis.vertical] places Save on top and Cancel below.
+  /// Defaults to [Axis.horizontal].
   final Axis axis;
 
   @override

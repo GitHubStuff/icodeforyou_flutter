@@ -1,4 +1,4 @@
-// extensions/lib/src/datetime_ordering.dart
+// packages/time_spans/lib/src/comparison/datetime_order.dart
 
 /// Describes the temporal relationship between two [DateTime] objects.
 enum DateTimeOrder {

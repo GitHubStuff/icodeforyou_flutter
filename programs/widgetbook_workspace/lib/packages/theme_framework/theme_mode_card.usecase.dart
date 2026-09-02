@@ -1,4 +1,4 @@
-// programs/widgetbook/lib/usecases/theme_framework/theme_mode_card.usecase.dart
+// programs/widgetbook_workspace/lib/packages/theme_framework/theme_mode_card.usecase.dart
 
 import 'package:flutter/material.dart';
 import 'package:theme_framework/theme_framework.dart' show ThemeModeCard;

@@ -1,4 +1,4 @@
-// test/src/widgets/sqlite_viewer_table_detail/sqlite_viewer_table_detail_schema_test.dart
+// packages/sqlite_viewer/test/src/widgets/sqlite_viewer_table_detail/sqlite_viewer_table_detail_schema_test.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

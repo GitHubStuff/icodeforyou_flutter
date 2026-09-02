@@ -5,9 +5,9 @@
 /// The formatter takes one non-negative [int] and a template string, formats
 /// the FIRST `%...q` token against that value, and returns the formatted prefix
 /// followed by the remainder of the template untouched. Text before the token
-/// is copied verbatim (with `%%` -> `%`); everything after the token is returned
-/// raw, so a caller can feed the tail back in with the next value to render a
-/// multi-unit display one token at a time.
+/// is copied verbatim (with `%%` -> `%`); everything after the token is
+/// returned raw, so a caller can feed the tail back in with the next value
+/// to render a multi-unit display one token at a time.
 /// {@endtemplate}
 library;
 
@@ -117,13 +117,14 @@ class _TokenSpec {
 /// - `q` — a unit letter (`Y M W D H m s S u`), ignored except for validation.
 /// - `t|singular|plural|q` — plurality: emit `singular` when the value is `1`,
 ///   otherwise `plural`. Inside the arms, `%%` -> `%` and `%|` -> `|` are the
-///   only valid escapes.
+///   only escapes; any other `%` is treated as a literal percent character.
 ///
 /// ## Sign
 ///
-/// [doFormat] expects a **non-negative** value. In debug builds a negative value
-/// trips an assertion; in release builds the value is coerced with [int.abs].
-/// The sign is *dropped*, never rendered — directionality (before / now / after)
+/// [doFormat] expects a **non-negative** value. In debug builds a negative
+/// value trips an assertion; in release builds the value is coerced with
+/// [int.abs].
+/// The sign is *dropped*, never rendered — directionality (before/now/ after)
 /// is the caller's concern, expressed with a `t` token or surrounding literal
 /// text.
 ///
@@ -339,7 +340,8 @@ class UnitFormatter {
 
 /// Reads one plurality arm up to the next unescaped `|`.
 ///
-/// Inside an arm only `%%` -> `%` and `%|` -> `|` are valid escapes.
+/// Inside an arm `%%` -> `%` and `%|` -> `|` are the only escapes; any other
+/// `%` is treated as a literal percent character and copied through.
 ({String text, int next}) _readArm(String s, int start) {
   final len = s.length;
   var i = start;
@@ -360,11 +362,7 @@ class UnitFormatter {
         i += 2;
         continue;
       }
-      assert(
-        false,
-        'Inside plurality arms only %% and %| are valid escapes; got "%$n" in: $s',
-      );
-      // Release fallback: treat the stray '%' as a literal.
+      // Not an escape: a lone '%' is a literal percent character.
       buffer.write(_kPercent);
       i++;
       continue;

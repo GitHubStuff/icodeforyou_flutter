@@ -1,4 +1,4 @@
-// packages/services_locator/lib/src/service_locator_registry/service_registration.dart
+// packages/service_locator/lib/src/service_registry/service_registration.dart
 //
 // Tracks the lifecycle state of a single staged service within the
 // [ServiceLocatorRegistry]. Transitions are one-way through the state

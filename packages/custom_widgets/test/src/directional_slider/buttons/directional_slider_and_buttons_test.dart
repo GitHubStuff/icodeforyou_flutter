@@ -7,14 +7,16 @@ import 'package:custom_widgets/src/directional_slider/buttons/step_button.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Fixed button diameter so tests never depend on an ambient CrossFadeTheme.
+/// Fixed button diameter so tests never depend on an ambient StepperTheme.
 const double _kButtonSize = 36;
 
 /// Pumps [widget] inside a Material scaffold.
 Future<void> _pump(WidgetTester tester, Widget widget) {
   return tester.pumpWidget(
     MaterialApp(
-      home: Scaffold(body: Padding(padding: const EdgeInsets.all(16), child: widget)),
+      home: Scaffold(
+        body: Padding(padding: const EdgeInsets.all(16), child: widget),
+      ),
     ),
   );
 }
@@ -28,8 +30,9 @@ StepButton _stepButtonFor(WidgetTester tester, IconData icon) {
 
 void main() {
   group('DirectionalSliderAndButtons', () {
-    testWidgets('plus and minus step the controller and fire onChanged',
-        (tester) async {
+    testWidgets('plus and minus step the controller and fire onChanged', (
+      tester,
+    ) async {
       final controller = DirectionalController(initial: 5);
       addTearDown(controller.dispose);
       final changes = <double>[];
@@ -57,8 +60,7 @@ void main() {
       expect(changes, [6.0, 5.0]);
     });
 
-    testWidgets('increment clamps an overshooting step to max',
-        (tester) async {
+    testWidgets('increment clamps an overshooting step to max', (tester) async {
       final controller = DirectionalController(initial: 9.5);
       addTearDown(controller.dispose);
 
@@ -104,8 +106,9 @@ void main() {
       expect(_stepButtonFor(tester, Icons.remove).onPressed, isNull);
     });
 
-    testWidgets('hold-to-repeat stops stepping at min without overshoot',
-        (tester) async {
+    testWidgets('hold-to-repeat stops stepping at min without overshoot', (
+      tester,
+    ) async {
       final controller = DirectionalController(initial: 1);
       addTearDown(controller.dispose);
 
@@ -132,8 +135,7 @@ void main() {
       expect(controller.value, 0);
     });
 
-    testWidgets('renders custom icons and the configured gap',
-        (tester) async {
+    testWidgets('renders custom icons and the configured gap', (tester) async {
       final controller = DirectionalController(initial: 5);
       addTearDown(controller.dispose);
 
@@ -192,24 +194,26 @@ void main() {
     });
 
     testWidgets(
-        'KNOWN BUG: minValueFirst false asserts because the slider grid '
-        'receives min and max swapped', (tester) async {
-      final controller = DirectionalController(initial: 5);
-      addTearDown(controller.dispose);
+      'KNOWN BUG: minValueFirst false asserts because the slider grid '
+      'receives min and max swapped',
+      (tester) async {
+        final controller = DirectionalController(initial: 5);
+        addTearDown(controller.dispose);
 
-      await _pump(
-        tester,
-        DirectionalSliderAndButtons(
-          controller: controller,
-          min: 0,
-          max: 10,
-          step: 1,
-          buttonSize: _kButtonSize,
-          minValueFirst: false,
-        ),
-      );
+        await _pump(
+          tester,
+          DirectionalSliderAndButtons(
+            controller: controller,
+            min: 0,
+            max: 10,
+            step: 1,
+            buttonSize: _kButtonSize,
+            minValueFirst: false,
+          ),
+        );
 
-      expect(tester.takeException(), isAssertionError);
-    });
+        expect(tester.takeException(), isAssertionError);
+      },
+    );
   });
 }

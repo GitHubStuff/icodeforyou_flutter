@@ -1,4 +1,4 @@
-// packages/extensions/lib/int_ext/int_ext.dart
+// packages/extensions/lib/int/int_ext.dart
 import 'package:flutter/material.dart' show Color;
 
 /// Extensions on [int] for common type conversions.

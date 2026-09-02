@@ -1,4 +1,4 @@
-// lib/src/analog_clock.dart
+// packages/analog_clock_widget/lib/src/analog_clock.dart
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';

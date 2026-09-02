@@ -1,4 +1,4 @@
-// test/color/color_ext_test.dart
+// packages/extensions/test/color/color_ext_test.dart
 
 import 'package:extensions/color/color_ext.dart' show ColorExt;
 import 'package:flutter/painting.dart';
@@ -46,14 +46,14 @@ void main() {
     group('contrastingTextColor', () {
       test('returns black on a light color', () {
         expect(
-          const Color(0xFFFFFFFF).contrastingTextColor(),
+          const Color(0xFFFFFFFF).contrastingColor(),
           const Color(0xFF000000),
         );
       });
 
       test('returns white on a dark color', () {
         expect(
-          const Color(0xFF000000).contrastingTextColor(),
+          const Color(0xFF000000).contrastingColor(),
           const Color(0xFFFFFFFF),
         );
       });

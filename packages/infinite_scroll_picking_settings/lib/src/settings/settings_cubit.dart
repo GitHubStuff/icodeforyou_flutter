@@ -1,4 +1,4 @@
-// infinite_scroll_picking_settings/lib/src/settings/settings_cubit.dart
+// packages/infinite_scroll_picking_settings/lib/src/settings/settings_cubit.dart
 // ignore_for_file: public_member_api_docs, always_use_package_imports
 
 import 'package:flutter_bloc/flutter_bloc.dart';

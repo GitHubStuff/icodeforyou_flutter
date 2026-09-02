@@ -1,4 +1,4 @@
-// packages/sqlite_viewer/lib/src/widgets/_display_query_widget_layout.dart
+// packages/sqlite_viewer/lib/src/widgets/display_query_widget/display_query_widget_layout.dart
 // ignore_for_file: avoid_types_on_closure_parameters
 
 part of 'display_query_widget.dart';

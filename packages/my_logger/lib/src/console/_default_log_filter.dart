@@ -1,4 +1,4 @@
-// my_logger/lib/src/console/_default_log_filter.dart
+// packages/my_logger/lib/src/console/_default_log_filter.dart
 part of 'my_logger.dart';
 
 final class _DefaultLogFilter implements _LogFilter {

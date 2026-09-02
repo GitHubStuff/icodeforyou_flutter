@@ -1,4 +1,4 @@
-// lib/src/core/constants/timing_constants.dart
+// packages/scrolling_datetime_pickers/lib/src/core/constants/timing_constants.dart
 
 /// Timing constants for animations and debouncing
 class TimingConstants {

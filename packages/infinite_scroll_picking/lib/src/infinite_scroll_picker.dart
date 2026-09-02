@@ -1,6 +1,4 @@
-// lib/src/infinite_scroll_picker.dart
-
-// ignore_for_file: avoid_positional_boolean_parameters, public_member_api_docs
+// packages/infinite_scroll_picking/lib/src/infinite_scroll_picker.dart
 
 part of 'library.dart';
 

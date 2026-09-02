@@ -1,4 +1,4 @@
-// test/string/string_ext_test.dart
+// packages/extensions/test/string/string_ext_test.dart
 
 import 'package:extensions/string/string_ext.dart' show StringExt;
 import 'package:flutter/painting.dart';

@@ -1,4 +1,4 @@
-// packages/services_locator/lib/src/service_locator/mock_service_locator.dart
+// packages/service_locator/lib/src/service_locator/mock_service_locator.dart
 //
 // A hand-rolled, GetIt-free implementation of [ServiceLocator] intended
 // for unit tests, widget tests, and local development. Provides

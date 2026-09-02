@@ -1,5 +1,6 @@
-// packages/splash_framework/lib/src/splash_cubit.dart
+// packages/splash_framework/lib/src/cubit/splash_cubit.dart
 
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'splash_state.dart';
@@ -13,7 +14,7 @@ import 'splash_state.dart';
 /// The cubit ensures the splash screen remains visible for at least [duration].
 /// If tasks take longer than the duration, the cubit emits [SplashWaiting] so
 /// the UI can show a loading indicator. When all tasks finish, it emits
-/// [SplashComplete]. If any task throws an error, it emits [SplashError].
+/// [SplashComplete]. If any task throws, it emits [SplashError].
 ///
 /// This cubit is typically used by [SplashScreen] to drive its visual state.
 final class SplashCubit extends Cubit<SplashState> {
@@ -35,15 +36,19 @@ final class SplashCubit extends Cubit<SplashState> {
   /// concurrently using `Future.wait`.
   final List<Future<void> Function()> tasks;
 
-  /// Starts the splash process by executing all tasks and enforcing the minimum
-  /// [duration].
+  /// Starts the splash process by executing all tasks and enforcing the
+  /// minimum [duration].
   ///
   /// Flow:
-  /// - All [tasks] begin executing concurrently.
+  /// - All [tasks] begin executing concurrently, invoked exactly once.
   /// - The cubit waits for [duration] to elapse.
-  /// - If tasks are still running after the duration, [SplashWaiting] is emitted.
+  /// - If tasks are still running after the duration, [SplashWaiting] is
+  ///   emitted.
   /// - When all tasks complete, [SplashComplete] is emitted.
-  /// - If any task throws an exception, [SplashError] is emitted with the error.
+  /// - If any task throws, [SplashError] is emitted with the error and its
+  ///   stack trace. In debug builds the error is then rethrown so programmer
+  ///   errors crash loudly at the throw site instead of only rendering as a
+  ///   crash screen.
   ///
   /// This method should be called once, typically immediately after cubit
   /// creation.
@@ -51,21 +56,30 @@ final class SplashCubit extends Cubit<SplashState> {
     try {
       var tasksComplete = false;
 
-      final tasksFuture = Future.wait(tasks.map((task) => task())).then((_) {
+      final futures = tasks.map((task) => task()).toList();
+
+      final tasksFuture = Future.wait(futures).then((_) {
         tasksComplete = true;
       });
 
       await Future<void>.delayed(duration);
 
-      if (!tasksComplete) {
+      if (!tasksComplete && !isClosed) {
         emit(const SplashWaiting());
       }
 
       await tasksFuture;
 
-      emit(const SplashComplete());
-    } on Exception catch (error) {
-      emit(SplashError(error));
+      if (!isClosed) {
+        emit(const SplashComplete());
+      }
+    } on Object catch (error, stackTrace) {
+      if (!isClosed) {
+        emit(SplashError(error, stackTrace));
+      }
+      if (kDebugMode) {
+        rethrow;
+      }
     }
   }
 }

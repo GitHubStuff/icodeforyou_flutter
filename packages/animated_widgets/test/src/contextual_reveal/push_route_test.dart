@@ -1,4 +1,4 @@
-// test/src/contextual_reveal/push_route_test.dart
+// packages/animated_widgets/test/src/contextual_reveal/push_route_test.dart
 
 import 'package:animated_widgets/src/contextual_reveal/contextual_reveal.dart';
 import 'package:flutter/gestures.dart';

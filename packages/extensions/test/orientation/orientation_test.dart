@@ -1,6 +1,6 @@
-// test/orientation/orientation_test.dart
+// packages/extensions/test/orientation/orientation_test.dart
 
-import 'package:extensions/orientation/orientation.dart' show OrientationExt;
+import 'package:extensions/extensions.dart' show OrientationExt;
 import 'package:flutter/widgets.dart' show Orientation;
 import 'package:flutter_test/flutter_test.dart';
 

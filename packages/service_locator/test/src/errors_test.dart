@@ -1,4 +1,4 @@
-// test/src/errors_test.dart
+// packages/service_locator/test/src/errors_test.dart
 //
 // Unit tests for the ServiceError sealed hierarchy.
 //

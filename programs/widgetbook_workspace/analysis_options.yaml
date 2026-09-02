@@ -3,10 +3,16 @@ include: package:very_good_analysis/analysis_options.yaml
 analyzer:
   errors:
     always_use_package_imports: ignore
+    avoid_positional_boolean_parameters: ignore
     avoid_redundant_argument_values: ignore
+    avoid_types_on_closure_parameters: ignore
     comment_references: ignore
     depend_on_referenced_packages: ignore
+    invalid_use_of_visible_for_testing_member: ignore
+    library_private_types_in_public_api: ignore
+    lines_longer_than_80_chars: ignore
     omit_local_variable_types: ignore
+    prefer_int_literals: ignore
     public_member_api_docs: ignore
 
   exclude:
@@ -16,6 +22,13 @@ analyzer:
     - '**/*.g.dart'
     - '**/*.gen.dart'
     - '**/*.mocks.dart'
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 
 linter:
   rules:

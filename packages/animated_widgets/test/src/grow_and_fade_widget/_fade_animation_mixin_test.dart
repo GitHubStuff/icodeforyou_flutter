@@ -1,4 +1,4 @@
-// animated_widgets/test/src/grow_and_fade_widget/_fade_animation_mixin_test.dart
+// packages/animated_widgets/test/src/grow_and_fade_widget/_fade_animation_mixin_test.dart
 
 import 'package:animated_widgets/src/grow_and_fade_widget/_fade_animation_mixin.dart'
     show FadeAnimationMixin;

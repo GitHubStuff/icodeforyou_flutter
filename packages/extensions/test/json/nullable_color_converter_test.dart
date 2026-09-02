@@ -1,4 +1,4 @@
-// test/json/nullable_color_converter_test.dart
+// packages/extensions/test/json/nullable_color_converter_test.dart
 
 import 'package:extensions/json/nullable_color_converter.dart'
     show NullableColorConverter;
@@ -8,6 +8,14 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('NullableColorConverter', () {
     const converter = NullableColorConverter();
+
+    test('constructor is generative', () {
+      // Non-const on purpose: a const instance is canonicalized at compile
+      // time and never executes the constructor at runtime, so it records
+      // no line coverage. This forces one real execution of line 22.
+      // ignore: prefer_const_constructors
+      expect(NullableColorConverter(), isA<NullableColorConverter>());
+    });
 
     test('fromJson returns null for null input', () {
       expect(converter.fromJson(null), isNull);

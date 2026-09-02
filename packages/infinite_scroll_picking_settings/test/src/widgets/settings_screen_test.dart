@@ -1,145 +1,276 @@
-// infinite_scroll_picking_settings/test/src/widgets/settings_screen_test.dart
+// packages/infinite_scroll_picking_settings/test/src/widgets/settings_screen_test.dart
+// ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:infinite_scroll_picking/infinite_scroll_picking.dart'
-    show InfiniteScrollPicker;
-import 'package:infinite_scroll_picking_settings/src/picker_visual_settings/picker_visual_settings.dart'
-    show PickerVisualSettings;
-import 'package:infinite_scroll_picking_settings/src/settings/settings_cubit.dart'
-    show SettingsCubit;
-import 'package:infinite_scroll_picking_settings/src/settings/settings_holder.dart'
-    show SettingsHolder;
-import 'package:infinite_scroll_picking_settings/src/settings/settings_repository.dart'
-    show SettingsRepository;
-import 'package:infinite_scroll_picking_settings/src/settings/settings_state/settings_state.dart'
-    show SettingsState;
-import 'package:infinite_scroll_picking_settings/src/widgets/settings_screen.dart'
-    show SettingsScreen;
+import 'package:infinite_scroll_picking_settings/src/picker_visual_settings/picker_visual_settings.dart';
+import 'package:infinite_scroll_picking_settings/src/settings/settings_cubit.dart';
+import 'package:infinite_scroll_picking_settings/src/settings/settings_holder.dart';
+import 'package:infinite_scroll_picking_settings/src/settings/settings_repository.dart';
+import 'package:infinite_scroll_picking_settings/src/settings/settings_state/settings_state.dart';
+import 'package:infinite_scroll_picking_settings/src/widgets/settings_screen.dart';
+import 'package:mocktail/mocktail.dart';
 
-/// No-op repository — screen-arm tests never persist.
-final class _FakeRepository implements SettingsRepository {
-  @override
-  Future<PickerVisualSettings?> load() async => null;
+class _MockSettingsHolder extends Mock implements SettingsHolder {}
+
+class _MockSettingsRepository extends Mock implements SettingsRepository {}
+
+class _TestSettingsCubit extends SettingsCubit {
+  _TestSettingsCubit({required super.holder, required super.repository});
+
+  int updateCount = 0;
 
   @override
-  Future<void> save(PickerVisualSettings settings) async {}
+  void updateSettings(PickerVisualSettings settings) {
+    updateCount++;
+    super.updateSettings(settings);
+  }
 
-  @override
-  Future<void> clear() async {}
-}
-
-/// Cubit exposing [force] so tests can reach the defensive
-/// initial/loading/error arms the real lifecycle never enters.
-///
-/// [force] must be called *before* the screen is pumped: the first
-/// build reads `state` synchronously, making the target arm render on
-/// the first frame with no dependence on stream-delivery timing.
-final class _StageableSettingsCubit extends SettingsCubit {
-  /// Creates a stageable cubit over [holder] and [repository].
-  _StageableSettingsCubit({
-    required super.holder,
-    required SettingsRepository repository,
-  }) : super(repository: repository);
-
-  /// Forces the cubit into [state] regardless of lifecycle rules.
-  void force(SettingsState state) => emit(state);
-}
-
-/// Pumps a [SettingsScreen] over [cubit] on a tall test surface.
-///
-/// [settle] must be `false` for the initial/loading arms — their
-/// [CircularProgressIndicator] is an indeterminate animation that
-/// repeats forever, so `pumpAndSettle` would time out.
-Future<void> _pumpScreen(
-  WidgetTester tester,
-  SettingsCubit cubit, {
-  bool settle = true,
-}) async {
-  tester.view.physicalSize = const Size(1200, 3000);
-  tester.view.devicePixelRatio = 1.0;
-  addTearDown(tester.view.resetPhysicalSize);
-  addTearDown(tester.view.resetDevicePixelRatio);
-
-  await tester.pumpWidget(
-    MaterialApp(
-      home: BlocProvider<SettingsCubit>.value(
-        value: cubit,
-        child: const SettingsScreen(),
-      ),
-    ),
-  );
-  if (settle) await tester.pumpAndSettle();
+  void seed(SettingsState state) => emit(state);
 }
 
 void main() {
-  group('SettingsScreen', () {
-    late SettingsHolder holder;
-    late _StageableSettingsCubit cubit;
+  late _MockSettingsHolder holder;
+  late _MockSettingsRepository repository;
 
-    setUp(() {
-      holder = SettingsHolder(const PickerVisualSettings());
-      cubit = _StageableSettingsCubit(
-        holder: holder,
-        repository: _FakeRepository(),
-      );
-    });
+  setUpAll(() {
+    registerFallbackValue(const PickerVisualSettings());
+  });
 
-    tearDown(() async {
-      await cubit.close();
-      holder.dispose();
-    });
+  setUp(() {
+    holder = _MockSettingsHolder();
+    repository = _MockSettingsRepository();
+    when(() => holder.value).thenReturn(const PickerVisualSettings());
+    when(() => holder.update(any())).thenAnswer((_) {});
+    when(() => repository.save(any())).thenAnswer((_) async {});
+    when(() => repository.clear()).thenAnswer((_) async {});
+  });
 
-    testWidgets('loaded state renders preview, all sections, and readout', (
+  _TestSettingsCubit buildCubit() =>
+      _TestSettingsCubit(holder: holder, repository: repository);
+
+  Future<_TestSettingsCubit> pumpScreen(
+    WidgetTester tester, {
+    _TestSettingsCubit? cubit,
+  }) async {
+    final c = cubit ?? buildCubit();
+    addTearDown(c.close);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: BlocProvider<SettingsCubit>.value(
+          value: c,
+          // child: const SettingsScreen(),
+          child: SettingsScreen(),
+        ),
+      ),
+    );
+    // await tester.pumpAndSettle();
+    await tester.pump();
+    return c;
+  }
+
+  Finder sliderFor(String label) => find.descendant(
+    of: find.ancestor(of: find.text(label), matching: find.byType(Row)).first,
+    matching: find.byType(Slider),
+  );
+
+  Future<void> dragSlider(WidgetTester tester, String label) async {
+    final slider = sliderFor(label);
+    await tester.ensureVisible(slider);
+    await tester.pumpAndSettle();
+    await tester.drag(slider, const Offset(-400, 0));
+    await tester.pumpAndSettle();
+    await tester.drag(sliderFor(label), const Offset(400, 0));
+    await tester.pumpAndSettle();
+  }
+
+  SettingsLoaded loadedState(_TestSettingsCubit cubit) =>
+      cubit.state as SettingsLoaded;
+
+  group('SettingsScreen state arms', () {
+    testWidgets('shows a progress indicator for initial and loading states', (
       tester,
     ) async {
-      await _pumpScreen(tester, cubit);
+      final cubit = buildCubit()..seed(const SettingsState.initial());
+      await pumpScreen(tester, cubit: cubit);
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
+      cubit.seed(const SettingsState.loading());
+      await tester.pump();
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    });
+
+    testWidgets('shows the error view for the error state', (tester) async {
+      final cubit = buildCubit()
+        ..seed(const SettingsState.error(message: 'kaboom'));
+      await pumpScreen(tester, cubit: cubit);
+      expect(find.text('kaboom'), findsOneWidget);
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+    });
+
+    testWidgets('shows the loaded view with all sections and a clean readout', (
+      tester,
+    ) async {
+      await pumpScreen(tester);
       expect(find.text('Picker Settings'), findsOneWidget);
-      expect(
-        find.byType(InfiniteScrollPicker<int, String>),
-        findsOneWidget,
-      );
+      expect(find.text('Preview'), findsOneWidget);
       expect(find.text('FRAME'), findsOneWidget);
       expect(find.text('WHEEL — DIMENSIONS'), findsOneWidget);
       expect(find.text('WHEEL — SELECTION BAND'), findsOneWidget);
       expect(find.text('WHEEL — PERSPECTIVE & MOTION'), findsOneWidget);
       expect(find.text('PICKER'), findsOneWidget);
       expect(find.text('Current settings'), findsOneWidget);
+      expect(find.text('unsaved'), findsNothing);
     });
+  });
 
-    testWidgets('initial state shows the defensive progress indicator', (
+  group('slider rows', () {
+    testWidgets('every slider drives updateSettings and dirties the state', (
       tester,
     ) async {
-      cubit.force(const SettingsState.initial());
-
-      await _pumpScreen(tester, cubit, settle: false);
-
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      final cubit = await pumpScreen(tester);
+      const labels = [
+        'frameBorderRadius',
+        'frameHorizontalPadding',
+        'frameVerticalPadding',
+        'itemExtent',
+        'wheelWidth',
+        'wheelHeight',
+        'wheelBorderRadius',
+        'dividerThickness',
+        'dividerInset',
+        'perspectiveDiameter',
+        'magnification',
+        'selectionDebounce ms',
+        'startingIndex',
+      ];
+      for (final label in labels) {
+        final before = cubit.updateCount;
+        await dragSlider(tester, label);
+        expect(cubit.updateCount, greaterThan(before), reason: label);
+      }
+      expect(loadedState(cubit).isDirty, isTrue);
+      expect(find.text('unsaved'), findsOneWidget);
     });
 
-    testWidgets('loading state shows the defensive progress indicator', (
+    testWidgets('wheelHeight is clamped to stay valid against itemExtent', (
       tester,
     ) async {
-      cubit.force(const SettingsState.loading());
+      final cubit = await pumpScreen(tester);
+      await dragSlider(tester, 'itemExtent');
+      await dragSlider(tester, 'wheelHeight');
+      final wheel = loadedState(cubit).settings.wheel;
+      expect(
+        wheel.wheelHeight,
+        greaterThanOrEqualTo(wheel.itemExtent * 1.1),
+      );
+    });
+  });
 
-      await _pumpScreen(tester, cubit, settle: false);
+  group('showBorder switch', () {
+    testWidgets('toggles the wheel border flag', (tester) async {
+      final cubit = await pumpScreen(tester);
+      final before = loadedState(cubit).settings.wheel.showBorder;
+      final sw = find.byType(Switch);
+      await tester.ensureVisible(sw);
+      await tester.pumpAndSettle();
+      await tester.tap(sw);
+      await tester.pumpAndSettle();
+      expect(loadedState(cubit).settings.wheel.showBorder, !before);
+    });
+  });
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  group('AppBar actions', () {
+    const edited = PickerVisualSettings(startingIndex: 5);
+
+    testWidgets('Save is disabled while clean and enabled once dirty', (
+      tester,
+    ) async {
+      final cubit = await pumpScreen(tester);
+      final saveButton = find.widgetWithText(TextButton, 'Save');
+      expect(tester.widget<TextButton>(saveButton).onPressed, isNull);
+
+      cubit.updateSettings(edited);
+      await tester.pumpAndSettle();
+      expect(tester.widget<TextButton>(saveButton).onPressed, isNotNull);
     });
 
-    testWidgets('error state shows the message in the error color', (
+    testWidgets('Save persists, updates the holder, and cleans the state', (
       tester,
     ) async {
-      cubit.force(const SettingsState.error(message: 'save exploded'));
+      final cubit = await pumpScreen(tester);
+      cubit.updateSettings(edited);
+      await tester.pumpAndSettle();
 
-      await _pumpScreen(tester, cubit, settle: false);
-      await tester.pump();
+      await tester.tap(find.widgetWithText(TextButton, 'Save'));
+      await tester.pumpAndSettle();
 
-      final text = tester.widget<Text>(find.text('save exploded'));
-      final context = tester.element(find.text('save exploded'));
-      expect(text.style?.color, Theme.of(context).colorScheme.error);
+      verify(() => repository.save(edited)).called(1);
+      verify(() => holder.update(edited)).called(1);
+      expect(cubit.state, const SettingsState.loaded(settings: edited));
+      expect(find.text('unsaved'), findsNothing);
+    });
+
+    testWidgets('Save failure surfaces the error view and spares the holder', (
+      tester,
+    ) async {
+      when(() => repository.save(any())).thenThrow(Exception('disk full'));
+      final cubit = await pumpScreen(tester);
+      cubit.updateSettings(edited);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.widgetWithText(TextButton, 'Save'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('Failed to save settings'), findsOneWidget);
+      verifyNever(() => holder.update(any()));
+    });
+
+    testWidgets('Reset restores defaults as a dirty preview', (tester) async {
+      final cubit = await pumpScreen(tester);
+      cubit.updateSettings(edited);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byTooltip('Reset to defaults'));
+      await tester.pumpAndSettle();
+
+      expect(
+        cubit.state,
+        const SettingsState.loaded(
+          settings: PickerVisualSettings(),
+          isDirty: true,
+        ),
+      );
+      expect(find.text('unsaved'), findsOneWidget);
+    });
+
+    testWidgets('Clear wipes storage, resets the holder, and cleans state', (
+      tester,
+    ) async {
+      final cubit = await pumpScreen(tester);
+      await tester.tap(find.byTooltip('Clear stored settings'));
+      await tester.pumpAndSettle();
+
+      verify(() => repository.clear()).called(1);
+      verify(() => holder.update(const PickerVisualSettings())).called(1);
+      expect(
+        cubit.state,
+        const SettingsState.loaded(settings: PickerVisualSettings()),
+      );
+    });
+
+    testWidgets('Clear failure surfaces the error view and spares the holder', (
+      tester,
+    ) async {
+      when(() => repository.clear()).thenThrow(Exception('locked'));
+      await pumpScreen(tester);
+
+      await tester.tap(find.byTooltip('Clear stored settings'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('Failed to clear settings'), findsOneWidget);
+      verifyNever(() => holder.update(any()));
     });
   });
 }

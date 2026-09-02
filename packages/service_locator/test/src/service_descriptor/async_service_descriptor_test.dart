@@ -1,4 +1,4 @@
-// service_locator/test/src/service_descriptor/async_service_descriptor_test.dart
+// packages/service_locator/test/src/service_descriptor/async_service_descriptor_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:service_locator/src/errors.dart' show BadServiceClass;

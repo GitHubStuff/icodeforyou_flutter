@@ -1,4 +1,4 @@
-// packages/sqlite_viewer/lib/src/widgets/_display_query_widget_cells.dart
+// packages/sqlite_viewer/lib/src/widgets/display_query_widget/display_query_widget_cells.dart
 
 part of 'display_query_widget.dart';
 
@@ -6,7 +6,13 @@ part of 'display_query_widget.dart';
 // Header and Cell Builders
 // =============================================================================
 
+/// Provides widget building methods for the header, body, rows, and
+/// cells of the `DisplayQueryWidget`.
 extension CellBuilders on DisplayQueryWidgetState {
+  /// Builds the scrollable header row of the table.
+  ///
+  /// The header contains the column names and is synchronized horizontally
+  /// with the table body via `_horizontalHeaderController`.
   Widget buildHeader() {
     return Container(
       height: widget.headerHeight,
@@ -31,6 +37,10 @@ extension CellBuilders on DisplayQueryWidgetState {
     );
   }
 
+  /// Builds an individual cell for the table header at the given [colIndex].
+  ///
+  /// Applies border styling and truncates text if it exceeds the calculated
+  /// column width.
   Widget buildHeaderCell(int colIndex) {
     final isFirst = colIndex == 0;
 
@@ -56,6 +66,10 @@ extension CellBuilders on DisplayQueryWidgetState {
     );
   }
 
+  /// Builds the scrollable body of the table containing the data rows.
+  ///
+  /// Supports both vertical scrolling via `_verticalController` and
+  /// horizontal scrolling via `_horizontalBodyController`.
   Widget buildBody() {
     return SingleChildScrollView(
       controller: _verticalController,
@@ -77,6 +91,10 @@ extension CellBuilders on DisplayQueryWidgetState {
     );
   }
 
+  /// Builds a single data row for the table at the given [rowIndex].
+  ///
+  /// Applies alternating row colors and styles based on whether the index
+  /// is even or odd.
   Widget buildRow(int rowIndex) {
     final isEven = rowIndex.isEven;
     final rowStyle = isEven ? widget.evenRowStyle : widget.oddRowStyle;
@@ -98,6 +116,11 @@ extension CellBuilders on DisplayQueryWidgetState {
     );
   }
 
+  /// Builds an individual data cell located at [rowIndex] and [colIndex].
+  ///
+  /// The [style] is applied to the text. If the cell contains a null
+  /// value, it renders with an italicized, grey appearance. Text wrapping
+  /// or truncation is determined by the widget's `textHandling` config.
   Widget buildDataCell(int rowIndex, int colIndex, TextStyle style) {
     final row = widget.rows[rowIndex];
     final cellValue = getCellValue(row, colIndex);

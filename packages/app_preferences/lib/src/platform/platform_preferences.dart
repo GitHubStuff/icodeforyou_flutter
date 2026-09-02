@@ -1,4 +1,4 @@
-// preferences/lib/src/platform_preferences.dart
+// packages/app_preferences/lib/src/platform/platform_preferences.dart
 // ignore_for_file: comment_references, always_use_package_imports
 
 import 'package:shared_preferences/shared_preferences.dart'

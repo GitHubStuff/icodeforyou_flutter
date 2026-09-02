@@ -1,4 +1,4 @@
-// package/test/src/utils/trace_color_test.dart
+// packages/my_logger/test/trace_color_test.dart
 // ignore_for_file: avoid_redundant_argument_values
 import 'package:flutter_test/flutter_test.dart';
 import 'package:my_logger/src/trace_color.dart' show TraceColor;

@@ -1,0 +1,2 @@
+# programs/widgetbook_workspace/test/analysis_options.yaml
+include: ../analysis_options.yaml

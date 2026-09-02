@@ -1,4 +1,4 @@
-// lib/src/_datetime_difference.dart
+// packages/extensions/lib/datetime/src/_datetime_difference.dart
 
 part of 'datetime_delta.dart';
 

@@ -1,6 +1,4 @@
-// animated_widgets/lib/src/length_colored_border_field/color_point.dart
-
-// ignore_for_file: comment_references
+// packages/animated_widgets/lib/src/length_colored_border_field/color_point.dart
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/painting.dart';

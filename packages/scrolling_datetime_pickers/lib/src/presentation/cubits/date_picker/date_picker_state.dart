@@ -1,4 +1,4 @@
-// lib/src/presentation/cubits/date_picker/date_picker_state.dart
+// packages/scrolling_datetime_pickers/lib/src/presentation/cubits/date_picker/date_picker_state.dart
 
 part of 'date_picker_cubit.dart';
 

@@ -1,4 +1,4 @@
-// infinite_scroll_picking_settings/lib/src/settings_state/settings_state.dart
+// packages/infinite_scroll_picking_settings/lib/src/settings/settings_state/settings_state.dart
 
 // ignore_for_file: comment_references, always_use_package_imports, public_member_api_docs
 

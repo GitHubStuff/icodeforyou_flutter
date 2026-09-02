@@ -1,10 +1,10 @@
+// packages/analog_clock_widget/test/clock_models_test.dart
+
 // clock_models_test.dart
-// ignore_for_file: use_named_constants
 
 import 'package:analog_clock_widget/analog_clock_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -59,9 +59,7 @@ void main() {
   group('_ClockConfiguration.hashCode (via helpers)', () {
     test('same (radius, theme, style instance) => same hash', () {
       final cs = ColorScheme.fromSeed(seedColor: const Color(0xFF1976D2));
-      const style = ClockStyle(
-        
-      );
+      const style = ClockStyle();
       final h1 = debugClockConfigurationHash(
         radius: 100,
         colorScheme: cs,
@@ -110,9 +108,7 @@ void main() {
 
     test('different style => different hash', () {
       final cs = ColorScheme.fromSeed(seedColor: const Color(0xFF1976D2));
-      const a = ClockStyle(
-        
-      );
+      const a = ClockStyle();
       const b = ClockStyle(
         handStyle: HandStyle.modern,
       );

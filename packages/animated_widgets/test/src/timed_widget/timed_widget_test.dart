@@ -1,4 +1,4 @@
-// animated_widgets/test/src/timed_widget/timed_widget_test.dart
+// packages/animated_widgets/test/src/timed_widget/timed_widget_test.dart
 import 'package:animated_widgets/src/timed_widget/timed_widget.dart'
     show TimedWidget;
 import 'package:flutter/widgets.dart';

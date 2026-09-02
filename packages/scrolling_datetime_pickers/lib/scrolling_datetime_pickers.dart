@@ -1,4 +1,4 @@
-// lib/scrolling_datetime_pickers.dart
+// packages/scrolling_datetime_pickers/lib/scrolling_datetime_pickers.dart
 
 // Constants
 export 'src/core/constants/popover_constants.dart';

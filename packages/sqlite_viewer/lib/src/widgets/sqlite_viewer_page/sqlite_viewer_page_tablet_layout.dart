@@ -1,4 +1,4 @@
-// packages/sqlite_viewer/lib/src/widgets/_sqlite_viewer_page_tablet_layout.dart
+// packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_page/sqlite_viewer_page_tablet_layout.dart
 
 part of 'sqlite_viewer_page.dart';
 

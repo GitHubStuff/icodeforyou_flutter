@@ -1,4 +1,4 @@
-// extensions/lib/src/nullable_color_converter.dart
+// packages/extensions/lib/json/nullable_color_converter.dart
 import 'package:extensions/color/color_ext.dart';
 import 'package:flutter/painting.dart';
 import 'package:json_annotation/json_annotation.dart';

@@ -25,10 +25,10 @@ part of '../animated_barrier.dart';
 sealed class BarrierAnimation {
   /// Creates the shared configuration for a barrier animation variant.
   ///
-  /// [duration] defaults to 750ms and [curve] to [Curves.easeOutCubic]. Both
+  /// [duration] defaults to 250ms and [curve] to [Curves.easeOutCubic]. Both
   /// are inherited by every subclass via `super` parameters.
   const BarrierAnimation({
-    this.duration = const Duration(milliseconds: 750),
+    this.duration = const Duration(milliseconds: 250),
     this.curve = Curves.easeOutCubic,
   });
 

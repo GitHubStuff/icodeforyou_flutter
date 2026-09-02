@@ -3,8 +3,13 @@ part of 'routes_framework.dart';
 
 //+ COLLECTION OF STARTER/DEFAULT ROUTES +//
 
-/// The route to the app after the splash completes {currently a rail-based
-/// navigation app}
+/// The route to the app after the splash completes. The
+/// [NavigationCubit] is provided here — above [NavigationChooser] and
+/// therefore above both navigation screens — so selection and rail
+/// visibility survive the dock↔rail swaps that rotation and window
+/// resizing trigger. The cubit is seeded with the dock's initial
+/// destination name; both enums name their shared members
+/// identically, so either enum's `initial` seeds correctly.
 GoRoute _appRoute() => GoRoute(
   path: RoutesFramework.app,
   pageBuilder: (context, state) => CustomTransitionPage<void>(
@@ -15,9 +20,14 @@ GoRoute _appRoute() => GoRoute(
           opacity: animation.drive(CurveTween(curve: Curves.easeInOut)),
           child: child,
         ),
-    child: const AnnotatedRegion<SystemUiOverlayStyle>(
+    child: AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light, // white status icons
-      child: RailScreen(),
+      child: BlocProvider<NavigationCubit>(
+        create: (_) => NavigationCubit(
+          initialDestinationName: DockDestinationEnum.initial.name,
+        ),
+        child: const NavigationChooser(),
+      ),
     ),
   ),
 );
@@ -38,17 +48,25 @@ GoRoute _crashRoute() => GoRoute(
 );
 
 /// Splash screens are [no] fun. They display, then transfer to the /app route
-GoRoute _splashRoute() => GoRoute(
+/// on success, or to the terminal /crash route with full failure context on
+/// error.
+GoRoute _splashRoute({required List<Future<void> Function()> tasks}) => GoRoute(
   path: RoutesFramework.splash,
   builder: (context, state) {
     return SplashScreen(
       duration: const Duration(milliseconds: 2500),
-      tasks: const [],
+      tasks: tasks,
       onComplete: () {
         context.go(RoutesFramework.app);
         unawaited(StatusBarChameleon.setStatusBarHidden(hidden: false));
       },
-      onError: (_) => context.go(RoutesFramework.crash),
+      onError: (error, stackTrace) {
+        context.go(
+          RoutesFramework.crash,
+          extra: CrashScreenArgs(error: error, stackTrace: stackTrace),
+        );
+        unawaited(StatusBarChameleon.setStatusBarHidden(hidden: false));
+      },
       child: const AnimatedSplashScreen(),
     );
   },

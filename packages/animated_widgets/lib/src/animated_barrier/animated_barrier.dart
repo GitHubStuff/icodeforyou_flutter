@@ -1,4 +1,4 @@
-// icodeforyou_flutter/packages/animated_barrier/lib/animated_barrier.dart
+// packages/animated_widgets/lib/src/animated_barrier/animated_barrier.dart
 
 library;
 

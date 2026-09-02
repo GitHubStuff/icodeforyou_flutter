@@ -1,4 +1,4 @@
-// service_locator/test/src/service_locator/get_it_service_locator_register_async_test.dart
+// packages/service_locator/test/src/service_locator/get_it_service_locator_register_async_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';

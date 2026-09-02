@@ -1,0 +1,11 @@
+# packages/prism_bubble_widget/analysis_options.yaml
+include: package:icodeforyou_lints/analysis_options.yaml
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**

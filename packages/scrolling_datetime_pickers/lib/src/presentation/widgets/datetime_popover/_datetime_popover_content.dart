@@ -1,4 +1,4 @@
-// lib/src/presentation/widgets/datetime_popover/_datetime_popover_content.dart
+// packages/scrolling_datetime_pickers/lib/src/presentation/widgets/datetime_popover/_datetime_popover_content.dart
 
 part of 'datetime_picker_popover.dart';
 

@@ -1,4 +1,4 @@
-// status_bar_chameleon/test/src/statusbar_test.dart
+// plugins/status_bar_chameleon/test/src/statusbar_test.dart
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:status_bar_chameleon/src/status_bar_chameleon.dart';

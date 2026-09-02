@@ -1,4 +1,4 @@
-// lib/src/duration/extended_duration.dart
+// packages/time_spans/lib/src/duration/extended_duration.dart
 
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';

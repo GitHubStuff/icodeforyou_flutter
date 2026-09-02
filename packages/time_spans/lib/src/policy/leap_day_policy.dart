@@ -1,4 +1,4 @@
-// packages/time_spans/lib/src/policy/lead_day_policy.dart
+// packages/time_spans/lib/src/policy/leap_day_policy.dart
 
 /// Resolves the birthday of a 29-February ("leapling") birth in common
 /// (non-leap) years, where 29 February does not exist.

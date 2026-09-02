@@ -140,7 +140,7 @@ A standalone fallback message that renders correctly with no inherited `DefaultT
 
 ## Dependencies
 
-Internal: `extensions` (`Placement`, `HapticIntensity`, `WindowSizeCategory`), `platform_utils` (`PlatformVendor`, `DipScale`), `theme_manager` (`CrossFadeTheme` button sizing), `analog_clock_widget`, `three_d_sphere`.
+Internal: `extensions` (`Placement`, `HapticIntensity`, `WindowSizeCategory`), `platform_utils` (`PlatformVendor`, `DipScale`), `theme_manager` (`StepperTheme` button sizing), `analog_clock_widget`, `three_d_sphere`.
 
 Pub: `gap`, `go_router`, `google_fonts`.
 

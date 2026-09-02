@@ -1,4 +1,4 @@
-// service_locator/test/src/errors/bad_service_class_test.dart
+// packages/service_locator/test/src/errors/bad_service_class_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:service_locator/service_locator.dart';

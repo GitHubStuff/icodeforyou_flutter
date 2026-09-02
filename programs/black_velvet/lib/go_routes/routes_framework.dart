@@ -2,17 +2,22 @@
 
 import 'dart:async' show unawaited;
 
+import 'package:app_navigation/app_navigation.dart'
+    show DockScreen, NavigationChooser, NavigationCubit, RailScreen;
+import 'package:black_velvet/app_dock_navigation/dock_destination_enum.dart'
+    show DockDestinationEnum;
+import 'package:black_velvet/app_rail_navigation/rail_destination_enum.dart';
+import 'package:black_velvet/splash/animated_splash_screen.dart'
+    show AnimatedSplashScreen;
 import 'package:custom_widgets/custom_widgets.dart'
     show CrashScreen, CrashScreenArgs;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider;
 import 'package:go_router/go_router.dart';
 import 'package:splash_framework/splash_framework.dart' show SplashScreen;
 import 'package:status_bar_chameleon/status_bar_chameleon.dart'
     show StatusBarChameleon;
-
-import '../screens/animated_splash_screen.dart' show AnimatedSplashScreen;
-import '../screens/rail_screen.dart' show RailScreen;
 
 part 'routes.goroute.dart';
 
@@ -38,7 +43,7 @@ part 'routes.goroute.dart';
 /// ```
 /// {@endtemplate}
 class RoutesFramework {
-  /// {@macro rail_destination_buttons}
+  /// Route path for the application shell.
   ///
   /// Navigated to once startup work completes and the splash
   /// sequence has finished.
@@ -62,13 +67,13 @@ class RoutesFramework {
   /// The router starts at [splash] and registers the application,
   /// crash, and splash routes. Call once during startup and hand the
   /// result to the router-aware application widget.
-  static GoRouter builtRoutes() {
+  static GoRouter builtRoutes({required List<Future<void> Function()> tasks}) {
     return GoRouter(
       initialLocation: splash,
       routes: <RouteBase>[
         _appRoute(),
         _crashRoute(),
-        _splashRoute(),
+        _splashRoute(tasks: tasks),
       ],
     );
   }

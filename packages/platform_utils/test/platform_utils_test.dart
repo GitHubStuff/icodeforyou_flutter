@@ -1,6 +1,5 @@
 // packages/platform_utils/test/platform_utils_test.dart
 
-import 'package:flutter/widgets.dart' show Orientation, Size;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:platform_utils/platform_utils.dart';
 
@@ -11,14 +10,6 @@ void main() {
     test('exports the platform and vendor enums', () {
       expect(AppPlatform.values, hasLength(7));
       expect(PlatformVendor.values, hasLength(4));
-    });
-
-    test('exports the form factor and orientation resolvers', () {
-      expect(FormFactor.values, hasLength(4));
-      expect(
-        OrientationFactor.from(const Size(400, 800)),
-        Orientation.portrait,
-      );
     });
 
     test('exports the spacing scale and Spacing typedef', () {

@@ -1,4 +1,4 @@
-// infinite_scroll_picking_settings/test/src/settings/settings_scope_test.dart
+// packages/infinite_scroll_picking_settings/test/src/settings/settings_scope_test.dart
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';

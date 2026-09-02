@@ -1,4 +1,4 @@
-// packages/extensions/lib/enum/src/extended_duration_unit.dart
+// packages/time_spans/lib/src/extended_duration_unit.dart
 
 /// Identifies a single calendar component of an `ExtendedDuration`.
 ///

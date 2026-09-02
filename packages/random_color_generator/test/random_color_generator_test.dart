@@ -1,4 +1,4 @@
-// test/random_color_generator_test.dart
+// packages/random_color_generator/test/random_color_generator_test.dart
 
 // ignore_for_file:
 

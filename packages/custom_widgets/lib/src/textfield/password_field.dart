@@ -1,4 +1,4 @@
-// packages/custom_widgets/lib/src/password_field/password_field.dart
+// packages/custom_widgets/lib/src/textfield/password_field.dart
 // ignore_for_file: always_use_package_imports
 
 import 'package:extensions/enum/src/window_size_category.dart'

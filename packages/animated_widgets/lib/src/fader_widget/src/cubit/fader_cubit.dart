@@ -1,9 +1,8 @@
-// packages/animated_widgets/lib/src/fader/fader_cubit.dart
-
-// ignore_for_file: comment_references
+// packages/animated_widgets/lib/src/fader_widget/src/cubit/fader_cubit.dart
 
 import 'dart:collection';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'fader_state.dart';
@@ -23,6 +22,7 @@ part 'fader_state.dart';
 ///   * Widget finishes the fade, calls [fadeComplete]; the cubit pulls the next
 ///     queued string (FIFO) and emits it, or goes idle if the queue is empty.
 class FaderCubit extends Cubit<FaderState> {
+  /// Constructor for FaderCubit
   FaderCubit()
     : super(
         const FaderState(

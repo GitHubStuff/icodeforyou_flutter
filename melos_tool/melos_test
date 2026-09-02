@@ -1,0 +1,602 @@
+#!/usr/bin/env zsh
+# melos_tool/melos_test
+# Unified test/coverage runner for the icodeforyou_flutter monorepo.
+# Version: 1.6.0
+#
+# Usage:
+#   melos_test test_one      <category> <name>   — single package/plugin/program
+#   melos_test test_all      <category>          — all in category, sequential
+#   melos_test test_coverage <category>          — coverage for all in category
+#   melos_test coverage_merge <category>         — merge LCOV for category
+#   melos_test coverage_merge_all                — merge LCOV across everything
+#   melos_test coverage_clean                    — wipe all coverage data
+#
+# Categories: packages | plugins | programs
+# Env flags:  STRICT=true  → fail-fast on first package failure
+#             (test_all and test_coverage)
+#
+# 1.6.0 — manifest-driven merges (find-glob scavenging removed):
+#   * Incident, continued: even with 1.5.0's per-package wipe discipline, a
+#     merge could still ingest a stale tracefile because the merge steps
+#     went HUNTING with `find` for any lcov.info the path glob matched —
+#     any forgotten tracefile anywhere on disk was a candidate. Aggregates
+#     kept reporting a line as uncovered while the package's own fresh
+#     tracefile said DA:…,1.
+#   * Coverage runs now WRITE A MANIFEST of exactly the tracefiles they
+#     produced: coverage/.manifest_<category>. test_coverage rewrites the
+#     category manifest from scratch; test_one upserts its package's entry.
+#   * Merges consume manifests and nothing else. `find` is gone from the
+#     merge path entirely. A tracefile not recorded by a real run cannot
+#     reach a report, no matter where it sits.
+#   * coverage_merge <cat> requires that category's manifest;
+#     coverage_merge_all consumes every manifest present and says which
+#     categories are missing. Each merged tracefile is listed with its
+#     mtime so staleness is visible at a glance.
+#   * Manifest entries are re-validated at merge time (file exists,
+#     non-empty); dead entries are skipped loudly.
+#   * coverage_clean removes manifests along with the data (they live in
+#     workspace-root coverage/).
+#
+# 1.5.0 — stale-trace elimination (coverage lies are now impossible):
+#   * Incident: a package's test run failed after a test-file change; its
+#     coverage/lcov.info from the PREVIOUS run survived, the merge ingested
+#     it, and the workspace report showed stale per-line data — an
+#     uncovered constructor kept reporting 0 hits after the fix landed.
+#     Isolation (`flutter test --coverage` in the package) showed DA:…,1
+#     while the aggregate said 0. The runner now enforces one invariant:
+#     a package's coverage data comes from the current run or not at all.
+#   * run_tests_in_dir wipes coverage/ BEFORE every --coverage run. Flutter
+#     only rewrites lcov.info on runs that complete, and the Dart path is
+#     worse — stale VM JSON accumulates and format_coverage --in=coverage
+#     merges every JSON file present.
+#   * On any coverage-run failure, coverage/ is wiped AFTER as well, so a
+#     partial or half-written tracefile can never reach a merge.
+#   * Coverage success now has a contract: exit 0 AND a non-empty
+#     coverage/lcov.info. A "passing" run that produced no tracefile is a
+#     failure — silently contributing zero lines is how gaps hide.
+#   * action_test_coverage no longer swallows failures with `|| true`: it
+#     tracks failed items, honors STRICT fail-fast, prints a summary, and
+#     exits nonzero if anything failed — so CI can actually gate on it.
+#
+# 1.4.1 — pipefail/SIGPIPE bug in detect_runner:
+#   * The 1.4.0 closure check piped the deps JSON into `grep -q`. grep -q
+#     exits on first match and closes stdin; with large JSON `print` was
+#     still writing, died with SIGPIPE (141), and `set -o pipefail`
+#     reported the pipeline as failed even though the match SUCCEEDED —
+#     so Flutter-transitive packages were still classified as Dart.
+#     Replaced the pipeline with a native zsh regex match on the variable:
+#     no pipe, no SIGPIPE, no pipefail interaction.
+#
+# 1.4.0 — Flutter detection by resolved dependency closure:
+#   * detect_runner previously grepped ONLY the package's own pubspec.yaml
+#     for a direct `flutter:` dependency. Packages whose Flutter dependency
+#     is transitive (app_preferences_service → app_preferences →
+#     path_provider → flutter) were misclassified as pure Dart and run under
+#     `fvm dart test`, crashing the standalone VM frontend:
+#       "type 'InvalidType' is not a subtype of type 'FunctionType'"
+#       "Dart library 'dart:ui' is not available on this platform"
+#     Classification now inspects the resolved closure via
+#     `fvm dart pub deps --json` (workspace-aware: reports the closure for
+#     the member in the current directory). Direct-dependency grep is kept
+#     as a fast path so most packages never pay the pub deps cost.
+#   * If dependency resolution fails, the package is classified as Flutter:
+#     `fvm flutter test` handles pure Dart packages correctly, while the
+#     reverse crashes the compiler.
+#
+# 1.3.0 — coverage completeness and SDK pinning:
+#   * Pure Dart packages now produce coverage/lcov.info via
+#     coverage:format_coverage. One-time setup:
+#       fvm dart pub global activate coverage
+#   * All flutter/dart invocations go through fvm (project-pinned SDK).
+#   * run_tests_in_dir aborts if `cd` into the package fails.
+#
+# 1.2.0 — lcov 2.x compatibility (--ignore-errors categories; empty
+#   tracefiles skipped with a warning; merge failures surfaced per-file).
+
+set -uo pipefail
+
+readonly ACTION="${1:-}"
+readonly VALID_CATEGORIES=(packages plugins programs)
+
+# lcov 2.x error categories that Dart tracefiles legitimately trigger:
+#   empty        — function coverage enabled, zero FN records (every Dart file)
+#   inconsistent — minor record-count mismatches across merged files
+#   format       — tolerant parsing of older tracefile dialects
+#   unused       — --remove patterns that match nothing
+readonly LCOV_IGNORE="empty,inconsistent,format,unused"
+# genhtml 2.x raises its own variants on function-less tracefiles.
+readonly GENHTML_IGNORE="source,empty,inconsistent,category"
+
+# ─── helpers ────────────────────────────────────────────────────────────────
+validate_category() {
+  local cat="$1"
+  if (( ! ${VALID_CATEGORIES[(Ie)$cat]} )); then
+    print -u2 "❌ Invalid category '$cat' (expected: ${VALID_CATEGORIES[*]})"
+    exit 64
+  fi
+}
+
+# Workspace-root manifest of tracefiles produced by coverage runs.
+# One workspace-relative tracefile path per line, e.g.:
+#   packages/extensions/coverage/lcov.info
+manifest_path() {
+  print "coverage/.manifest_$1"
+}
+
+# Record a package's fresh tracefile in its category manifest, replacing
+# any previous entry for the same package (test_one re-runs).
+manifest_upsert() {
+  local category="$1"
+  local entry="$2"
+  local manifest
+  manifest=$(manifest_path "$category")
+
+  mkdir -p coverage
+  if [[ -f "$manifest" ]]; then
+    grep -v -F -x "$entry" "$manifest" > "${manifest}.tmp" || true
+    mv "${manifest}.tmp" "$manifest"
+  fi
+  print -- "$entry" >> "$manifest"
+}
+
+# Echoes "flutter" or "dart" depending on the package's RESOLVED dependency
+# closure, not merely its direct dependencies.
+#
+# Fast path: a direct `flutter:` dependency in the package's own pubspec.
+# Slow path: `fvm dart pub deps --json`, run from inside the package so pub
+#   reports the closure for that workspace member. Any appearance of the
+#   flutter SDK package in the closure means the tests must run under
+#   `fvm flutter test` — the standalone VM cannot compile dart:ui imports
+#   pulled in transitively (e.g. via path_provider).
+# Failure path: if resolution fails, classify as flutter. `flutter test`
+#   runs pure Dart packages correctly; `dart test` on a Flutter-transitive
+#   package crashes the compiler.
+detect_runner() {
+  local dir="$1"
+
+  if grep -q "^[[:space:]]*flutter:" "${dir}/pubspec.yaml" 2>/dev/null; then
+    print "flutter"
+    return
+  fi
+
+  local deps_json
+  deps_json=$(cd "$dir" 2>/dev/null && fvm dart pub deps --json 2>/dev/null)
+
+  if [[ -z "$deps_json" ]]; then
+    print -u2 "⚠️  Could not resolve dependencies for ${dir} — assuming Flutter (safe default)"
+    print "flutter"
+    return
+  fi
+
+  # 1.4.1: native zsh regex match on the variable — no pipe, no SIGPIPE,
+  # no pipefail interaction (see changelog).
+  if [[ "$deps_json" =~ '"name":[[:space:]]*"flutter"' ]]; then
+    print "flutter"
+  else
+    print "dart"
+  fi
+}
+
+# Convert Dart VM coverage JSON into coverage/lcov.info so the merge steps
+# can see pure Dart packages. Runs from inside the package directory.
+# Requires package:coverage — one-time setup:
+#   fvm dart pub global activate coverage
+convert_dart_coverage() {
+  print "🔁 Converting VM coverage JSON → coverage/lcov.info"
+  if ! fvm dart pub global run coverage:format_coverage \
+      --lcov \
+      --in=coverage \
+      --out=coverage/lcov.info \
+      --report-on=lib; then
+    print -u2 "⚠️  lcov conversion failed. Is package:coverage activated?"
+    print -u2 "   Run once: fvm dart pub global activate coverage"
+    return 1
+  fi
+}
+
+# Run tests in a single directory. Args: <dir> [--coverage]
+#
+# Coverage invariant (1.5.0): a package's coverage data comes from THIS
+# run or it does not exist.
+#   * coverage/ is wiped before the run — Flutter only rewrites lcov.info
+#     on completed runs, and stale Dart VM JSON pollutes format_coverage.
+#   * coverage/ is wiped again on failure — partial tracefiles never merge.
+#   * Success requires a non-empty coverage/lcov.info — a run that passes
+#     but produces no tracefile is treated as a failure.
+run_tests_in_dir() {
+  local dir="$1"
+  local with_coverage="${2:-}"
+  local runner
+  runner=$(detect_runner "$dir")
+
+  if ! cd "$dir"; then
+    print -u2 "❌ Could not enter ${dir} — aborting rather than testing from the wrong directory"
+    return 1
+  fi
+
+  if [[ "$with_coverage" == "--coverage" ]]; then
+    rm -rf coverage
+  fi
+
+  local rc=0
+  if [[ "$runner" == "flutter" ]]; then
+    print "🦋 Flutter package — running fvm flutter test"
+    if [[ "$with_coverage" == "--coverage" ]]; then
+      fvm flutter test --coverage
+      rc=$?
+    else
+      fvm flutter test
+      rc=$?
+    fi
+  else
+    print "🎯 Dart package — running fvm dart test"
+    if [[ "$with_coverage" == "--coverage" ]]; then
+      fvm dart test --coverage=coverage
+      rc=$?
+      if (( rc == 0 )); then
+        convert_dart_coverage
+        rc=$?
+      fi
+    else
+      fvm dart test
+      rc=$?
+    fi
+  fi
+
+  if [[ "$with_coverage" == "--coverage" ]]; then
+    if (( rc == 0 )) && [[ ! -s "coverage/lcov.info" ]]; then
+      print -u2 "❌ Tests passed but no coverage/lcov.info was produced — treating as failure"
+      rc=1
+    fi
+    if (( rc != 0 )); then
+      rm -rf coverage
+      print -u2 "🧹 Removed coverage/ for this package — failed runs contribute no data"
+    fi
+  fi
+
+  cd - > /dev/null
+  return $rc
+}
+
+# ─── actions ────────────────────────────────────────────────────────────────
+
+action_test_one() {
+  local category="$1"
+  local name="${2:-}"
+
+  validate_category "$category"
+
+  if [[ -z "$name" ]]; then
+    print -u2 "❌ Name not set."
+    case "$category" in
+      packages) print -u2 "   Usage: PKG=package_name melos test_package" ;;
+      plugins)  print -u2 "   Usage: PRG=plugin_name melos test_plugin" ;;
+      programs) print -u2 "   Usage: PRG=program_name melos test_program" ;;
+    esac
+    exit 1
+  fi
+
+  local target_dir="${category}/${name}"
+
+  [[ -d "$target_dir" ]] || { print -u2 "❌ '${name}' not found at ${target_dir}"; exit 1; }
+  [[ -d "${target_dir}/test" ]] || { print -u2 "❌ No test directory found in ${target_dir}"; exit 1; }
+
+  print ""
+  print "📦 Testing ${name}..."
+  run_tests_in_dir "$target_dir" --coverage
+  local rc=$?
+  print ""
+  if (( rc == 0 )); then
+    manifest_upsert "$category" "${target_dir}/coverage/lcov.info"
+    print "✅ Done: ${name} (tracefile recorded in $(manifest_path "$category"))"
+  else
+    print "❌ Failed: ${name}"
+  fi
+  return $rc
+}
+
+action_test_all() {
+  local category="$1"
+  validate_category "$category"
+
+  print "🧪 Running tests sequentially to avoid Flutter lock conflicts..."
+  [[ "${STRICT:-}" == "true" ]] && print "⚠️  STRICT mode — stopping on first failure"
+
+  local failed_items=""
+  local total=0
+  local tested=0
+
+  for target_dir in ${category}/*/; do
+    local name=$(basename "$target_dir")
+
+    if [[ -d "${target_dir}test" ]]; then
+      print ""
+      print "📦 Testing ${name}..."
+      total=$((total + 1))
+      tested=$((tested + 1))
+
+      if ! run_tests_in_dir "${target_dir%/}"; then
+        print "❌  Tests failed in ${name}"
+        if [[ "${STRICT:-}" == "true" ]]; then
+          print ""
+          print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          print "🛑 STRICT mode — stopping at ${name}"
+          print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          exit 1
+        fi
+        if [[ -z "$failed_items" ]]; then
+          failed_items="$name"
+        else
+          failed_items="$failed_items, $name"
+        fi
+      fi
+    else
+      print "⏭️  Skipping ${name} (no test directory)"
+      total=$((total + 1))
+    fi
+  done
+
+  print ""
+  print "✅ Test run completed!"
+  print ""
+  print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  print "📊 SUMMARY (${category})"
+  print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  print "Total:  ${total}"
+  print "Tested: ${tested}"
+
+  if [[ -n "$failed_items" ]]; then
+    print "❌ FAILED: ${failed_items}"
+    print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    exit 1
+  else
+    print "✅ All tests passed!"
+    print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  fi
+}
+
+action_test_coverage() {
+  local category="$1"
+  validate_category "$category"
+
+  print "🧪 Running coverage tests for ${category}..."
+  [[ "${STRICT:-}" == "true" ]] && print "⚠️  STRICT mode — stopping on first failure"
+
+  # Fresh manifest for this run: only tracefiles produced NOW are
+  # eligible for merging.
+  local manifest
+  manifest=$(manifest_path "$category")
+  mkdir -p coverage
+  : > "$manifest"
+
+  local failed_items=""
+  local total=0
+  local tested=0
+
+  for target_dir in ${category}/*/; do
+    local name=$(basename "$target_dir")
+
+    if [[ -d "${target_dir}test" ]]; then
+      print ""
+      print "📦 Testing ${name}..."
+      total=$((total + 1))
+      tested=$((tested + 1))
+
+      if run_tests_in_dir "${target_dir%/}" --coverage; then
+        print -- "${target_dir%/}/coverage/lcov.info" >> "$manifest"
+      else
+        print "❌  Coverage run failed in ${name} — it will contribute NO data to merges"
+        if [[ "${STRICT:-}" == "true" ]]; then
+          print ""
+          print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          print "🛑 STRICT mode — stopping at ${name}"
+          print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          exit 1
+        fi
+        if [[ -z "$failed_items" ]]; then
+          failed_items="$name"
+        else
+          failed_items="$failed_items, $name"
+        fi
+      fi
+    else
+      print "⏭️  Skipping ${name} (no test directory)"
+      total=$((total + 1))
+    fi
+  done
+
+  print ""
+  print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  print "📊 COVERAGE SUMMARY (${category})"
+  print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  print "Total:  ${total}"
+  print "Tested: ${tested}"
+  print "Manifest: ${manifest} ($(wc -l < "$manifest" | tr -d ' ') tracefiles)"
+
+  if [[ -n "$failed_items" ]]; then
+    print "❌ FAILED (no coverage data): ${failed_items}"
+    print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    exit 1
+  else
+    print "✅ Coverage generation completed for all ${category}!"
+    print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  fi
+}
+
+# Internal: merge the tracefiles listed in the given manifests into one
+# output, with optional excludes.
+# Args: <output_file> <html_dir> <manifests_space_joined> [exclude_patterns...]
+#
+# 1.6.0: merges consume manifests ONLY. No find, no globs, no scavenging —
+# a tracefile that no coverage run recorded cannot reach a report. Each
+# manifest entry is re-validated (exists, non-empty) and listed with its
+# mtime so staleness is visible.
+_merge_coverage() {
+  local output_file="$1"
+  local html_dir="$2"
+  local manifests_joined="$3"
+  shift 3
+  local -a excludes=("$@")
+  local -a manifests=(${(z)manifests_joined})
+
+  mkdir -p coverage
+  rm -f "$output_file"
+
+  local -a tracefiles=()
+  local m
+  for m in "${manifests[@]}"; do
+    if [[ ! -f "$m" ]]; then
+      print -u2 "⚠️  Manifest missing: ${m} — run the corresponding test_coverage first"
+      continue
+    fi
+    local line
+    while IFS= read -r line; do
+      [[ -z "$line" ]] && continue
+      tracefiles+=("$line")
+    done < "$m"
+  done
+
+  if (( ${#tracefiles[@]} == 0 )); then
+    print -u2 "❌ No tracefiles recorded in any manifest (${manifests_joined})."
+    print -u2 "   Run test_coverage for the categories you want merged."
+    return 1
+  fi
+
+  print "Tracefiles recorded by coverage runs:"
+  local tf
+  for tf in "${tracefiles[@]}"; do
+    if [[ -f "$tf" ]]; then
+      print "  $(stat -f '%Sm' -t '%Y-%m-%d %H:%M:%S' "$tf" 2>/dev/null || stat -c '%y' "$tf" 2>/dev/null)  ${tf}"
+    else
+      print "  (missing)            ${tf}"
+    fi
+  done
+
+  local skipped_items=""
+  local merged_count=0
+
+  for tf in "${tracefiles[@]}"; do
+    local source_path="${tf%/coverage/lcov.info}"
+
+    if [[ ! -s "$tf" ]]; then
+      print "⚠️  Skipping ${source_path} — tracefile missing or empty (re-run test_coverage)"
+      if [[ -z "$skipped_items" ]]; then
+        skipped_items="$source_path"
+      else
+        skipped_items="$skipped_items, $source_path"
+      fi
+      continue
+    fi
+
+    print "Processing coverage for ${source_path}..."
+
+    local temp_file="coverage/temp_$(print -- "$source_path" | tr '/' '_').info"
+    sed "s|SF:lib/|SF:${source_path}/lib/|g" "$tf" > "$temp_file"
+
+    if [[ -f "$output_file" ]]; then
+      if lcov --ignore-errors "$LCOV_IGNORE" \
+          --add-tracefile "$output_file" \
+          --add-tracefile "$temp_file" \
+          --output-file "$output_file"; then
+        merged_count=$((merged_count + 1))
+      else
+        print "⚠️  Merge failed for ${source_path} — skipping this tracefile"
+        if [[ -z "$skipped_items" ]]; then
+          skipped_items="$source_path"
+        else
+          skipped_items="$skipped_items, $source_path"
+        fi
+      fi
+    else
+      cp "$temp_file" "$output_file"
+      merged_count=$((merged_count + 1))
+    fi
+
+    rm "$temp_file"
+  done
+
+  if (( merged_count == 0 )); then
+    print "❌ No tracefiles could be merged."
+    return 1
+  fi
+
+  if (( ${#excludes[@]} > 0 )); then
+    lcov --ignore-errors "$LCOV_IGNORE" \
+      --remove "$output_file" "${excludes[@]}" \
+      --output-file "$output_file"
+  fi
+
+  genhtml --ignore-errors "$GENHTML_IGNORE" "$output_file" -o "$html_dir"
+  print "✅ Merged coverage report: ${html_dir}/index.html"
+  print "   Tracefiles merged: ${merged_count}"
+  if [[ -n "$skipped_items" ]]; then
+    print "⚠️  Skipped: ${skipped_items}"
+  fi
+
+  if [[ -f "${html_dir}/index.html" ]]; then
+    open "${html_dir}/index.html"
+  else
+    print "⚠️  HTML file wasn't created"
+    lcov --ignore-errors "$LCOV_IGNORE" --summary "$output_file"
+  fi
+}
+
+action_coverage_merge() {
+  local category="$1"
+  validate_category "$category"
+
+  case "$category" in
+    packages)
+      _merge_coverage \
+        "coverage/lcov.info" \
+        "coverage/html" \
+        "$(manifest_path packages)" \
+        '*/lib/src/_app_settings_entry.dart'
+      ;;
+    plugins)
+      _merge_coverage \
+        "coverage/plugins_lcov.info" \
+        "coverage/plugins_html" \
+        "$(manifest_path plugins)"
+      ;;
+    programs)
+      _merge_coverage \
+        "coverage/programs_lcov.info" \
+        "coverage/programs_html" \
+        "$(manifest_path programs)"
+      ;;
+  esac
+}
+
+action_coverage_merge_all() {
+  _merge_coverage \
+    "coverage/all_lcov.info" \
+    "coverage/all_html" \
+    "$(manifest_path packages) $(manifest_path plugins) $(manifest_path programs)" \
+    '*/lib/src/_app_settings_entry.dart'
+}
+
+action_coverage_clean() {
+  rm -rf coverage/
+  find . -name "coverage" -type d -not -path "./coverage" -exec rm -rf {} +
+  print "🧹 Coverage data cleaned from entire workspace (manifests included)"
+}
+
+# ─── dispatch ───────────────────────────────────────────────────────────────
+case "$ACTION" in
+  test_one)            action_test_one "${2:-}" "${3:-}" ;;
+  test_all)            action_test_all "${2:-}" ;;
+  test_coverage)       action_test_coverage "${2:-}" ;;
+  coverage_merge)      action_coverage_merge "${2:-}" ;;
+  coverage_merge_all)  action_coverage_merge_all ;;
+  coverage_clean)      action_coverage_clean ;;
+  "")
+    print -u2 "Usage: $0 <action> [category] [name]"
+    print -u2 "  actions: test_one | test_all | test_coverage | coverage_merge | coverage_merge_all | coverage_clean"
+    exit 64
+    ;;
+  *)
+    print -u2 "❌ Unknown action: $ACTION"
+    exit 64
+    ;;
+esac

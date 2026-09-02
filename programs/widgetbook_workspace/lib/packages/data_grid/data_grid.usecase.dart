@@ -1,4 +1,4 @@
-// programs/widgetbook_workspace/lib/data_grid/data_grid.usecase.dart
+// programs/widgetbook_workspace/lib/packages/data_grid/data_grid.usecase.dart
 // ignore_for_file: public_member_api_docs
 import 'package:data_grid/data_grid.dart' show DataDensity, DataGrid;
 import 'package:extensions/extensions.dart' show HapticIntensity;

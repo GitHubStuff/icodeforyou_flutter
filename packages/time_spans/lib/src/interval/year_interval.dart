@@ -171,6 +171,9 @@ class YearInterval {
   /// Works for every month, including a leap-year February, by asking for day
   /// `0` of the following month, which Dart normalizes to the last day of the
   /// requested month.
-  static int _lastDayOfMonthUtc(int year, int month) =>
-      DateTime.utc(year, month + Span.kNextMonthOffset, Span.kDayBeforeFirst).day;
+  static int _lastDayOfMonthUtc(int year, int month) => DateTime.utc(
+    year,
+    month + Span.kNextMonthOffset,
+    Span.kDayBeforeFirst,
+  ).day;
 }

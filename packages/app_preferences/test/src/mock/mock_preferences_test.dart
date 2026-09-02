@@ -1,5 +1,4 @@
-// app_preferences/test/src/mock/mock_preferences_test.dart
-// ignore_for_file: prefer_const_constructors
+// packages/app_preferences/test/src/mock/mock_preferences_test.dart
 
 import 'package:app_preferences/app_preferences.dart';
 import 'package:flutter_test/flutter_test.dart';

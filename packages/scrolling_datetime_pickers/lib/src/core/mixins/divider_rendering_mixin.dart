@@ -1,4 +1,4 @@
-// lib/src/core/mixins/divider_rendering_mixin.dart
+// packages/scrolling_datetime_pickers/lib/src/core/mixins/divider_rendering_mixin.dart
 
 // ignore_for_file: document_ignores, public_member_api_docs
 

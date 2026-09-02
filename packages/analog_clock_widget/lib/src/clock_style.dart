@@ -1,3 +1,5 @@
+// packages/analog_clock_widget/lib/src/clock_style.dart
+
 import 'package:analog_clock_widget/src/analog_clock.dart'
     show ClockFaceStyle, HandStyle;
 import 'package:equatable/equatable.dart';

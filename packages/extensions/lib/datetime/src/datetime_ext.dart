@@ -1,4 +1,4 @@
-// extensions/lib/src/datetime_ext/datetime_extension.dart
+// packages/extensions/lib/datetime/src/datetime_ext.dart
 import 'package:extensions/datetime/src/datetime_unit.dart' show DateTimeUnit;
 import 'package:flutter/foundation.dart';
 
@@ -6,14 +6,6 @@ import 'package:flutter/foundation.dart';
 /// and precision truncation utilities.
 extension DateTimeExt on DateTime {
   static int _lastMicroseconds = 0;
-
-  /// Tracks the maximum observed clock drift in microseconds.
-  static int maxDrift = 0;
-
-  /// The microsecond drift threshold above which the method waits for the
-  /// system clock to catch up. Configurable for testing.
-  @visibleForTesting
-  static int driftThreshold = 500;
 
   /// Returns a [DateTime] guaranteed to be unique across successive calls.
   ///
@@ -29,16 +21,6 @@ extension DateTimeExt on DateTime {
     int currentMicros = now().microsecondsSinceEpoch;
     if (currentMicros <= _lastMicroseconds) {
       currentMicros = _lastMicroseconds + 1;
-      final drift = currentMicros - now().microsecondsSinceEpoch;
-      if (maxDrift < drift) {
-        maxDrift = drift;
-      }
-      if (drift > driftThreshold) {
-        while (now().microsecondsSinceEpoch < currentMicros) {
-          await Future<void>.delayed(const Duration(milliseconds: 1));
-        }
-        currentMicros = now().microsecondsSinceEpoch;
-      }
     }
     _lastMicroseconds = currentMicros;
     return DateTime.fromMicrosecondsSinceEpoch(_lastMicroseconds);
@@ -48,8 +30,6 @@ extension DateTimeExt on DateTime {
   @visibleForTesting
   static void reset() {
     _lastMicroseconds = 0;
-    maxDrift = 0;
-    driftThreshold = 500;
   }
 
   /// Whether [year] falls on a Gregorian leap year.
@@ -60,7 +40,7 @@ extension DateTimeExt on DateTime {
   ///
   /// "Next" means the first instant at which the requested [unit] rolls over:
   /// `DateTimeUnit.second` counts to the upcoming `.000000` of the next
-  /// second, `DateTimeUnit.hour` to the top of the next hour, `DateTimeUnit.day`
+  /// second, `DateTimeUnit.hour` to the top of next hour, `DateTimeUnit.day`
   /// to the next midnight in this instant's zone, and so on. All finer units
   /// are treated as zero, so the result is always strictly greater than zero —
   /// an instant already sitting exactly on a boundary reports one full unit,

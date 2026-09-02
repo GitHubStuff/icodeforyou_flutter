@@ -1,4 +1,4 @@
-// animated_widgets/lib/src/contextual_reveal/_push_route.dart
+// packages/animated_widgets/lib/src/contextual_reveal/src/push_route.dart
 
 part of 'contextual_reveal.dart';
 

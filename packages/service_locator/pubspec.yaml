@@ -6,23 +6,16 @@ resolution: workspace
 homepage:
 
 environment:
-  sdk: ">=3.12.0 <4.0.0"
+  sdk: ^3.12.0
 
 dependencies:
   extensions: ^1.0.0
-  flutter:
-    sdk: flutter
   flutter_bloc: ^9.1.1
   gap: ^3.0.1
   get_it: ^9.2.1
   my_logger: ^1.0.0
 
- 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^10.3.0
-
-flutter:
-  uses-material-design: true
+  icodeforyou_lints: ^1.0.0

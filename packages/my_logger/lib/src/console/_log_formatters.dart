@@ -1,4 +1,4 @@
-// lib/src/console/_log_formatters.dart
+// packages/my_logger/lib/src/console/_log_formatters.dart
 
 part of 'my_logger.dart';
 

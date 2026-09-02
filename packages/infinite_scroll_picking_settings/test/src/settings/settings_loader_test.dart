@@ -1,12 +1,9 @@
-// infinite_scroll_picking_settings/test/src/settings/settings_loader_test.dart
+// packages/infinite_scroll_picking_settings/test/src/settings/settings_loader_test.dart
 
+import 'package:flutter/foundation.dart' show DebugPrintCallback, debugPrint;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:infinite_scroll_picking_settings/src/picker_visual_settings/picker_visual_settings.dart'
-    show PickerVisualSettings;
-import 'package:infinite_scroll_picking_settings/src/settings/settings_loader.dart'
-    show SettingsLoader;
-import 'package:infinite_scroll_picking_settings/src/settings/settings_repository.dart'
-    show SettingsRepository;
+import 'package:infinite_scroll_picking_settings/infinite_scroll_picking_settings.dart'
+    show PickerVisualSettings, SettingsLoader, SettingsRepository;
 
 /// Repository resolving to a canned value, or throwing when [error] is
 /// non-null. Save and clear are unreachable from [SettingsLoader].
@@ -57,16 +54,49 @@ void main() {
       expect(holder.value, const PickerVisualSettings());
     });
 
-    test('seeds with defaults and swallows the error when the '
-        'repository throws', () async {
+    test('seeds with defaults, swallows the error, and logs the failure '
+        'to the injected sink when the repository throws', () async {
+      final logged = <String>[];
       final holder = await SettingsLoader.load(
         repository: _FakeRepository(
           error: const FormatException('corrupt store'),
         ),
+        log: logged.add,
       );
       addTearDown(holder.dispose);
 
       expect(holder.value, const PickerVisualSettings());
+      expect(logged, hasLength(1));
+      expect(
+        logged.single,
+        allOf(
+          contains('SettingsLoader: repository.load() failed'),
+          contains('FormatException: corrupt store'),
+        ),
+      );
     });
+
+    test(
+      'routes the failure through debugPrint when no sink is injected',
+      () async {
+        final printed = <String>[];
+        final DebugPrintCallback original = debugPrint;
+        debugPrint = (String? message, {int? wrapWidth}) {
+          printed.add(message ?? '');
+        };
+        addTearDown(() => debugPrint = original);
+
+        final holder = await SettingsLoader.load(
+          repository: _FakeRepository(
+            error: const FormatException('corrupt store'),
+          ),
+        );
+        addTearDown(holder.dispose);
+
+        expect(holder.value, const PickerVisualSettings());
+        expect(printed, hasLength(1));
+        expect(printed.single, contains('falling back to defaults'));
+      },
+    );
   });
 }

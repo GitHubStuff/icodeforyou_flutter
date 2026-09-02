@@ -1,4 +1,4 @@
-// packages/extensions/lib/color_ext/color_ext.dart
+// packages/extensions/lib/color/color_ext.dart
 import 'package:flutter/painting.dart';
 
 /// Extensions on [Color] providing equality, contrast, and integer conversion.
@@ -9,9 +9,10 @@ extension ColorExt on Color {
 
   /// Returns white or black depending on which has better contrast
   /// against this color.
-  Color contrastingTextColor() => computeLuminance() > 0.5
-      ? const Color(0xFF000000)
-      : const Color(0xFFFFFFFF);
+  Color contrastingColor({Color? forDark, Color? forLight}) =>
+      computeLuminance() > 0.5
+      ? forLight ?? const Color(0xFF000000)
+      : forDark ?? const Color(0xFFFFFFFF);
 
   /// Returns the color as a 32-bit ARGB integer.
   int toInt() =>

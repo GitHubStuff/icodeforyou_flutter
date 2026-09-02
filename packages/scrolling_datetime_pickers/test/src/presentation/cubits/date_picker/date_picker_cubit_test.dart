@@ -1,4 +1,4 @@
-// test/src/presentation/cubits/date_picker/date_picker_cubit_test.dart
+// packages/scrolling_datetime_pickers/test/src/presentation/cubits/date_picker/date_picker_cubit_test.dart
 
 // ignore_for_file: document_ignores, cascade_invocations
 

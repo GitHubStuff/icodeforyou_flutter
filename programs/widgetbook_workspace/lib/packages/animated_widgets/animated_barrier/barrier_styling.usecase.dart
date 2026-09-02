@@ -1,4 +1,4 @@
-// widgetbook_workspace/lib/packages/animated_barrier/barrier_styling.usecase.dart
+// programs/widgetbook_workspace/lib/packages/animated_widgets/animated_barrier/barrier_styling.usecase.dart
 
 import 'package:animated_widgets/animated_widgets.dart'
     show AnimatedBarrier, FadeBarrier;

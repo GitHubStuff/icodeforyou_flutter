@@ -1,4 +1,4 @@
-// test/src/settings_widget_test.dart
+// packages/settings_widget/test/src/settings_widget_test.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,7 +10,6 @@ class _StubEntry extends AppSettingsEntry {
   const _StubEntry({required this.label});
   final String label;
 
-  @override
   Widget get title => Text(label);
 
   @override
@@ -39,7 +38,8 @@ class _Host extends StatelessWidget {
         direction: direction,
         breakpoint: breakpoint,
         edgeGap: edgeGap,
-        title: title ??
+        title:
+            title ??
             const Text(
               'Settings...',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -55,17 +55,16 @@ Widget _wrap({
   double breakpoint = 600,
   double edgeGap = 16,
   Widget? title,
-}) =>
-    MaterialApp(
-      home: Scaffold(
-        body: _Host(
-          direction: direction,
-          breakpoint: breakpoint,
-          edgeGap: edgeGap,
-          title: title,
-        ),
-      ),
-    );
+}) => MaterialApp(
+  home: Scaffold(
+    body: _Host(
+      direction: direction,
+      breakpoint: breakpoint,
+      edgeGap: edgeGap,
+      title: title,
+    ),
+  ),
+);
 
 void main() {
   group('SettingsWidget.show', () {
@@ -106,9 +105,7 @@ void main() {
     });
 
     testWidgets('renders custom title', (tester) async {
-      await tester.pumpWidget(
-        _wrap(title: const Text('My Prefs')),
-      );
+      await tester.pumpWidget(_wrap(title: const Text('My Prefs')));
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
 
@@ -147,9 +144,7 @@ void main() {
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
 
-      final layout = tester.widget<SettingsLayout>(
-        find.byType(SettingsLayout),
-      );
+      final layout = tester.widget<SettingsLayout>(find.byType(SettingsLayout));
       expect(layout.edgeGap, 32);
     });
 

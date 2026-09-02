@@ -1,4 +1,4 @@
-// test/src/core/models/divider_configuration_test.dart
+// packages/scrolling_datetime_pickers/test/src/core/models/divider_configuration_test.dart
 
 // ignore_for_file: document_ignores, lines_longer_than_80_chars
 

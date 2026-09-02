@@ -1,4 +1,4 @@
-// infinite_scroll_picking_settings/test/src/json/duration_json_converter_test.dart
+// packages/infinite_scroll_picking_settings/test/src/json/duration_json_converter_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:infinite_scroll_picking_settings/src/json/duration_json_converter.dart'

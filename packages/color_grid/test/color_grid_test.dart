@@ -71,7 +71,7 @@ void main() {
       expect(
         () => ColorGrid(
           colors: const [0xFF000000],
-          onColorTapped: (_, __) {},
+          onColorTapped: (_, _) {},
           onRefreshRequested: () {},
         ),
         throwsAssertionError,
@@ -85,7 +85,7 @@ void main() {
         tester,
         ColorGrid(
           colors: _kColors,
-          onColorTapped: (_, __) {},
+          onColorTapped: (_, _) {},
           onRefreshRequested: () {},
         ),
       );
@@ -115,7 +115,7 @@ void main() {
         tester,
         ColorGrid(
           colors: _kColors,
-          onColorTapped: (_, __) {},
+          onColorTapped: (_, _) {},
           onRefreshRequested: () {},
         ),
       );
@@ -157,7 +157,7 @@ void main() {
         tester,
         ColorGrid(
           colors: _kColors,
-          onColorTapped: (_, __) {},
+          onColorTapped: (_, _) {},
           onRefreshRequested: () {},
         ),
         width: _kWideModeMinWidth - 1,
@@ -187,7 +187,7 @@ void main() {
         tester,
         ColorGrid(
           colors: _kColors,
-          onColorTapped: (_, __) {},
+          onColorTapped: (_, _) {},
           onRefreshRequested: () {},
         ),
       );
@@ -207,7 +207,7 @@ void main() {
         tester,
         ColorGrid(
           colors: _kColors,
-          onColorTapped: (_, __) {},
+          onColorTapped: (_, _) {},
           onRefreshRequested: () {},
         ),
         brightness: Brightness.dark,
@@ -255,7 +255,7 @@ void main() {
         tester,
         ColorGrid(
           colors: _kColors,
-          onColorTapped: (_, __) {},
+          onColorTapped: (_, _) {},
           onRefreshRequested: () => refreshes++,
         ),
       );
@@ -272,7 +272,7 @@ void main() {
         tester,
         ColorGrid(
           colors: _kColors,
-          onColorTapped: (_, __) {},
+          onColorTapped: (_, _) {},
           onRefreshRequested: () {},
         ),
       );
@@ -289,7 +289,7 @@ void main() {
         tester,
         ColorGrid(
           colors: _kColors,
-          onColorTapped: (_, __) {},
+          onColorTapped: (_, _) {},
           onRefreshRequested: () {},
         ),
       );

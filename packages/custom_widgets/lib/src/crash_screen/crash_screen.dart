@@ -1,4 +1,4 @@
-// packages/crash_framework/lib/src/crash_screen.dart
+// packages/custom_widgets/lib/src/crash_screen/crash_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart' show Gap;

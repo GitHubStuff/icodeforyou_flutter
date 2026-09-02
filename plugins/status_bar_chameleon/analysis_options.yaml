@@ -1,1 +1,11 @@
-include: ../../analysis_options.yaml
+# plugins/status_bar_chameleon/analysis_options.yaml
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+include: package:icodeforyou_lints/analysis_options.yaml

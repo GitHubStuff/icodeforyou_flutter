@@ -1,4 +1,4 @@
-// programs/widgetbook_workspace/lib/splash_framework/splash_screen.usecase.dart
+// programs/widgetbook_workspace/lib/packages/splash_framework/splash_screen.usecase.dart
 // ignore_for_file: public_member_api_docs
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart' show showToast;
@@ -113,7 +113,7 @@ class _SplashScreenUseCaseHarnessState
             duration: widget.duration,
             tasks: [_task],
             onComplete: () => showToast('onComplete'),
-            onError: (error) => showToast('onError($error)'),
+            onError: (error, stackTrace) => showToast('onError($error)'),
             child: const Center(
               child: Text(
                 'black_velvet',

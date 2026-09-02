@@ -5,4 +5,4 @@ library;
 
 export 'src/notification_permission_status.dart'
     show NotificationPermissionStatus;
-export 'src/remind_me.dart' show RemindMe;
+export 'src/remind_me_class.dart' show RemindMe;

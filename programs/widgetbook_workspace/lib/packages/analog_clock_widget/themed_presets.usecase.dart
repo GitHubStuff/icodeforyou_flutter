@@ -90,8 +90,9 @@ Widget themedPresetsAnalogClockUseCase(BuildContext context) {
       minuteHandColor: minuteHandColor ?? base.minuteHandColor,
       secondHandColor: secondHandColor ?? base.secondHandColor,
       showNumbers: overrideShowNumbers ? showNumbersValue : base.showNumbers,
-      showSecondHand:
-          overrideShowSecondHand ? showSecondHandValue : base.showSecondHand,
+      showSecondHand: overrideShowSecondHand
+          ? showSecondHandValue
+          : base.showSecondHand,
       faceStyle: overrideFaceStyle ? faceStyleValue : base.faceStyle,
       handStyle: overrideHandStyle ? handStyleValue : base.handStyle,
     );
@@ -170,11 +171,11 @@ class _Preset extends Equatable {
 }
 
 final _presets = <_Preset>[
-  _Preset(
+  const _Preset(
     name: 'Midnight',
-    background: const Color(0xFF0B1020),
+    background: Color(0xFF0B1020),
     labelColor: Colors.white,
-    style: const ClockStyle(
+    style: ClockStyle(
       faceColor: Color(0xFF111935),
       borderColor: Color(0xFF8FA3FF),
       hourHandColor: Colors.white,
@@ -184,11 +185,11 @@ final _presets = <_Preset>[
       handStyle: HandStyle.modern,
     ),
   ),
-  _Preset(
+  const _Preset(
     name: 'Paper',
-    background: const Color(0xFFF6F1E7),
+    background: Color(0xFFF6F1E7),
     labelColor: Colors.black87,
-    style: const ClockStyle(
+    style: ClockStyle(
       faceColor: Color(0xFFFBF8F1),
       borderColor: Color(0xFF8B7355),
       hourHandColor: Color(0xFF2B2B2B),
@@ -198,11 +199,11 @@ final _presets = <_Preset>[
       handStyle: HandStyle.traditional,
     ),
   ),
-  _Preset(
+  const _Preset(
     name: 'Minimal',
     background: Colors.white,
     labelColor: Colors.black87,
-    style: const ClockStyle(
+    style: ClockStyle(
       faceColor: Colors.white,
       borderColor: Colors.black,
       hourHandColor: Colors.black,
@@ -213,11 +214,11 @@ final _presets = <_Preset>[
       handStyle: HandStyle.sleek,
     ),
   ),
-  _Preset(
+  const _Preset(
     name: 'Neon',
-    background: const Color(0xFF0A0A0A),
-    labelColor: const Color(0xFF00FFD1),
-    style: const ClockStyle(
+    background: Color(0xFF0A0A0A),
+    labelColor: Color(0xFF00FFD1),
+    style: ClockStyle(
       faceColor: Colors.black,
       borderColor: Color(0xFF00FFD1),
       hourHandColor: Color(0xFF00FFD1),
@@ -227,11 +228,11 @@ final _presets = <_Preset>[
       handStyle: HandStyle.sleek,
     ),
   ),
-  _Preset(
+  const _Preset(
     name: 'Rose',
-    background: const Color(0xFFFDE7EF),
-    labelColor: const Color(0xFF8E2155),
-    style: const ClockStyle(
+    background: Color(0xFFFDE7EF),
+    labelColor: Color(0xFF8E2155),
+    style: ClockStyle(
       faceColor: Color(0xFFFFF5F8),
       borderColor: Color(0xFFB73E73),
       hourHandColor: Color(0xFF8E2155),
@@ -241,11 +242,11 @@ final _presets = <_Preset>[
       handStyle: HandStyle.modern,
     ),
   ),
-  _Preset(
+  const _Preset(
     name: 'Forest',
-    background: const Color(0xFF1B3B2F),
-    labelColor: const Color(0xFFE8F5E9),
-    style: const ClockStyle(
+    background: Color(0xFF1B3B2F),
+    labelColor: Color(0xFFE8F5E9),
+    style: ClockStyle(
       faceColor: Color(0xFF2D5A47),
       borderColor: Color(0xFFC8B273),
       hourHandColor: Color(0xFFE8F5E9),

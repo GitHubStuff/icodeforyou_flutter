@@ -1,4 +1,4 @@
-// packages/custom_widgets/lib/src/full_screen_color/full_screen_color.dart
+// packages/custom_widgets/lib/src/solid_screen_color/sollid_screen_color.dart
 
 import 'package:flutter/material.dart' show Colors;
 import 'package:flutter/services.dart' show SystemUiOverlayStyle;

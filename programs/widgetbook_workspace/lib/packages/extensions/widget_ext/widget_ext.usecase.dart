@@ -1,4 +1,4 @@
-// packages/extensions/lib/widget_ext/widget_ext.usecase.dart
+// programs/widgetbook_workspace/lib/packages/extensions/widget_ext/widget_ext.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:extensions/widget/widget_ext.dart' show WidgetExt;

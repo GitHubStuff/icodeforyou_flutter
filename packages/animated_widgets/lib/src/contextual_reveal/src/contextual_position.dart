@@ -1,4 +1,4 @@
-// animated_widgets/lib/src/contextual_reveal/contextual_position.dart
+// packages/animated_widgets/lib/src/contextual_reveal/src/contextual_position.dart
 
 import 'package:animated_widgets/src/contextual_reveal/contextual_reveal.dart'
     show ContextualReveal;

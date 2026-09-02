@@ -1,4 +1,4 @@
-// lib/packages/animated_widgets/lib/src/animated_checkbox/animated_checkbox.usecase.dart
+// programs/widgetbook_workspace/lib/packages/animated_widgets/animated_checkbox/animated_checkbox.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:animated_widgets/animated_widgets.dart';

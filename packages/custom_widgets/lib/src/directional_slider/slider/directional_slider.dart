@@ -1,14 +1,21 @@
-// packages/custom_widgets/lib/src/directional_slider/src/slider/directional.dart
-// ignore_for_file: always_use_package_imports, comment_references
+// packages/custom_widgets/lib/src/directional_slider/slider/directional_slider.dart
 
-import 'package:extensions/extensions.dart' show HapticIntensity;
 import 'package:extensions/enum/src/placement.dart' show Placement;
+import 'package:extensions/extensions.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
 
 import 'directional_controller.dart';
 import 'step_grid.dart';
 
+/// A directional slider supporting step snapping, rotation, and haptic
+/// feedback.
+///
+/// Binds to a [DirectionalController] as its source of truth and enforces
+/// discrete value steps through a [StepGrid].
 class DirectionalSlider extends StatelessWidget {
+  /// Creates a [DirectionalSlider].
+  ///
+  /// Constructs an internal [grid] from [min], [max], and [step].
   DirectionalSlider({
     required this.controller,
     required this.rotation,
@@ -17,7 +24,7 @@ class DirectionalSlider extends StatelessWidget {
     required double step,
     super.key,
     this.minValueFirst = true,
-    this.placement = .bottom,
+    this.placement = Placement.bottom,
     this.label,
     this.onChanged,
     this.activeColor,
@@ -27,8 +34,10 @@ class DirectionalSlider extends StatelessWidget {
     this.hapticIntensity = HapticIntensity.selection,
   }) : grid = StepGrid(min: min, max: max, step: step);
 
+  /// Placement of auxiliary elements relative to the slider.
   final Placement placement;
 
+  /// Whether the minimum value appears first in the layout order.
   final bool minValueFirst;
 
   /// External source of truth for the slider's value.
@@ -83,9 +92,9 @@ class DirectionalSlider extends StatelessWidget {
 
   Widget _orient(Widget slider) {
     switch (rotation) {
-      case .horizontal:
+      case Axis.horizontal:
         return slider;
-      case .vertical:
+      case Axis.vertical:
         return RotatedBox(
           quarterTurns: 2,
           child: Directionality(
@@ -102,6 +111,7 @@ class DirectionalSlider extends StatelessWidget {
 /// Rebuilds only on controller change via [ValueListenableBuilder] — no
 /// manual `addListener` / `setState` plumbing.
 class _HapticSlider extends StatefulWidget {
+  /// Creates an internal haptic-enabled slider.
   const _HapticSlider({
     required this.controller,
     required this.grid,
@@ -114,14 +124,31 @@ class _HapticSlider extends StatefulWidget {
     required this.hapticIntensity,
   });
 
+  /// The slider's value controller.
   final DirectionalController controller;
+
+  /// Discrete step calculation grid.
   final StepGrid grid;
+
+  /// Optional custom thumb label.
   final String? label;
+
+  /// Callback for user-initiated value adjustments.
   final ValueChanged<double>? onChanged;
+
+  /// Active track segment color.
   final Color? activeColor;
+
+  /// Inactive track segment color.
   final Color? inactiveColor;
+
+  /// Thumb handle color.
   final Color? thumbColor;
+
+  /// Whether haptics trigger when crossing step thresholds.
   final bool enableHapticFeedback;
+
+  /// Intensity pattern for step-crossing feedback.
   final HapticIntensity hapticIntensity;
 
   @override
@@ -162,7 +189,7 @@ class _HapticSliderState extends State<_HapticSlider> {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<double>(
       valueListenable: widget.controller,
-      builder: (_, value, __) => Slider(
+      builder: (_, value, _) => Slider(
         value: value,
         onChanged: _handleSliderChanged,
         min: widget.grid.min,

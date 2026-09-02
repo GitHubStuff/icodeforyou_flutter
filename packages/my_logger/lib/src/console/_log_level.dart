@@ -1,4 +1,4 @@
-// my_logger/lib/src/console/_log_level.dart
+// packages/my_logger/lib/src/console/_log_level.dart
 part of 'my_logger.dart';
 
 const String _blue = '\x1B[34m';

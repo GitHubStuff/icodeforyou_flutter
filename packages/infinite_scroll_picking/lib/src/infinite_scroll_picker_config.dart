@@ -1,6 +1,4 @@
-// lib/src/infinite_scroll_picker_config.dart
-
-// ignore_for_file: public_member_api_docs
+// packages/infinite_scroll_picking/lib/src/infinite_scroll_picker_config.dart
 
 part of 'library.dart';
 

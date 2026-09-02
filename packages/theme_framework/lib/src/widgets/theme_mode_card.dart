@@ -1,4 +1,4 @@
-// packages/theme_framework/lib/src/theme_mode_card.dart
+// packages/theme_framework/lib/src/widgets/theme_mode_card.dart
 import 'package:flutter/material.dart';
 
 const EdgeInsets _kHeaderPadding = EdgeInsets.fromLTRB(16, 0, 16, 8);

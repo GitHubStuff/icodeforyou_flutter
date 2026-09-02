@@ -1,9 +1,14 @@
-// packages/time_spans/lib/src/duration/month_duration.dart
-// ignore_for_file: public_member_api_docs
+// packages/time_spans/lib/src/interval/month_interval.dart
 
 import 'package:time_spans/src/policy/month_policy.dart' show MonthPolicy;
 import 'package:time_spans/src/span.dart' show Span;
 
+/// A collection of methods for doing date/time processing including:
+/// - microsecondMonths
+/// - completedMonths
+/// - completedYears
+/// - monthCounter
+/// - averageDaysPerMonth
 class MonthInterval {
   /// interval [start]..[finish].
   ///
@@ -21,14 +26,16 @@ class MonthInterval {
   ]) {
     final earlier = start.isAfter(finish) ? finish : start;
     final later = start.isAfter(finish) ? start : finish;
+
+    // (Δyear × months-per-year) + Δmonth is an upper bound on the whole
+    // months in the interval: the anniversary for month `k` never lands in
+    // an earlier calendar month than `earlier.month + k`. Only a downward
+    // correction can ever be needed.
     var months =
         (later.year - earlier.year) * Span.kMonthsPerYear +
         (later.month - earlier.month);
     while (months > 0 && _addMonths(earlier, months, policy).isAfter(later)) {
       months--;
-    }
-    while (!_addMonths(earlier, months + 1, policy).isAfter(later)) {
-      months++;
     }
 
     final anchor = _addMonths(earlier, months, policy);
@@ -86,22 +93,23 @@ class MonthInterval {
       ).abs();
     }
 
+    // Upper-bound estimate; see [microsecondMonths] — only a downward
+    // correction is ever possible.
     var months =
         (finish.year - start.year) * Span.kMonthsPerYear +
         (finish.month - start.month);
-
     while (months > 0 &&
         _addMonths(start, months, monthPolicy).isAfter(finish)) {
       months--;
-    }
-    while (!_addMonths(start, months + 1, monthPolicy).isAfter(finish)) {
-      months++;
     }
     return -months;
   }
 
   /// Adds [months] whole months to [anchor], resolving an overflowing
   /// day-of-month according to [policy].
+  ///
+  /// Strictly increasing in [months] under both policies: the result always
+  /// lands in a strictly later calendar month with the same time-of-day.
   static DateTime _addMonths(DateTime anchor, int months, MonthPolicy policy) {
     final target = anchor.copyWith(month: anchor.month + months);
     if (policy == MonthPolicy.overflow || target.day == anchor.day) {

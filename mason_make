@@ -1,0 +1,266 @@
+#!/usr/bin/env zsh
+# mason_make
+readonly _kVersion='0.0.2'
+#
+# General-purpose Mason brick consumer for the icodeforyou_flutter monorepo.
+#
+# Wraps `mason make` with monorepo-aware validation: verifies the brick is
+# both registered in mason.yaml and present under /bricks, verifies the
+# output subfolder is one of the allowed monorepo content directories,
+# runs `mason get`, then generates the new member at <dir>/<output>.
+#
+# Run from the monorepo folder root
+#   ./mason_make --using <brickname> --output <name> --dir <subfolder>
+#
+# Examples:
+#   ./mason_make --using archetypes --output sincewhen_models --dir packages
+#   ./mason_make --using black_velvet --output cooool_stuff --dir programs
+
+
+# ─── EDITABLE CONFIGURATION ───────────────────────────────────────────────────
+
+## Allowed output subfolders at the monorepo root. Add new content
+## directories here (e.g. 'html') as the monorepo grows.
+readonly -a _kAllowedDirs=('packages' 'plugins' 'programs')
+
+# ─── SHARED LIBRARIES ─────────────────────────────────────────────────────────
+
+## Home of the shared zsh libraries.
+readonly _kLibDir="${HOME}/bin/lib"
+
+## Required shared libraries; abort if any are missing.
+readonly -a _kLibs=('colors.zsh' 'common.zsh' 'datetime_library.zsh')
+
+for _lib in ${_kLibs[@]}; do
+  if [[ ! -f "${_kLibDir}/${_lib}" ]]; then
+    printf '❌ Missing required library: %s\n' "${_kLibDir}/${_lib}" >&2
+    printf '   Aborting. Fix _kLibDir in this script if your libraries live elsewhere.\n' >&2
+    exit 1
+  fi
+  source "${_kLibDir}/${_lib}"
+done
+
+# ─── ABOUT ────────────────────────────────────────────────────────────────────
+
+## Prints the script's header commentary — its purpose, usage, and examples.
+show_about() {
+  printf "\n${CYAN}"
+  cat << 'EOF'
+# General-purpose Mason brick consumer for the icodeforyou_flutter monorepo.
+#
+# Wraps `mason make` with monorepo-aware validation: verifies the brick is
+# both registered in mason.yaml and present under /bricks, verifies the
+# output subfolder is one of the allowed monorepo content directories,
+# runs `mason get`, then generates the new member at <dir>/<output>.
+#
+# Run from the monorepo folder root
+#   ./mason_make --using <brickname> --output <name> --dir <subfolder>
+#
+# Examples:
+#   ./mason_make --using archetypes --output sincewhen_models --dir packages
+#   ./mason_make --using black_velvet --output cooool_stuff --dir programs
+EOF
+  printf "${RESET}\n"
+}
+
+## --about wins over everything else: if present anywhere on the command
+## line, all other parameters are ignored.
+if (( ${@[(Ie)--about]} )); then
+  show_about
+  exit 0
+fi
+
+# ─── HELP ─────────────────────────────────────────────────────────────────────
+
+## Prints usage instructions.
+show_help() {
+  echo
+  printf "${BOLD}${GREEN}mason_make${RESET} — ${YELLOW}Mason brick consumer, version %s${RESET}\n\n" "${_kVersion}"
+  printf "${UNDERLINE}${PURPLE}Usage${RESET}\n"
+  printf "  ./mason_make --using <brickname> --output <name> --dir <subfolder>\n\n"
+  printf "${UNDERLINE}${PURPLE}Options (all REQUIRED)${RESET}\n"
+  printf "  --using <brickname>   Brick to consume. Must be registered in the root\n"
+  printf "                        mason.yaml AND exist as a folder under /bricks.\n"
+  printf "  --output <name>       New member name in snake_case. Becomes both the\n"
+  printf "                        --name passed to mason and the output folder name.\n"
+  printf "  --dir <subfolder>     Monorepo subfolder receiving the new member.\n"
+  printf "                        Allowed: ${GREEN}%s${RESET}\n\n" "${(j:, :)_kAllowedDirs}"
+  printf "${UNDERLINE}${PURPLE}Other${RESET}\n"
+  printf "  --about               Show what this script is and does, then exit.\n"
+  printf "                        Ignores all other parameters.\n\n"
+  printf "${UNDERLINE}${PURPLE}What it does${RESET}\n"
+  printf "    1. Verifies it is running from the monorepo root.\n"
+  printf "    2. Verifies <subfolder> is allowed and exists.\n"
+  printf "    3. Verifies the brick is registered in mason.yaml AND present\n"
+  printf "       under /bricks (guards deletions and typos).\n"
+  printf "    4. Runs mason get.\n"
+  printf "    5. Runs: mason make <brickname> --name <name> -o <subfolder>/<name>\n"
+  printf "       (mason handles its own prompts and overwrite conflicts).\n"
+  printf "    6. Prints the full path to the new member and puts a ready-to-paste\n"
+  printf "       'cd <path>' command in the clipboard (pbcopy).\n\n"
+  printf "${UNDERLINE}${PURPLE}Examples${RESET}\n"
+  printf "  ./mason_make --using archetypes --output sincewhen_models --dir packages\n"
+  printf "  ./mason_make --using black_velvet --output cooool_stuff --dir programs\n\n"
+  printf "  Run from the monorepo root. The root must contain ${BLUE}mason.yaml${RESET},\n"
+  printf "  ${BLUE}/bricks${RESET}, and the target ${BLUE}<subfolder>${RESET}.\n"
+  echo
+}
+
+## Prints an error explanation, appends the help text, and exits.
+die() {
+  error "$1"
+  echo
+  show_help
+  exit 1
+}
+
+if (( $# == 0 )); then
+  show_help
+  exit 1
+fi
+
+# ─── ARGUMENT PARSING ─────────────────────────────────────────────────────────
+
+## Brick name to consume, e.g. archetypes.
+_brick=''
+
+## New member name in snake_case, e.g. sincewhen_models.
+_output=''
+
+## Monorepo subfolder receiving the new member, e.g. packages.
+_dir=''
+
+while (( $# > 0 )); do
+  case "$1" in
+    -h|--help)
+      show_help
+      exit 0
+      ;;
+    --using)
+      if (( $# < 2 )) || [[ -z "$2" ]]; then
+        die '--using requires a brick name (e.g. --using archetypes)'
+      fi
+      _brick="$2"
+      shift 2
+      ;;
+    --output)
+      if (( $# < 2 )) || [[ -z "$2" ]]; then
+        die '--output requires a member name (e.g. --output sincewhen_models)'
+      fi
+      _output="$2"
+      shift 2
+      ;;
+    --dir)
+      if (( $# < 2 )) || [[ -z "$2" ]]; then
+        die "--dir requires a subfolder (allowed: ${(j:, :)_kAllowedDirs})"
+      fi
+      _dir="$2"
+      shift 2
+      ;;
+    *)
+      die "Unknown argument: $1"
+      ;;
+  esac
+done
+
+readonly _brick
+readonly _output
+readonly _dir
+
+if [[ -z "${_brick}" ]]; then
+  die 'Missing required --using <brickname>'
+fi
+
+if [[ -z "${_output}" ]]; then
+  die 'Missing required --output <name>'
+fi
+
+if [[ -z "${_dir}" ]]; then
+  die "Missing required --dir <subfolder> (allowed: ${(j:, :)_kAllowedDirs})"
+fi
+
+if [[ ! "${_output}" =~ '^[a-z][a-z0-9_]*$' ]]; then
+  die "Output name must be snake_case (got: ${_output})"
+fi
+
+# ─── CONSTANTS ────────────────────────────────────────────────────────────────
+
+## Brick home directory, relative to the monorepo root.
+readonly _kBrickHome="bricks/${_brick}"
+
+## Output target, relative to the monorepo root.
+readonly _kTarget="${_dir}/${_output}"
+
+# ─── STARTUP BANNER ───────────────────────────────────────────────────────────
+printf "\n"
+color_print "${CYAN}" "$(local_time), mason_make ${_brick} -> ${_kTarget}, version ${_kVersion}"
+printf "\n"
+
+# ─── PRECONDITIONS ────────────────────────────────────────────────────────────
+
+if [[ ! -f 'pubspec.yaml' || ! -d 'bricks' ]]; then
+  die 'Run from the monorepo root (pubspec.yaml + bricks/ required).'
+fi
+
+if [[ ! -f 'mason.yaml' ]]; then
+  die 'mason.yaml not found at the monorepo root. No bricks are registered.'
+fi
+
+if (( ! ${_kAllowedDirs[(Ie)${_dir}]} )); then
+  die "'${_dir}' is not an allowed subfolder (allowed: ${(j:, :)_kAllowedDirs})"
+fi
+
+if [[ ! -d "${_dir}" ]]; then
+  die "Subfolder /${_dir} does not exist at the monorepo root."
+fi
+
+if ! grep -q "^  ${_brick}:$" 'mason.yaml'; then
+  die "Brick '${_brick}' is not registered in mason.yaml. Publish it first (see build_brick)."
+fi
+
+if [[ ! -d "${_kBrickHome}" ]]; then
+  die "Brick '${_brick}' is registered in mason.yaml but /${_kBrickHome} does not exist. Deleted brick or typo in mason.yaml."
+fi
+
+set -e
+
+# ─── POST INSTRUCTIONS ────────────────────────────────────────────────────────
+
+## Printed after a successful mason make. Add member-onboarding printf
+## statements here (workspace registration, pub get, etc).
+post_instructions() {
+  :
+}
+
+# ─── MASON GET ────────────────────────────────────────────────────────────────
+
+mason get
+plain_output 'mason get' 'complete'
+
+# ─── MASON MAKE ───────────────────────────────────────────────────────────────
+
+mason make "${_brick}" --name "${_output}" -o "${_kTarget}"
+
+success "Generated: ${_kTarget}"
+
+post_instructions
+
+# ─── PATH REPORT ──────────────────────────────────────────────────────────────
+
+## Absolute path to the new member.
+readonly _kFullPath="$(pwd)/${_kTarget}"
+
+printf '\n'
+color_print "${WHITE}" "Path to ${_output}:"
+printf '\n'
+printf "  ${GREEN}cd %s${RESET}\n" "${_kFullPath}"
+printf '\n'
+
+if command -v pbcopy > /dev/null 2>&1; then
+  ## No trailing newline: pasting shows the command without executing it.
+  printf 'cd %s' "${_kFullPath}" | pbcopy
+  color_print "${CYAN}" "The cd command is in your clipboard — paste and hit return to jump there."
+else
+  color_print "${YELLOW}" "pbcopy not available — copy the cd line above manually."
+fi
+printf '\n'

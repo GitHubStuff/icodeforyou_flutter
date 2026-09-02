@@ -1,6 +1,4 @@
-// lib/src/infinite_scroll_wheel_config.dart
-
-// ignore_for_file: comment_references, public_member_api_docs
+// packages/infinite_scroll_picking/lib/src/infinite_scroll_wheel_config.dart
 
 part of 'library.dart';
 

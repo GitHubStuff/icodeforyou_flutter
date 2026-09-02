@@ -1,4 +1,4 @@
-// test/src/utils/query_validator_test.dart
+// packages/sqlite_viewer/test/src/utils/query_validator_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqlite_viewer/src/failures/sqlite_viewer_failure.dart';

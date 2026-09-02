@@ -1,4 +1,4 @@
-// packages/sqlite_viewer/lib/src/widgets/_sqlite_viewer_page_phone_layout.dart
+// packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_page/sqlite_viewer_page_phone_layout.dart
 
 // ignore_for_file: public_member_api_docs
 

@@ -1,4 +1,4 @@
-// programs/widgetbook/lib/use_cases/orientation_flex.usecase.dart
+// programs/widgetbook_workspace/lib/packages/custom_widgets/orientation_flex/orientation_flex.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:custom_widgets/custom_widgets.dart';
@@ -55,10 +55,11 @@ Widget buildOrientationFlexUseCase(BuildContext context) {
     labelBuilder: (axis) => axis.name,
   );
 
-  // Override only the size on the ambient MediaQuery so OrientationFlex resolves
-  // its direction from the chosen viewport while every other inherited value
-  // (text scale, padding, platform brightness) is preserved. This is the same
-  // tree-level seam the widget is designed around — no override parameter.
+  // Override only the size on the ambient MediaQuery so OrientationFlex
+  // resolves its direction from the chosen viewport while every other
+  // inherited value (text scale, padding, platform brightness) is preserved.
+  // This is the same tree-level seam the widget is designed
+  // around — no override parameter.
   final media = MediaQuery.of(context).copyWith(size: viewport.size);
 
   return MediaQuery(

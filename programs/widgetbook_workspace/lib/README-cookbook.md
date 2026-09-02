@@ -43,25 +43,6 @@ Not:
 import 'package:widgetbook_workspace/main.directories.g.dart';
 ```
 
-## Package order
-
-1. adaptive_modal
-2. analog_clock_widget
-3. animated_rail_menu
-4. animated_widgets
-5. edittext_popover
-6. ice_chip
-7. ice_chip_trai
-8. infinite_scroll_picking
-9. infinite_scroll_picking_settings
-10. random_color_generator
-11. scrolling_datetime_pickers
-12. settings_widget
-13. since_when_widgets
-14. sqlite_viewer
-15. step_slider_package
-16. theme_widget
-
 ## Notes
 
 - Never edit `main.directories.g.dart` — it is always overwritten by build_runner

@@ -17,6 +17,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// Does **not** own the controller — the caller constructs and disposes it;
 /// this cubit only subscribes and tears its subscription down in [close].
 class CrossFadeWidgetsCubit extends Cubit<int> {
+  /// Constructor for cubit
   CrossFadeWidgetsCubit({
     required DirectionalController controller,
     required this.length,

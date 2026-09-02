@@ -6,7 +6,7 @@ homepage:
 resolution: workspace
 
 environment:
-  sdk: ">=3.12.0 <4.0.0"
+  sdk: ^3.12.0
 
 dependencies:
   app_preferences: ^1.0.0
@@ -25,6 +25,3 @@ dev_dependencies:
   json_serializable: ^6.13.2
   mocktail: ^1.0.5
   icodeforyou_lints: ^1.0.0
-
-flutter:
-  uses-material-design: true

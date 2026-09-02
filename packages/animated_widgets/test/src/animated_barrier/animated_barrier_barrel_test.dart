@@ -1,4 +1,4 @@
-// packages/animated_barrier/test/animated_barrier_test.dart
+// packages/animated_widgets/test/src/animated_barrier/animated_barrier_barrel_test.dart
 
 import 'package:animated_widgets/animated_widgets.dart';
 import 'package:flutter/material.dart';

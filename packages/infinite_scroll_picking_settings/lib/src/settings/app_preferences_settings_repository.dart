@@ -1,4 +1,4 @@
-// infinite_scroll_picking_settings/lib/src/settings/app_preferences_settings_repository.dart
+// packages/infinite_scroll_picking_settings/lib/src/settings/app_preferences_settings_repository.dart
 
 // ignore_for_file: comment_references, public_member_api_docs, always_use_package_imports
 

@@ -1,4 +1,4 @@
-// lib/packages/custom_widgets/lib/src/uniform_cluster/uniform_cluster.usecase.dart
+// programs/widgetbook_workspace/lib/packages/custom_widgets/uniform_cluster/uniform_cluster.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:custom_widgets/custom_widgets.dart';

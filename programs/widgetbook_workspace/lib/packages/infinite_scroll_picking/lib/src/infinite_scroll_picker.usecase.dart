@@ -1,4 +1,4 @@
-// lib/packages/infinite_scroll_picking/lib/src/infinite_scroll_picker.usecase.dart
+// programs/widgetbook_workspace/lib/packages/infinite_scroll_picking/lib/src/infinite_scroll_picker.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:flutter/material.dart';

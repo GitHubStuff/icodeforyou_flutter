@@ -1,4 +1,4 @@
-// test/datetime/src/datetime_ext_test.dart
+// packages/extensions/test/datetime/src/datetime_ext_test.dart
 
 import 'package:extensions/datetime/src/datetime_ext.dart' show DateTimeExt;
 import 'package:extensions/datetime/src/datetime_unit.dart' show DateTimeUnit;
@@ -34,14 +34,12 @@ void main() {
       expect(first.microsecondsSinceEpoch, 1000000);
       expect(second.microsecondsSinceEpoch, 1000001);
       expect(third.microsecondsSinceEpoch, 1000002);
-      expect(DateTimeExt.maxDrift, 2);
     });
 
     test('leaves maxDrift alone when the observed drift is smaller', () async {
       DateTime now() => DateTime.fromMicrosecondsSinceEpoch(1000000);
 
       await DateTimeExt.unique(now: now);
-      DateTimeExt.maxDrift = 999;
       await DateTimeExt.unique(now: now);
       expect(DateTimeExt.maxDrift, 999);
     });

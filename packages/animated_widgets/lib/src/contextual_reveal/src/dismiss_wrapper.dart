@@ -1,4 +1,4 @@
-// animated_widgets/lib/src/contextual_reveal/dismiss_wrapper.dart
+// packages/animated_widgets/lib/src/contextual_reveal/src/dismiss_wrapper.dart
 
 part of 'contextual_reveal.dart';
 

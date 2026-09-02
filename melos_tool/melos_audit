@@ -1,0 +1,507 @@
+#!/usr/bin/env zsh
+# melos_tool/melos_audit
+# Workspace hygiene audit for a pub-workspace / melos monorepo.
+readonly VERSION="2.0.0"
+
+# ─── configuration ──────────────────────────────────────────────────────────
+# per-repo configurations
+
+# The monorepo this script is calibrated for. Must match `name:` in the
+# root pubspec.yaml. Edit this one line to port the script.
+readonly REPO_NAME="icodeforyou_flutter"
+
+# First-level directories searched for content.
+readonly TIERS=(packages plugins programs)
+
+
+#
+# Usage:
+#   melos_audit                          — show help (exit 0)
+#   melos_audit --local                  — all local checks (fast, offline)
+#   melos_audit --dependencies           — dependency triage (network)
+#   melos_audit --local --dependencies   — everything
+#   melos_audit --local --fail-fast      — abort on first failure (dev loop)
+#   melos_audit -h | --help              — show help
+#
+# Flags are composable. At least one check flag (--local, --dependencies)
+# is required to run; bare invocation shows help.
+#
+# Must be run from the workspace root: the directory whose pubspec.yaml
+# carries the `workspace:` key AND whose `name:` matches REPO_NAME below.
+# Belt and suspenders — structural root detection plus identity check.
+# Porting this script to another monorepo is a one-line REPO_NAME edit.
+#
+# Exit status: 0 clean, 1 failures found, 64 wrong directory / bad usage,
+#              69 missing prerequisite (jq).
+#
+# Failure modes:
+#   default      — every selected check runs to completion; all failures
+#                  accumulate; summary at the end; exit 1 if any. This is
+#                  the CI mode: one run reports everything that is wrong.
+#   --fail-fast  — the FIRST failure from any check aborts the audit
+#                  immediately. Developer inner-loop mode: find the next
+#                  problem before it gets committed. Warnings never
+#                  trigger fail-fast.
+#
+# Local checks (--local):
+#
+#   1. Test presence — every package (a first-level tier directory holding
+#      a pubspec.yaml) must have:
+#        a. a test/ directory
+#        b. test/analysis_options.yaml whose first two lines are exactly:
+#             # {relative path}/test/analysis_options.yaml
+#             include: ../analysis_options.yaml
+#        c. at least one *_test.dart anywhere under test/
+#      Tests are an absolute requirement; every violation is a failure.
+#   2. Test entrypoints — every *_test.dart under a test/ tree must declare
+#      a top-level main(). A main-less test file is discovered by the test
+#      glob and fails compilation at load time.
+#   3. Header truth — a first-line header of the form `// path/to/file.dart`
+#      must match the file's actual repo-relative path. Lying headers hide
+#      duplicates and misdirect debugging. Files with no path header are
+#      reported as warnings, not failures. Generated files are exempt.
+#   4. Duplicate basenames — the same *_test.dart basename appearing more
+#      than once within a single package's test/ tree almost always means
+#      a stray scaffold stub shadowing the real test in test/src/.
+#   5. Nested SDK pins — a .fvmrc file or .fvm/ directory below the
+#      workspace root overrides the root pin for anything executed inside
+#      that package, silently running tests under a stale Dart SDK. The
+#      root .fvmrc is the single source of truth.
+#
+# Dependency triage (--dependencies) — parses
+# `fvm dart pub outdated --json` at the workspace root and buckets every
+# package by required action:
+#
+#   ⬆️  Upgradable    — newer version allowed by current constraints.
+#                       Remediation: fvm dart pub upgrade
+#   💥 Major bump     — newer version needs a constraint edit.
+#                       Remediation: widen constraint + read changelog
+#   🔒 Held back      — latest blocked by transitive pins / SDK floor.
+#                       No local action.
+#   ⚰️  Discontinued  — package abandoned on pub.dev. Plan a replacement.
+#                       Counted as a warning.
+#
+# Dependency drift is informational — it never fails the audit. The
+# network call to pub.dev is why this check is a separate flag; typical
+# CI gates on --local per-commit and runs --dependencies on a schedule.
+
+set -uo pipefail
+
+# ─── configuration ──────────────────────────────────────────────────────────
+
+# Generated files are exempt from header checks.
+readonly -a GENERATED_NAME_FILTERS=(
+  -not -name '*.g.dart'
+  -not -name '*.freezed.dart'
+  -not -name '*.mocks.dart'
+  -not -name '*.drift.dart'
+  -not -name '*.gr.dart'
+  -not -name '*.config.dart'
+)
+
+readonly -a PATH_FILTERS=(
+  -not -path '*/.dart_tool/*'
+  -not -path '*/build/*'
+)
+
+# ─── cleanup ────────────────────────────────────────────────────────────────
+
+# No temp files are used today. This trap exists so that if any future
+# check introduces them (under $AUDIT_TMP_DIR), they are removed on every
+# exit path — clean run, failure, or fail-fast abort.
+AUDIT_TMP_DIR=""
+
+cleanup() {
+  [[ -n "$AUDIT_TMP_DIR" && -d "$AUDIT_TMP_DIR" ]] && rm -rf "$AUDIT_TMP_DIR"
+}
+trap cleanup EXIT INT TERM
+
+# ─── usage ──────────────────────────────────────────────────────────────────
+
+show_usage() {
+  print ""
+  print "melos_audit v${VERSION} — ${REPO_NAME} Workspace hygiene audit"
+  print "═══════════════════════════════════════════════════════════════"
+  print ""
+  print "USAGE:"
+  print "  melos_audit                          Show this help"
+  print "  melos_audit --local                  All local checks (fast, offline)"
+  print "  melos_audit --dependencies           Dependency triage (network)"
+  print "  melos_audit --local --dependencies   Everything"
+  print "  melos_audit -h | --help              Show this help"
+  print ""
+  print "OPTIONS:"
+  print "  --local          Run local hygiene checks"
+  print "  --dependencies   Run pub outdated dependency triage"
+  print "  --fail-fast      Abort on the first failure (dev inner loop);"
+  print "                   default is to report ALL failures (CI mode)"
+  print ""
+  print "Must be run from the ${REPO_NAME} workspace root."
+  print ""
+  print "EXIT STATUS:"
+  print "  0   clean (or help shown)"
+  print "  1   failures found"
+  print "  64  wrong directory / bad usage"
+  print "  69  missing prerequisite (jq)"
+  print ""
+}
+
+# ─── argument parsing ───────────────────────────────────────────────────────
+
+typeset -i run_local=0
+typeset -i run_dependencies=0
+typeset -i fail_fast=0
+
+if (( $# == 0 )); then
+  show_usage
+  exit 0
+fi
+
+for arg in "$@"; do
+  case "$arg" in
+    --local)
+      run_local=1
+      ;;
+    --dependencies)
+      run_dependencies=1
+      ;;
+    --fail-fast)
+      fail_fast=1
+      ;;
+    -h|--help)
+      show_usage
+      exit 0
+      ;;
+    *)
+      print -u2 "❌ Unknown argument: $arg"
+      show_usage
+      exit 64
+      ;;
+  esac
+done
+
+if (( run_local == 0 && run_dependencies == 0 )); then
+  print -u2 "❌ --fail-fast requires a check to run: add --local and/or --dependencies."
+  show_usage
+  exit 64
+fi
+
+# ─── preconditions ──────────────────────────────────────────────────────────
+
+# Belt: structural root detection — only the workspace root pubspec.yaml
+# carries the `workspace:` key (members carry `resolution: workspace`).
+# Suspenders: the derived `name:` must match REPO_NAME.
+
+if [[ ! -f pubspec.yaml ]]; then
+  print -u2 ""
+  print -u2 "❌ No pubspec.yaml here. Run this from the ${REPO_NAME} workspace root."
+  exit 64
+fi
+
+if ! grep -qE '^workspace:' pubspec.yaml; then
+  print -u2 ""
+  print -u2 "❌ This pubspec.yaml has no \`workspace:\` key — not a workspace root."
+  print -u2 "   Run this from the ${REPO_NAME} workspace root."
+  exit 64
+fi
+
+derived_name=$(grep -E '^name:' pubspec.yaml | head -n 1 | sed 's/^name:[[:space:]]*//' | tr -d '[:space:]')
+
+if [[ "$derived_name" != "$REPO_NAME" ]]; then
+  print -u2 ""
+  print -u2 "❌ Workspace root found, but wrong repo."
+  print -u2 "   expected: ${REPO_NAME}"
+  print -u2 "   found:    ${derived_name:-<no name>}"
+  exit 64
+fi
+
+if (( run_dependencies )) && ! command -v jq >/dev/null 2>&1; then
+  print -u2 ""
+  print -u2 "❌ Dependency triage requires jq (brew install jq)."
+  exit 69
+fi
+
+typeset -i failures=0
+typeset -i warnings=0
+typeset -i total_checks=0
+(( run_local )) && total_checks=$((total_checks + 5))
+(( run_dependencies )) && total_checks=$((total_checks + 1))
+typeset -i check_number=0
+
+# ─── fail-fast ──────────────────────────────────────────────────────────────
+
+# Called immediately after every failure is recorded and printed. Under
+# --fail-fast the first failure aborts the audit; default mode returns
+# and lets the run accumulate.
+check_fail_fast() {
+  (( fail_fast )) || return 0
+  print ""
+  print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  print "🛑 FAIL-FAST — aborting on first failure"
+  print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  print "Fix the failure above, then run again."
+  print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  exit 1
+}
+
+# ─── check 1: test presence + lint config ──────────────────────────────────
+
+check_test_presence() {
+  check_number=$((check_number + 1))
+  print "🔍 [${check_number}/${total_checks}] Test presence — test/, valid analysis_options.yaml, ≥1 *_test.dart"
+
+  local tier pkg_dir pkg yaml expected_header line1 line2 first_test
+  for tier in $TIERS; do
+    for pkg_dir in ${tier}/*(N/); do
+      pkg="${pkg_dir%/}"
+
+      # A package is a directory with a pubspec.yaml; skip anything else.
+      [[ -f "${pkg}/pubspec.yaml" ]] || continue
+
+      # a. test/ directory exists. Missing → cascade: skip b and c.
+      if [[ ! -d "${pkg}/test" ]]; then
+        print ""
+        print "  ❌ no test/ directory: ${pkg}"
+        failures=$((failures + 1))
+        check_fail_fast
+        continue
+      fi
+
+      # b. test/analysis_options.yaml exists with exact first two lines.
+      yaml="${pkg}/test/analysis_options.yaml"
+      if [[ ! -f "$yaml" ]]; then
+        print ""
+        print "  ❌ missing: ${yaml}"
+        failures=$((failures + 1))
+        check_fail_fast
+      else
+        expected_header="# ${yaml}"
+        line1=$(sed -n '1p' "$yaml")
+        line2=$(sed -n '2p' "$yaml")
+
+        if [[ "$line1" != "$expected_header" ]]; then
+          print ""
+          print "  ❌ lying/missing header: ${yaml}"
+          print "     expected: ${expected_header}"
+          print "     found:    ${line1:-<empty>}"
+          failures=$((failures + 1))
+          check_fail_fast
+        fi
+
+        if [[ "$line2" != "include: ../analysis_options.yaml" ]]; then
+          print ""
+          print "  ❌ wrong include: ${yaml}"
+          print "     expected: include: ../analysis_options.yaml"
+          print "     found:    ${line2:-<empty>}"
+          failures=$((failures + 1))
+          check_fail_fast
+        fi
+      fi
+
+      # c. At least one *_test.dart anywhere under test/.
+      first_test=$(find "${pkg}/test" -name '*_test.dart' -type f \
+        $PATH_FILTERS 2>/dev/null | head -n 1)
+      if [[ -z "$first_test" ]]; then
+        print ""
+        print "  ❌ no *_test.dart under: ${pkg}/test — package has no tests"
+        failures=$((failures + 1))
+        check_fail_fast
+      fi
+    done
+  done
+}
+
+# ─── check 2: every *_test.dart declares a top-level main ──────────────────
+
+check_test_entrypoints() {
+  check_number=$((check_number + 1))
+  print "🔍 [${check_number}/${total_checks}] Test entrypoints — top-level main() in every *_test.dart"
+
+  local f
+  while IFS= read -r f; do
+    if ! grep -qE '^(void|Future<void>) main\s*\(' "$f"; then
+      print "  ❌ no top-level main: $f"
+      failures=$((failures + 1))
+      check_fail_fast
+    fi
+  done < <(find $TIERS -path '*/test/*' -name '*_test.dart' -type f \
+    $PATH_FILTERS 2>/dev/null)
+}
+
+# ─── check 3: first-line path headers must tell the truth ──────────────────
+
+check_header_truth() {
+  check_number=$((check_number + 1))
+  print "🔍 [${check_number}/${total_checks}] Header truth — first-line path comments match real paths"
+
+  local f first_line claimed
+  while IFS= read -r f; do
+    first_line=$(head -n 1 "$f")
+    if [[ "$first_line" == '// '* ]]; then
+      claimed="${first_line#// }"
+      # Only treat it as a path header if it looks like one: contains a
+      # slash and ends in .dart. Prose comments on line 1 are left alone.
+      if [[ "$claimed" == */*.dart ]]; then
+        if [[ "$claimed" != "$f" ]]; then
+          print ""
+          print "  ❌ lying header: $f"
+          print "     claims: $claimed"
+          failures=$((failures + 1))
+          check_fail_fast
+        fi
+      fi
+    else
+      print "  ⚠️  no path header: $f"
+      warnings=$((warnings + 1))
+    fi
+  done < <(find $TIERS -type f -name '*.dart' \
+    \( -path '*/lib/*' -o -path '*/test/*' \) \
+    $PATH_FILTERS $GENERATED_NAME_FILTERS 2>/dev/null)
+}
+
+# ─── check 4: duplicate *_test.dart basenames within one package ───────────
+
+check_duplicate_basenames() {
+  check_number=$((check_number + 1))
+  print "🔍 [${check_number}/${total_checks}] Duplicates — repeated test basenames inside a package"
+
+  local tier test_dir dupes base hit
+  for tier in $TIERS; do
+    for test_dir in ${tier}/*/test(N/); do
+      dupes=$(find "$test_dir" -name '*_test.dart' -type f \
+        $PATH_FILTERS 2>/dev/null | awk -F/ '{print $NF}' | sort | uniq -d)
+      [[ -z "$dupes" ]] && continue
+
+      while IFS= read -r base; do
+        print ""
+        print "  ❌ duplicate test basename in ${test_dir%/}: $base"
+        find "$test_dir" -name "$base" -type f $PATH_FILTERS 2>/dev/null \
+          | while IFS= read -r hit; do print "     → $hit"; done
+        failures=$((failures + 1))
+        check_fail_fast
+      done <<< "$dupes"
+    done
+  done
+}
+
+# ─── check 5: no nested .fvmrc / .fvm below the workspace root ─────────────
+
+check_nested_sdk_pins() {
+  check_number=$((check_number + 1))
+  print "🔍 [${check_number}/${total_checks}] SDK pins — no nested .fvmrc or .fvm/ below workspace root"
+
+  local f pinned
+  while IFS= read -r f; do
+    pinned=$(grep -o '"flutter"[[:space:]]*:[[:space:]]*"[^"]*"' "$f" \
+      | sed 's/.*:[[:space:]]*"\(.*\)"/\1/')
+    print ""
+    print "  ❌ nested SDK pin: $f"
+    print "     pins: ${pinned:-<unreadable>}"
+    failures=$((failures + 1))
+    check_fail_fast
+  done < <(find $TIERS -name '.fvmrc' -type f $PATH_FILTERS 2>/dev/null)
+
+  local d
+  while IFS= read -r d; do
+    print ""
+    print "  ❌ nested .fvm directory: $d"
+    failures=$((failures + 1))
+    check_fail_fast
+  done < <(find $TIERS -name '.fvm' -type d $PATH_FILTERS 2>/dev/null)
+}
+
+# ─── check 6: dependency triage via pub outdated ───────────────────────────
+
+check_dependencies() {
+  check_number=$((check_number + 1))
+  print "🔍 [${check_number}/${total_checks}] Dependencies — pub outdated triage (network)"
+
+  local json
+  if ! json=$(fvm dart pub outdated --json 2>/dev/null); then
+    print ""
+    print "  ⚠️  pub outdated failed — offline or pub.dev unreachable; check skipped"
+    warnings=$((warnings + 1))
+    return
+  fi
+
+  # Bucket every package by first applicable condition. Versions only move
+  # forward, so field inequality is a sufficient ordering test.
+  local triaged
+  triaged=$(print -r -- "$json" | jq -r '
+    .packages[]
+    | select(.current != null)
+    | {
+        name: .package,
+        cur:  .current.version,
+        upg:  (.upgradable.version // .current.version),
+        res:  (.resolvable.version // .upgradable.version // .current.version),
+        lat:  (.latest.version // ""),
+        disc: (.isDiscontinued // false)
+      }
+    | if .disc                     then "discontinued\t\(.name) \(.cur)"
+      elif .cur != .upg            then "upgradable\t\(.name) \(.cur) → \(.upg)"
+      elif .upg != .res            then "major\t\(.name) \(.cur) → \(.res)"
+      elif .lat != "" and .res != .lat
+                                   then "held\t\(.name) \(.cur) (latest \(.lat))"
+      else empty
+      end
+  ')
+
+  local -a upgradable=() major=() held=() discontinued=()
+  local bucket detail line
+  while IFS=$'\t' read -r bucket detail; do
+    [[ -z "$bucket" ]] && continue
+    case "$bucket" in
+      upgradable)   upgradable+=("$detail") ;;
+      major)        major+=("$detail") ;;
+      held)         held+=("$detail") ;;
+      discontinued) discontinued+=("$detail") ;;
+    esac
+  done <<< "$triaged"
+
+  print "  ⬆️  Upgradable (${#upgradable}) — within constraints; remediation: fvm dart pub upgrade"
+  for line in $upgradable; do print "      $line"; done
+
+  print "  💥 Major bump (${#major}) — constraint edit + changelog review"
+  for line in $major; do print "      $line"; done
+
+  print "  🔒 Held back (${#held}) — blocked by transitive pins; no local action"
+  for line in $held; do print "      $line"; done
+
+  print "  ⚰️  Discontinued (${#discontinued}) — plan replacement"
+  for line in $discontinued; do
+    print "      $line"
+    warnings=$((warnings + 1))
+  done
+}
+
+# ─── run ────────────────────────────────────────────────────────────────────
+
+if (( run_local )); then
+  check_test_presence
+  check_test_entrypoints
+  check_header_truth
+  check_duplicate_basenames
+  check_nested_sdk_pins
+fi
+
+if (( run_dependencies )); then
+  check_dependencies
+fi
+
+print ""
+print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+print "📊 AUDIT SUMMARY"
+print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+print "Failures: ${failures}"
+print "Warnings: ${warnings}"
+
+if (( failures > 0 )); then
+  print "❌ Audit failed."
+  print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  exit 1
+fi
+
+print "✅ Audit passed."
+print "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+exit 0

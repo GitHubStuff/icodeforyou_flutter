@@ -1,4 +1,4 @@
-// test/helpers/mock_sqlite_viewer_source.dart
+// packages/sqlite_viewer/test/helpers/mock_sqlite_viewer_source.dart
 
 import 'package:fpdart/fpdart.dart';
 import 'package:sqlite_viewer/sqlite_viewer.dart';

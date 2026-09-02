@@ -1,4 +1,4 @@
-// lib/src/_infinite_scroll_wheel.dart
+// packages/infinite_scroll_picking/lib/src/infinite_scroll_wheel.dart
 
 // ignore: lines_longer_than_80_chars
 // ignore_for_file: document_ignores, avoid_positional_boolean_parameters, public_member_api_docs

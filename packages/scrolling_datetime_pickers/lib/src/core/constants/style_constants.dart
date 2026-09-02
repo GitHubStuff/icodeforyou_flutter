@@ -1,4 +1,4 @@
-// lib/src/core/constants/style_constants.dart
+// packages/scrolling_datetime_pickers/lib/src/core/constants/style_constants.dart
 
 import 'package:flutter/material.dart';
 

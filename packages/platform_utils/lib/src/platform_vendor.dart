@@ -1,4 +1,4 @@
-// core/platform/platform_vendor.dart
+// packages/platform_utils/lib/src/platform_vendor.dart
 
 import 'package:platform_utils/src/app_platform.dart';
 

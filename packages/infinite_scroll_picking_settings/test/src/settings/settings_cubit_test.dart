@@ -1,4 +1,4 @@
-// infinite_scroll_picking_settings/test/src/settings/settings_cubit_test.dart
+// packages/infinite_scroll_picking_settings/test/src/settings/settings_cubit_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:infinite_scroll_picking_settings/src/picker_visual_settings/picker_visual_settings.dart'

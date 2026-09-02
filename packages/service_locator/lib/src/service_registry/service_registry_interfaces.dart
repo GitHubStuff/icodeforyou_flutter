@@ -1,4 +1,4 @@
-// packages/services_locator/lib/src/service_locator_registry/service_locator_registry_interface.dart
+// packages/service_locator/lib/src/service_registry/service_registry_interfaces.dart
 //
 // The write-side ([ServiceRegistrar]) and read-side ([ServiceResolver])
 // interfaces that [ServiceLocatorRegistry] implements. Split out so

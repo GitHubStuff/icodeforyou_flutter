@@ -1,4 +1,4 @@
-// packages/stacking_widgets/lib/src/stacking_widgets.usecase.dart
+// programs/widgetbook_workspace/lib/packages/stacking_widgets/stacking_widgets.usecase.dart
 
 import 'package:flutter/material.dart';
 import 'package:stacking_widgets/stacking_widgets.dart'

@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 # bricks/build_brick
-readonly _kVersion='0.0.8'
+readonly _kVersion='1.0.1'
 #
 # General-purpose Mason brick builder for the icodeforyou_flutter monorepo.
 #
@@ -34,6 +34,36 @@ for _lib in ${_kLibs[@]}; do
   source "${_kLibDir}/${_lib}"
 done
 
+# ─── ABOUT ────────────────────────────────────────────────────────────────────
+
+## Prints the script's header commentary — its purpose, usage, and examples.
+show_about() {
+  printf "${CYAN}"
+  cat << 'EOF'
+# General-purpose Mason brick builder for the icodeforyou_flutter monorepo.
+#
+# Builds (or rebuilds) bricks/<name>/__brick__ from <subfolder>/<name>,
+# substituting every identity form with mustache case lambdas, generating
+# bricks/<name>/brick.yaml if missing, and registering the brick in the
+# root mason.yaml if absent.
+#
+# Run from the monorepo folder root
+#   ./bricks/build_brick <template_app_name> -s <subfolder>
+#
+# Examples:
+#   ./bricks/build_brick black_velvet -s programs
+#   ./bricks/build_brick yellow_velvet -s packages
+EOF
+  printf "${RESET}\n"
+}
+
+## --about wins over everything else: if present anywhere on the command
+## line, all other parameters are ignored.
+if (( ${@[(Ie)--about]} )); then
+  show_about
+  exit 0
+fi
+
 # ─── HELP ─────────────────────────────────────────────────────────────────────
 
 ## Prints usage instructions.
@@ -45,6 +75,9 @@ show_help() {
   printf "  -s <subfolder>   REQUIRED. Monorepo subfolder holding the template\n"
   printf "                   (e.g. packages, plugins, programs).\n"
   printf "                   Must exist as a directory at the monorepo root.\n\n"
+  printf "${UNDERLINE}${PURPLE}Other${RESET}\n"
+  printf "  --about          Show what this script is and does, then exit.\n"
+  printf "                   Ignores all other parameters.\n\n"
   printf "${UNDERLINE}${PURPLE}What it does${RESET}\n"
   printf "  Rebuilds bricks/<name>/__brick__ from <subfolder>/<name>:\n"
   printf "    1. Generates bricks/<name>/brick.yaml if missing (never overwrites).\n"
@@ -311,15 +344,15 @@ success "Brick built clean: ${_kBrick}"
 printf '\n'
 color_print "${WHITE}" "Create a NEW ${_subdir} member from this brick (from the monorepo root):"
 printf '\n'
-printf "  mason get\n"
-printf "  mason make %s --name ${GREEN}my_app${RESET} --description \"${YELLOW}My app${RESET}\" -o ${YELLOW}%s/my_app${RESET}\n" "${_snake}" "${_subdir}"
+printf "  ./mason_make --using %s --output ${GREEN}my_app${RESET} --dir ${YELLOW}%s${RESET}\n" "${_snake}" "${_subdir}"
 printf '\n'
 printf "  Then add ${YELLOW}%s/my_app${RESET} to the workspace list in the root ${YELLOW}pubspec.yaml${RESET}\n" "${_subdir}"
 printf "  and run: ${YELLOW}flutter pub get${RESET}\n\n"
 color_print "${WHITE}" "Pull template changes into an EXISTING member (clean git tree first):"
 printf "\n"
 printf "  From the terminal:\n"
-printf "   %% mason make %s --name my_app -o %s/my_app --on-conflict overwrite\n" "${_snake}" "${_subdir}"
+printf "   %% ./mason_make --using %s --output my_app --dir %s\n" "${_snake}" "${_subdir}"
 printf "   %% git diff\n\n"
-printf "  Review the diff; git checkout -- the files where the app's own edits\n"
-printf "  should win, then commit.\n\n"
+printf "  Answer mason's conflict prompts (overwrite where the template should\n"
+printf "  win). Review the diff; git checkout -- the files where the app's own\n"
+printf "  edits should win, then commit.\n\n"

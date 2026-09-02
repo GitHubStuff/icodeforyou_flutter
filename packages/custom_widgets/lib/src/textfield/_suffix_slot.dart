@@ -1,6 +1,4 @@
-// packages/custom_widgets/lib/src/shared/suffix_slot.dart
-// ignore_for_file: public_member_api_docs
-
+// packages/custom_widgets/lib/src/textfield/_suffix_slot.dart
 import 'package:flutter/material.dart';
 
 /// Horizontal gap between the trailing affordance and the field's outline, so

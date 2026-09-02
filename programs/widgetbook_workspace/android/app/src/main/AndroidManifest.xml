@@ -1,8 +1,33 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- CHANGED: Permissions for notifications, scheduling, vibration, and reboot persistence -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
     <application
         android:label="widgetbook_workspace"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <!-- CHANGED: Receivers to trigger and restore scheduled notifications across device reboots -->
+        <receiver 
+            android:exported="false" 
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
+        <receiver 
+            android:exported="false" 
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -43,3 +68,16 @@
         </intent>
     </queries>
 </manifest>
+<!--
+Changes:
+
+Added <uses-permission> elements directly under <manifest>:
+    POST_NOTIFICATIONS: Allows showing notifications on Android 13+ (API 33+).  
+    RECEIVE_BOOT_COMPLETED: Lets the plugin restore scheduled alerts after a device restart.  
+    SCHEDULE_EXACT_ALARM & USE_EXACT_ALARM: Enables exact time delivery for scheduled alerts.
+    VIBRATE: Allows notifications to trigger device vibration.
+
+Added <receiver> tags inside <application>:
+    ScheduledNotificationReceiver: Handles firing alarms when their scheduled time arrives.
+    ScheduledNotificationBootReceiver: Reschedules active notifications upon system reboot or package update.
+-->

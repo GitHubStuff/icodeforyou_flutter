@@ -1,6 +1,4 @@
-// widgetbook_workspace/lib/packages/animated_barrier/confirm_dialog.usecase.dart
-
-// ignore_for_file: comment_references
+// programs/widgetbook_workspace/lib/packages/animated_widgets/animated_barrier/confirm_dialog.usecase.dart
 
 import 'package:animated_widgets/animated_widgets.dart'
     show AnimatedBarrier, FadeBarrier, PopoverHandle;

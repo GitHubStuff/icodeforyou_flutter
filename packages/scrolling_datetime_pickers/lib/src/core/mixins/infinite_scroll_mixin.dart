@@ -1,4 +1,4 @@
-// lib/src/core/mixins/infinite_scroll_mixin.dart
+// packages/scrolling_datetime_pickers/lib/src/core/mixins/infinite_scroll_mixin.dart
 
 import 'package:flutter/cupertino.dart';
 import 'package:scrolling_datetime_pickers/src/core/constants/style_constants.dart';

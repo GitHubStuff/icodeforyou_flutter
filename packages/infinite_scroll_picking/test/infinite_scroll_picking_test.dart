@@ -1,4 +1,4 @@
-// test/infinite_scroll_picking_test.dart
+// packages/infinite_scroll_picking/test/infinite_scroll_picking_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:infinite_scroll_picking/infinite_scroll_picking.dart';

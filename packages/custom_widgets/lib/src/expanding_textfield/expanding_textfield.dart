@@ -1,6 +1,4 @@
-// packages/custom_widgets/lib/src/expanding_textfield.dart
-
-// ignore_for_file: public_member_api_docs
+// packages/custom_widgets/lib/src/expanding_textfield/expanding_textfield.dart
 
 import 'package:flutter/material.dart';
 
@@ -32,7 +30,16 @@ InputDecoration _inputDecoration({
   hintText: hintText,
 );
 
+/// A multiline text field configured for code or plain-text editing that
+/// expands dynamically between [minLines] and [maxLines].
+///
+/// Disables autocorrect, text capitalization, smart punctuation, and
+/// suggestions by default, making it suitable for structured data entry.
 class ExpandingTextField extends StatelessWidget {
+  /// Creates an [ExpandingTextField].
+  ///
+  /// The [minLines] must be greater than or equal to 1, and [maxLines]
+  /// must be greater than or equal to [minLines].
   const ExpandingTextField({
     required this.controller,
     required this.onChanged,
@@ -51,14 +58,33 @@ class ExpandingTextField extends StatelessWidget {
        ),
        assert(minLines >= 1, 'minLines >= 1');
 
+  /// Defines the keyboard focus for this widget.
   final FocusNode? focusNode;
+
+  /// The type of keyboard to use for editing the text.
   final TextInputType keyboardType;
+
+  /// Controls the text being edited.
   final TextEditingController controller;
+
+  /// The minimum number of lines to occupy when content is short.
   final int minLines;
+
+  /// The maximum number of lines to show before the field scrolls internally.
   final int? maxLines;
+
+  /// Called when the user initiates a change to the text field content.
   final ValueChanged<String> onChanged;
+
+  /// The color to use for the field's outline border.
+  ///
+  /// Defaults to [ColorScheme.primary] if null.
   final Color? borderColor;
+
+  /// The text style applied to the editable text.
   final TextStyle _textStyle;
+
+  /// Optional text displayed when the text field is empty.
   final String? hintText;
 
   @override

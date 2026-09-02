@@ -1,4 +1,4 @@
-// packages/time_spans/lib/src/calendar/month.dartpackages/extensions/lib/enum/src/month.dart
+// packages/time_spans/lib/src/calendar/month.dart
 
 /// A month of the Gregorian calendar, carrying its own length in days.
 ///

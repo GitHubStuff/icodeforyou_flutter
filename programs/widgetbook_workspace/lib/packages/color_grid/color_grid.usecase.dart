@@ -1,4 +1,4 @@
-// programs/widgetbook/lib/color_grid/color_grid.usecase.dart
+// programs/widgetbook_workspace/lib/packages/color_grid/color_grid.usecase.dart
 import 'package:color_grid/color_grid.dart' show ColorGrid;
 import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart'

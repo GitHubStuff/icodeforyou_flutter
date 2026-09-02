@@ -1,4 +1,4 @@
-// packages/sqlite_table_viewer/lib/src/models/text_handling.dart
+// packages/sqlite_viewer/lib/src/models/text_handling.dart
 
 /// Defines how long text content is handled within table cells.
 enum TextHandling {

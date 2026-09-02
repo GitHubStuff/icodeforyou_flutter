@@ -1,3 +1,5 @@
+// programs/black_velvet/lib/gen/assets.gen.dart
+
 // dart format width=80
 
 /// GENERATED CODE - DO NOT MODIFY BY HAND
@@ -12,10 +14,13 @@
 import 'package:flutter/widgets.dart';
 
 abstract final class Assets {
-  static const AssetGenImage iconer = AssetGenImage('assets/iconer.png');
+  static const AssetGenImage icon = AssetGenImage('assets/icon.png');
+  static const AssetGenImage splashScreen = AssetGenImage(
+    'assets/splash_screen.png',
+  );
 
   /// List of all assets
-  static List<AssetGenImage> get values => [iconer];
+  static List<AssetGenImage> get values => [icon, splashScreen];
 }
 
 class AssetGenImage {

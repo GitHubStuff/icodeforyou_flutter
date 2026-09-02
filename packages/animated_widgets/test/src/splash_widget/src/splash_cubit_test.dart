@@ -1,4 +1,4 @@
-// animated_widgets/test/src/splash_widget/src/splash_cubit_test.dart
+// packages/animated_widgets/test/src/splash_widget/src/splash_cubit_test.dart
 import 'dart:async';
 
 import 'package:animated_widgets/src/splash_widget/src/splash_cubit.dart';
@@ -15,8 +15,8 @@ void main() {
       expect(cubit.state, isA<SplashShowing>());
     });
 
-    test('lands when tasks finish before the splash elapses', () {
-      fakeAsync((async) {
+    test('lands when tasks finish before the splash elapses', () async {
+      await fakeAsync((async) async {
         final task = Completer<void>();
         final cubit = SplashCubit();
 
@@ -32,56 +32,62 @@ void main() {
         async.elapse(cubit.config.splashDuration);
         expect(cubit.state, isA<LandingShowing>());
 
-        cubit.close();
+        await cubit.close();
         async.flushMicrotasks();
       });
     });
 
-    test('shows indeterminate, then lands, when the splash elapses first', () {
-      fakeAsync((async) {
-        final task = Completer<void>();
-        final cubit = SplashCubit();
+    test(
+      'shows indeterminate, then lands, when the splash elapses first',
+      () async {
+        await fakeAsync((async) async {
+          final task = Completer<void>();
+          final cubit = SplashCubit();
 
-        cubit.start(tasks: [task.future]);
+          cubit.start(tasks: [task.future]);
 
-        // Splash elapses while tasks are pending -> indeterminate.
-        async.elapse(cubit.config.splashDuration);
-        expect(cubit.state, isA<IndeterminateShowing>());
+          // Splash elapses while tasks are pending -> indeterminate.
+          async.elapse(cubit.config.splashDuration);
+          expect(cubit.state, isA<IndeterminateShowing>());
 
-        // Tasks then complete -> landing.
-        task.complete();
-        async.flushMicrotasks();
-        expect(cubit.state, isA<LandingShowing>());
+          // Tasks then complete -> landing.
+          task.complete();
+          async.flushMicrotasks();
+          expect(cubit.state, isA<LandingShowing>());
 
-        cubit.close();
-        async.flushMicrotasks();
-      });
-    });
+          await cubit.close();
+          async.flushMicrotasks();
+        });
+      },
+    );
 
-    test('times out when the indeterminate phase exceeds the timeout', () {
-      fakeAsync((async) {
-        final task = Completer<void>(); // stays pending through the timeout
-        final cubit = SplashCubit();
+    test(
+      'times out when the indeterminate phase exceeds the timeout',
+      () async {
+        await fakeAsync((async) async {
+          final task = Completer<void>(); // stays pending through the timeout
+          final cubit = SplashCubit();
 
-        cubit.start(tasks: [task.future]);
-        async.elapse(cubit.config.splashDuration);
-        expect(cubit.state, isA<IndeterminateShowing>());
+          cubit.start(tasks: [task.future]);
+          async.elapse(cubit.config.splashDuration);
+          expect(cubit.state, isA<IndeterminateShowing>());
 
-        async.elapse(cubit.config.timeoutDuration);
-        expect(cubit.state, isA<TimedOut>());
+          async.elapse(cubit.config.timeoutDuration);
+          expect(cubit.state, isA<TimedOut>());
 
-        // A late completion after termination is a no-op (terminated guard).
-        task.complete();
-        async.flushMicrotasks();
-        expect(cubit.state, isA<TimedOut>());
+          // A late completion after termination is a no-op (terminated guard).
+          task.complete();
+          async.flushMicrotasks();
+          expect(cubit.state, isA<TimedOut>());
 
-        cubit.close();
-        async.flushMicrotasks();
-      });
-    });
+          await cubit.close();
+          async.flushMicrotasks();
+        });
+      },
+    );
 
     test('reports BackgroundTaskFailed when a task throws', () {
-      fakeAsync((async) {
+      fakeAsync((async) async {
         final task = Completer<void>();
         final cubit = SplashCubit();
 
@@ -91,7 +97,7 @@ void main() {
 
         expect(cubit.state, isA<BackgroundTaskFailed>());
 
-        cubit.close();
+        await cubit.close();
         async.flushMicrotasks();
       });
     });

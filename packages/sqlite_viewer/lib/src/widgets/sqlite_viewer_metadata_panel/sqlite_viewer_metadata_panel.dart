@@ -1,4 +1,4 @@
-// packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_metadata_panel.dart
+// packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_metadata_panel/sqlite_viewer_metadata_panel.dart
 
 import 'package:flutter/material.dart';
 

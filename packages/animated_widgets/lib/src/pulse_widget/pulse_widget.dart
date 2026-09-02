@@ -1,4 +1,4 @@
-// packages/animated_widgets/lib/src/pulse_widget/src/pulse_widget.dart
+// packages/animated_widgets/lib/src/pulse_widget/pulse_widget.dart
 import 'package:animated_widgets/src/combination_animation/extensions/animates_widget.dart'
     show AnimatesWidgetExt;
 import 'package:animated_widgets/src/combination_animation/tweens/animation_tween.dart'

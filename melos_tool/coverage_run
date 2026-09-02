@@ -1,0 +1,86 @@
+#!/usr/bin/env zsh
+# melos_tool/coverage_run
+# Full-workspace coverage pipeline for the icodeforyou_flutter monorepo:
+# runs coverage for packages + plugins + programs, merges everything,
+# strips generated files, renders HTML to coverage/html.
+# Version: 0.9.0
+#
+# Usage:
+#   coverage_run run       — execute the full coverage pipeline
+#   coverage_run version   — print version
+#   coverage_run           — this usage text
+#
+# 0.9.0 — initial version:
+#   * Generated files (*.g.dart, *.gr.dart, *.gen.dart, *.freezed.dart,
+#     *.mocks.dart, *.config.dart) are stripped from the merged tracefile
+#     between merge and genhtml — flutter test --coverage records every
+#     compiled file, Drift and json_serializable parts included, and the
+#     merge passes them through untouched. This is the choke point.
+#   * Output logged to Z_coverage_run_<timestamp>.txt in the CWD.
+#   * Cache-busting query strings appended to intra-report hrefs so
+#     browsers don't serve stale pages from a previous run.
+
+set -uo pipefail
+
+readonly VERSION="0.9.0"
+readonly ACTION="${1:-}"
+
+usage() {
+  print -u2 "coverage_run ${VERSION} — full-workspace coverage pipeline"
+  print -u2 ""
+  print -u2 "Usage: $0 <action>"
+  print -u2 "  run       Execute the full pipeline:"
+  print -u2 "            coverage (packages, plugins, programs) → merge →"
+  print -u2 "            strip generated files → genhtml → open report"
+  print -u2 "  version   Print version"
+  print -u2 ""
+  print -u2 "Output is logged to Z_coverage_run_<timestamp>.txt in the CWD."
+}
+
+action_run() {
+  local log="$(pwd)/Z_coverage_run_$(date +%Y%m%d_%H%M%S).txt"
+  print "📝 Log: $log"
+  {
+    melos test_coverage
+    melos test_plugin_coverage
+    melos test_programs_coverage
+    NO_HTML=true melos coverage_merge_all
+
+    # Strip generated files from the merged tracefile before any report
+    # reads it. flutter test --coverage records every compiled file —
+    # Drift and json_serializable .g.dart parts included — and the merge
+    # passes them through. This is the choke point between merge and report.
+    lcov \
+      --remove coverage/all_lcov.info \
+      '*.g.dart' \
+      '*.gr.dart' \
+      '*.gen.dart' \
+      '*.freezed.dart' \
+      '*.mocks.dart' \
+      '*.config.dart' \
+      --output-file coverage/all_lcov.info \
+      --ignore-errors empty,inconsistent,format,unused
+
+    rm -rf coverage/html
+    genhtml --ignore-errors source,empty,inconsistent,category \
+      coverage/all_lcov.info -o coverage/html
+
+    local ts=$(date +%s)
+    find coverage/html -name '*.html' \
+      -exec sed -i '' -E "s/(href=\"[^\"#]+\.html)\"/\1?v=${ts}\"/g" {} +
+
+    open "file://$(pwd)/coverage/html/index.html"
+  } > "$log" 2>&1 && print "✅ Done" || print "❌ Failed — check $log"
+}
+
+# ─── dispatch ───────────────────────────────────────────────────────────────
+case "$ACTION" in
+  run)      action_run ;;
+  version)  print "$VERSION" ;;
+  "")       usage; exit 64 ;;
+  *)
+    print -u2 "❌ Unknown action: $ACTION"
+    usage
+    exit 64
+    ;;
+esac

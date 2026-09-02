@@ -1,1 +1,3 @@
-export 'src/glossary/glossay_entry_form.dart' show GlossaryEntryForm;
+// packages/sincewhen_widgets/lib/sincewhen_widgets.dart
+
+export 'src/glossary_edits/glossary_edits.dart';

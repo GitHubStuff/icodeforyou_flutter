@@ -1,6 +1,4 @@
-// widgetbook_workspace/lib/packages/animated_barrier/fallback_chain.usecase.dart
-
-// ignore_for_file: comment_references
+// programs/widgetbook_workspace/lib/packages/animated_widgets/animated_barrier/fallback_chain.usecase.dart
 
 import 'package:animated_widgets/animated_widgets.dart'
     show AnimatedBarrier, PopoverPosition;

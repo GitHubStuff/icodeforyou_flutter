@@ -1,0 +1,15 @@
+// packages/dependency_resolver/lib/src/start_resolver.dart
+
+import 'package:dependency_resolver/dependency_resolver.dart'
+    show DependencyContainer, DependencyResolver;
+
+/// Starts the resolver: registers [container] under the
+/// [DependencyResolver] interface so downstream code resolves the
+/// resolver itself without knowing the backend.
+///
+/// [container] is the one backend decision in the application — pass
+/// `GetItDependencyResolver()` in production, any other
+/// [DependencyContainer] to swizzle.
+Future<void> startResolver(DependencyContainer container) async {
+  container.registerSingleton<DependencyResolver>(container);
+}

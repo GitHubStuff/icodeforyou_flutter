@@ -85,4 +85,3 @@ abstract final class OrientationFactor {
     );
   }
 }
-

@@ -1,4 +1,4 @@
-// widgetbook_workspace/lib/packages/animated_barrier/animation_playground.usecase.dart
+// programs/widgetbook_workspace/lib/packages/animated_widgets/animated_barrier/animation_playground.usecase.dart
 
 import 'package:animated_widgets/animated_widgets.dart'
     show

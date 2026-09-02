@@ -1,4 +1,4 @@
-// test/datetime/src/datetime_delta_format_test.dart
+// packages/extensions/test/datetime/src/datetime_delta_format_test.dart
 //
 // The formatter is deprecated but remains in lib, so it still counts toward
 // coverage; the ignore below silences the in-package deprecation warnings.

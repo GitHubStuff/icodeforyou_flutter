@@ -1,4 +1,4 @@
-// test/src/contextual_reveal/src/theme/contextual_reveal_light_copy_test.dart
+// packages/animated_widgets/test/src/contextual_reveal/theme/contextual_reveal_light_copy_test.dart
 
 import 'package:animated_widgets/src/contextual_reveal/src/theme/contextual_reveal_light.dart';
 import 'package:flutter/material.dart';

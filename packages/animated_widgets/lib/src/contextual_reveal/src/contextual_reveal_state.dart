@@ -1,4 +1,4 @@
-// animated_widgets/lib/src/contextual_reveal/contextual_reveal_state.dart
+// packages/animated_widgets/lib/src/contextual_reveal/src/contextual_reveal_state.dart
 
 part of 'contextual_reveal.dart';
 
@@ -142,13 +142,11 @@ class _ContextualRevealState extends State<ContextualReveal>
   }
 
   void _showDoublePush() {
-    unawaited(
-      Navigator.of(context).push<void>(
-        MaterialPageRoute<void>(
-          builder: (_) => _PushRoute(
-            backButton: ContextualRevealTheme.of(context).backButton,
-            child: widget.doubleChild,
-          ),
+    Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (_) => _PushRoute(
+          backButton: ContextualRevealTheme.of(context).backButton,
+          child: widget.doubleChild,
         ),
       ),
     );
@@ -158,7 +156,7 @@ class _ContextualRevealState extends State<ContextualReveal>
 
   void _fadeIn(Duration duration) {
     _controller.duration = duration;
-    unawaited(_controller.forward());
+    _controller.forward();
   }
 
   void _fadeOut(VoidCallback onComplete) {

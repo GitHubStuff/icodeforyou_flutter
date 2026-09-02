@@ -1,4 +1,4 @@
-// app_preferences_service/lib/src/app_preferences_service_class.dart
+// packages/app_preferences_service/lib/src/app_preferences.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:app_preferences/app_preferences.dart'

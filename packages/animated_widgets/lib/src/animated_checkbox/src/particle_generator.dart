@@ -1,7 +1,4 @@
-// animated_widgets/lib/src/animated_checkbox/_particle_generator.dart
-
-// ignore_for_file: always_use_package_imports
-
+// packages/animated_widgets/lib/src/animated_checkbox/src/particle_generator.dart
 import 'dart:math' as math;
 import 'dart:ui';
 

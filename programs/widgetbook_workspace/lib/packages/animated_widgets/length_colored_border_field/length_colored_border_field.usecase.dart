@@ -1,4 +1,4 @@
-// lib/packages/animated_widgets/lib/src/length_colored_border_field/length_colored_border_field.usecase.dart
+// programs/widgetbook_workspace/lib/packages/animated_widgets/length_colored_border_field/length_colored_border_field.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:animated_widgets/animated_widgets.dart';

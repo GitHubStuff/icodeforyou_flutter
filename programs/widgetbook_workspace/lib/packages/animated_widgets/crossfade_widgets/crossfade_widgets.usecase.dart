@@ -1,4 +1,4 @@
-// lib/packages/animated_widgets/lib/src/crossfade_widgets/crossfade_widgets.usecase.dart
+// programs/widgetbook_workspace/lib/packages/animated_widgets/crossfade_widgets/crossfade_widgets.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:animated_widgets/animated_widgets.dart';

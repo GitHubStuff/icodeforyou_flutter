@@ -1,4 +1,4 @@
-// lib/src/core/models/fade_configuration.dart
+// packages/scrolling_datetime_pickers/lib/src/core/models/fade_configuration.dart
 
 import 'package:flutter/material.dart';
 

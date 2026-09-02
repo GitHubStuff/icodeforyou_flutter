@@ -1,4 +1,4 @@
-// packages/theme_framework/lib/src/widgets/theme_mode_entry.dart
+// packages/theme_framework/lib/src/theme_mode_entry.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -383,21 +383,17 @@ class _DataGridState extends State<DataGrid> {
 
   void _resetScroll() {
     if (_horizontalController.hasClients) {
-      unawaited(
-        _horizontalController.animateTo(
-          0,
-          duration: _kResetScrollDuration,
-          curve: _kResetScrollCurve,
-        ),
+      _horizontalController.animateTo(
+        0,
+        duration: _kResetScrollDuration,
+        curve: _kResetScrollCurve,
       );
     }
     if (_verticalController.hasClients) {
-      unawaited(
-        _verticalController.animateTo(
-          0,
-          duration: _kResetScrollDuration,
-          curve: _kResetScrollCurve,
-        ),
+      _verticalController.animateTo(
+        0,
+        duration: _kResetScrollDuration,
+        curve: _kResetScrollCurve,
       );
     }
   }
@@ -531,19 +527,21 @@ class _DataGridState extends State<DataGrid> {
   }
 
   void _showCellDialog(String column, Object? value) {
-    unawaited(showDialog<void>(
-      context: context,
-      builder: (dialogContext) {
-        final theme = Theme.of(dialogContext);
-        final dataStyle = _effectiveDataStyle(theme);
-        return AlertDialog(
-          title: Text(column, style: _effectiveHeaderStyle(theme)),
-          content: value == null
-              ? Text('null', style: _nullStyle(theme, dataStyle))
-              : SelectableText(value.toString(), style: dataStyle),
-        );
-      },
-    ));
+    unawaited(
+      showDialog<void>(
+        context: context,
+        builder: (dialogContext) {
+          final theme = Theme.of(dialogContext);
+          final dataStyle = _effectiveDataStyle(theme);
+          return AlertDialog(
+            title: Text(column, style: _effectiveHeaderStyle(theme)),
+            content: value == null
+                ? Text('null', style: _nullStyle(theme, dataStyle))
+                : SelectableText(value.toString(), style: dataStyle),
+          );
+        },
+      ),
+    );
   }
 
   TextStyle _nullStyle(ThemeData theme, TextStyle base) {

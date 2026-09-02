@@ -2,8 +2,7 @@
 
 import 'package:flutter/widgets.dart' show Builder, Orientation, Size, SizedBox;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:platform_utils/src/orientation_factor.dart'
-    show OrientationFactor;
+import 'package:platform_utils/src/orientation_factor.dart';
 
 void main() {
   tearDown(OrientationFactor.setOrientation);
@@ -44,8 +43,7 @@ void main() {
       );
     });
 
-    test('setOrientation with no argument restores runtime resolution',
-        () {
+    test('setOrientation with no argument restores runtime resolution', () {
       OrientationFactor.setOrientation(to: Orientation.landscape);
       OrientationFactor.setOrientation();
 
@@ -57,8 +55,7 @@ void main() {
   });
 
   group('OrientationFactor.of', () {
-    testWidgets('resolves from the ambient MediaQuery size',
-        (tester) async {
+    testWidgets('resolves from the ambient MediaQuery size', (tester) async {
       tester.view.physicalSize = const Size(800, 400);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.resetPhysicalSize);

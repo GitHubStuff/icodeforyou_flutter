@@ -1,4 +1,4 @@
-// animated_widgets/test/src/fade_in_out_view/fade_in_out_view_test.dart
+// packages/animated_widgets/test/src/fade_in_out_view/fade_in_out_view_test.dart
 
 import 'package:animated_widgets/animated_widgets.dart' show FadeInOutView;
 import 'package:flutter/widgets.dart';

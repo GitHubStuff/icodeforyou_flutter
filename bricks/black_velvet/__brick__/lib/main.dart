@@ -1,4 +1,6 @@
 // programs/{{name.snakeCase()}}/lib/main.dart
+import 'package:dependency_resolver/dependency_resolver.dart'
+    show GetItDependencyResolver, InMemoryDependencyResolver;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart'
     show SharedPreferences;
@@ -22,7 +24,28 @@ Future<void> main() async {
   // Preferenes are created here because it is an async task.
   final preferences = await SharedPreferences.getInstance();
 
+  /// TODO: And any background tasks to run while the splash screen is displayed
+  final List<Future<void> Function()> tasks = [];
+
+  /// TODO: There are two available services providers (aka resolvers) that
+  /// can be use to register services that become accessable using:
+  ///   context.read<DependencyResolver>()
+  ///
+  /// Below the default is to use the InMemoryDependencyResolver, this is good
+  /// for testing/development
+  /// The 'get_it' package back GetItDependencyResolver() can be used for
+  /// production.
+
+  // Service Resolvers:
+  //- Custom GetIt like resolver that uses Map<>, (for testing)
+  final resolver = InMemoryDependencyResolver();
+  //- This is true GetIt packed resolover, (for production)
+  // change "_" to resolover and delete/comment the above 'resolver'
+  final _ = GetItDependencyResolver();
+
   ApplicationStartup(
     themeStorage: SharedPreferencesThemeStorage(preferences),
+    resolver: resolver,
+    tasks: tasks,
   ).runner();
 }

@@ -1,4 +1,4 @@
-// animated_widgets/lib/src/contextual_reveal/contextual_reveal_defaults.dart
+// packages/animated_widgets/lib/src/contextual_reveal/src/theme/_contextual_reveal_defaults.dart
 import 'package:flutter/material.dart';
 
 /// Duration of the fade-in transition when the popover appears.

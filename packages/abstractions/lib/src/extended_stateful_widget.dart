@@ -1,4 +1,4 @@
-// abstractiions/lib/src/extended_stateful_widget.dart
+// packages/abstractions/lib/src/extended_stateful_widget.dart
 
 // ignore_for_file: document_ignores, public_member_api_docs
 

@@ -1,4 +1,4 @@
-// extensions/lib/src/string_ext.dart
+// packages/extensions/lib/string/string_ext.dart
 import 'package:flutter/painting.dart';
 
 /// Default font size used by [StringExt.renderSize] (14.0 logical pixels).

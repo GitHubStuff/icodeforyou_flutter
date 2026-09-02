@@ -1,7 +1,5 @@
 // packages/three_d_sphere/lib/src/three_d_sphere.dart
 
-// ignore_for_file: omit_local_variable_types
-
 import 'package:flutter/material.dart' show Colors;
 import 'package:flutter/widgets.dart';
 import 'package:three_d_sphere/src/quadrant.dart' show Quadrant;
@@ -160,12 +158,12 @@ class _ThreeDSpherePainter extends CustomPainter {
   Alignment _alignmentFor(Quadrant quadrant) {
     return switch (quadrant) {
       Quadrant.topLeft => const Alignment(-0.45, -0.45),
-      Quadrant.topCenter => const Alignment(0.0, -0.45),
+      Quadrant.topCenter => const Alignment(0, -0.45),
       Quadrant.topRight => const Alignment(0.45, -0.45),
-      Quadrant.leftCenter => const Alignment(-0.45, 0.0),
-      Quadrant.rightCenter => const Alignment(0.45, 0.0),
+      Quadrant.leftCenter => const Alignment(-0.45, 0),
+      Quadrant.rightCenter => const Alignment(0.45, 0),
       Quadrant.bottomLeft => const Alignment(-0.45, 0.45),
-      Quadrant.bottomCenter => const Alignment(0.0, 0.45),
+      Quadrant.bottomCenter => const Alignment(0, 0.45),
       Quadrant.bottomRight => const Alignment(0.45, 0.45),
     };
   }
@@ -178,12 +176,12 @@ class _ThreeDSpherePainter extends CustomPainter {
   Alignment _highlightAlignmentFor(Quadrant quadrant) {
     return switch (quadrant) {
       Quadrant.topLeft => const Alignment(-0.25, -0.25),
-      Quadrant.topCenter => const Alignment(0.0, -0.25),
+      Quadrant.topCenter => const Alignment(0, -0.25),
       Quadrant.topRight => const Alignment(0.25, -0.25),
-      Quadrant.leftCenter => const Alignment(-0.25, 0.0),
-      Quadrant.rightCenter => const Alignment(0.25, 0.0),
+      Quadrant.leftCenter => const Alignment(-0.25, 0),
+      Quadrant.rightCenter => const Alignment(0.25, 0),
       Quadrant.bottomLeft => const Alignment(-0.25, 0.25),
-      Quadrant.bottomCenter => const Alignment(0.0, 0.25),
+      Quadrant.bottomCenter => const Alignment(0, 0.25),
       Quadrant.bottomRight => const Alignment(0.25, 0.25),
     };
   }
@@ -205,29 +203,23 @@ class _ThreeDSpherePainter extends CustomPainter {
     final double left = switch (quadrant) {
       Quadrant.topLeft ||
       Quadrant.leftCenter ||
-      Quadrant.bottomLeft =>
-        horizontalInset,
+      Quadrant.bottomLeft => horizontalInset,
       Quadrant.topCenter ||
-      Quadrant.bottomCenter =>
-        (size.width - highlightWidth) / 2,
+      Quadrant.bottomCenter => (size.width - highlightWidth) / 2,
       Quadrant.topRight ||
       Quadrant.rightCenter ||
-      Quadrant.bottomRight =>
-        size.width - highlightWidth - horizontalInset,
+      Quadrant.bottomRight => size.width - highlightWidth - horizontalInset,
     };
 
     final double top = switch (quadrant) {
       Quadrant.topLeft ||
       Quadrant.topCenter ||
-      Quadrant.topRight =>
-        verticalInset,
+      Quadrant.topRight => verticalInset,
       Quadrant.leftCenter ||
-      Quadrant.rightCenter =>
-        (size.height - highlightHeight) / 2,
+      Quadrant.rightCenter => (size.height - highlightHeight) / 2,
       Quadrant.bottomLeft ||
       Quadrant.bottomCenter ||
-      Quadrant.bottomRight =>
-        size.height - highlightHeight - verticalInset,
+      Quadrant.bottomRight => size.height - highlightHeight - verticalInset,
     };
 
     return Rect.fromLTWH(left, top, highlightWidth, highlightHeight);

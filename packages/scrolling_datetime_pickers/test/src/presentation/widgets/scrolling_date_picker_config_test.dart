@@ -1,4 +1,4 @@
-// test/src/presentation/widgets/scrolling_date_picker_config_test.dart
+// packages/scrolling_datetime_pickers/test/src/presentation/widgets/scrolling_date_picker_config_test.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

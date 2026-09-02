@@ -1,4 +1,4 @@
-// lib/packages/random_color_generator/lib/random_color_generator.usecase.dart
+// programs/widgetbook_workspace/lib/packages/random_color_generator/random_color_generator.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:flutter/material.dart';

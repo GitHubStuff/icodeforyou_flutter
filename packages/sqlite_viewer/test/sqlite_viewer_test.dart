@@ -1,4 +1,4 @@
-// test/sqlite_viewer_test.dart
+// packages/sqlite_viewer/test/sqlite_viewer_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqlite_viewer/sqlite_viewer.dart';

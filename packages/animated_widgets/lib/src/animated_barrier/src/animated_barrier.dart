@@ -1,4 +1,4 @@
-// packages/animated_barrier/lib/src/animated_barrier.dart
+// packages/animated_widgets/lib/src/animated_barrier/src/animated_barrier.dart
 
 part of '../animated_barrier.dart';
 
@@ -168,7 +168,7 @@ class _AnimatedBarrierLayerState extends State<_AnimatedBarrierLayer>
       unawaited(StatusBarChameleon.setStatusBarHidden(hidden: true));
     }
 
-    unawaited(_controller.forward());
+    _controller.forward();
   }
 
   @override
@@ -201,7 +201,7 @@ class _AnimatedBarrierLayerState extends State<_AnimatedBarrierLayer>
   /// smooth exit.
   void _handleDismiss(VoidCallback? onComplete) {
     _pendingOnDismissed = onComplete;
-    unawaited(_controller.reverse());
+    _controller.reverse();
   }
 
   void _onBarrierTap() {

@@ -1,4 +1,4 @@
-// test/src/_settings_direction_test.dart
+// packages/settings_widget/test/src/settings_direction_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:settings_widget/src/settings_direction.dart';

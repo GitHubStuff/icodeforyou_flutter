@@ -1,4 +1,4 @@
-// lib/packages/animated_widgets/lib/src/contextual_reveal/src/contextual_reveal.usecase.dart
+// programs/widgetbook_workspace/lib/packages/animated_widgets/contextual_reveal/contextual_reveal.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:animated_widgets/animated_widgets.dart';

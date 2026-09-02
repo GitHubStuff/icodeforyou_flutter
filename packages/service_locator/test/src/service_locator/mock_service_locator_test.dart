@@ -1,4 +1,4 @@
-// packages/services_locator/test/src/service_locator/mock_service_locator_test.dart
+// packages/service_locator/test/src/service_locator/mock_service_locator_test.dart
 //
 // Full-coverage test suite for [MockServiceLocator].
 //

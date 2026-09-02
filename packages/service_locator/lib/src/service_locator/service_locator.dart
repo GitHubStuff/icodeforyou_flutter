@@ -1,4 +1,4 @@
-// packages/services_locator/lib/src/service_locator/service_locator.dart
+// packages/service_locator/lib/src/service_locator/service_locator.dart
 //
 // Abstract interface for a service locator: four methods (two to
 // register, two to resolve) and a callback typedef for lifecycle

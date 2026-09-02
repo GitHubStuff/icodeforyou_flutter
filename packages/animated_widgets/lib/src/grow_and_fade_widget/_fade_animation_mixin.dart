@@ -1,4 +1,4 @@
-// animated_widgets/lib/src/grow_and_fade_widget/_fade_animation_mixin.dart
+// packages/animated_widgets/lib/src/grow_and_fade_widget/_fade_animation_mixin.dart
 import 'package:flutter/widgets.dart';
 
 /// Encapsulates an opacity 0.0→1.0 animation driven by an

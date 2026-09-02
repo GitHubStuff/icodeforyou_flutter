@@ -1,4 +1,4 @@
-// app_preferences/test/src/hive/hive_preferences_test.dart
+// packages/app_preferences/test/src/hive/hive_preferences_test.dart
 
 import 'dart:io';
 

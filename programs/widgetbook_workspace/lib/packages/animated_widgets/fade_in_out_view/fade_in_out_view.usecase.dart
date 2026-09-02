@@ -1,4 +1,4 @@
-// lib/packages/animated_widgets/lib/src/fade_in_out_view/fade_in_out_view.usecase.dart
+// programs/widgetbook_workspace/lib/packages/animated_widgets/fade_in_out_view/fade_in_out_view.usecase.dart
 // ignore_for_file: public_member_api_docs
 
 import 'package:animated_widgets/animated_widgets.dart';
