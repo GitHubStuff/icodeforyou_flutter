@@ -20,7 +20,7 @@ class PiledWidget extends StatelessWidget {
   /// The widget below this widget in the tree.
   final Widget child;
 
-  /// The 2D displacement applied to the [child] relative to its original position.
+  /// The 2D displacement applied to the [child] relative to original position.
   final Offset offset;
 
   @override

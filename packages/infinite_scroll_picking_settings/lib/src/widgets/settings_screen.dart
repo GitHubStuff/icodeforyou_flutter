@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_picking/infinite_scroll_picking.dart';
 
-import '../picker_visual_settings/picker_visual_settings.dart';
-import '../settings/settings_cubit.dart';
-import '../settings/settings_mapper.dart';
-import '../settings/settings_state/settings_state.dart';
+import 'package:infinite_scroll_picking_settings/src/picker_visual_settings/picker_visual_settings.dart';
+import 'package:infinite_scroll_picking_settings/src/settings/settings_cubit.dart';
+import 'package:infinite_scroll_picking_settings/src/settings/settings_mapper.dart';
+import 'package:infinite_scroll_picking_settings/src/settings/settings_state/settings_state.dart';
 
 part 'settings_screen_sections.dart';
 part 'settings_screen_widgets.dart';
@@ -34,6 +34,7 @@ const _kPreviewItemCount = 100;
 /// spinner under normal flow — the [SettingsInitial]/[SettingsLoading]
 /// arms below are defensive only.
 class SettingsScreen extends StatelessWidget {
+  /// Full screen settings editor for [PickerVisualSettings]
   const SettingsScreen({super.key});
 
   @override

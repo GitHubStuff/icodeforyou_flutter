@@ -97,7 +97,7 @@ class BubbleShaderManager {
     try {
       return await programLoader(packagePath);
     } on Exception catch (_) {
-      return await programLoader(localPath);
+      return programLoader(localPath);
     }
   }
 

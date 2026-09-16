@@ -12,17 +12,17 @@ void main() {
         (tester) async {
       await tester.pumpWidget(
         testableWidgetWithScaffold(
-          SizedBox(
+          const SizedBox(
             width: 600,
             height: 400,
             child: DisplayQueryWidget(
-              columns: const ['id', 'name'],
-              rows: const [
+              columns: ['id', 'name'],
+              rows: [
                 {'id': 1, 'name': 'A'},
                 {'id': 2, 'name': 'B'},
               ],
-              evenRowStyle: const TextStyle(fontSize: 14),
-              oddRowStyle: const TextStyle(fontSize: 16),
+              evenRowStyle: TextStyle(fontSize: 14),
+              oddRowStyle: TextStyle(fontSize: 16),
               evenRowColor: Colors.white,
               oddRowColor: Colors.grey,
             ),
@@ -36,16 +36,16 @@ void main() {
     testWidgets('null values render in italic grey style', (tester) async {
       await tester.pumpWidget(
         testableWidgetWithScaffold(
-          SizedBox(
+          const SizedBox(
             width: 600,
             height: 400,
             child: DisplayQueryWidget(
-              columns: const ['id', 'name'],
-              rows: const [
+              columns: ['id', 'name'],
+              rows: [
                 {'id': 1, 'name': null},
               ],
-              evenRowStyle: const TextStyle(fontSize: 14),
-              oddRowStyle: const TextStyle(fontSize: 14),
+              evenRowStyle: TextStyle(fontSize: 14),
+              oddRowStyle: TextStyle(fontSize: 14),
             ),
           ),
         ),
@@ -56,16 +56,16 @@ void main() {
     testWidgets('renders with TextHandling.wrap branch', (tester) async {
       await tester.pumpWidget(
         testableWidgetWithScaffold(
-          SizedBox(
+          const SizedBox(
             width: 600,
             height: 400,
             child: DisplayQueryWidget(
-              columns: const ['note'],
-              rows: const [
+              columns: ['note'],
+              rows: [
                 {'note': 'A very long note that should wrap to many lines'},
               ],
-              evenRowStyle: const TextStyle(fontSize: 14),
-              oddRowStyle: const TextStyle(fontSize: 14),
+              evenRowStyle: TextStyle(fontSize: 14),
+              oddRowStyle: TextStyle(fontSize: 14),
               textHandling: TextHandling.wrap,
             ),
           ),

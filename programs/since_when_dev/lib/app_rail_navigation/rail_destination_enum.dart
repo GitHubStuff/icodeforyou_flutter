@@ -125,6 +125,7 @@ enum RailDestinationEnum implements NavigableDestinationAbstract {
   /// Stored as [IconData] rather than a widget so members remain
   /// const; `RailDestinationButtons` wraps it in an [Icon] with
   /// whatever styling the rail owns.
+  @override
   final IconData iconData;
 
   /// The text rendered as this destination's button caption.
@@ -132,6 +133,7 @@ enum RailDestinationEnum implements NavigableDestinationAbstract {
   /// Stored as a plain [String] for the same const reason;
   /// `RailDestinationButtons` wraps it in a [Text] with the rail's
   /// caption style.
+  @override
   final String caption;
 
   /// Builds this destination's view.
@@ -139,5 +141,6 @@ enum RailDestinationEnum implements NavigableDestinationAbstract {
   /// A constant tear-off so the member stays const. Invoked once per
   /// destination inside `RailScreen`'s build; the returned widget is
   /// kept alive in the view stack for the screen's lifetime.
+  @override
   final Widget Function() viewBuilder;
 }

@@ -9,6 +9,7 @@ part of 'library.dart';
 /// dividers, and how the wheel reports selection changes upstream.
 @immutable
 class InfiniteScrollWheelConfig {
+  /// Config for scroll wheel
   const InfiniteScrollWheelConfig({
     this.itemExtent = 24.0,
     this.dividerThickness = 1.0,

@@ -39,7 +39,7 @@ void main() {
         uniqueTime: () async => testDateTime,
       );
       expect(cubit.state, equals(const GlossaryEditInitial()));
-      cubit.close();
+      unawaited(cubit.close());
     });
 
     test('uses default RandomColorGenerator when colorGenerator is null', () {

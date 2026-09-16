@@ -102,12 +102,35 @@ class DisplayQueryWidget extends StatefulWidget {
   State<DisplayQueryWidget> createState() => DisplayQueryWidgetState();
 }
 
+/// State for [DisplayQueryWidget].
+///
+/// Owns the scroll controllers that keep the frozen header and the
+/// body horizontally in sync, and caches the computed column layout
+/// so it is only recomputed when the viewport width, inherited text
+/// state, or the widget's data actually change. Layout math and cell
+/// construction live in the `part` files
+/// (`display_query_widget_layout.dart`,
+/// `display_query_widget_cells.dart`) as extensions on this class.
 class DisplayQueryWidgetState extends State<DisplayQueryWidget> {
+  /// Drives horizontal scrolling of the frozen header row. Kept in
+  /// lock-step with [_horizontalBodyController] by
+  /// [_syncHorizontalScroll].
   final ScrollController _horizontalHeaderController = ScrollController();
+
+  /// Drives horizontal scrolling of the table body. Kept in lock-step
+  /// with [_horizontalHeaderController] by [_syncHorizontalScroll].
   final ScrollController _horizontalBodyController = ScrollController();
+
+  /// Drives vertical scrolling of the table body. The header sits
+  /// outside this scroll view, which is what keeps it frozen.
   final ScrollController _verticalController = ScrollController();
 
+  /// Per-column widths from the most recent layout pass,
+  /// index-aligned with [_displayColumns].
   List<double> _columnWidths = [];
+
+  /// Column headers currently displayed, including the leading `#`
+  /// column when `showRowNumbers` is enabled.
   List<String> _displayColumns = [];
 
   /// Viewport width used by the most recent layout pass. Tracked so we
@@ -131,6 +154,9 @@ class DisplayQueryWidgetState extends State<DisplayQueryWidget> {
     _lastViewportWidth = double.nan;
   }
 
+  /// Invalidates cached column widths when the columns, row count, or
+  /// row-number visibility change, so the next build's
+  /// `LayoutBuilder` pass recomputes the layout against the new data.
   @override
   void didUpdateWidget(DisplayQueryWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -155,6 +181,11 @@ class DisplayQueryWidgetState extends State<DisplayQueryWidget> {
     super.dispose();
   }
 
+  /// Mirrors offsets between the header and body horizontal
+  /// controllers in both directions, so dragging either surface
+  /// scrolls the other. The offset-equality guard breaks the
+  /// listener feedback loop that the mutual mirroring would
+  /// otherwise create.
   void _syncHorizontalScroll() {
     _horizontalHeaderController.addListener(() {
       if (_horizontalBodyController.hasClients &&
@@ -173,6 +204,10 @@ class DisplayQueryWidgetState extends State<DisplayQueryWidget> {
     });
   }
 
+  /// Shallow element-wise equality for two lists.
+  ///
+  /// Local stand-in for `package:collection`'s `listEquals` to avoid
+  /// pulling in the dependency for one comparison.
   bool _listEquals<T>(List<T> a, List<T> b) {
     if (a.length != b.length) return false;
     for (var i = 0; i < a.length; i++) {
@@ -181,6 +216,13 @@ class DisplayQueryWidgetState extends State<DisplayQueryWidget> {
     return true;
   }
 
+  /// Builds the table: a frozen header above a scrollable body.
+  ///
+  /// Short-circuits to [DisplayQueryWidget.emptyWidget] (or a
+  /// fallback) when there are no columns or no rows. Otherwise a
+  /// `LayoutBuilder` supplies the viewport width, and the column
+  /// layout is recomputed only when that width differs from the
+  /// cached [_lastViewportWidth].
   @override
   Widget build(BuildContext context) {
     if (widget.columns.isEmpty) {

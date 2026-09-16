@@ -9,11 +9,11 @@ import 'package:sincewhen_models/sincewhen_models.dart';
 /// Builds a glossary item; the database assigns the real primary key,
 /// so [id] only matters for update/delete matching.
 GlossaryItem _item({
-  int id = 0,
   required int createdTimestamp,
   required String tag,
   required int colorArgb,
   required String descr,
+  int id = 0,
 }) => GlossaryItem(
   id: id,
   createdTimestamp: createdTimestamp,

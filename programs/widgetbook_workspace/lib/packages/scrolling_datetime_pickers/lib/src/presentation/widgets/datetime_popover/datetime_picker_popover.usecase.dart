@@ -6,8 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:scrolling_datetime_pickers/scrolling_datetime_pickers.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart'
-    as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 @widgetbook.UseCase(name: 'Default', type: DateTimePickerPopoverShowcase)
 Widget dateTimePickerPopoverUseCase(BuildContext context) {
@@ -49,7 +48,7 @@ class DateTimePickerPopoverShowcase extends StatefulWidget {
 
 class _DateTimePickerPopoverShowcaseState
     extends State<DateTimePickerPopoverShowcase> {
-  final _anchorKey = GlobalKey();
+  final GlobalKey<State<StatefulWidget>> _anchorKey = GlobalKey();
   DateTime? _result;
 
   Future<void> _show() async {
@@ -87,7 +86,11 @@ class _DateTimePickerPopoverShowcaseState
             label: const Text('Open popover'),
           ),
           const Gap(16),
-          Text(_result == null ? '— no selection —' : 'selected: ${_format(_result!)}'),
+          Text(
+            _result == null
+                ? '— no selection —'
+                : 'selected: ${_format(_result!)}',
+          ),
         ],
       ),
     );

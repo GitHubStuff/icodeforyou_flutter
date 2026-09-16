@@ -237,7 +237,6 @@ void main() {
     group('equality and hashCode', () {
       test('identical instance is equal to itself', () {
         final c = baseConfig();
-        // ignore: unrelated_type_equality_checks
         expect(c == c, isTrue);
       });
 

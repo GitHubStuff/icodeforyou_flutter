@@ -74,7 +74,7 @@ class _MacOSSelectDirectoryState extends State<MacOSSelectDirectory> {
           ? widget.operatingSystemOverride!()
           : Platform.operatingSystem;
       throw UnsupportedError(
-        'MacOSSelectDirectory is only supported on macOS. Current platform: $os',
+        'MacOSSelectDirectory is only supported on macOS, not platform: $os',
       );
     }
 

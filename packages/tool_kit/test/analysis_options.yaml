@@ -7,5 +7,6 @@ analyzer:
     avoid_slow_async_io: ignore
     avoid_types_on_closure_parameters: ignore
     cascade_invocations: ignore
+    cast_nullable_to_non_nullable: ignore
     document_ignores: ignore
     lines_longer_than_80_chars: ignore

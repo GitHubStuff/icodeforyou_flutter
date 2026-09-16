@@ -1,5 +1,4 @@
 // packages/sqlite_viewer/lib/src/widgets/display_query_widget/display_query_widget_layout.dart
-// ignore_for_file: avoid_types_on_closure_parameters
 
 part of 'display_query_widget.dart';
 
@@ -7,6 +6,7 @@ part of 'display_query_widget.dart';
 // Layout Calculations
 // =============================================================================
 
+/// Recomputes display columns and column widths for the given viewport.
 extension LayoutCalculations on DisplayQueryWidgetState {
   /// Recomputes display columns and column widths for the given viewport.
   ///
@@ -30,6 +30,12 @@ extension LayoutCalculations on DisplayQueryWidgetState {
     _columnWidths = stretchToViewport(contentWidths, viewportWidth);
   }
 
+  /// Builds the ordered list of column headers to display.
+  ///
+  /// When `showRowNumbers` is enabled, a leading `#` column is
+  /// prepended ahead of the data columns; otherwise the data columns
+  /// are returned as-is (copied, so callers can't mutate the widget's
+  /// backing list).
   List<String> buildDisplayColumns() {
     if (widget.showRowNumbers) {
       return ['#', ...widget.columns];
@@ -37,6 +43,16 @@ extension LayoutCalculations on DisplayQueryWidgetState {
     return List.from(widget.columns);
   }
 
+  /// Measures every display column against its content and returns
+  /// the per-column widths needed to fit that content.
+  ///
+  /// For each column, the header (in [effectiveHeaderStyle]) and every
+  /// cell value (in `evenRowStyle`) are measured with
+  /// [measureTextWidth]; the column takes the widest result plus the
+  /// widget's horizontal `cellPadding`, clamped to
+  /// `[minColumnWidth, maxColumnWidth]`.
+  ///
+  /// The returned list is index-aligned with `_displayColumns`.
   List<double> computeContentFitWidths() {
     final widths = <double>[];
     final headerTextStyle = _measurementStyle(effectiveHeaderStyle);
@@ -94,7 +110,7 @@ extension LayoutCalculations on DisplayQueryWidgetState {
     if (!viewportWidth.isFinite || viewportWidth <= 0) return contentWidths;
 
     final widths = List<double>.from(contentWidths);
-    var total = widths.fold<double>(0, (sum, w) => sum + w);
+    final total = widths.fold<double>(0, (sum, w) => sum + w);
     var slack = viewportWidth - total;
 
     if (slack <= 0) return widths;
@@ -172,6 +188,13 @@ extension LayoutCalculations on DisplayQueryWidgetState {
     return textPainter.width.ceilToDouble();
   }
 
+  /// Resolves the display string for the cell at [colIndex] in [row].
+  ///
+  /// When `showRowNumbers` is enabled, column `0` yields the
+  /// one-based row number and data columns shift right by one. Out of
+  /// range indices resolve to an empty string, and `null` database
+  /// values resolve to the widget's `nullValueDisplay` placeholder.
+  /// All other values are rendered via `toString()`.
   String getCellValue(Map<String, Object?> row, int colIndex) {
     if (widget.showRowNumbers && colIndex == 0) {
       final rowIndex = widget.rows.indexOf(row);
@@ -194,19 +217,37 @@ extension LayoutCalculations on DisplayQueryWidgetState {
     return value.toString();
   }
 
+  /// The [TextStyle] applied to header cells.
+  ///
+  /// Uses the widget's explicit `headerStyle` when provided;
+  /// otherwise derives a bold variant of `evenRowStyle` so headers
+  /// stand out without requiring separate configuration.
   TextStyle get effectiveHeaderStyle {
     return widget.headerStyle ??
         widget.evenRowStyle.copyWith(fontWeight: FontWeight.bold);
   }
 
+  /// The [Color] used for cell and table borders.
+  ///
+  /// Uses the widget's explicit `borderColor` when provided;
+  /// otherwise falls back to [Colors.grey] shade 300.
   Color get effectiveBorderColor {
     return widget.borderColor ?? Colors.grey.shade300;
   }
 
-  double get totalTableWidth {
-    return _columnWidths.fold(0, (double sum, double width) => sum + width);
-  }
+  /// The sum of all computed column widths.
+  ///
+  /// This is the intrinsic width of the rendered table, used to size
+  /// the horizontally scrollable content area.
+  double get totalTableWidth =>
+      _columnWidths.fold(0, (sum, width) => sum + width);
 
+  /// Whether the cell at [colIndex] in [row] holds a `null` database
+  /// value.
+  ///
+  /// The row-number column (when `showRowNumbers` is enabled) and out
+  /// of range indices are never considered null. Used to style null
+  /// placeholders distinctly from real values.
   bool isNullValueRowTest(Map<String, Object?> row, int colIndex) {
     if (widget.showRowNumbers && colIndex == 0) {
       return false;

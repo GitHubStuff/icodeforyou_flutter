@@ -1,14 +1,14 @@
 // packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_page/sqlite_viewer_page_phone_layout.dart
 
-// ignore_for_file: public_member_api_docs
-
 part of 'sqlite_viewer_page.dart';
 
 // =============================================================================
 // Phone Layout — Bottom Navigation
 // =============================================================================
 
+/// A compact layout tailored for phone screens using a bottom navigation bar.
 class PhoneLayout extends StatefulWidget {
+  /// Creates a [PhoneLayout].
   const PhoneLayout({
     required this.title,
     required this.showQueryInput,
@@ -18,16 +18,26 @@ class PhoneLayout extends StatefulWidget {
     super.key,
   });
 
+  /// The title displayed in the top app bar.
   final String title;
+
+  /// Whether to show the query input destination and tab.
   final bool showQueryInput;
+
+  /// Whether to render row indices in data views.
   final bool showRowNumbers;
+
+  /// The placeholder string used to represent SQL `NULL` values.
   final String nullValueDisplay;
+
+  /// Configuration for handling text overflow and truncation in table cells.
   final TextHandling textHandling;
 
   @override
   State<PhoneLayout> createState() => PhoneLayoutState();
 }
 
+/// The state for [PhoneLayout], managing navigation tabs and tab views.
 class PhoneLayoutState extends State<PhoneLayout> {
   int _currentIndex = 0;
 
@@ -84,6 +94,7 @@ class PhoneLayoutState extends State<PhoneLayout> {
     );
   }
 
+  /// Builds the main content area based on the current [state].
   Widget buildBody(BuildContext context, SqliteViewerState state) {
     return switch (state) {
       ViewerDisconnected() => const DisconnectedView(),
@@ -138,6 +149,7 @@ class PhoneLayoutState extends State<PhoneLayout> {
     };
   }
 
+  /// Renders the body when a database connection and [metadata] are present.
   Widget _buildConnectedBody(
     BuildContext context,
     SqliteViewerState state,
@@ -155,6 +167,7 @@ class PhoneLayoutState extends State<PhoneLayout> {
     }
   }
 
+  /// Builds the table list view tab.
   Widget _buildTablesTab(
     BuildContext context,
     SqliteViewerState state,
@@ -181,6 +194,7 @@ class PhoneLayoutState extends State<PhoneLayout> {
     );
   }
 
+  /// Builds the data grid view tab for the active table or query result.
   Widget _buildDataTab(BuildContext context, SqliteViewerState state) {
     return switch (state) {
       TableDetailLoading(:final tableName) => LoadingView(
@@ -232,6 +246,7 @@ class PhoneLayoutState extends State<PhoneLayout> {
     };
   }
 
+  /// Builds the view displaying the results of an executed query.
   Widget _buildQueryResult(
     BuildContext context,
     String query,
@@ -248,12 +263,12 @@ class PhoneLayoutState extends State<PhoneLayout> {
     );
   }
 
+  /// Builds the query editor tab containing the SQL input interface.
   Widget _buildQueryTab(
     BuildContext context,
     SqliteViewerState state,
     DatabaseMetadata metadata,
   ) {
-
     return Column(
       children: [
         Expanded(
