@@ -1,10 +1,8 @@
 // packages/infinite_scroll_picking_settings/lib/src/wheel_settings/wheel_settings.dart
 
-// ignore_for_file: public_member_api_docs
-
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../json/duration_json_converter.dart';
+import 'package:infinite_scroll_picking_settings/src/json/duration_json_converter.dart'
+    show DurationJsonConverter;
 
 part 'wheel_settings.freezed.dart';
 part 'wheel_settings.g.dart';
@@ -33,6 +31,7 @@ abstract class WheelSettings with _$WheelSettings {
   @Assert('perspectiveDiameter > 0', 'perspectiveDiameter must be > 0')
   @Assert('dividerThickness >= 0', 'dividerThickness must be >= 0')
   @Assert('dividerInset >= 0', 'dividerInset must be >= 0')
+  /// Factory constructor
   const factory WheelSettings({
     /// Height of a single item slot inside the wheel.
     @Default(24.0) double itemExtent,

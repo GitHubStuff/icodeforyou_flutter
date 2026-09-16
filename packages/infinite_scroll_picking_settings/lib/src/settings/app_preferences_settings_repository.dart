@@ -1,14 +1,13 @@
 // packages/infinite_scroll_picking_settings/lib/src/settings/app_preferences_settings_repository.dart
 
-// ignore_for_file: comment_references, public_member_api_docs, always_use_package_imports
-
 import 'dart:convert' show jsonDecode, jsonEncode;
 
 import 'package:app_preferences/app_preferences.dart'
     show AbstractPreferencesInterface;
-
-import '../picker_visual_settings/picker_visual_settings.dart';
-import 'settings_repository.dart';
+import 'package:infinite_scroll_picking_settings/infinite_scroll_picking_settings.dart'
+    show SettingsRepository;
+import 'package:infinite_scroll_picking_settings/src/picker_visual_settings/picker_visual_settings.dart'
+    show PickerVisualSettings;
 
 /// [SettingsRepository] backed by an [AbstractPreferencesInterface] —
 /// typically a `PlatformPreferences` (shared_preferences) or

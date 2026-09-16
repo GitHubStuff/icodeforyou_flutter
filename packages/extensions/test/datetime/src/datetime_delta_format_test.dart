@@ -2,7 +2,6 @@
 //
 // The formatter is deprecated but remains in lib, so it still counts toward
 // coverage; the ignore below silences the in-package deprecation warnings.
-// ignore_for_file: deprecated_member_use_from_same_package
 
 import 'package:extensions/datetime/src/datetime_delta.dart'
     show DateTimeDelta;

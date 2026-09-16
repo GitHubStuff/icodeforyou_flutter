@@ -1,6 +1,5 @@
 // packages/infinite_scroll_picking_settings/lib/infinite_scroll_picking_settings.dart
 
-// ignore_for_file: comment_references
 
 /// Settings screen and persistable visual configuration for the
 /// `infinite_scroll_picking` package.

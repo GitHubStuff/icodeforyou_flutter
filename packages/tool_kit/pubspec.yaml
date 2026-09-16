@@ -1,0 +1,20 @@
+# packages/tool_kit/pubspec.yaml
+name: tool_kit
+description: "Mac&#x2F;iOS file tools"
+publish_to: none
+resolution: workspace
+version: 1.0.0
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  file_picker: ^12.2.0
+  gap: 3.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0

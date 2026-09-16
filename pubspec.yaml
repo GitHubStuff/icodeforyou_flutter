@@ -38,6 +38,7 @@ workspace:
   - packages/theme_framework
   - packages/three_d_sphere
   - packages/time_spans
+  - packages/tool_kit
   - packages/widget_animation_framework
   - plugins/status_bar_chameleon
   - programs/black_velvet

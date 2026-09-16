@@ -1,10 +1,8 @@
 // packages/infinite_scroll_picking_settings/lib/src/settings/settings_state/settings_state.dart
 
-// ignore_for_file: comment_references, always_use_package_imports, public_member_api_docs
-
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../../picker_visual_settings/picker_visual_settings.dart';
+import 'package:infinite_scroll_picking_settings/infinite_scroll_picking_settings.dart'
+    show PickerVisualSettings;
 
 part 'settings_state.freezed.dart';
 

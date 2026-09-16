@@ -141,10 +141,10 @@ class UnitFormatter {
   /// Formats [on] into the first `%...q` token found in [using], then appends
   /// the remainder of [using] untouched.
   ///
-  /// Text before the token is copied verbatim, with `%%` -> `%`. Everything from
-  /// the end of the formatted token onward is returned raw — including any `%%`
-  /// and any further tokens — so the result can be fed back in with the next
-  /// value to render successive units.
+  /// Text before the token is copied verbatim, with `%%` -> `%`. Everything
+  /// from the end of the formatted token onward is returned raw — including
+  /// any `%%` and any further tokens — so the result can be fed back in with
+  /// the next value to render successive units.
   ///
   /// ```dart
   /// const f = UnitFormatter();
@@ -161,7 +161,7 @@ class UnitFormatter {
     assert(
       on >= 0,
       'UnitFormatter.doFormat expects a non-negative value; sign and direction '
-      'are the caller\'s responsibility. Got $on.',
+      "are the caller's responsibility. Got $on.",
     );
     final value = on.abs();
 
