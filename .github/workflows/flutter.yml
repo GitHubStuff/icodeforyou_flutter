@@ -19,6 +19,9 @@ jobs:
           channel: stable
 
       - run: sudo apt-get update && sudo apt-get install --yes zsh
+      - run: dart pub global activate fvm
+      - run: echo "$HOME/.pub-cache/bin" >> "$GITHUB_PATH"
+      - run: fvm install
       - run: dart pub global activate melos
       - run: melos bootstrap
       - run: melos run analyze
