@@ -75,7 +75,7 @@ void main() {
               home: BlocProvider<ThemeCubit>.value(
                 value: cubit,
                 child: SettingsScreen.withTheme(
-                  preferences: [const Text('Extra Preference')],
+                  preferences: const [Text('Extra Preference')],
                 ),
               ),
             ),

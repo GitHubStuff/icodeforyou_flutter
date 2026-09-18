@@ -6,7 +6,16 @@ part of 'sqlite_viewer_metadata_panel.dart';
 // Table List Building
 // =============================================================================
 
+/// Builds the scrollable list of table names in the metadata panel.
 extension TableListBuilder on SqliteViewerMetadataPanel {
+  /// Builds the scrollable table list for the panel.
+  ///
+  /// Renders an italic "No tables found" placeholder when the
+  /// metadata contains no tables. Otherwise builds a
+  /// [ListView.separated] of table items divided by hairline
+  /// [Divider]s in [dividerColor], delegating each row to
+  /// [buildTableItem] with its selection state resolved against
+  /// `selectedTable`.
   Widget buildTableList(
     BuildContext context,
     TextStyle? tableItemStyle,
@@ -48,6 +57,15 @@ extension TableListBuilder on SqliteViewerMetadataPanel {
     );
   }
 
+  /// Builds one tappable row for [tableName] in the table list.
+  ///
+  /// The row shows a table icon, the (ellipsized) table name, and —
+  /// when [isSelected] — a trailing chevron. Selection also switches
+  /// the background to [selectedColor], bolds the label, and swaps
+  /// icon and text colors to the theme's `onPrimaryContainer`.
+  ///
+  /// Tapping invokes `onTableSelected` with [tableName]; when that
+  /// callback is `null`, the row renders but is not interactive.
   Widget buildTableItem(
     BuildContext context,
     String tableName,

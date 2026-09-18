@@ -126,8 +126,8 @@ class _AnimatedPrismBubbleState extends State<AnimatedPrismBubble>
   @override
   Widget build(BuildContext context) {
     final Listenable animationListenable = Listenable.merge([
-      if (_breathingController != null) _breathingController!,
-      if (_rotationController != null) _rotationController!,
+      ?_breathingController,
+      ?_rotationController,
     ]);
 
     return AnimatedBuilder(

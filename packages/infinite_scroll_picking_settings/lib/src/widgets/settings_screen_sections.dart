@@ -2,7 +2,7 @@
 
 part of 'settings_screen.dart';
 
-// ── Slider ranges (min, max) ──────────────────────────────────────────────────
+// ── Slider ranges (min, max) ────────────────────────────────────────────────
 
 const _kFrameBorderRadiusRange = Size(0, 24);
 const _kFrameHPadRange = Size(0, 32);
@@ -22,7 +22,7 @@ const _kDebounceMsRange = Size(0, 500);
 
 const _kStartingIndexRange = Size(0, 99);
 
-// ── Slider steps ──────────────────────────────────────────────────────────────
+// ── Slider steps ────────────────────────────────────────────────────────────
 
 const _kBorderRadiusStep = 0.5;
 const _kFramePadStep = 1.0;

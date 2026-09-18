@@ -1,0 +1,12 @@
+# packages/tool_kit/test/analysis_options.yaml
+include: ../analysis_options.yaml
+
+analyzer:
+  errors:
+    avoid_positional_boolean_parameters: ignore
+    avoid_slow_async_io: ignore
+    avoid_types_on_closure_parameters: ignore
+    cascade_invocations: ignore
+    cast_nullable_to_non_nullable: ignore
+    document_ignores: ignore
+    lines_longer_than_80_chars: ignore

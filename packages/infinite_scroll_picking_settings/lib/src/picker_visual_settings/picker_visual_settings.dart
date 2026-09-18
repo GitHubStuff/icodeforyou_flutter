@@ -1,8 +1,8 @@
 // packages/infinite_scroll_picking_settings/lib/src/picker_visual_settings/picker_visual_settings.dart
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../wheel_settings/wheel_settings.dart';
+import 'package:infinite_scroll_picking_settings/infinite_scroll_picking_settings.dart'
+    show WheelSettings;
 
 part 'picker_visual_settings.freezed.dart';
 part 'picker_visual_settings.g.dart';

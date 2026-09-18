@@ -1,6 +1,4 @@
 // packages/widget_animation_framework/lib/src/animation_combiner_on_widget/animation_controller_widget.dart
-import 'dart:async';
-
 import 'package:flutter/widgets.dart';
 
 /// Builds a subtree against a timeline supplied by [AnimationControllerWidget].
@@ -78,7 +76,7 @@ class _AnimationControllerWidgetState extends State<AnimationControllerWidget>
     // The TickerFuture is intentionally discarded: completion is reported
     // through _handleStatusChanged, and the future never completes if the
     // ticker is cancelled on dispose.
-    unawaited(_controller.forward());
+    _controller.forward();
   }
 
   @override

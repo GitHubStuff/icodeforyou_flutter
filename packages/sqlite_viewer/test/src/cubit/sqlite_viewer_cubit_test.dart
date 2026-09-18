@@ -1,5 +1,7 @@
 // packages/sqlite_viewer/test/src/cubit/sqlite_viewer_cubit_test.dart
 
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqlite_viewer/sqlite_viewer.dart';
@@ -12,7 +14,7 @@ void main() {
     test('starts in ViewerDisconnected', () {
       final cubit = SqliteViewerCubit(MockSqliteViewerSource());
       expect(cubit.state, const ViewerDisconnected());
-      cubit.close();
+      unawaited(cubit.close());
     });
 
     test('.seeded uses provided initial state', () {
@@ -21,7 +23,7 @@ void main() {
         const MetadataLoaded(metadata: testMetadata),
       );
       expect(cubit.state, const MetadataLoaded(metadata: testMetadata));
-      cubit.close();
+      unawaited(cubit.close());
     });
 
     test('.withState uses provided initial state', () {
@@ -30,7 +32,7 @@ void main() {
         const MetadataLoaded(metadata: testMetadata),
       );
       expect(cubit.state, const MetadataLoaded(metadata: testMetadata));
-      cubit.close();
+      unawaited(cubit.close());
     });
   });
 

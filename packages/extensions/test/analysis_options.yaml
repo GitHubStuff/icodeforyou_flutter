@@ -6,6 +6,7 @@ analyzer:
     avoid_positional_boolean_parameters: ignore
     avoid_types_on_closure_parameters: ignore
     cascade_invocations: ignore
+    discarded_futures: ignore
     document_ignores: ignore
     lines_longer_than_80_chars: ignore
     prefer_const_constructors: ignore

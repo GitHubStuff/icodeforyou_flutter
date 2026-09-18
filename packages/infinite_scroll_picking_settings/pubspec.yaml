@@ -22,6 +22,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   freezed: ^3.2.5
+  icodeforyou_lints: ^1.0.0
   json_serializable: ^6.13.2
   mocktail: ^1.0.5
-  icodeforyou_lints: ^1.0.0

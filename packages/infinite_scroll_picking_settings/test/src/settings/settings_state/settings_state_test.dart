@@ -14,11 +14,11 @@ import 'package:infinite_scroll_picking_settings/src/settings/settings_state/set
 /// Names each sealed case through an exhaustive switch — the compiler
 /// enforces that no case is forgotten here.
 String _describe(SettingsState state) => switch (state) {
-      SettingsInitial() => 'initial',
-      SettingsLoading() => 'loading',
-      SettingsLoaded(:final isDirty) => 'loaded(dirty: $isDirty)',
-      SettingsError(:final message) => 'error($message)',
-    };
+  SettingsInitial() => 'initial',
+  SettingsLoading() => 'loading',
+  SettingsLoaded(:final isDirty) => 'loaded(dirty: $isDirty)',
+  SettingsError(:final message) => 'error($message)',
+};
 
 void main() {
   group('SettingsState', () {
@@ -34,7 +34,7 @@ void main() {
     test('loaded carries settings and defaults isDirty to false', () {
       const state = SettingsState.loaded(settings: PickerVisualSettings());
       expect(state, isA<SettingsLoaded>());
-      final loaded = state as SettingsLoaded;
+      const loaded = state as SettingsLoaded;
       expect(loaded.settings, const PickerVisualSettings());
       expect(loaded.isDirty, isFalse);
     });

@@ -360,7 +360,6 @@ class ServiceLocatorRegistry
               stackTrace: stackTrace,
             ),
       );
-      // ignore: avoid_catches_without_on_clauses
     } catch (error, stackTrace) {
       registration.markFailed(error, stackTrace);
       // Throw the canonical wrapper stored by [markFailed]. This way the

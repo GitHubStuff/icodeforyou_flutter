@@ -1,7 +1,5 @@
 // packages/infinite_scroll_picking_settings/lib/src/json/duration_json_converter.dart
 
-// ignore_for_file: public_member_api_docs
-
 import 'package:json_annotation/json_annotation.dart';
 
 /// Serializes a [Duration] as its [Duration.inMicroseconds] value.
@@ -19,6 +17,7 @@ import 'package:json_annotation/json_annotation.dart';
 /// abstract class MyConfig with _$MyConfig { ... }
 /// ```
 class DurationJsonConverter implements JsonConverter<Duration, int> {
+  /// Constructor
   const DurationJsonConverter();
 
   @override

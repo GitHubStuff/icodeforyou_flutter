@@ -16,7 +16,7 @@ part 'sqlite_viewer_table_detail_items.dart';
 /// - Foreign keys
 /// - Table data in a spreadsheet view
 ///
-/// Used as the main content area in 'SqliteViewerPage' when a table is selected.
+/// Used as the main content area in 'SqliteViewerPage' when table is selected.
 ///
 /// Example:
 /// ```dart

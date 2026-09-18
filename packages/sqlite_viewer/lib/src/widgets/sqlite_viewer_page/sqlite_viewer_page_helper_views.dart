@@ -6,8 +6,10 @@ part of 'sqlite_viewer_page.dart';
 // Shared Helper Widgets
 // =============================================================================
 
+/// A placeholder view shown when no active database connection exists.
 class DisconnectedView extends StatelessWidget {
-  const DisconnectedView();
+  /// Creates a [DisconnectedView].
+  const DisconnectedView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +36,12 @@ class DisconnectedView extends StatelessWidget {
   }
 }
 
+/// A progress indicator display with an accompanying status [message].
 class LoadingView extends StatelessWidget {
-  const LoadingView({required this.message});
+  /// Creates a [LoadingView] displaying [message].
+  const LoadingView({required this.message, super.key});
 
+  /// The status or progress message shown below the indicator.
   final String message;
 
   @override
@@ -60,10 +65,15 @@ class LoadingView extends StatelessWidget {
   }
 }
 
+/// An error display that shows a [message] and an optional [onRetry] action.
 class ErrorView extends StatelessWidget {
-  const ErrorView({required this.message, this.onRetry});
+  /// Creates an [ErrorView].
+  const ErrorView({required this.message, super.key, this.onRetry});
 
+  /// The error description to display.
   final String message;
+
+  /// Optional callback invoked when the user taps the retry button.
   final VoidCallback? onRetry;
 
   @override
@@ -103,8 +113,10 @@ class ErrorView extends StatelessWidget {
   }
 }
 
+/// A placeholder view shown when no table has been selected yet.
 class EmptyDataView extends StatelessWidget {
-  const EmptyDataView();
+  /// Creates an [EmptyDataView].
+  const EmptyDataView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -131,8 +143,10 @@ class EmptyDataView extends StatelessWidget {
   }
 }
 
+/// A prompt instructing the user to choose a table or enter a custom query.
 class SelectTablePrompt extends StatelessWidget {
-  const SelectTablePrompt();
+  /// Creates a [SelectTablePrompt].
+  const SelectTablePrompt({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +180,9 @@ class SelectTablePrompt extends StatelessWidget {
   }
 }
 
+/// Displays the results of an executed SQL query in a tabular format.
 class QueryResultView extends StatelessWidget {
+  /// Creates a [QueryResultView].
   const QueryResultView({
     required this.query,
     required this.columns,
@@ -174,13 +190,25 @@ class QueryResultView extends StatelessWidget {
     required this.showRowNumbers,
     required this.nullValueDisplay,
     required this.textHandling,
+    super.key,
   });
 
+  /// The raw SQL query string that produced these results.
   final String query;
+
+  /// The list of column headers returned by the query.
   final List<String> columns;
+
+  /// The list of row records mapping column names to their cell values.
   final List<Map<String, Object?>> rows;
+
+  /// Whether to render a leading row-index column.
   final bool showRowNumbers;
+
+  /// The string placeholder used to represent SQL `NULL` values.
   final String nullValueDisplay;
+
+  /// Determines how cell text overflow and wrapping are handled.
   final TextHandling textHandling;
 
   @override

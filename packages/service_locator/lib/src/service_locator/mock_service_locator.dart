@@ -6,8 +6,6 @@
 // and [failLazyService] test hooks, so tests never need to race against
 // real async builders.
 
-// ignore_for_file: comment_references
-
 import 'dart:async' show Completer, TimeoutException, unawaited;
 
 import 'package:service_locator/src/errors.dart'

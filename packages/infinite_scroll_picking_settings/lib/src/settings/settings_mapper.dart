@@ -1,11 +1,10 @@
 // packages/infinite_scroll_picking_settings/lib/src/settings/settings_mapper.dart
 
-// ignore_for_file: public_member_api_docs, always_use_package_imports
-
 import 'package:infinite_scroll_picking/infinite_scroll_picking.dart';
-
-import '../picker_visual_settings/picker_visual_settings.dart';
-import '../wheel_settings/wheel_settings.dart';
+import 'package:infinite_scroll_picking_settings/infinite_scroll_picking_settings.dart'
+    show WheelSettings;
+import 'package:infinite_scroll_picking_settings/src/picker_visual_settings/picker_visual_settings.dart'
+    show PickerVisualSettings;
 
 /// Conversion between this package's persistable settings types and the
 /// runtime config types owned by the `infinite_scroll_picking` package.
@@ -36,6 +35,7 @@ extension WheelSettingsMapper on WheelSettings {
 /// config (e.g. when a consumer already has an `InfiniteScrollWheelConfig`
 /// hard-coded somewhere and wants it to become the default settings).
 extension WheelConfigMapper on InfiniteScrollWheelConfig {
+  /// Reverse settings
   WheelSettings toWheelSettings() {
     return WheelSettings(
       itemExtent: itemExtent,
@@ -52,10 +52,10 @@ extension WheelConfigMapper on InfiniteScrollWheelConfig {
   }
 }
 
+/// Build a runtime [InfiniteScrollPickerConfig] from these settings plus
+/// the runtime-only [items] and [pickerId].
+///
 extension PickerVisualSettingsMapper on PickerVisualSettings {
-  /// Build a runtime [InfiniteScrollPickerConfig] from these settings plus
-  /// the runtime-only [items] and [pickerId].
-  ///
   /// The picker config asserts `items` is non-empty and `startingIndex <
   /// items.length` — both are enforced here at the boundary, since the
   /// settings type can't see [items].

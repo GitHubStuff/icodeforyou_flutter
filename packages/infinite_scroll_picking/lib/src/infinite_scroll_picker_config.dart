@@ -17,6 +17,7 @@ part of 'library.dart';
 ///   handler serves multiple pickers.
 @immutable
 class InfiniteScrollPickerConfig<T, K> {
+  /// Configuration for an [InfiniteScrollPicker].
   const InfiniteScrollPickerConfig({
     required this.items,
     required this.pickerId,

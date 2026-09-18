@@ -9,8 +9,8 @@ import 'package:sincewhen_models/sincewhen_models.dart';
 /// Builds a record; the database assigns the real primary key, so [id]
 /// only matters for update/delete matching.
 SinceWhenItem _item({
-  int id = 0,
   required int createdTimestamp,
+  int id = 0,
   int reviewedTimestamp = 1,
   int editedTimestamp = 1,
   int sequenceNumber = 0,

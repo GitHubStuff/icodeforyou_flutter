@@ -34,6 +34,7 @@ part of 'library.dart';
 /// );
 /// ```
 class InfiniteScrollPicker<T, K> extends StatefulWidget {
+  /// An Apple-style infinite scrolling picker.
   const InfiniteScrollPicker({
     required this.config,
     required this.label,

@@ -33,9 +33,8 @@ void main() {
     });
 
     test('equality holds across distinct runtime instances', () {
-      // ignore: prefer_const_constructors — distinct (non-identical) instances
       // force Equatable past its identical() check so props is read on both.
-      final a = ViewerDatabaseNotOpen();
+      const a = ViewerDatabaseNotOpen();
       // ignore: prefer_const_constructors
       final b = ViewerDatabaseNotOpen();
       expect(identical(a, b), isFalse);

@@ -11,6 +11,7 @@ analyzer:
     invalid_use_of_visible_for_testing_member: ignore
     library_private_types_in_public_api: ignore
     lines_longer_than_80_chars: ignore
+    missing_whitespace_between_adjacent_strings: ignore
     omit_local_variable_types: ignore
     prefer_int_literals: ignore
     public_member_api_docs: ignore

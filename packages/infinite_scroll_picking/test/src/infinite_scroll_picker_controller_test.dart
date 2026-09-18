@@ -18,7 +18,7 @@ void main() {
         final controller = InfiniteScrollPickerController();
         addTearDown(controller.dispose);
 
-        expect(() => controller.reset(), throwsA(isA<AssertionError>()));
+        expect(controller.reset, throwsA(isA<AssertionError>()));
       });
 
       test('jumpToIndex() throws an AssertionError', () {

@@ -1,8 +1,7 @@
 // packages/my_logger/lib/src/format_stack_trace.dart
-// ignore_for_file: comment_references, public_member_api_docs
-import 'package:stack_trace/stack_trace.dart';
 
-import 'trace_color.dart';
+import 'package:my_logger/src/trace_color.dart';
+import 'package:stack_trace/stack_trace.dart';
 
 /// Predicate used to decide whether a [Frame] should be folded out of the
 /// formatted trace. Return `true` to fold (hide) the frame.

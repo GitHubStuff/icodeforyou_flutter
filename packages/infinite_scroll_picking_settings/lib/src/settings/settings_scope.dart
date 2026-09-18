@@ -1,11 +1,9 @@
 // packages/infinite_scroll_picking_settings/lib/src/settings/settings_scope.dart
 
-// ignore_for_file: always_use_package_imports
-
 import 'package:flutter/widgets.dart';
 
-import '../picker_visual_settings/picker_visual_settings.dart';
-import 'settings_holder.dart';
+import 'package:infinite_scroll_picking_settings/src/picker_visual_settings/picker_visual_settings.dart';
+import 'package:infinite_scroll_picking_settings/src/settings/settings_holder.dart';
 
 /// Provides a [SettingsHolder] to descendant widgets and rebuilds dependents
 /// when the holder's value changes.

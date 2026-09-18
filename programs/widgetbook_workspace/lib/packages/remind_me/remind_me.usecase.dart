@@ -137,7 +137,7 @@ const _groups = <_Group>[
         signature: 'Future<NotificationPermissionStatus> currentStatus()',
         summary:
             'Reads the current permission state without prompting. '
-            'Maps permission_handler\'s PermissionStatus to the package-'
+            "Maps permission_handler's PermissionStatus to the package-"
             'native NotificationPermissionStatus enum.',
         platforms: 'iOS · Android',
       ),

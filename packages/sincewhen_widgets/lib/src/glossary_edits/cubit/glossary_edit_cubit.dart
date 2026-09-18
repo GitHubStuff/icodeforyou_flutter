@@ -68,7 +68,6 @@ class GlossaryEditCubit extends Cubit<GlossaryEditState> {
   Future<void> editComplete({GlossaryItem? glossaryItem}) async {
     if (glossaryItem != null) {
       await _glossaryRepo.insertItem(glossaryItem);
-      final c = await _glossaryRepo.itemCount();
     }
     emit(const GlossaryEditInitial());
   }

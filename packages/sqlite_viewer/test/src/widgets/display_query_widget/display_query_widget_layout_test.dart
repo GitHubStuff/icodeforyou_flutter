@@ -15,12 +15,12 @@ void main() {
         (tester) async {
       await tester.pumpWidget(
         testableWidgetWithScaffold(
-          SizedBox(
+          const SizedBox(
             width: 1200,
             height: 600,
             child: DisplayQueryWidget(
-              columns: const ['a', 'b'],
-              rows: const [
+              columns: ['a', 'b'],
+              rows: [
                 {'a': 'x', 'b': 'y'},
               ],
               evenRowStyle: evenStyle,
@@ -63,12 +63,12 @@ void main() {
       (tester) async {
         await tester.pumpWidget(
           testableWidgetWithScaffold(
-            SizedBox(
+            const SizedBox(
               width: 4000,
               height: 400,
               child: DisplayQueryWidget(
-                columns: const ['a', 'b'],
-                rows: const [
+                columns: ['a', 'b'],
+                rows: [
                   {'a': 'x', 'b': 'y'},
                 ],
                 evenRowStyle: evenStyle,
@@ -90,12 +90,12 @@ void main() {
       (tester) async {
         await tester.pumpWidget(
           testableWidgetWithScaffold(
-            SizedBox(
+            const SizedBox(
               width: 600,
               height: 400,
               child: DisplayQueryWidget(
-                columns: const ['id'],
-                rows: const [
+                columns: ['id'],
+                rows: [
                   {'id': 'first'},
                   {'id': 'second'},
                 ],
@@ -121,12 +121,12 @@ void main() {
         // the source row contains nulls.
         await tester.pumpWidget(
           testableWidgetWithScaffold(
-            SizedBox(
+            const SizedBox(
               width: 600,
               height: 400,
               child: DisplayQueryWidget(
-                columns: const ['id'],
-                rows: const [
+                columns: ['id'],
+                rows: [
                   {'id': null},
                 ],
                 evenRowStyle: evenStyle,
@@ -146,12 +146,12 @@ void main() {
       (tester) async {
         await tester.pumpWidget(
           testableWidgetWithScaffold(
-            SizedBox(
+            const SizedBox(
               width: 600,
               height: 400,
               child: DisplayQueryWidget(
-                columns: const ['n', 'active'],
-                rows: const [
+                columns: ['n', 'active'],
+                rows: [
                   {'n': 42, 'active': true},
                 ],
                 evenRowStyle: evenStyle,

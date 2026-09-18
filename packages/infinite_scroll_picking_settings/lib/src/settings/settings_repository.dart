@@ -1,8 +1,6 @@
 // packages/infinite_scroll_picking_settings/lib/src/settings/settings_repository.dart
 
-// ignore_for_file: always_use_package_imports
-
-import '../picker_visual_settings/picker_visual_settings.dart';
+import 'package:infinite_scroll_picking_settings/src/picker_visual_settings/picker_visual_settings.dart';
 
 /// Persistence boundary for the picker's visual settings.
 ///

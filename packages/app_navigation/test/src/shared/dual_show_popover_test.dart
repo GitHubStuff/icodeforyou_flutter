@@ -1,4 +1,6 @@
 // packages/app_navigation/test/src/shared/dual_show_popover_test.dart
+import 'dart:async';
+
 import 'package:app_navigation/src/shared/dual_show_popover.dart';
 import 'package:extensions/enum/src/haptic_intensity.dart';
 import 'package:flutter/material.dart';
@@ -253,9 +255,11 @@ void main() {
                           child: GestureDetector(
                             key: const ValueKey('open_anchor'),
                             onTap: () {
-                              dualShowPopover<void>(
-                                anchorContext: ctx,
-                                children: const [Text('Item')],
+                              unawaited(
+                                dualShowPopover<void>(
+                                  anchorContext: ctx,
+                                  children: const [Text('Item')],
+                                ),
                               );
                             },
                             child: const Text('Open'),

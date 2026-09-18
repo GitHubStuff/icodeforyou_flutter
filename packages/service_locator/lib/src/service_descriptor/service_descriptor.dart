@@ -1,10 +1,4 @@
 // packages/service_locator/lib/src/service_descriptor/service_descriptor.dart
-//
-// Descriptor hierarchy declaring how a service is registered with a
-// [ServiceLocator]. The sealed base [ServiceDescriptor] and its two
-// concrete subclasses — [SyncServiceDescriptor] (eager, synchronous) and
-// [LazyAsyncServiceDescriptor] (builder-on-first-access) — cover every
-// registration mode the locator supports.
 
 import 'dart:async' show FutureOr;
 
@@ -15,6 +9,21 @@ import 'package:service_locator/src/service_locator/service_locator.dart'
 import 'package:service_locator/src/service_registry/service_registration.dart'
     show ServiceRegistration;
 
+/// Declarative descriptor hierarchy for registering services with a
+/// [ServiceLocator].
+///
+/// This library defines the sealed [ServiceDescriptor] base class and its
+/// concrete registration strategies:
+///
+/// * [SyncServiceDescriptor] — Eager, synchronous registration for cheap
+///   instances.
+/// * [AsyncServiceDescriptor] — Eager, asynchronous registration that
+///   initializes
+///   immediately during locator setup.
+/// * [LazyAsyncServiceDescriptor] — Deferred asynchronous registration that
+///   executes
+///   the builder only upon first access via `getServiceAsync`.
+
 /// Marker interface every service contract must implement.
 ///
 /// The locator's generic APIs are bounded on `extends ServiceClass`, so
@@ -24,7 +33,12 @@ import 'package:service_locator/src/service_registry/service_registration.dart'
 /// generics like [ServiceLocator.getServiceSync] a compile-time handle
 /// on "something registered here" without falling back to `dynamic`.
 abstract interface class ServiceClass {
+  /// Validates that generic parameter [SRV] is an explicit subclass of
+  /// [ServiceClass] and not a widened fallback type.
   ///
+  /// Throws [BadServiceClass] if [SRV] is [ServiceClass] itself, [dynamic],
+  /// or [Object], which typically indicates an omitted type argument at the
+  /// call site. [name] provides the registration key for debugging context.
   static void checkGeneric<SRV extends ServiceClass>(String name) {
     if (SRV == ServiceClass || SRV == dynamic || SRV == Object) {
       throw BadServiceClass(name);
@@ -46,6 +60,8 @@ abstract interface class ServiceClass {
 ///  * [SyncServiceDescriptor] — builder runs eagerly during
 ///    `registerWith`; registration transitions straight to
 ///    [LocatorStatus.ready].
+///  * [AsyncServiceDescriptor] — builder runs eagerly upon registration,
+///    awaiting completion before marking the service ready.
 ///  * [LazyAsyncServiceDescriptor] — builder is handed to the locator
 ///    and runs on first `getServiceAsync` access; registration stays at
 ///    [LocatorStatus.starting] until the builder resolves.
@@ -89,9 +105,8 @@ sealed class ServiceDescriptor<SRV extends ServiceClass> {
   /// internal `Type → name` index.
   List<Type> get dependencies => const [];
 
-  /// Maximum time a [LazyAsyncServiceDescriptor]'s builder is given to
-  /// complete before the registry throws `ServiceItemTimeout`. Defaults
-  /// to [defaultTimeout].
+  /// Maximum time an asynchronous builder is given to complete before the
+  /// registry throws `ServiceItemTimeout`. Defaults to [defaultTimeout].
   Duration get timeout => defaultTimeout;
 
   /// The concrete service type this descriptor registers.
@@ -124,10 +139,10 @@ sealed class ServiceDescriptor<SRV extends ServiceClass> {
   ///
   /// Called by the registry once per successful `register(name)` call
   /// after dependency resolution completes. Subclasses implement the
-  /// two supported flows: [SyncServiceDescriptor] builds and fires
-  /// `ready` before returning; [LazyAsyncServiceDescriptor] hands the
-  /// builder off and lets the locator drive transitions from first
-  /// `getServiceAsync`.
+  /// supported flows: [SyncServiceDescriptor] builds and fires `ready`
+  /// before returning; [AsyncServiceDescriptor] eagerly awaits initialization;
+  /// and [LazyAsyncServiceDescriptor] hands off builder execution until
+  /// the first `getServiceAsync` call.
   FutureOr<void> registerWith(
     ServiceLocator locator, {
     required ReportServiceState serviceState,
@@ -141,12 +156,33 @@ sealed class ServiceDescriptor<SRV extends ServiceClass> {
       'timeout: ${timeout.inSeconds}s)';
 }
 
+/// Descriptor for services whose initialization is asynchronous, but occurs
+/// eagerly during registration.
+///
+/// Use this mode when an essential dependency must be fully initialized and
+/// ready before downstream systems bootstrap (e.g. reading a local SQLite
+/// storage token or initializing critical secure storage).
+///
+/// Unlike [LazyAsyncServiceDescriptor], which defers invocation until accessed,
+/// [registerWith] immediately calls [builder], awaits the resulting [Future],
+/// and transitions the registration to [LocatorStatus.ready] before completing.
 abstract class AsyncServiceDescriptor<SRV extends ServiceClass>
     extends ServiceDescriptor<SRV> {
+  /// Base constructor for concrete eager-async descriptors.
   const AsyncServiceDescriptor();
 
+  /// Asynchronous factory that produces the service instance.
+  ///
+  /// Invoked immediately inside [registerWith]. If this future fails, the
+  /// uncaught exception propagates to the registry registration pipeline,
+  /// marking the service status as failed.
   Future<SRV> Function() get builder;
 
+  /// Registers this service eagerly by invoking and awaiting [builder].
+  ///
+  /// Upon successful resolution, [locator.registerServiceAsync] stores the
+  /// instance and [serviceState] notifies observers that the service has
+  /// transitioned to [LocatorStatus.ready].
   @override
   Future<void> registerWith(
     ServiceLocator locator, {

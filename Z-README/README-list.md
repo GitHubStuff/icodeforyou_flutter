@@ -16,6 +16,7 @@ Loly Lips
 Melanie Queen
 Miss Driada - Urakadaki
 MissRedStar
+Only Love
 Owl Crystal
 Shonaryen
 Skye Young

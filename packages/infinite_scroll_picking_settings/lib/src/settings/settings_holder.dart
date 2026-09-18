@@ -1,11 +1,9 @@
 // packages/infinite_scroll_picking_settings/lib/src/settings/settings_holder.dart
 
-// ignore_for_file: always_use_package_imports
-
 import 'package:flutter/foundation.dart' show ChangeNotifier, ValueListenable;
 import 'package:flutter/material.dart';
-
-import '../picker_visual_settings/picker_visual_settings.dart';
+import 'package:infinite_scroll_picking_settings/infinite_scroll_picking_settings.dart'
+    show PickerVisualSettings;
 
 /// App-wide source of truth for the current [PickerVisualSettings].
 ///

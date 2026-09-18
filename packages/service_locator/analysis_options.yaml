@@ -1,5 +1,8 @@
 # packages/service_locator/analysis_options.yaml
 analyzer:
+  errors:
+    avoid_catches_without_on_clauses: ignore
+    avoid_types_on_closure_parameters: ignore
   exclude:
     - build/**
     - android/**
