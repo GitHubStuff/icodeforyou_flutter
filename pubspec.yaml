@@ -2,7 +2,7 @@
 name: icodeforyou_flutter
 publish_to: none
 description: "Collection of flutter packages"
-version: 9.4.3
+version: 9.4.4
 
 workspace:
   - packages/abstractions
@@ -31,6 +31,7 @@ workspace:
   - packages/settings_widget
   - packages/sincewhen_drift_framework
   - packages/sincewhen_models
+  - packages/sincewhen_screens
   - packages/sincewhen_widgets
   - packages/splash_framework
   - packages/sqlite_viewer

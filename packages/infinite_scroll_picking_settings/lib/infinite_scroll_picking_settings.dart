@@ -1,6 +1,5 @@
 // packages/infinite_scroll_picking_settings/lib/infinite_scroll_picking_settings.dart
 
-
 /// Settings screen and persistable visual configuration for the
 /// `infinite_scroll_picking` package.
 ///
@@ -22,8 +21,7 @@
 /// implementation passed to [SettingsLoader.load].
 library;
 
-export 'src/picker_visual_settings/picker_visual_settings.dart'
-    show PickerVisualSettings;
+export 'src/picker_visual_settings/picker_visual_settings.dart';
 export 'src/settings/app_preferences_settings_repository.dart'
     show AppPreferencesSettingsRepository;
 export 'src/settings/settings_cubit.dart' show SettingsCubit;
@@ -33,12 +31,6 @@ export 'src/settings/settings_mapper.dart'
     show PickerVisualSettingsMapper, WheelConfigMapper, WheelSettingsMapper;
 export 'src/settings/settings_repository.dart' show SettingsRepository;
 export 'src/settings/settings_scope.dart' show SettingsScope;
-export 'src/settings/settings_state/settings_state.dart'
-    show
-        SettingsError,
-        SettingsInitial,
-        SettingsLoaded,
-        SettingsLoading,
-        SettingsState;
-export 'src/wheel_settings/wheel_settings.dart' show WheelSettings;
+export 'src/settings/settings_state/settings_state.dart';
+export 'src/wheel_settings/wheel_settings.dart';
 export 'src/widgets/settings_screen.dart' show SettingsScreen;

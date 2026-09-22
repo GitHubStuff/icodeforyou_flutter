@@ -9,10 +9,6 @@ extension DateTimeExt on DateTime {
 
   /// Returns a [DateTime] guaranteed to be unique across successive calls.
   ///
-  /// If the system clock has not advanced since the last call, the returned
-  /// value is incremented by one microsecond. When drift exceeds
-  /// [driftThreshold], the method yields until the clock catches up.
-  ///
   /// [now] returns the current time and is injectable so the method can be
   /// driven by a fake clock in tests; it defaults to [DateTime.now].
   static Future<DateTime> unique({

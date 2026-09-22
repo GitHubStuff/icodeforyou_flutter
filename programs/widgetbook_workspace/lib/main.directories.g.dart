@@ -143,6 +143,18 @@ import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/lib/src
     as _widgetbook_workspace_packages_scrolling_datetime_pickers_lib_src_presentation_widgets_scrolling_time_picker_usecase;
 import 'package:widgetbook_workspace/packages/settings_widget/settings_widget.usecase.dart'
     as _widgetbook_workspace_packages_settings_widget_settings_widget_usecase;
+import 'package:widgetbook_workspace/packages/sincewhen_screens/sincewhen_mini/since_when_mini.usecase.dart'
+    as _widgetbook_workspace_packages_sincewhen_screens_sincewhen_mini_since_when_mini_usecase;
+import 'package:widgetbook_workspace/packages/sincewhen_screens/widgets/event_timestamp_row.usecase.dart'
+    as _widgetbook_workspace_packages_sincewhen_screens_widgets_event_timestamp_row_usecase;
+import 'package:widgetbook_workspace/packages/sincewhen_screens/widgets/since_when_mini_action_bar.usecase.dart'
+    as _widgetbook_workspace_packages_sincewhen_screens_widgets_since_when_mini_action_bar_usecase;
+import 'package:widgetbook_workspace/packages/sincewhen_screens/widgets/since_when_mini_text_column.usecase.dart'
+    as _widgetbook_workspace_packages_sincewhen_screens_widgets_since_when_mini_text_column_usecase;
+import 'package:widgetbook_workspace/packages/sincewhen_screens/widgets/sincewhen_mini_timestamp_column.usecase.dart'
+    as _widgetbook_workspace_packages_sincewhen_screens_widgets_sincewhen_mini_timestamp_column_usecase;
+import 'package:widgetbook_workspace/packages/sincewhen_screens/widgets/timestamp_row.usecase.dart'
+    as _widgetbook_workspace_packages_sincewhen_screens_widgets_timestamp_row_usecase;
 import 'package:widgetbook_workspace/packages/sincewhen_widgets/glossary_card.usecase.dart'
     as _widgetbook_workspace_packages_sincewhen_widgets_glossary_card_usecase;
 import 'package:widgetbook_workspace/packages/sincewhen_widgets/glossary_item_create_dialog.usecase.dart'
@@ -1044,6 +1056,28 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookFolder(
+    name: 'sincewhen_mini',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'SinceWhenMini',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Create flow',
+            builder:
+                _widgetbook_workspace_packages_sincewhen_screens_sincewhen_mini_since_when_mini_usecase
+                    .buildSinceWhenMiniCreateFlowUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Edit flow',
+            builder:
+                _widgetbook_workspace_packages_sincewhen_screens_sincewhen_mini_since_when_mini_usecase
+                    .buildSinceWhenMiniEditFlowUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
     name: 'sized_spinner',
     children: [
       _widgetbook.WidgetbookComponent(
@@ -1220,6 +1254,23 @@ final directories = <_widgetbook.WidgetbookNode>[
     name: 'widgets',
     children: [
       _widgetbook.WidgetbookComponent(
+        name: 'EventTimestampRow',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Empty',
+            builder:
+                _widgetbook_workspace_packages_sincewhen_screens_widgets_event_timestamp_row_usecase
+                    .buildEventTimestampRowEmptyUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'With value',
+            builder:
+                _widgetbook_workspace_packages_sincewhen_screens_widgets_event_timestamp_row_usecase
+                    .buildEventTimestampRowWithValueUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'SettingsScreen',
         useCases: [
           _widgetbook.WidgetbookUseCase(
@@ -1243,6 +1294,51 @@ final directories = <_widgetbook.WidgetbookNode>[
         ],
       ),
       _widgetbook.WidgetbookComponent(
+        name: 'SinceWhenMiniActionBar',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Interactive',
+            builder:
+                _widgetbook_workspace_packages_sincewhen_screens_widgets_since_when_mini_action_bar_usecase
+                    .buildSinceWhenMiniActionBarUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'SinceWhenMiniTextColumn',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Empty',
+            builder:
+                _widgetbook_workspace_packages_sincewhen_screens_widgets_since_when_mini_text_column_usecase
+                    .buildSinceWhenMiniTextColumnEmptyUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Pre-filled',
+            builder:
+                _widgetbook_workspace_packages_sincewhen_screens_widgets_since_when_mini_text_column_usecase
+                    .buildSinceWhenMiniTextColumnPreFilledUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'SinceWhenMiniTimestampColumn',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Create mode',
+            builder:
+                _widgetbook_workspace_packages_sincewhen_screens_widgets_sincewhen_mini_timestamp_column_usecase
+                    .buildSinceWhenMiniTimestampColumnCreateUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Edit mode',
+            builder:
+                _widgetbook_workspace_packages_sincewhen_screens_widgets_sincewhen_mini_timestamp_column_usecase
+                    .buildSinceWhenMiniTimestampColumnEditUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
         name: 'ThemeModeCard',
         useCases: [
           _widgetbook.WidgetbookUseCase(
@@ -1261,6 +1357,17 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder:
                 _widgetbook_workspace_packages_theme_framework_theme_setting_screen_usecase
                     .buildThemeSettingScreenUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'TimestampRow',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Interactive',
+            builder:
+                _widgetbook_workspace_packages_sincewhen_screens_widgets_timestamp_row_usecase
+                    .buildTimestampRowUseCase,
           ),
         ],
       ),
