@@ -98,6 +98,11 @@ class _SinceWhenMiniViewState extends State<_SinceWhenMiniView> {
     _metaDataController = TextEditingController(
       text: widget.item?.metaData ?? '',
     );
+    // BlocListener never fires for the initial state, so a cubit that
+    // starts out Ready gets its one-time initial focus here.
+    if (context.read<SinceWhenMiniCubit>().state is SinceWhenMiniReady) {
+      _focusContent();
+    }
   }
 
   @override
@@ -109,15 +114,24 @@ class _SinceWhenMiniViewState extends State<_SinceWhenMiniView> {
     super.dispose();
   }
 
-  /// Grants the content field focus once the draft is ready.
+  /// Initial focus is granted exactly once: on the Loading→Ready
+  /// transition. Ready→Ready emissions (every keystroke, every
+  /// timestamp change) must not steal focus from the field the user
+  /// moved to.
+  static bool _isDraftBecomingReady(
+    SinceWhenMiniState previous,
+    SinceWhenMiniState current,
+  ) {
+    return previous is SinceWhenMiniLoading && current is SinceWhenMiniReady;
+  }
+
+  /// Grants the content field focus.
   ///
   /// Deferred a frame so the field exists before focus is requested —
   /// in create mode the fields are not built until Loading→Ready.
   void _focusContent() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        _contentFocusNode.requestFocus();
-      }
+      if (mounted) _contentFocusNode.requestFocus();
     });
   }
 
@@ -127,20 +141,15 @@ class _SinceWhenMiniViewState extends State<_SinceWhenMiniView> {
     navigator.pop<SinceWhenItem?>(result);
   }
 
-  void _onCancelPressed() {
-    Navigator.of(context).pop<SinceWhenItem?>(null);
-  }
+  void _onCancelPressed() => Navigator.of(context).pop<SinceWhenItem?>(null);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: BlocConsumer<SinceWhenMiniCubit, SinceWhenMiniState>(
-          listener: (context, state) {
-            if (state is SinceWhenMiniReady) {
-              _focusContent();
-            }
-          },
+          listenWhen: _isDraftBecomingReady,
+          listener: (_, _) => _focusContent(),
           builder: (context, state) {
             return switch (state) {
               SinceWhenMiniLoading() => const Center(

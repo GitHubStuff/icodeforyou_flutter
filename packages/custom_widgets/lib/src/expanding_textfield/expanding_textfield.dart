@@ -28,6 +28,8 @@ InputDecoration _inputDecoration({
     borderSide: BorderSide(color: border, width: 2),
   ),
   contentPadding: _insets,
+  labelText: 'LabelText',
+  floatingLabelBehavior: FloatingLabelBehavior.always,
   hintText: hintText,
   hintStyle: textStyle.copyWith(
     fontWeight: FontWeight.normal,

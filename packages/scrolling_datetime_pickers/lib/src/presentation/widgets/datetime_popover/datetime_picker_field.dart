@@ -1,11 +1,7 @@
 // packages/scrolling_datetime_pickers/lib/src/presentation/widgets/datetime_popover/datetime_picker_field.dart
 
 import 'package:flutter/material.dart';
-import 'package:scrolling_datetime_pickers/src/core/constants/popover_constants.dart';
-import 'package:scrolling_datetime_pickers/src/core/enums/datetime_option.dart';
-import 'package:scrolling_datetime_pickers/src/core/models/divider_configuration.dart';
-import 'package:scrolling_datetime_pickers/src/core/models/fade_configuration.dart';
-import 'package:scrolling_datetime_pickers/src/presentation/widgets/datetime_popover/datetime_picker_popover.dart';
+import 'package:scrolling_datetime_pickers/scrolling_datetime_pickers.dart' show DateTimeOption, DateTimePickerPopover, DividerConfiguration, FadeConfiguration, PopoverConstants;
 
 /// A convenience wrapper that presents a [DateTimePickerPopover] anchored to
 /// itself when tapped.
@@ -13,6 +9,11 @@ import 'package:scrolling_datetime_pickers/src/presentation/widgets/datetime_pop
 /// Wrap any widget with [DateTimePickerField] to turn it into a tappable
 /// date/time input. The popover is anchored to the wrapped widget via a
 /// [GlobalKey] so it appears in the correct position regardless of layout.
+///
+/// Interactive descendants of [child] (for example an [IconButton] used as
+/// a clear affordance) keep their own tap handling: a tap that lands on one
+/// of them is delivered to that widget and does not open the popover. Taps
+/// anywhere else within [child], including its padding, open the popover.
 class DateTimePickerField extends StatefulWidget {
   /// Creates a [DateTimePickerField].
   ///
@@ -203,8 +204,6 @@ class _DateTimePickerFieldState extends State<DateTimePickerField> {
   final GlobalKey _anchorKey = GlobalKey();
 
   Future<void> _showPopover() async {
-    if (!widget.enabled) return;
-
     final result = await DateTimePickerPopover.show(
       context: context,
       anchorKey: _anchorKey,
@@ -242,12 +241,9 @@ class _DateTimePickerFieldState extends State<DateTimePickerField> {
   Widget build(BuildContext context) {
     return GestureDetector(
       key: _anchorKey,
-      onTap: _showPopover,
+      onTap: widget.enabled ? _showPopover : null,
       behavior: HitTestBehavior.opaque,
-      child: AbsorbPointer(
-        absorbing: widget.enabled,
-        child: widget.child,
-      ),
+      child: widget.child,
     );
   }
 }

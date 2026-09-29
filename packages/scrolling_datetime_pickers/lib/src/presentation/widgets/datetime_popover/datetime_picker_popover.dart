@@ -1,7 +1,5 @@
 // packages/scrolling_datetime_pickers/lib/src/presentation/widgets/datetime_popover/datetime_picker_popover.dart
 
-// ignore_for_file: document_ignores
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:scrolling_datetime_pickers/src/core/constants/popover_constants.dart';
@@ -135,10 +133,8 @@ class DateTimePickerPopover {
     String timeFormat = PopoverConstants.defaultTimeFormat,
     bool showSeconds = true,
 
-    // ignore: comment_references
     /// Whether to preserve the seconds component of [initialDateTime].
     ///
-    // ignore: comment_references
     /// Only meaningful when [showSeconds] is `true`. When `false` seconds
     /// default to `0`.
     bool useCurrentSecond = false,

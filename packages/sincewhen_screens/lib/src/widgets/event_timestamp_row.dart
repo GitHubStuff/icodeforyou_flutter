@@ -58,52 +58,142 @@ class EventTimestampRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final timestamp = eventTimestamp;
+    debugPrint('timestamp $timestamp');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(fieldLabel, style: theme.textTheme.labelLarge),
-        const Gap(SinceWhenMiniDimensions.labelValueGap),
         Row(
           children: [
-            Expanded(
-              child: DateTimePickerField(
-                initialDateTime: timestamp == null
-                    ? null
-                    : DateTime.fromMicrosecondsSinceEpoch(timestamp),
-                onDateTimeSelected: _onDateTimeSelected,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: theme.colorScheme.outline,
-                    ),
-                    borderRadius: BorderRadius.circular(
-                      SinceWhenMiniDimensions.eventFieldBorderRadius,
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical:
-                          SinceWhenMiniDimensions.eventFieldVerticalPadding,
-                      horizontal:
-                          SinceWhenMiniDimensions.eventFieldHorizontalPadding,
-                    ),
-                    child: Text(
-                      TimestampDisplay.formatOrPlaceholder(timestamp),
-                      style: theme.textTheme.bodyLarge,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            if (timestamp != null)
-              IconButton(
-                icon: const Icon(Icons.clear),
-                tooltip: clearTooltip,
-                onPressed: onEventCleared,
-              ),
+            exps(theme: theme, timestamp: timestamp),
+            //exp(theme: theme, timestamp: timestamp),
+
+            // Expanded(
+            //   child: DateTimePickerField(
+            //     initialDateTime: timestamp == null
+            //         ? null
+            //         : DateTime.fromMicrosecondsSinceEpoch(timestamp),
+            //     onDateTimeSelected: _onDateTimeSelected,
+            //     child: DecoratedBox(
+            //       decoration: BoxDecoration(
+            //         border: Border.all(
+            //           color: theme.colorScheme.outline,
+            //         ),
+            //         borderRadius: BorderRadius.circular(
+            //           SinceWhenMiniDimensions.eventFieldBorderRadius,
+            //         ),
+            //       ),
+            //       child: Padding(
+            //         padding: const EdgeInsets.symmetric(
+            //           vertical:
+            //               SinceWhenMiniDimensions.eventFieldVerticalPadding,
+            //           horizontal:
+            //               SinceWhenMiniDimensions.eventFieldHorizontalPadding,
+            //         ),
+            //         child: Text(
+            //           TimestampDisplay.formatOrPlaceholder(timestamp),
+            //           style: theme.textTheme.bodyLarge,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            // if (timestamp != null)
+            //   IconButton(
+            //     icon: const Icon(Icons.clear),
+            //     tooltip: clearTooltip,
+            //     onPressed: onEventCleared,
+            //   ),
           ],
         ),
       ],
+    );
+  }
+
+  Widget exps({
+    required ThemeData theme,
+    required int? timestamp,
+  }) {
+    debugPrint('child $timestamp');
+    return Expanded(
+      child: DateTimePickerField(
+        initialDateTime: timestamp == null
+            ? null
+            : DateTime.fromMicrosecondsSinceEpoch(timestamp),
+        onDateTimeSelected: _onDateTimeSelected,
+        child: InputDecorator(
+          isEmpty: timestamp == null,
+          decoration: InputDecoration(
+            labelText: 'Date & time',
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            filled: true,
+            fillColor: theme.colorScheme.surface,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: theme.colorScheme.outline),
+              borderRadius: BorderRadius.circular(
+                SinceWhenMiniDimensions.eventFieldBorderRadius,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: theme.colorScheme.outline,
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(
+                SinceWhenMiniDimensions.eventFieldBorderRadius,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: SinceWhenMiniDimensions.eventFieldVerticalPadding,
+              horizontal: SinceWhenMiniDimensions.eventFieldHorizontalPadding,
+            ),
+            suffixIcon: timestamp == null
+                ? null
+                : IconButton(
+                    icon: const Icon(Icons.clear),
+                    tooltip: clearTooltip,
+                    onPressed: onEventCleared,
+                  ),
+          ),
+          child: Text(
+            TimestampDisplay.formatOrPlaceholder(timestamp),
+            style: theme.textTheme.bodyLarge,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget exp({
+    required ThemeData theme,
+    required int? timestamp,
+  }) {
+    return Expanded(
+      child: DateTimePickerField(
+        initialDateTime: timestamp == null
+            ? null
+            : DateTime.fromMicrosecondsSinceEpoch(timestamp),
+        onDateTimeSelected: _onDateTimeSelected,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: theme.colorScheme.outline,
+            ),
+            borderRadius: BorderRadius.circular(
+              SinceWhenMiniDimensions.eventFieldBorderRadius,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: SinceWhenMiniDimensions.eventFieldVerticalPadding,
+              horizontal: SinceWhenMiniDimensions.eventFieldHorizontalPadding,
+            ),
+            child: Text(
+              TimestampDisplay.formatOrPlaceholder(timestamp),
+              style: theme.textTheme.bodyLarge,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

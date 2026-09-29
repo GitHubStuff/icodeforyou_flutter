@@ -363,51 +363,89 @@ void main() {
       expect(find.text('Set'), findsOneWidget);
     });
 
-    testWidgets('should absorb pointer events when enabled', (tester) async {
-      bool childTapped = false;
+    testWidgets(
+      'should deliver taps to interactive descendants without opening the popover',
+      (tester) async {
+        var childTapped = false;
 
-      await tester.pumpWidget(
-        buildTestApp(
-          child: DateTimePickerField(
-            onDateTimeSelected: (_) {},
-            child: GestureDetector(
-              onTap: () => childTapped = true,
-              child: const Text('Tap Me'),
+        await tester.pumpWidget(
+          buildTestApp(
+            child: DateTimePickerField(
+              onDateTimeSelected: (_) {},
+              child: GestureDetector(
+                onTap: () => childTapped = true,
+                child: const Text('Tap Me'),
+              ),
             ),
           ),
-        ),
-      );
+        );
 
-      await tester.tap(find.byType(DateTimePickerField));
-      await tester.pumpAndSettle();
+        await tester.tap(find.text('Tap Me'));
+        await tester.pumpAndSettle();
 
-      // Child's onTap should not be called due to AbsorbPointer
-      expect(childTapped, isFalse);
-      // Popover should be shown instead
-      expect(find.text('Set'), findsOneWidget);
-    });
+        // The descendant wins the gesture arena: its handler fires and the
+        // field does not open the popover.
+        expect(childTapped, isTrue);
+        expect(find.text('Set'), findsNothing);
+      },
+    );
 
-    testWidgets('should not absorb pointer events when disabled', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        buildTestApp(
-          child: DateTimePickerField(
-            onDateTimeSelected: (_) {},
-            enabled: false,
-            child: const Text('Tap Me'),
+    testWidgets(
+      'should open popover when tapping outside an interactive descendant',
+      (tester) async {
+        var childTapped = false;
+
+        await tester.pumpWidget(
+          buildTestApp(
+            child: DateTimePickerField(
+              onDateTimeSelected: (_) {},
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: GestureDetector(
+                  onTap: () => childTapped = true,
+                  child: const Text('Tap Me'),
+                ),
+              ),
+            ),
           ),
-        ),
-      );
+        );
 
-      // When disabled, absorbing is false, so child can receive events
-      // But DateTimePickerField's GestureDetector still fires first
-      // and _showPopover returns early due to !widget.enabled
-      await tester.tap(find.byType(DateTimePickerField));
-      await tester.pumpAndSettle();
+        // Tap inside the field's padding, away from the descendant. The
+        // opaque hit-test behaviour makes this region the field's own.
+        final topLeft = tester.getTopLeft(find.byType(DateTimePickerField));
+        await tester.tapAt(topLeft + const Offset(4, 4));
+        await tester.pumpAndSettle();
 
-      // Popover should NOT be shown (disabled)
-      expect(find.text('Set'), findsNothing);
-    });
+        expect(childTapped, isFalse);
+        expect(find.text('Set'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'should deliver taps to interactive descendants when disabled',
+      (tester) async {
+        var childTapped = false;
+
+        await tester.pumpWidget(
+          buildTestApp(
+            child: DateTimePickerField(
+              onDateTimeSelected: (_) {},
+              enabled: false,
+              child: GestureDetector(
+                onTap: () => childTapped = true,
+                child: const Text('Tap Me'),
+              ),
+            ),
+          ),
+        );
+
+        await tester.tap(find.text('Tap Me'));
+        await tester.pumpAndSettle();
+
+        // Disabling the field never interferes with its child's own handling.
+        expect(childTapped, isTrue);
+        expect(find.text('Set'), findsNothing);
+      },
+    );
   });
 }
