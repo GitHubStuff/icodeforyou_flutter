@@ -14,6 +14,7 @@ dependencies:
   dependency_resolver: ^1.0.0
   flutter:
     sdk: flutter
+  mypickdf: ^1.0.0
   shared_preferences: ^2.5.5
   sincewhen_widgets: ^1.0.0
   splash_framework: ^1.0.0

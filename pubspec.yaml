@@ -16,12 +16,14 @@ workspace:
   - packages/color_grid
   - packages/custom_widgets
   - packages/data_grid
+  - packages/datetime_popover_pickers
   - packages/dependency_resolver
   - packages/extensions
   - packages/icodeforyou_lints
   - packages/infinite_scroll_picking
   - packages/infinite_scroll_picking_settings
   - packages/my_logger
+  - packages/mypickdf
   - packages/platform_utils
   - packages/prism_bubble_widget
   - packages/random_color_generator

@@ -6,12 +6,13 @@ import 'package:black_velvet/app_screens/shared_search_body.dart'
     show SharedSearchBody;
 import 'package:custom_widgets/custom_widgets.dart' show DefaultWelcomeScreen;
 import 'package:flutter/material.dart';
+import 'package:mypickdf/mypickdf.dart' show ArcheTypes;
 import 'package:sincewhen_widgets/sincewhen_widgets.dart' show GlossaryEditPage;
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
 /// Placeholder view for the library destination.
 /// TODO: Replace with the real screen, then delete this function.
-Widget _libraryView() => const Center(child: Text('Library'));
+//Widget _libraryView() => const Center(child: Text('Library'));
 
 /// {@template dock_destination_enum}
 /// The set of destinations available in the dock — and the only file
@@ -61,7 +62,8 @@ enum DockDestinationEnum implements NavigableDestinationAbstract {
   library(
     iconData: Icons.video_library_outlined,
     caption: 'Library',
-    viewBuilder: _libraryView,
+    //viewBuilder: _libraryView,
+    viewBuilder: ArcheTypes.new,
   ),
 
   /// The settings destination.

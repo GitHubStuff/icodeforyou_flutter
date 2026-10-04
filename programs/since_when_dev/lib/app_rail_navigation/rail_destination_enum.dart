@@ -5,6 +5,7 @@ import 'package:app_navigation/app_navigation.dart'
 import 'package:custom_widgets/custom_widgets.dart'
     show DefaultWelcomeScreen, IceChip;
 import 'package:flutter/material.dart';
+import 'package:mypickdf/mypickdf.dart' show ArcheTypes;
 import 'package:sincewhen_widgets/sincewhen_widgets.dart';
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
@@ -21,7 +22,7 @@ Widget _searchView() => Center(
 
 /// Placeholder view for the library destination.
 /// TODO: Replace with the real screen, then delete this function.
-Widget _libraryView() => const Center(child: Text('Library'));
+//Widget _libraryView() => const Center(child: Text('Library'));
 
 /// {@template rail_destination_enum}
 /// The set of destinations available in the rail — and the only file
@@ -71,7 +72,8 @@ enum RailDestinationEnum implements NavigableDestinationAbstract {
   library(
     iconData: Icons.video_library_outlined,
     caption: 'Library',
-    viewBuilder: _libraryView,
+    //viewBuilder: _libraryView,
+    viewBuilder: ArcheTypes.new,
   ),
 
   /// The settings destination.

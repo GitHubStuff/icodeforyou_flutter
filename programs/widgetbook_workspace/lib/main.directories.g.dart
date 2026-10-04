@@ -135,6 +135,8 @@ import 'package:widgetbook_workspace/packages/remind_me/remind_me.usecase.dart'
     as _widgetbook_workspace_packages_remind_me_remind_me_usecase;
 import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/lib/src/presentation/widgets/datetime_popover/datetime_picker_field.usecase.dart'
     as _widgetbook_workspace_packages_scrolling_datetime_pickers_lib_src_presentation_widgets_datetime_popover_datetime_picker_field_usecase;
+import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/lib/src/presentation/widgets/datetime_popover/datetime_picker_field_decorated.usecase.dart'
+    as _widgetbook_workspace_packages_scrolling_datetime_pickers_lib_src_presentation_widgets_datetime_popover_datetime_picker_field_decorated_usecase;
 import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/lib/src/presentation/widgets/datetime_popover/datetime_picker_popover.usecase.dart'
     as _widgetbook_workspace_packages_scrolling_datetime_pickers_lib_src_presentation_widgets_datetime_popover_datetime_picker_popover_usecase;
 import 'package:widgetbook_workspace/packages/scrolling_datetime_pickers/lib/src/presentation/widgets/scrolling_date_picker.usecase.dart'
@@ -1026,10 +1028,34 @@ final directories = <_widgetbook.WidgetbookNode>[
                 name: 'DateTimePickerField',
                 useCases: [
                   _widgetbook.WidgetbookUseCase(
-                    name: 'Default',
+                    name: 'Decorated Gallery',
+                    builder:
+                        _widgetbook_workspace_packages_scrolling_datetime_pickers_lib_src_presentation_widgets_datetime_popover_datetime_picker_field_decorated_usecase
+                            .dateTimePickerFieldDecoratedGallery,
+                  ),
+                  _widgetbook.WidgetbookUseCase(
+                    name: 'Decorated Interactive',
+                    builder:
+                        _widgetbook_workspace_packages_scrolling_datetime_pickers_lib_src_presentation_widgets_datetime_popover_datetime_picker_field_decorated_usecase
+                            .dateTimePickerFieldDecoratedInteractive,
+                  ),
+                  _widgetbook.WidgetbookUseCase(
+                    name: 'Decorated Variants',
+                    builder:
+                        _widgetbook_workspace_packages_scrolling_datetime_pickers_lib_src_presentation_widgets_datetime_popover_datetime_picker_field_decorated_usecase
+                            .dateTimePickerFieldDecoratedVariants,
+                  ),
+                  _widgetbook.WidgetbookUseCase(
+                    name: 'Interactive',
                     builder:
                         _widgetbook_workspace_packages_scrolling_datetime_pickers_lib_src_presentation_widgets_datetime_popover_datetime_picker_field_usecase
-                            .dateTimePickerFieldUseCase,
+                            .dateTimePickerFieldInteractive,
+                  ),
+                  _widgetbook.WidgetbookUseCase(
+                    name: 'Option Gallery',
+                    builder:
+                        _widgetbook_workspace_packages_scrolling_datetime_pickers_lib_src_presentation_widgets_datetime_popover_datetime_picker_field_usecase
+                            .dateTimePickerFieldOptionGallery,
                   ),
                 ],
               ),

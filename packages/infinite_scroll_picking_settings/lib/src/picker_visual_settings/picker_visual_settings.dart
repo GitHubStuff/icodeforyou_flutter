@@ -26,6 +26,7 @@ abstract class PickerVisualSettings with _$PickerVisualSettings {
     'frameHorizontalPadding >= 0',
     'frameHorizontalPadding must be >= 0',
   )
+  /// Visual and behavioral configuration for the wheel itself.
   @Assert('frameVerticalPadding >= 0', 'frameVerticalPadding must be >= 0')
   const factory PickerVisualSettings({
     /// Visual and behavioral configuration for the wheel itself.

@@ -1,7 +1,14 @@
 // packages/scrolling_datetime_pickers/lib/src/presentation/widgets/datetime_popover/datetime_picker_field.dart
 
 import 'package:flutter/material.dart';
-import 'package:scrolling_datetime_pickers/scrolling_datetime_pickers.dart' show DateTimeOption, DateTimePickerPopover, DividerConfiguration, FadeConfiguration, PopoverConstants;
+import 'package:scrolling_datetime_pickers/scrolling_datetime_pickers.dart'
+    show
+        DateTimeOption,
+        DateTimePickerDecorator,
+        DateTimePickerPopover,
+        DividerConfiguration,
+        FadeConfiguration,
+        PopoverConstants;
 
 /// A convenience wrapper that presents a [DateTimePickerPopover] anchored to
 /// itself when tapped.
@@ -53,6 +60,96 @@ class DateTimePickerField extends StatefulWidget {
     this.dayAscending = true,
     this.enabled = true,
   });
+
+  /// Creates a [DateTimePickerField] whose [child] is a
+  /// [DateTimePickerDecorator] rendering [initialDateTime] under [labelText].
+  ///
+  /// [initialDateTime], [option], [showSeconds] and [enabled] are passed to
+  /// both the field and the decorator so the displayed value, the exposed
+  /// columns and the enabled state cannot drift apart.
+  ///
+  /// [onCleared], [placeholder], [clearTooltip] and [formatter] configure
+  /// the decorator only; when [onCleared] is `null` no clear button is
+  /// rendered. All other parameters behave exactly as on the unnamed
+  /// constructor.
+  factory DateTimePickerField.decorated({
+    required ValueChanged<DateTime?> onDateTimeSelected,
+    required String labelText,
+    Key? key,
+    DateTime? initialDateTime,
+    DateTimeOption option = DateTimeOption.dateTime,
+    String dateFormat = PopoverConstants.defaultDateFormat,
+    String timeFormat = PopoverConstants.defaultTimeFormat,
+    bool showSeconds = true,
+    Color popoverBackgroundColor =
+        PopoverConstants.defaultPopoverBackgroundColor,
+    Color dateButtonColor = PopoverConstants.defaultDateButtonColor,
+    Color timeButtonColor = PopoverConstants.defaultTimeButtonColor,
+    Color? pickerBackgroundColor,
+    TextStyle? dateButtonTextStyle,
+    TextStyle? timeButtonTextStyle,
+    TextStyle? headerDateTextStyle,
+    TextStyle? headerTimeTextStyle,
+    TextStyle? dateStyle,
+    TextStyle? timeStyle,
+    Widget? confirmWidget,
+    Color confirmButtonColor = PopoverConstants.defaultConfirmButtonColor,
+    String confirmButtonText = PopoverConstants.defaultConfirmButtonText,
+    TextStyle? confirmButtonTextStyle,
+    Size? portraitPickerSize,
+    Size? landscapePickerSize,
+    DividerConfiguration? dividerConfiguration,
+    FadeConfiguration? fadeConfiguration,
+    bool enableHaptics = true,
+    bool dayAscending = true,
+    bool enabled = true,
+    VoidCallback? onCleared,
+    String placeholder = 'Tap to select',
+    String clearTooltip = 'Clear',
+    String Function(DateTime value)? formatter,
+  }) {
+    return DateTimePickerField(
+      key: key,
+      onDateTimeSelected: onDateTimeSelected,
+      initialDateTime: initialDateTime,
+      option: option,
+      dateFormat: dateFormat,
+      timeFormat: timeFormat,
+      showSeconds: showSeconds,
+      popoverBackgroundColor: popoverBackgroundColor,
+      dateButtonColor: dateButtonColor,
+      timeButtonColor: timeButtonColor,
+      pickerBackgroundColor: pickerBackgroundColor,
+      dateButtonTextStyle: dateButtonTextStyle,
+      timeButtonTextStyle: timeButtonTextStyle,
+      headerDateTextStyle: headerDateTextStyle,
+      headerTimeTextStyle: headerTimeTextStyle,
+      dateStyle: dateStyle,
+      timeStyle: timeStyle,
+      confirmWidget: confirmWidget,
+      confirmButtonColor: confirmButtonColor,
+      confirmButtonText: confirmButtonText,
+      confirmButtonTextStyle: confirmButtonTextStyle,
+      portraitPickerSize: portraitPickerSize,
+      landscapePickerSize: landscapePickerSize,
+      dividerConfiguration: dividerConfiguration,
+      fadeConfiguration: fadeConfiguration,
+      enableHaptics: enableHaptics,
+      dayAscending: dayAscending,
+      enabled: enabled,
+      child: DateTimePickerDecorator(
+        value: initialDateTime,
+        option: option,
+        labelText: labelText,
+        showSeconds: showSeconds,
+        enabled: enabled,
+        placeholder: placeholder,
+        clearTooltip: clearTooltip,
+        onCleared: onCleared,
+        formatter: formatter,
+      ),
+    );
+  }
 
   /// The widget that the user taps to open the date/time popover.
   final Widget child;

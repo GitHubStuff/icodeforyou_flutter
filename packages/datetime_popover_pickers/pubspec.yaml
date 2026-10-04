@@ -1,0 +1,20 @@
+# packages/datetime_popover_pickers/pubspec.yaml
+name: datetime_popover_pickers
+description: "Cupertino Date Time Pickers Widget"
+publish_to: none
+resolution: workspace
+version: 1.0.0
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  gap: ^3.0.1
+  intl: ^0.20.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0

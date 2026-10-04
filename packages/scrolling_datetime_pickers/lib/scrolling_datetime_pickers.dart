@@ -7,6 +7,8 @@ export 'src/core/enums/datetime_option.dart';
 // Models
 export 'src/core/models/divider_configuration.dart';
 export 'src/core/models/fade_configuration.dart';
+export 'src/presentation/widgets/datetime_popover/datetime_picker_decorator.dart'
+    show DateTimePickerDecorator;
 export 'src/presentation/widgets/datetime_popover/datetime_picker_field.dart';
 // DateTime Popover
 export 'src/presentation/widgets/datetime_popover/datetime_picker_popover.dart';

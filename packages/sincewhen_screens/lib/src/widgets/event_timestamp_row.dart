@@ -1,7 +1,6 @@
 // packages/sincewhen_screens/lib/src/widgets/event_timestamp_row.dart
 
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:scrolling_datetime_pickers/scrolling_datetime_pickers.dart'
     show DateTimePickerField;
 import 'package:sincewhen_screens/src/util/sincewhen_mini_constants.dart'
@@ -65,55 +64,17 @@ class EventTimestampRow extends StatelessWidget {
         Row(
           children: [
             exps(theme: theme, timestamp: timestamp),
-            //exp(theme: theme, timestamp: timestamp),
-
-            // Expanded(
-            //   child: DateTimePickerField(
-            //     initialDateTime: timestamp == null
-            //         ? null
-            //         : DateTime.fromMicrosecondsSinceEpoch(timestamp),
-            //     onDateTimeSelected: _onDateTimeSelected,
-            //     child: DecoratedBox(
-            //       decoration: BoxDecoration(
-            //         border: Border.all(
-            //           color: theme.colorScheme.outline,
-            //         ),
-            //         borderRadius: BorderRadius.circular(
-            //           SinceWhenMiniDimensions.eventFieldBorderRadius,
-            //         ),
-            //       ),
-            //       child: Padding(
-            //         padding: const EdgeInsets.symmetric(
-            //           vertical:
-            //               SinceWhenMiniDimensions.eventFieldVerticalPadding,
-            //           horizontal:
-            //               SinceWhenMiniDimensions.eventFieldHorizontalPadding,
-            //         ),
-            //         child: Text(
-            //           TimestampDisplay.formatOrPlaceholder(timestamp),
-            //           style: theme.textTheme.bodyLarge,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            // if (timestamp != null)
-            //   IconButton(
-            //     icon: const Icon(Icons.clear),
-            //     tooltip: clearTooltip,
-            //     onPressed: onEventCleared,
-            //   ),
           ],
         ),
       ],
     );
   }
 
+  /// Widget to display expanded time stamp
   Widget exps({
     required ThemeData theme,
     required int? timestamp,
   }) {
-    debugPrint('child $timestamp');
     return Expanded(
       child: DateTimePickerField(
         initialDateTime: timestamp == null
@@ -157,40 +118,6 @@ class EventTimestampRow extends StatelessWidget {
           child: Text(
             TimestampDisplay.formatOrPlaceholder(timestamp),
             style: theme.textTheme.bodyLarge,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget exp({
-    required ThemeData theme,
-    required int? timestamp,
-  }) {
-    return Expanded(
-      child: DateTimePickerField(
-        initialDateTime: timestamp == null
-            ? null
-            : DateTime.fromMicrosecondsSinceEpoch(timestamp),
-        onDateTimeSelected: _onDateTimeSelected,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: theme.colorScheme.outline,
-            ),
-            borderRadius: BorderRadius.circular(
-              SinceWhenMiniDimensions.eventFieldBorderRadius,
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: SinceWhenMiniDimensions.eventFieldVerticalPadding,
-              horizontal: SinceWhenMiniDimensions.eventFieldHorizontalPadding,
-            ),
-            child: Text(
-              TimestampDisplay.formatOrPlaceholder(timestamp),
-              style: theme.textTheme.bodyLarge,
-            ),
           ),
         ),
       ),
