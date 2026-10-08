@@ -31,6 +31,33 @@ extension DateTimeExt on DateTime {
   /// Whether [year] falls on a Gregorian leap year.
   bool get isLeapYear => year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
 
+  /// Returns `true` when the absolute distance between `this` and [other]
+  /// is less than or equal to [tolerance].
+  ///
+  /// The check is symmetric: `a.isWithin(b, tolerance: t)` yields the same
+  /// result as `b.isWithin(a, tolerance: t)`. Both instants are compared on
+  /// the absolute timeline, so mixing UTC and local [DateTime]s is safe.
+  ///
+  /// Throws an [ArgumentError] when [tolerance] is negative.
+  bool isWithin(
+    DateTime other, {
+    Duration tolerance = const Duration(
+      microseconds: 250,
+    ),
+  }) {
+    if (tolerance.isNegative) {
+      throw ArgumentError.value(
+        tolerance,
+        'tolerance',
+        'must be zero or positive',
+      );
+    }
+
+    final distance = difference(other).abs();
+
+    return distance <= tolerance;
+  }
+
   /// Returns the number of microseconds from this [DateTime] until the start
   /// of the next [unit] boundary.
   ///

@@ -5,7 +5,8 @@ import 'package:intl/intl.dart' show DateFormat;
 
 /// Refined 12-hour time picker with hour, minute, optional second, and AM/PM
 /// wheels, composed from [CupertinoPicker] columns sharing one selection
-/// overlay. All geometry derives from [size].
+/// overlay. Row geometry derives from [size]; column widths derive from the
+/// measured width of each column's widest label.
 class TimePicker extends StatefulWidget {
   /// Constructor
   const TimePicker({
@@ -20,7 +21,7 @@ class TimePicker extends StatefulWidget {
   /// The initial time (hours, minutes and seconds are read from it)
   final DateTime? initialTime;
 
-  /// Size preset controlling font size, row height, and box dimensions
+  /// Size preset controlling font size, row height, and column padding
   final PickerSize size;
 
   /// Whether the seconds wheel is shown. When `false` the emitted time
@@ -42,8 +43,10 @@ class _TimePickerState extends State<TimePicker> {
   static const int _hoursOnClock = 12;
   static const int _minutesPerHour = 60;
   static const int _secondsPerMinute = 60;
-  static const int _baseColumnCount = 3;
   static const List<String> _periods = ['AM', 'PM'];
+
+  /// Widest two-digit sample in virtually every Latin typeface.
+  static const String _widestTwoDigits = '88';
 
   late DateTime _currentTime;
   late int _hour12;
@@ -90,9 +93,6 @@ class _TimePickerState extends State<TimePicker> {
     return isPm ? base + _hoursOnClock : base;
   }
 
-  int get _columnCount =>
-      widget.showSeconds ? _baseColumnCount + 1 : _baseColumnCount;
-
   void _emit() {
     setState(() {
       _currentTime = DateTime(
@@ -134,15 +134,34 @@ class _TimePickerState extends State<TimePicker> {
           .merge(widget.textStyle)
           .merge(widget.size.textStyle);
 
+  static double _measure(
+    BuildContext context,
+    String text,
+    TextStyle style,
+  ) {
+    final painter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+    )..layout();
+    final width = painter.width;
+    painter.dispose();
+    return width;
+  }
+
+  double _columnWidth(BuildContext context, TextStyle style, String widest) =>
+      widget.size.columnWidthFor(_measure(context, widest, style));
+
   Widget _column({
     required FixedExtentScrollController controller,
     required int itemCount,
     required String Function(int index) label,
     required ValueChanged<int> onChanged,
     required TextStyle style,
+    required double width,
     bool looping = true,
   }) => SizedBox(
-    width: widget.size.columnWidth,
+    width: width,
     child: CupertinoPicker(
       scrollController: controller,
       itemExtent: widget.size.itemExtent,
@@ -156,38 +175,49 @@ class _TimePickerState extends State<TimePicker> {
     ),
   );
 
-  List<Widget> _columns(TextStyle style) => [
-    _column(
-      controller: _hourController,
-      itemCount: _hoursOnClock,
-      label: (index) => '${index + 1}',
-      onChanged: _onHourChanged,
-      style: style,
-    ),
-    _column(
-      controller: _minuteController,
-      itemCount: _minutesPerHour,
-      label: _twoDigits,
-      onChanged: _onMinuteChanged,
-      style: style,
-    ),
-    if (widget.showSeconds)
+  List<Widget> _columns(BuildContext context, TextStyle style) {
+    final digitsWidth = _columnWidth(context, style, _widestTwoDigits);
+    final periodWidth = _periods
+        .map((period) => _columnWidth(context, style, period))
+        .reduce((a, b) => a > b ? a : b);
+
+    return [
       _column(
-        controller: _secondController,
-        itemCount: _secondsPerMinute,
-        label: _twoDigits,
-        onChanged: _onSecondChanged,
+        controller: _hourController,
+        itemCount: _hoursOnClock,
+        label: (index) => '${index + 1}',
+        onChanged: _onHourChanged,
         style: style,
+        width: digitsWidth,
       ),
-    _column(
-      controller: _periodController,
-      itemCount: _periods.length,
-      label: (index) => _periods[index],
-      onChanged: _onPeriodChanged,
-      style: style,
-      looping: false,
-    ),
-  ];
+      _column(
+        controller: _minuteController,
+        itemCount: _minutesPerHour,
+        label: _twoDigits,
+        onChanged: _onMinuteChanged,
+        style: style,
+        width: digitsWidth,
+      ),
+      if (widget.showSeconds)
+        _column(
+          controller: _secondController,
+          itemCount: _secondsPerMinute,
+          label: _twoDigits,
+          onChanged: _onSecondChanged,
+          style: style,
+          width: digitsWidth,
+        ),
+      _column(
+        controller: _periodController,
+        itemCount: _periods.length,
+        label: (index) => _periods[index],
+        onChanged: _onPeriodChanged,
+        style: style,
+        width: periodWidth,
+        looping: false,
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -195,17 +225,21 @@ class _TimePickerState extends State<TimePicker> {
 
     return SizedBox(
       height: widget.size.height,
-      width: widget.size.widthFor(_columnCount),
       child: Stack(
         children: [
-          Center(
-            child: SizedBox(
-              height: widget.size.itemExtent,
-              width: double.infinity,
-              child: const CupertinoPickerDefaultSelectionOverlay(),
+          Positioned.fill(
+            child: Center(
+              child: SizedBox(
+                height: widget.size.itemExtent,
+                width: double.infinity,
+                child: const CupertinoPickerDefaultSelectionOverlay(),
+              ),
             ),
           ),
-          Row(children: _columns(style)),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: _columns(context, style),
+          ),
         ],
       ),
     );

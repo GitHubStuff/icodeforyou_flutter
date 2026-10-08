@@ -21,7 +21,7 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.15.1    # dart run build_runner build
-  drift_dev: '>=2.34.0 <2.34.5' # analyzer ^13 in 2.34.5 conflicts with freezed 3.2.5 (workspace)
+  drift_dev: ^2.35.1 # analyzer ^13 in 2.34.5 conflicts with freezed 3.2.5 (workspace)
   flutter_test:
     sdk: flutter
   get_it: ^9.2.1

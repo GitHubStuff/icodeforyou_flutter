@@ -10,6 +10,7 @@ environment:
 
 dependencies:
   datetime_popover_pickers: ^1.0.0
+  extensions: ^1.0.4
   flutter:
     sdk: flutter
   gap: ^3.0.1

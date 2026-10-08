@@ -7,6 +7,7 @@ import 'package:black_velvet/app_screens/shared_search_body.dart'
 import 'package:custom_widgets/custom_widgets.dart' show DefaultWelcomeScreen;
 import 'package:flutter/material.dart';
 import 'package:mypickdf/mypickdf.dart' show ArcheTypes;
+import 'package:ping_pong/example/ping_pong_example.dart' show PingPongExample;
 import 'package:sincewhen_widgets/sincewhen_widgets.dart' show GlossaryEditPage;
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
@@ -63,7 +64,8 @@ enum DockDestinationEnum implements NavigableDestinationAbstract {
     iconData: Icons.video_library_outlined,
     caption: 'Library',
     //viewBuilder: _libraryView,
-    viewBuilder: ArcheTypes.new,
+    //viewBuilder: ArcheTypes.new,
+    viewBuilder: PingPongExample.new,
   ),
 
   /// The settings destination.

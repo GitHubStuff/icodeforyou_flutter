@@ -112,6 +112,8 @@ import 'package:widgetbook_workspace/packages/infinite_scroll_picking/lib/src/in
     as infinite_scroll_picking_lib_src_infinite_scroll_picker;
 import 'package:widgetbook_workspace/packages/infinite_scroll_picking_settings/settings_screen.usecase.dart'
     as infinite_scroll_picking_settings_settings_screen;
+import 'package:widgetbook_workspace/packages/ping_pong/ping_pong.usecase.dart'
+    as ping_pong_ping_pong;
 import 'package:widgetbook_workspace/packages/prism_bubble_widget/animated_prism_bubble.usecase.dart'
     as prism_bubble_widget_animated_prism_bubble;
 import 'package:widgetbook_workspace/packages/prism_bubble_widget/dynamic_prism_bubble.usecase.dart'
@@ -721,6 +723,20 @@ final directories = <WidgetbookNode>[
             name: 'Default',
             builder: infinite_scroll_picking_settings_settings_screen
                 .settingsScreenUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  WidgetbookFolder(
+    name: 'ping_pong',
+    children: [
+      WidgetbookComponent(
+        name: 'PingPong',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Interactive',
+            builder: ping_pong_ping_pong.interactivePingPong,
           ),
         ],
       ),

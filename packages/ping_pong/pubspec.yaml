@@ -1,0 +1,23 @@
+# packages/ping_pong/pubspec.yaml
+name: ping_pong
+description: "Ping Style Animated Widget"
+publish_to: none
+resolution: workspace
+version: 1.0.0
+
+environment:
+  sdk: ^3.12.0
+
+
+dependencies:
+  duration_widget: ^1.0.0
+  equatable: ^2.1.0
+  extensions: ^1.0.0
+  flutter:
+    sdk: flutter
+  meta: ^1.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0

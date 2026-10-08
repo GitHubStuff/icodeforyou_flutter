@@ -11,6 +11,7 @@ dependencies:
   analog_clock_widget: ^1.0.0
   animated_widgets: ^1.0.0
   app_preferences: ^1.0.0
+  audioplayers: ^6.8.1
   color_grid: ^1.0.0
   custom_widgets: ^1.0.0
   data_grid: ^1.0.0
@@ -24,6 +25,7 @@ dependencies:
   infinite_scroll_picking: ^1.0.0
   infinite_scroll_picking_settings: ^1.0.0
   oktoast: ^3.4.0    # instead of debugPrint  
+  ping_pong: ^1.0.0
   prism_bubble_widget: ^1.0.0
   random_color_generator: ^1.0.0
   remind_me: ^1.0.0
@@ -52,3 +54,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/sounds/evict.wav

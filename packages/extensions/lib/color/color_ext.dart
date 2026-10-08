@@ -1,5 +1,5 @@
 // packages/extensions/lib/color/color_ext.dart
-import 'package:flutter/painting.dart';
+import 'package:flutter/material.dart' show Brightness, Color, ThemeData;
 
 /// Extensions on [Color] providing equality, contrast, and integer conversion.
 extension ColorExt on Color {
@@ -10,7 +10,7 @@ extension ColorExt on Color {
   /// Returns white or black depending on which has better contrast
   /// against this color.
   Color contrastingColor({Color? forDark, Color? forLight}) =>
-      computeLuminance() > 0.5
+      ThemeData.estimateBrightnessForColor(this) == Brightness.light
       ? forLight ?? const Color(0xFF000000)
       : forDark ?? const Color(0xFFFFFFFF);
 
