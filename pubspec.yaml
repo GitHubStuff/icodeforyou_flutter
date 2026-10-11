@@ -25,6 +25,7 @@ workspace:
   - packages/infinite_scroll_picking_settings
   - packages/my_logger
   - packages/mypickdf
+  - packages/neon
   - packages/ping_pong
   - packages/platform_utils
   - packages/prism_bubble_widget

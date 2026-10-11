@@ -4,6 +4,7 @@ import 'package:duration_widget/duration_widget.dart'
     show TickingDurationWidget;
 import 'package:extensions/extensions.dart' show ColorExt;
 import 'package:flutter/material.dart';
+import 'package:neon/neon.dart';
 
 /// A centred caption/detail pair that always fits inside a circle of
 /// [radius]: over-long strings are truncated with an ellipsis, and when the
@@ -51,13 +52,19 @@ class TitleSubtitleText extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                title,
+              const NeonText(
+                'GYM',
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: baseStyle.copyWith(fontSize: titleFontSize),
-              ),
+                color: Colors.green,
+                distance: .45,
+              ).withNeonBorder(color: Colors.blueGrey),
+              // Text(
+              //   title,1
+              //   maxLines: 1,
+              //   overflow: TextOverflow.ellipsis,
+              //   textAlign: TextAlign.center,
+              //   style: baseStyle.copyWith(fontSize: titleFontSize),
+              // ),
               TickingDurationWidget(
                 eventTime: DateTime(1960, 3),
                 currentTime: DateTime(2026, 9),
@@ -67,7 +74,7 @@ class TitleSubtitleText extends StatelessWidget {
                 Text(
                   caption!,
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.fade,
                   textAlign: TextAlign.center,
                   style: baseStyle.copyWith(fontSize: captionFontSize),
                 ),

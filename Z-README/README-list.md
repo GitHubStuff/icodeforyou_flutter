@@ -1,7 +1,7 @@
 404HotFound
 Abby Lovee7 - 53
 Alisa Wonderland
-Angelica Heaven
+Angelica Heaven - 73
 Ariana Lopes
 Arisha Mills
 AvaDyson
@@ -18,11 +18,15 @@ Jenny Kitty
 Julie Jesse
 Kisselka
 Kukupaiii
-Labonitas
+Kuporovaa Krupa - 150
+Labonitas - 109
 Lana Myers - 159
-Lilly Cute
+Lilly Cute - 200+
 Lizzy Wild
 Loly Lips
+Luna Berg - 152
+Magdalene Delight - X
+MaryCandy - 200+
 Melanie Queen - 198 / Sweety Titties
 Mila Solana - 77
 Milfetta
@@ -38,5 +42,6 @@ Solazola - 61
 Space Lady
 Spirite Moon - 33 [ugly tats]
 Vesperessa - X
+Yuiwoo - 72
 Zoey Di Giacomo - 12
 Zoe Nell - X
