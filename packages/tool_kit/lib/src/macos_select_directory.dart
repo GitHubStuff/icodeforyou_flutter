@@ -1,4 +1,5 @@
 // packages/tool_kit/lib/src/macos_select_directory.dart
+import 'dart:async';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -64,20 +65,32 @@ class _MacOSSelectDirectoryState extends State<MacOSSelectDirectory> {
   String? _selectedPath;
   bool _isLoading = false;
 
-  Future<void> _pickDirectory() async {
+  /// Synchronous tap handler.
+  ///
+  /// Performs the platform guard synchronously so an [UnsupportedError]
+  /// propagates through the gesture system and is reported via
+  /// [FlutterError.onError], then hands off to the asynchronous picker.
+  void _onPressed() {
+    _assertMacOS();
+    unawaited(_pickDirectory());
+  }
+
+  void _assertMacOS() {
     final bool isMacOS = widget.isMacOSOverride != null
         ? widget.isMacOSOverride!()
         : Platform.isMacOS;
 
-    if (!isMacOS) {
-      final String os = widget.operatingSystemOverride != null
-          ? widget.operatingSystemOverride!()
-          : Platform.operatingSystem;
-      throw UnsupportedError(
-        'MacOSSelectDirectory is only supported on macOS, not platform: $os',
-      );
-    }
+    if (isMacOS) return;
 
+    final String os = widget.operatingSystemOverride != null
+        ? widget.operatingSystemOverride!()
+        : Platform.operatingSystem;
+    throw UnsupportedError(
+      'MacOSSelectDirectory is only supported on macOS, not platform: $os',
+    );
+  }
+
+  Future<void> _pickDirectory() async {
     setState(() => _isLoading = true);
 
     try {
@@ -87,12 +100,17 @@ class _MacOSSelectDirectoryState extends State<MacOSSelectDirectory> {
         initialDirectory: widget.initialDirectory,
       );
 
-      if (selectedPath != null) {
-        setState(() => _selectedPath = selectedPath);
-        widget.onDirectorySelected(Directory(selectedPath));
-      } else {
+      // The widget may have been removed while the native sheet was open.
+      // There is nothing left to update and no owner to notify.
+      if (!mounted) return;
+
+      if (selectedPath == null) {
         widget.onCancel?.call();
+        return;
       }
+
+      setState(() => _selectedPath = selectedPath);
+      widget.onDirectorySelected(Directory(selectedPath));
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
@@ -107,7 +125,7 @@ class _MacOSSelectDirectoryState extends State<MacOSSelectDirectory> {
       mainAxisSize: MainAxisSize.min,
       children: [
         CupertinoButton.filled(
-          onPressed: _isLoading ? null : _pickDirectory,
+          onPressed: _isLoading ? null : _onPressed,
           child: _isLoading
               ? const CupertinoActivityIndicator(
                   color: CupertinoColors.white,

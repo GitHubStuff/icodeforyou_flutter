@@ -1,19 +1,20 @@
 // programs/since_when_dev/lib/app_rail_navigation/rail_destination_enum.dart
 
+// NOTE: This is the vertical direction menu items
+
 import 'package:app_navigation/app_navigation.dart'
     show NavigableDestinationAbstract;
 import 'package:custom_widgets/custom_widgets.dart'
     show DefaultWelcomeScreen, IceChip;
 import 'package:flutter/material.dart';
-import 'package:mypickdf/mypickdf.dart' show ArcheTypes;
-import 'package:sincewhen_widgets/sincewhen_widgets.dart';
+import 'package:sincewhen_widgets/sincewhen_widgets.dart' show GlossaryEditPage;
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
 /// Placeholder view for the search destination.
 /// TODO: Replace with the real screen, then delete this function.
 Widget _searchView() => Center(
   child: IceChip(
-    const Text('Sample'),
+    const Text('Rail'),
     backgroundColor: Colors.purpleAccent,
     showBorder: true,
     onPress: () {},
@@ -21,8 +22,7 @@ Widget _searchView() => Center(
 );
 
 /// Placeholder view for the library destination.
-/// TODO: Replace with the real screen, then delete this function.
-//Widget _libraryView() => const Center(child: Text('Library'));
+Widget _libraryView() => const Center(child: Text('Library'));
 
 /// {@template rail_destination_enum}
 /// The set of destinations available in the rail — and the only file
@@ -72,8 +72,7 @@ enum RailDestinationEnum implements NavigableDestinationAbstract {
   library(
     iconData: Icons.video_library_outlined,
     caption: 'Library',
-    //viewBuilder: _libraryView,
-    viewBuilder: ArcheTypes.new,
+    viewBuilder: _libraryView,
   ),
 
   /// The settings destination.

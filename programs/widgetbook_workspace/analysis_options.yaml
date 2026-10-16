@@ -8,6 +8,7 @@ analyzer:
     avoid_types_on_closure_parameters: ignore
     comment_references: ignore
     depend_on_referenced_packages: ignore
+    implementation_imports: ignore
     invalid_use_of_visible_for_testing_member: ignore
     library_private_types_in_public_api: ignore
     lines_longer_than_80_chars: ignore

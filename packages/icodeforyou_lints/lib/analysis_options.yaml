@@ -21,4 +21,4 @@ analyzer:
 
 linter:
   rules:
-    # Relaxed rules if needed (none for now - keeping strict)
+    - flutter_style_todos

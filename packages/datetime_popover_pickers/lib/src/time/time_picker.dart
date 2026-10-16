@@ -1,7 +1,6 @@
 // packages/datetime_popover_pickers/lib/src/time/time_picker.dart
 import 'package:datetime_popover_pickers/src/picker_size.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart' show DateFormat;
 
 /// Refined 12-hour time picker with hour, minute, optional second, and AM/PM
 /// wheels, composed from [CupertinoPicker] columns sharing one selection
@@ -248,17 +247,3 @@ class _TimePickerState extends State<TimePicker> {
 
 /// Formats a [DateTime] as `1:47:22 AM`, or `1:47 AM` when seconds are
 /// hidden.
-class TimeLabelFormatter {
-  /// Creates a [TimeLabelFormatter].
-  const TimeLabelFormatter({required this.showSeconds});
-
-  /// Whether seconds are included in the formatted output.
-  final bool showSeconds;
-
-  static final DateFormat _withSeconds = DateFormat('h:mm:ss a');
-  static final DateFormat _withoutSeconds = DateFormat('h:mm a');
-
-  /// Returns [time] rendered as 12-hour clock with AM/PM.
-  String format(DateTime time) =>
-      (showSeconds ? _withSeconds : _withoutSeconds).format(time);
-}

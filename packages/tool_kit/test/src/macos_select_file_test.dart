@@ -1,315 +1,487 @@
 // packages/tool_kit/test/src/macos_select_file_test.dart
 import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tool_kit/src/macos_select_file.dart';
+import 'package:tool_kit/src/macos_select_file.dart'
+    show FilePickerFn, MacOSSelectFile;
 
-/// Concrete subtype of [PlatformFile] for test assertions.
-final class _TestPlatformFile extends PlatformFile {
-  _TestPlatformFile({
-    required this.name,
-    required this.size,
-    this.path,
-  });
+/// Minimal concrete [PlatformFile] for tests.
+///
+/// [PlatformFile] is `abstract base`, so it must be extended rather than
+/// instantiated or implemented. Only [name] and [path] are consulted by
+/// [MacOSSelectFile]; everything else is stubbed.
+final class _FakePlatformFile extends PlatformFile {
+  _FakePlatformFile({required this.name, this.path});
+
   @override
   final String name;
-
-  final int size;
 
   @override
   final String? path;
 
   @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+  Uri get uri => Uri.file(path ?? name);
+
+  @override
+  Never get xFile => throw UnimplementedError('xFile is not used in tests');
+
+  @override
+  Future<int> length() async => 0;
+
+  @override
+  int? lengthSync() => 0;
+
+  @override
+  Future<Uint8List> readAsBytes() async => Uint8List(0);
+
+  @override
+  Stream<Uint8List> readAsByteStream() => const Stream<Uint8List>.empty();
 }
 
 void main() {
-  Widget buildTestWidget({
+  const String buttonLabel = 'Choose file';
+  const String dialogTitle = 'Pick a file';
+  const String pickedPath = '/Users/test/Documents/notes.txt';
+  const String hiddenPath = '/Users/test/Documents/.secret';
+
+  PlatformFile visibleFile() =>
+      _FakePlatformFile(name: 'notes.txt', path: pickedPath);
+
+  PlatformFile hiddenFile() =>
+      _FakePlatformFile(name: '.secret', path: hiddenPath);
+
+  PlatformFile pathlessFile() => _FakePlatformFile(name: 'notes.txt');
+
+  Future<void> pumpSubject(
+    WidgetTester tester, {
     required ValueChanged<String> onFileSelected,
     VoidCallback? onCancel,
-    String buttonLabel = 'Choose File',
-    String dialogTitle = 'Select File',
     List<String>? allowedExtensions,
     bool includeHidden = false,
     bool Function()? isMacOSOverride,
     String Function()? operatingSystemOverride,
     FilePickerFn? pickerOverride,
   }) {
-    return CupertinoApp(
-      home: CupertinoPageScaffold(
-        child: MacOSSelectFile(
-          onFileSelected: onFileSelected,
-          onCancel: onCancel,
-          buttonLabel: buttonLabel,
-          dialogTitle: dialogTitle,
-          allowedExtensions: allowedExtensions,
-          includeHidden: includeHidden,
-          isMacOSOverride: isMacOSOverride ?? () => true,
-          operatingSystemOverride: operatingSystemOverride ?? () => 'macos',
-          pickerOverride: pickerOverride,
+    return tester.pumpWidget(
+      CupertinoApp(
+        home: Center(
+          child: MacOSSelectFile(
+            onFileSelected: onFileSelected,
+            onCancel: onCancel,
+            buttonLabel: buttonLabel,
+            dialogTitle: dialogTitle,
+            allowedExtensions: allowedExtensions,
+            includeHidden: includeHidden,
+            isMacOSOverride: isMacOSOverride,
+            operatingSystemOverride: operatingSystemOverride,
+            pickerOverride: pickerOverride,
+          ),
         ),
       ),
     );
   }
 
-  testWidgets('throws UnsupportedError when run on non-macOS', (
-    WidgetTester tester,
-  ) async {
-    Object? capturedError;
+  Future<void> tapButton(WidgetTester tester) async {
+    await tester.tap(find.byType(CupertinoButton));
+    await tester.pump();
+  }
 
-    // Use runZonedGuarded to capture async error thrown from onPressed
-    await runZonedGuarded(
-      () async {
-        await tester.pumpWidget(
-          buildTestWidget(
+  group('MacOSSelectFile', () {
+    group('rendering', () {
+      testWidgets('shows the button label and folder icon', (tester) async {
+        await pumpSubject(
+          tester,
+          onFileSelected: (_) {},
+          isMacOSOverride: () => true,
+          pickerOverride:
+              ({dialogTitle, type = FileType.any, allowedExtensions}) async =>
+                  null,
+        );
+
+        expect(find.text(buttonLabel), findsOneWidget);
+        expect(find.byIcon(CupertinoIcons.folder), findsOneWidget);
+        expect(find.byType(CupertinoActivityIndicator), findsNothing);
+      });
+
+      testWidgets('does not show a path before any selection', (tester) async {
+        await pumpSubject(
+          tester,
+          onFileSelected: (_) {},
+          isMacOSOverride: () => true,
+          pickerOverride:
+              ({dialogTitle, type = FileType.any, allowedExtensions}) async =>
+                  null,
+        );
+
+        expect(find.text(pickedPath), findsNothing);
+      });
+    });
+
+    group('platform guard', () {
+      testWidgets(
+        'throws UnsupportedError with the overridden OS name off macOS',
+        (tester) async {
+          await pumpSubject(
+            tester,
             onFileSelected: (_) {},
             isMacOSOverride: () => false,
             operatingSystemOverride: () => 'windows',
-          ),
-        );
+            pickerOverride:
+                ({dialogTitle, type = FileType.any, allowedExtensions}) async =>
+                    visibleFile(),
+          );
 
-        await tester.tap(find.byType(CupertinoButton));
-        await tester.pump();
-      },
-      (error, stack) {
-        capturedError = error;
-      },
-    );
+          await tapButton(tester);
 
-    expect(capturedError, isA<UnsupportedError>());
-    expect(
-      (capturedError as UnsupportedError).message,
-      contains(
-        'MacOSSelectFile is only supported on macOS. Current platform: windows',
-      ),
-    );
-  });
-
-  testWidgets(
-    'selects standard visible file and displays selected path',
-    (WidgetTester tester) async {
-      String? selected;
-      FileType? receivedType;
-      List<String>? receivedExtensions;
-
-      final testFile = _TestPlatformFile(
-        name: 'document.pdf',
-        size: 1024,
-        path: '/Users/test/document.pdf',
+          final Object? exception = tester.takeException();
+          expect(exception, isA<UnsupportedError>());
+          expect(
+            (exception! as UnsupportedError).message,
+            contains('Current platform: windows'),
+          );
+        },
       );
 
-      await tester.pumpWidget(
-        buildTestWidget(
-          onFileSelected: (path) => selected = path,
-          allowedExtensions: const ['pdf'],
+      testWidgets(
+        'falls back to Platform.operatingSystem when no OS override is given',
+        (tester) async {
+          await pumpSubject(
+            tester,
+            onFileSelected: (_) {},
+            isMacOSOverride: () => false,
+            pickerOverride:
+                ({dialogTitle, type = FileType.any, allowedExtensions}) async =>
+                    visibleFile(),
+          );
+
+          await tapButton(tester);
+
+          final Object? exception = tester.takeException();
+          expect(exception, isA<UnsupportedError>());
+          expect(
+            (exception! as UnsupportedError).message,
+            contains('Current platform: ${Platform.operatingSystem}'),
+          );
+        },
+      );
+
+      testWidgets(
+        'falls back to Platform.isMacOS and runs the picker on a macOS host',
+        (tester) async {
+          bool pickerCalled = false;
+
+          await pumpSubject(
+            tester,
+            onFileSelected: (_) {},
+            pickerOverride:
+                ({dialogTitle, type = FileType.any, allowedExtensions}) async {
+                  pickerCalled = true;
+                  return visibleFile();
+                },
+          );
+
+          await tapButton(tester);
+          await tester.pumpAndSettle();
+
+          expect(tester.takeException(), isNull);
+          expect(pickerCalled, isTrue);
+        },
+        skip: !Platform.isMacOS,
+      );
+
+      testWidgets(
+        'falls back to Platform.isMacOS and throws on a non-macOS host',
+        (tester) async {
+          bool pickerCalled = false;
+
+          await pumpSubject(
+            tester,
+            onFileSelected: (_) {},
+            pickerOverride:
+                ({dialogTitle, type = FileType.any, allowedExtensions}) async {
+                  pickerCalled = true;
+                  return visibleFile();
+                },
+          );
+
+          await tapButton(tester);
+
+          expect(tester.takeException(), isA<UnsupportedError>());
+          expect(pickerCalled, isFalse);
+        },
+        skip: Platform.isMacOS,
+      );
+    });
+
+    group('picker arguments', () {
+      testWidgets('passes dialogTitle and FileType.any without extensions', (
+        tester,
+      ) async {
+        String? receivedTitle;
+        FileType? receivedType;
+        List<String>? receivedExtensions;
+
+        await pumpSubject(
+          tester,
+          onFileSelected: (_) {},
+          isMacOSOverride: () => true,
           pickerOverride:
-              ({
-                dialogTitle,
-                type = FileType.any,
-                allowedExtensions,
-              }) async {
+              ({dialogTitle, type = FileType.any, allowedExtensions}) async {
+                receivedTitle = dialogTitle;
                 receivedType = type;
                 receivedExtensions = allowedExtensions;
-                return testFile;
+                return visibleFile();
               },
-        ),
-      );
+        );
 
-      await tester.tap(find.byType(CupertinoButton));
-      await tester.pumpAndSettle();
+        await tapButton(tester);
+        await tester.pumpAndSettle();
 
-      expect(receivedType, equals(FileType.custom));
-      expect(receivedExtensions, equals(['pdf']));
-      expect(selected, equals('/Users/test/document.pdf'));
-      expect(find.text('/Users/test/document.pdf'), findsOneWidget);
-    },
-  );
+        expect(receivedTitle, dialogTitle);
+        expect(receivedType, FileType.any);
+        expect(receivedExtensions, isNull);
+      });
 
-  testWidgets(
-    'uses FileType.any when allowedExtensions is null',
-    (WidgetTester tester) async {
-      FileType? receivedType;
+      testWidgets('passes FileType.custom with the allowed extensions', (
+        tester,
+      ) async {
+        FileType? receivedType;
+        List<String>? receivedExtensions;
 
-      await tester.pumpWidget(
-        buildTestWidget(
+        await pumpSubject(
+          tester,
           onFileSelected: (_) {},
-          allowedExtensions: null,
+          allowedExtensions: const <String>['txt', 'pdf'],
+          isMacOSOverride: () => true,
           pickerOverride:
-              ({
-                dialogTitle,
-                type = FileType.any,
-                allowedExtensions,
-              }) async {
+              ({dialogTitle, type = FileType.any, allowedExtensions}) async {
                 receivedType = type;
-                return null;
+                receivedExtensions = allowedExtensions;
+                return visibleFile();
               },
-        ),
-      );
+        );
 
-      await tester.tap(find.byType(CupertinoButton));
-      await tester.pumpAndSettle();
+        await tapButton(tester);
+        await tester.pumpAndSettle();
 
-      expect(receivedType, equals(FileType.any));
-    },
-  );
+        expect(receivedType, FileType.custom);
+        expect(receivedExtensions, <String>['txt', 'pdf']);
+      });
+    });
 
-  testWidgets('triggers onCancel callback when picker returns null', (
-    WidgetTester tester,
-  ) async {
-    bool canceled = false;
+    group('picking', () {
+      testWidgets('shows a spinner and disables the button while picking', (
+        tester,
+      ) async {
+        final Completer<PlatformFile?> completer = Completer<PlatformFile?>();
 
-    await tester.pumpWidget(
-      buildTestWidget(
-        onFileSelected: (_) {},
-        onCancel: () => canceled = true,
-        pickerOverride:
-            ({
-              dialogTitle,
-              type = FileType.any,
-              allowedExtensions,
-            }) async {
-              return null;
-            },
-      ),
-    );
+        await pumpSubject(
+          tester,
+          onFileSelected: (_) {},
+          isMacOSOverride: () => true,
+          pickerOverride:
+              ({dialogTitle, type = FileType.any, allowedExtensions}) =>
+                  completer.future,
+        );
 
-    await tester.tap(find.byType(CupertinoButton));
-    await tester.pumpAndSettle();
+        await tapButton(tester);
 
-    expect(canceled, isTrue);
-  });
+        expect(find.byType(CupertinoActivityIndicator), findsOneWidget);
+        expect(find.text(buttonLabel), findsNothing);
+        final CupertinoButton button = tester.widget<CupertinoButton>(
+          find.byType(CupertinoButton),
+        );
+        expect(button.onPressed, isNull);
 
-  testWidgets('handles picker returning null without onCancel provided', (
-    WidgetTester tester,
-  ) async {
-    await tester.pumpWidget(
-      buildTestWidget(
-        onFileSelected: (_) {},
-        onCancel: null,
-        pickerOverride:
-            ({
-              dialogTitle,
-              type = FileType.any,
-              allowedExtensions,
-            }) async {
-              return null;
-            },
-      ),
-    );
+        completer.complete(visibleFile());
+        await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(CupertinoButton));
-    await tester.pumpAndSettle();
+        expect(find.byType(CupertinoActivityIndicator), findsNothing);
+        expect(find.text(buttonLabel), findsOneWidget);
+      });
 
-    expect(find.byType(CupertinoButton), findsOneWidget);
-  });
+      testWidgets('invokes onFileSelected with the path and shows it', (
+        tester,
+      ) async {
+        String? selected;
 
-  testWidgets('ignores hidden file when includeHidden is false', (
-    WidgetTester tester,
-  ) async {
-    bool selected = false;
+        await pumpSubject(
+          tester,
+          onFileSelected: (String path) => selected = path,
+          isMacOSOverride: () => true,
+          pickerOverride:
+              ({dialogTitle, type = FileType.any, allowedExtensions}) async =>
+                  visibleFile(),
+        );
 
-    final hiddenFile = _TestPlatformFile(
-      name: '.profile',
-      size: 512,
-      path: '/Users/test/.profile',
-    );
+        await tapButton(tester);
+        await tester.pumpAndSettle();
 
-    await tester.pumpWidget(
-      buildTestWidget(
-        onFileSelected: (_) => selected = true,
-        includeHidden: false,
-        pickerOverride:
-            ({
-              dialogTitle,
-              type = FileType.any,
-              allowedExtensions,
-            }) async {
-              return hiddenFile;
-            },
-      ),
-    );
+        expect(selected, pickedPath);
+        expect(find.text(pickedPath), findsOneWidget);
+      });
 
-    await tester.tap(find.byType(CupertinoButton));
-    await tester.pumpAndSettle();
+      testWidgets('invokes onCancel when the picker returns null', (
+        tester,
+      ) async {
+        bool cancelled = false;
+        bool selectedCalled = false;
 
-    expect(selected, isFalse);
-    expect(find.text('/Users/test/.profile'), findsNothing);
-  });
+        await pumpSubject(
+          tester,
+          onFileSelected: (_) => selectedCalled = true,
+          onCancel: () => cancelled = true,
+          isMacOSOverride: () => true,
+          pickerOverride:
+              ({dialogTitle, type = FileType.any, allowedExtensions}) async =>
+                  null,
+        );
 
-  testWidgets('selects hidden file when includeHidden is true', (
-    WidgetTester tester,
-  ) async {
-    String? selected;
+        await tapButton(tester);
+        await tester.pumpAndSettle();
 
-    final hiddenFile = _TestPlatformFile(
-      name: '.zshrc',
-      size: 256,
-      path: '/Users/test/.zshrc',
-    );
+        expect(cancelled, isTrue);
+        expect(selectedCalled, isFalse);
+        expect(find.text(pickedPath), findsNothing);
+      });
 
-    await tester.pumpWidget(
-      buildTestWidget(
-        onFileSelected: (path) => selected = path,
-        includeHidden: true,
-        pickerOverride:
-            ({
-              dialogTitle,
-              type = FileType.any,
-              allowedExtensions,
-            }) async {
-              return hiddenFile;
-            },
-      ),
-    );
+      testWidgets('tolerates a null onCancel when the picker returns null', (
+        tester,
+      ) async {
+        await pumpSubject(
+          tester,
+          onFileSelected: (_) {},
+          isMacOSOverride: () => true,
+          pickerOverride:
+              ({dialogTitle, type = FileType.any, allowedExtensions}) async =>
+                  null,
+        );
 
-    await tester.tap(find.byType(CupertinoButton));
-    await tester.pumpAndSettle();
+        await tapButton(tester);
+        await tester.pumpAndSettle();
 
-    expect(selected, equals('/Users/test/.zshrc'));
-    expect(find.text('/Users/test/.zshrc'), findsOneWidget);
-  });
+        expect(tester.takeException(), isNull);
+      });
 
-  testWidgets('ignores file when path is null', (WidgetTester tester) async {
-    bool selected = false;
+      testWidgets('ignores a file with a null path', (tester) async {
+        bool selectedCalled = false;
+        bool cancelled = false;
 
-    final noPathFile = _TestPlatformFile(name: 'in_memory.txt', size: 100);
+        await pumpSubject(
+          tester,
+          onFileSelected: (_) => selectedCalled = true,
+          onCancel: () => cancelled = true,
+          isMacOSOverride: () => true,
+          pickerOverride:
+              ({dialogTitle, type = FileType.any, allowedExtensions}) async =>
+                  pathlessFile(),
+        );
 
-    await tester.pumpWidget(
-      buildTestWidget(
-        onFileSelected: (_) => selected = true,
-        pickerOverride:
-            ({
-              dialogTitle,
-              type = FileType.any,
-              allowedExtensions,
-            }) async {
-              return noPathFile;
-            },
-      ),
-    );
+        await tapButton(tester);
+        await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(CupertinoButton));
-    await tester.pumpAndSettle();
+        expect(selectedCalled, isFalse);
+        expect(cancelled, isFalse);
+        expect(find.byType(CupertinoActivityIndicator), findsNothing);
+      });
 
-    expect(selected, isFalse);
-  });
+      testWidgets('does nothing when unmounted while the picker is open', (
+        tester,
+      ) async {
+        final Completer<PlatformFile?> completer = Completer<PlatformFile?>();
+        bool selectedCalled = false;
+        bool cancelled = false;
 
-  testWidgets('uses default platform and picker fallbacks', (
-    WidgetTester tester,
-  ) async {
-    await tester.pumpWidget(
-      CupertinoApp(
-        home: CupertinoPageScaffold(
-          child: MacOSSelectFile(
-            onFileSelected: (_) {},
-            buttonLabel: 'Default Test',
-            dialogTitle: 'Default Sheet',
-          ),
-        ),
-      ),
-    );
+        await pumpSubject(
+          tester,
+          onFileSelected: (_) => selectedCalled = true,
+          onCancel: () => cancelled = true,
+          isMacOSOverride: () => true,
+          pickerOverride:
+              ({dialogTitle, type = FileType.any, allowedExtensions}) =>
+                  completer.future,
+        );
 
-    expect(find.text('Default Test'), findsOneWidget);
+        await tapButton(tester);
+
+        // Replace the tree so the widget is disposed mid-pick.
+        await tester.pumpWidget(const CupertinoApp(home: SizedBox()));
+
+        completer.complete(visibleFile());
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+        expect(selectedCalled, isFalse);
+        expect(cancelled, isFalse);
+      });
+    });
+
+    group('hidden files', () {
+      testWidgets('ignores hidden files by default', (tester) async {
+        bool selectedCalled = false;
+
+        await pumpSubject(
+          tester,
+          onFileSelected: (_) => selectedCalled = true,
+          isMacOSOverride: () => true,
+          pickerOverride:
+              ({dialogTitle, type = FileType.any, allowedExtensions}) async =>
+                  hiddenFile(),
+        );
+
+        await tapButton(tester);
+        await tester.pumpAndSettle();
+
+        expect(selectedCalled, isFalse);
+        expect(find.text(hiddenPath), findsNothing);
+      });
+
+      testWidgets('accepts hidden files when includeHidden is true', (
+        tester,
+      ) async {
+        String? selected;
+
+        await pumpSubject(
+          tester,
+          onFileSelected: (String path) => selected = path,
+          includeHidden: true,
+          isMacOSOverride: () => true,
+          pickerOverride:
+              ({dialogTitle, type = FileType.any, allowedExtensions}) async =>
+                  hiddenFile(),
+        );
+
+        await tapButton(tester);
+        await tester.pumpAndSettle();
+
+        expect(selected, hiddenPath);
+        expect(find.text(hiddenPath), findsOneWidget);
+      });
+
+      testWidgets('still accepts visible files when includeHidden is true', (
+        tester,
+      ) async {
+        String? selected;
+
+        await pumpSubject(
+          tester,
+          onFileSelected: (String path) => selected = path,
+          includeHidden: true,
+          isMacOSOverride: () => true,
+          pickerOverride:
+              ({dialogTitle, type = FileType.any, allowedExtensions}) async =>
+                  visibleFile(),
+        );
+
+        await tapButton(tester);
+        await tester.pumpAndSettle();
+
+        expect(selected, pickedPath);
+      });
+    });
   });
 }

@@ -1,159 +1,309 @@
 // packages/tool_kit/test/src/macos_select_directory_test.dart
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tool_kit/src/macos_select_directory.dart';
+import 'package:tool_kit/src/macos_select_directory.dart'
+    show DirectoryPickerFn, MacOSSelectDirectory;
 
 void main() {
-  Widget buildTestWidget({
+  const String buttonLabel = 'Choose folder';
+  const String dialogTitle = 'Pick a folder';
+  const String pickedPath = '/Users/test/Documents';
+
+  Future<void> pumpSubject(
+    WidgetTester tester, {
     required ValueChanged<Directory> onDirectorySelected,
     VoidCallback? onCancel,
-    String buttonLabel = 'Select Folder',
-    String dialogTitle = 'Choose Folder',
     String? initialDirectory,
     bool Function()? isMacOSOverride,
     String Function()? operatingSystemOverride,
     DirectoryPickerFn? pickerOverride,
   }) {
-    return CupertinoApp(
-      home: CupertinoPageScaffold(
-        child: MacOSSelectDirectory(
-          onDirectorySelected: onDirectorySelected,
-          buttonLabel: buttonLabel,
-          dialogTitle: dialogTitle,
-          initialDirectory: initialDirectory,
-          onCancel: onCancel,
-          isMacOSOverride: isMacOSOverride ?? () => true,
-          operatingSystemOverride: operatingSystemOverride ?? () => 'macos',
-          pickerOverride: pickerOverride,
+    return tester.pumpWidget(
+      CupertinoApp(
+        home: Center(
+          child: MacOSSelectDirectory(
+            onDirectorySelected: onDirectorySelected,
+            onCancel: onCancel,
+            buttonLabel: buttonLabel,
+            dialogTitle: dialogTitle,
+            initialDirectory: initialDirectory,
+            isMacOSOverride: isMacOSOverride,
+            operatingSystemOverride: operatingSystemOverride,
+            pickerOverride: pickerOverride,
+          ),
         ),
       ),
     );
   }
 
-  testWidgets('throws UnsupportedError when run on non-macOS', (
-    WidgetTester tester,
-  ) async {
-    Object? capturedError;
+  Future<void> tapButton(WidgetTester tester) async {
+    await tester.tap(find.byType(CupertinoButton));
+    await tester.pump();
+  }
 
-    await runZonedGuarded(
-      () async {
-        await tester.pumpWidget(
-          buildTestWidget(
+  group('MacOSSelectDirectory', () {
+    group('rendering', () {
+      testWidgets('shows the button label and folder icon', (tester) async {
+        await pumpSubject(
+          tester,
+          onDirectorySelected: (_) {},
+          isMacOSOverride: () => true,
+          pickerOverride: ({dialogTitle, initialDirectory}) async => null,
+        );
+
+        expect(find.text(buttonLabel), findsOneWidget);
+        expect(find.byIcon(CupertinoIcons.folder), findsOneWidget);
+        expect(find.byType(CupertinoActivityIndicator), findsNothing);
+      });
+
+      testWidgets('does not show a path before any selection', (tester) async {
+        await pumpSubject(
+          tester,
+          onDirectorySelected: (_) {},
+          isMacOSOverride: () => true,
+          pickerOverride: ({dialogTitle, initialDirectory}) async => null,
+        );
+
+        expect(find.text(pickedPath), findsNothing);
+      });
+    });
+
+    group('platform guard', () {
+      testWidgets(
+        'throws UnsupportedError with the overridden OS name off macOS',
+        (tester) async {
+          await pumpSubject(
+            tester,
             onDirectorySelected: (_) {},
             isMacOSOverride: () => false,
             operatingSystemOverride: () => 'windows',
-          ),
+            pickerOverride: ({dialogTitle, initialDirectory}) async =>
+                pickedPath,
+          );
+
+          await tapButton(tester);
+
+          final Object? exception = tester.takeException();
+          expect(exception, isA<UnsupportedError>());
+          expect(
+            (exception! as UnsupportedError).message,
+            contains('not platform: windows'),
+          );
+        },
+      );
+
+      testWidgets(
+        'falls back to Platform.operatingSystem when no OS override is given',
+        (tester) async {
+          await pumpSubject(
+            tester,
+            onDirectorySelected: (_) {},
+            isMacOSOverride: () => false,
+            pickerOverride: ({dialogTitle, initialDirectory}) async =>
+                pickedPath,
+          );
+
+          await tapButton(tester);
+
+          final Object? exception = tester.takeException();
+          expect(exception, isA<UnsupportedError>());
+          expect(
+            (exception! as UnsupportedError).message,
+            contains('not platform: ${Platform.operatingSystem}'),
+          );
+        },
+      );
+
+      testWidgets(
+        'falls back to Platform.isMacOS and runs the picker on a macOS host',
+        (tester) async {
+          bool pickerCalled = false;
+
+          await pumpSubject(
+            tester,
+            onDirectorySelected: (_) {},
+            pickerOverride: ({dialogTitle, initialDirectory}) async {
+              pickerCalled = true;
+              return pickedPath;
+            },
+          );
+
+          await tapButton(tester);
+          await tester.pumpAndSettle();
+
+          expect(tester.takeException(), isNull);
+          expect(pickerCalled, isTrue);
+        },
+        skip: !Platform.isMacOS,
+      );
+
+      testWidgets(
+        'falls back to Platform.isMacOS and throws on a non-macOS host',
+        (tester) async {
+          bool pickerCalled = false;
+
+          await pumpSubject(
+            tester,
+            onDirectorySelected: (_) {},
+            pickerOverride: ({dialogTitle, initialDirectory}) async {
+              pickerCalled = true;
+              return pickedPath;
+            },
+          );
+
+          await tapButton(tester);
+
+          expect(tester.takeException(), isA<UnsupportedError>());
+          expect(pickerCalled, isFalse);
+        },
+        skip: Platform.isMacOS,
+      );
+    });
+
+    group('picking', () {
+      testWidgets('passes dialogTitle and initialDirectory to the picker', (
+        tester,
+      ) async {
+        String? receivedTitle;
+        String? receivedInitialDirectory;
+
+        await pumpSubject(
+          tester,
+          onDirectorySelected: (_) {},
+          initialDirectory: '/initial',
+          isMacOSOverride: () => true,
+          pickerOverride: ({dialogTitle, initialDirectory}) async {
+            receivedTitle = dialogTitle;
+            receivedInitialDirectory = initialDirectory;
+            return pickedPath;
+          },
         );
 
-        await tester.tap(find.byType(CupertinoButton));
-        await tester.pump();
-      },
-      (error, stack) {
-        capturedError = error;
-      },
-    );
+        await tapButton(tester);
+        await tester.pumpAndSettle();
 
-    expect(capturedError, isA<UnsupportedError>());
-    expect(
-      (capturedError! as UnsupportedError).message,
-      contains(
-        'MacOSSelectDirectory is only supported on macOS. '
-        'Current platform: windows',
-      ),
-    );
-  });
+        expect(receivedTitle, dialogTitle);
+        expect(receivedInitialDirectory, '/initial');
+      });
 
-  testWidgets(
-    'selects folder and triggers callback with Directory',
-    (WidgetTester tester) async {
-      Directory? chosenDir;
-      String? passedTitle;
-      String? passedInitialDir;
+      testWidgets('shows a spinner and disables the button while picking', (
+        tester,
+      ) async {
+        final Completer<String?> completer = Completer<String?>();
 
-      await tester.pumpWidget(
-        buildTestWidget(
-          buttonLabel: 'Select Projects',
-          dialogTitle: 'Pick Projects Folder',
-          initialDirectory: '/Users/test/dev',
-          onDirectorySelected: (dir) => chosenDir = dir,
-          pickerOverride: ({dialogTitle, initialDirectory}) async {
-            passedTitle = dialogTitle;
-            passedInitialDir = initialDirectory;
-            return '/Users/test/dev/my_project';
-          },
-        ),
-      );
-
-      await tester.tap(find.byType(CupertinoButton));
-      await tester.pumpAndSettle();
-
-      expect(passedTitle, equals('Pick Projects Folder'));
-      expect(passedInitialDir, equals('/Users/test/dev'));
-      expect(chosenDir, isNotNull);
-      expect(chosenDir!.path, equals('/Users/test/dev/my_project'));
-      expect(find.text('/Users/test/dev/my_project'), findsOneWidget);
-    },
-  );
-
-  testWidgets(
-    'triggers onCancel callback when user cancels folder selection',
-    (WidgetTester tester) async {
-      bool canceled = false;
-
-      await tester.pumpWidget(
-        buildTestWidget(
+        await pumpSubject(
+          tester,
           onDirectorySelected: (_) {},
-          onCancel: () => canceled = true,
-          pickerOverride: ({dialogTitle, initialDirectory}) async {
-            return null;
-          },
-        ),
+          isMacOSOverride: () => true,
+          pickerOverride: ({dialogTitle, initialDirectory}) => completer.future,
+        );
+
+        await tapButton(tester);
+
+        expect(find.byType(CupertinoActivityIndicator), findsOneWidget);
+        expect(find.text(buttonLabel), findsNothing);
+        final CupertinoButton button = tester.widget<CupertinoButton>(
+          find.byType(CupertinoButton),
+        );
+        expect(button.onPressed, isNull);
+
+        completer.complete(pickedPath);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(CupertinoActivityIndicator), findsNothing);
+        expect(find.text(buttonLabel), findsOneWidget);
+      });
+
+      testWidgets(
+        'invokes onDirectorySelected with the picked Directory and shows path',
+        (tester) async {
+          Directory? selected;
+
+          await pumpSubject(
+            tester,
+            onDirectorySelected: (Directory directory) => selected = directory,
+            isMacOSOverride: () => true,
+            pickerOverride: ({dialogTitle, initialDirectory}) async =>
+                pickedPath,
+          );
+
+          await tapButton(tester);
+          await tester.pumpAndSettle();
+
+          expect(selected, isNotNull);
+          expect(selected!.path, pickedPath);
+          expect(find.text(pickedPath), findsOneWidget);
+        },
       );
 
-      await tester.tap(find.byType(CupertinoButton));
-      await tester.pumpAndSettle();
+      testWidgets('invokes onCancel when the picker returns null', (
+        tester,
+      ) async {
+        bool cancelled = false;
+        bool selectedCalled = false;
 
-      expect(canceled, isTrue);
-    },
-  );
+        await pumpSubject(
+          tester,
+          onDirectorySelected: (_) => selectedCalled = true,
+          onCancel: () => cancelled = true,
+          isMacOSOverride: () => true,
+          pickerOverride: ({dialogTitle, initialDirectory}) async => null,
+        );
 
-  testWidgets(
-    'handles cancellation gracefully when onCancel is null',
-    (WidgetTester tester) async {
-      await tester.pumpWidget(
-        buildTestWidget(
+        await tapButton(tester);
+        await tester.pumpAndSettle();
+
+        expect(cancelled, isTrue);
+        expect(selectedCalled, isFalse);
+        expect(find.text(pickedPath), findsNothing);
+      });
+
+      testWidgets('tolerates a null onCancel when the picker returns null', (
+        tester,
+      ) async {
+        await pumpSubject(
+          tester,
           onDirectorySelected: (_) {},
-          onCancel: null,
-          pickerOverride: ({dialogTitle, initialDirectory}) async {
-            return null;
-          },
-        ),
-      );
+          isMacOSOverride: () => true,
+          pickerOverride: ({dialogTitle, initialDirectory}) async => null,
+        );
 
-      await tester.tap(find.byType(CupertinoButton));
-      await tester.pumpAndSettle();
+        await tapButton(tester);
+        await tester.pumpAndSettle();
 
-      expect(find.byType(CupertinoButton), findsOneWidget);
-    },
-  );
+        expect(tester.takeException(), isNull);
+      });
 
-  testWidgets('renders default widget using fallback parameters', (
-    WidgetTester tester,
-  ) async {
-    await tester.pumpWidget(
-      CupertinoApp(
-        home: CupertinoPageScaffold(
-          child: MacOSSelectDirectory(
-            onDirectorySelected: (_) {},
-            buttonLabel: 'Default Label',
-            dialogTitle: 'Default Dialog',
-          ),
-        ),
-      ),
-    );
+      testWidgets('does nothing when unmounted while the picker is open', (
+        tester,
+      ) async {
+        final Completer<String?> completer = Completer<String?>();
+        bool selectedCalled = false;
+        bool cancelled = false;
 
-    expect(find.text('Default Label'), findsOneWidget);
+        await pumpSubject(
+          tester,
+          onDirectorySelected: (_) => selectedCalled = true,
+          onCancel: () => cancelled = true,
+          isMacOSOverride: () => true,
+          pickerOverride: ({dialogTitle, initialDirectory}) => completer.future,
+        );
+
+        await tapButton(tester);
+
+        // Replace the tree so the widget is disposed mid-pick.
+        await tester.pumpWidget(const CupertinoApp(home: SizedBox()));
+
+        completer.complete(pickedPath);
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+        expect(selectedCalled, isFalse);
+        expect(cancelled, isFalse);
+      });
+    });
   });
 }

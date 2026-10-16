@@ -8,3 +8,4 @@ analyzer:
     cascade_invocations: ignore
     document_ignores: ignore
     lines_longer_than_80_chars: ignore
+    specify_nonobvious_property_types: ignore

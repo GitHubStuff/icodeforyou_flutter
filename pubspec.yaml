@@ -2,7 +2,7 @@
 name: icodeforyou_flutter
 publish_to: none
 description: "Collection of flutter packages"
-version: 9.5.0
+version: 9.6.0
 
 workspace:
   - packages/abstractions
@@ -18,13 +18,13 @@ workspace:
   - packages/data_grid
   - packages/datetime_popover_pickers
   - packages/dependency_resolver
+  - packages/dual_selection
   - packages/duration_widget
   - packages/extensions
   - packages/icodeforyou_lints
   - packages/infinite_scroll_picking
   - packages/infinite_scroll_picking_settings
   - packages/my_logger
-  - packages/mypickdf
   - packages/neon
   - packages/ping_pong
   - packages/platform_utils
@@ -38,6 +38,7 @@ workspace:
   - packages/sincewhen_models
   - packages/sincewhen_screens
   - packages/sincewhen_widgets
+  - packages/sliders
   - packages/splash_framework
   - packages/sqlite_viewer
   - packages/stacking_widgets
@@ -85,7 +86,7 @@ melos:
         Usage: melos test
         Scoped: melos exec --scope=data_grid -- fvm flutter test
       exec:
-        command: fvm flutter test
+        command: fvm flutter test --concurrency=1
         concurrency: 1
         failFast: true
       packageFilters:
@@ -197,7 +198,7 @@ melos:
         dart run build_runner clean
         echo "🧹 Widgetbook generated files cleaned"
 
-    # ─── UTILITIES ────────────────────────────────────────────────────────────
+    # ─── UTILITIES ────────────────────────────────────────────────────
 
     list_packages:
       description: List all packages and programs in workspace

@@ -1,231 +1,413 @@
 // packages/extensions/test/datetime/src/datetime_ext_test.dart
+
+import 'package:extensions/datetime/src/datetime_ext.dart' show DateTimeExt;
 import 'package:extensions/datetime/src/datetime_unit.dart' show DateTimeUnit;
-import 'package:extensions/extensions.dart' show DateTimeExt;
-import 'package:fake_async/fake_async.dart';
+import 'package:fake_async/fake_async.dart' show FakeAsync;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  setUp(DateTimeExt.reset);
+  // Sunday 11 October 2026, 05:09:04.123456 — used throughout as a fixed,
+  // known instant with every component non-zero and non-minimal.
+  final utc = DateTime.utc(2026, 10, 11, 5, 9, 4, 123, 456);
+  final local = DateTime(2026, 10, 11, 5, 9, 4, 123, 456);
 
-  group('DateTimeExt.unique and reset', () {
-    test('returns unique timestamps across calls with default now()', () async {
-      final t1 = await DateTimeExt.unique();
-      final t2 = await DateTimeExt.unique();
-      expect(t2.microsecondsSinceEpoch, greaterThan(t1.microsecondsSinceEpoch));
+  group('DateTimeExt.unique', () {
+    setUp(DateTimeExt.reset);
+    tearDown(DateTimeExt.reset);
+
+    test('returns the clock value when it is ahead of the last result', () {
+      final result = DateTimeExt.unique(
+        now: () => DateTime.fromMicrosecondsSinceEpoch(1000),
+      );
+
+      expect(result.microsecondsSinceEpoch, 1000);
     });
 
-    test(
-      'increments microsecond when now() yields the same or smaller timestamp',
-      () async {
-        final fixedTime = DateTime(2026, 1, 1, 12, 0, 0);
-        final t1 = await DateTimeExt.unique(now: () => fixedTime);
-        final t2 = await DateTimeExt.unique(now: () => fixedTime);
-        final t3 = await DateTimeExt.unique(
-          now: () => fixedTime.subtract(const Duration(seconds: 10)),
-        );
+    test('bumps by one microsecond when the clock has not advanced', () {
+      DateTime frozen() => DateTime.fromMicrosecondsSinceEpoch(1000);
 
-        expect(t1.microsecondsSinceEpoch, fixedTime.microsecondsSinceEpoch);
-        expect(t2.microsecondsSinceEpoch, fixedTime.microsecondsSinceEpoch + 1);
-        expect(t3.microsecondsSinceEpoch, fixedTime.microsecondsSinceEpoch + 2);
-      },
-    );
+      final first = DateTimeExt.unique(now: frozen);
+      final second = DateTimeExt.unique(now: frozen);
+      final third = DateTimeExt.unique(now: frozen);
 
-    test('reset clears internal microsecond state', () async {
-      final fixedTime = DateTime(2026, 1, 1, 12, 0, 0);
-      await DateTimeExt.unique(now: () => fixedTime);
+      expect(first.microsecondsSinceEpoch, 1000);
+      expect(second.microsecondsSinceEpoch, 1001);
+      expect(third.microsecondsSinceEpoch, 1002);
+    });
+
+    test('bumps past the last result when the clock goes backwards', () {
+      DateTimeExt.unique(
+        now: () => DateTime.fromMicrosecondsSinceEpoch(5000),
+      );
+
+      final result = DateTimeExt.unique(
+        now: () => DateTime.fromMicrosecondsSinceEpoch(4000),
+      );
+
+      expect(result.microsecondsSinceEpoch, 5001);
+    });
+
+    test('uses DateTime.now by default', () {
+      final before = DateTime.now();
+      final result = DateTimeExt.unique();
+      final after = DateTime.now();
+
+      expect(result.isBefore(before), isFalse);
+      expect(result.isAfter(after), isFalse);
+    });
+
+    test('reset clears the high-water mark', () {
+      DateTimeExt.unique(
+        now: () => DateTime.fromMicrosecondsSinceEpoch(9000),
+      );
+
       DateTimeExt.reset();
 
-      final tAfterReset = await DateTimeExt.unique(now: () => fixedTime);
-      expect(
-        tAfterReset.microsecondsSinceEpoch,
-        fixedTime.microsecondsSinceEpoch,
+      final result = DateTimeExt.unique(
+        now: () => DateTime.fromMicrosecondsSinceEpoch(10),
       );
+      expect(result.microsecondsSinceEpoch, 10);
     });
   });
 
-  group('isLeapYear', () {
-    test('evaluates Gregorian leap years correctly', () {
-      expect(DateTime(2024, 1, 1).isLeapYear, isTrue); // Divisible by 4
-      expect(DateTime(2000, 1, 1).isLeapYear, isTrue); // Divisible by 400
-      expect(
-        DateTime(1900, 1, 1).isLeapYear,
-        isFalse,
-      ); // Divisible by 100, not 400
-      expect(DateTime(2023, 1, 1).isLeapYear, isFalse); // Not divisible by 4
+  group('DateTimeExt.toDisplay', () {
+    test('uses displayPattern by default', () {
+      expect(utc.toDisplay(), 'Sun 11-Oct-2026 5:09:04 AM');
+    });
+
+    test('renders PM hours in 12-hour form', () {
+      final afternoon = DateTime.utc(2026, 10, 11, 17, 9, 4);
+
+      expect(afternoon.toDisplay(), 'Sun 11-Oct-2026 5:09:04 PM');
+    });
+
+    test('honours a custom pattern', () {
+      expect(utc.toDisplay('yyyy-MM-dd'), '2026-10-11');
+    });
+
+    test('displayPattern is the documented default', () {
+      expect(DateTimeExt.displayPattern, 'EEE dd-MMM-yyyy h:mm:ss a');
     });
   });
 
-  group('next and _nextBoundary', () {
-    test(
-      'calculates microseconds to next boundary for all units (local & UTC)',
-      () {
-        final local = DateTime(2026, 5, 10, 14, 30, 45, 123, 456);
-        final utc = DateTime.utc(2026, 5, 10, 14, 30, 45, 123, 456);
+  group('DateTimeExt.isLeapYear', () {
+    test('divisible by 4 but not 100 is a leap year', () {
+      expect(DateTime.utc(2024).isLeapYear, isTrue);
+    });
 
-        for (final dt in [local, utc]) {
-          expect(dt.next(DateTimeUnit.year), greaterThan(0));
-          expect(dt.next(DateTimeUnit.month), greaterThan(0));
-          expect(dt.next(DateTimeUnit.day), greaterThan(0));
-          expect(dt.next(DateTimeUnit.hour), greaterThan(0));
-          expect(dt.next(DateTimeUnit.minute), greaterThan(0));
-          expect(dt.next(DateTimeUnit.second), greaterThan(0));
-          expect(dt.next(DateTimeUnit.msec), greaterThan(0));
-          expect(dt.next(DateTimeUnit.usec), greaterThan(0));
-        }
-      },
-    );
+    test('divisible by 400 is a leap year', () {
+      expect(DateTime.utc(2000).isLeapYear, isTrue);
+    });
 
-    test('matches exact differences to next boundaries', () {
-      final dtUtc = DateTime.utc(2026, 1, 1, 0, 0, 0, 0, 0);
-      expect(
-        dtUtc.next(DateTimeUnit.second),
-        equals(Duration.microsecondsPerSecond),
-      );
-      expect(
-        dtUtc.next(DateTimeUnit.usec),
-        equals(1),
-      );
+    test('divisible by 100 but not 400 is not a leap year', () {
+      expect(DateTime.utc(1900).isLeapYear, isFalse);
+      expect(DateTime.utc(2100).isLeapYear, isFalse);
+    });
+
+    test('not divisible by 4 is not a leap year', () {
+      expect(DateTime.utc(2023).isLeapYear, isFalse);
     });
   });
 
-  group('repeatEvery', () {
-    test('repeats and stops on local DateTime when task returns false', () {
-      fakeAsync((async) {
-        final start = DateTime(2026, 1, 1, 0, 0, 0, 0, 0);
-        int runCount = 0;
-        DateTime? finalBasis;
-
-        start
-            .repeatEvery(DateTimeUnit.usec, () {
-              runCount++;
-              return runCount < 3;
-            })
-            .then((result) {
-              finalBasis = result;
-            });
-
-        async.elapse(const Duration(milliseconds: 10));
-        expect(runCount, equals(3));
-        expect(finalBasis, isNotNull);
-        expect(finalBasis!.isUtc, isFalse);
-      });
+  group('DateTimeExt.isWithin', () {
+    test('throws ArgumentError for a negative tolerance', () {
+      expect(
+        () => utc.isWithin(utc, tolerance: const Duration(microseconds: -1)),
+        throwsA(
+          isA<ArgumentError>()
+              .having((e) => e.name, 'name', 'tolerance')
+              .having((e) => e.message, 'message', 'must be zero or positive'),
+        ),
+      );
     });
 
-    test('repeats and stops on UTC DateTime when task returns false', () {
-      fakeAsync((async) {
-        final start = DateTime.utc(2026, 1, 1, 0, 0, 0, 0, 0);
-        int runCount = 0;
-        DateTime? finalBasis;
+    test('is true at exactly the default tolerance', () {
+      final other = utc.add(const Duration(microseconds: 250));
 
-        start
-            .repeatEvery(DateTimeUnit.usec, () {
-              runCount++;
-              return runCount < 2;
-            })
-            .then((result) {
-              finalBasis = result;
-            });
-
-        async.elapse(const Duration(milliseconds: 10));
-        expect(runCount, equals(2));
-        expect(finalBasis, isNotNull);
-        expect(finalBasis!.isUtc, isTrue);
-      });
+      expect(utc.isWithin(other), isTrue);
     });
 
-    test('terminates immediately on the first tick if task returns false', () {
-      fakeAsync((async) {
-        final start = DateTime.utc(2026, 1, 1, 0, 0, 0, 0, 0);
-        int runCount = 0;
-        DateTime? finalBasis;
+    test('is false one microsecond past the default tolerance', () {
+      final other = utc.add(const Duration(microseconds: 251));
 
-        start
+      expect(utc.isWithin(other), isFalse);
+    });
+
+    test('is true for identical instants with zero tolerance', () {
+      expect(utc.isWithin(utc, tolerance: Duration.zero), isTrue);
+    });
+
+    test('is symmetric', () {
+      final other = utc.subtract(const Duration(milliseconds: 5));
+      const tolerance = Duration(milliseconds: 5);
+
+      expect(utc.isWithin(other, tolerance: tolerance), isTrue);
+      expect(other.isWithin(utc, tolerance: tolerance), isTrue);
+    });
+
+    test('compares UTC and local on the absolute timeline', () {
+      final asLocal = utc.toLocal();
+
+      expect(utc.isWithin(asLocal, tolerance: Duration.zero), isTrue);
+    });
+  });
+
+  group('DateTimeExt.next', () {
+    test('year counts to 1 January of next year', () {
+      final expected = DateTime.utc(2027).difference(utc).inMicroseconds;
+
+      expect(utc.next(DateTimeUnit.year), expected);
+    });
+
+    test('month counts to the first of next month', () {
+      final expected = DateTime.utc(2026, 11).difference(utc).inMicroseconds;
+
+      expect(utc.next(DateTimeUnit.month), expected);
+    });
+
+    test('day counts to next midnight', () {
+      final expected = DateTime.utc(
+        2026,
+        10,
+        12,
+      ).difference(utc).inMicroseconds;
+
+      expect(utc.next(DateTimeUnit.day), expected);
+    });
+
+    test('hour counts to the top of next hour', () {
+      final expected = DateTime.utc(
+        2026,
+        10,
+        11,
+        6,
+      ).difference(utc).inMicroseconds;
+
+      expect(utc.next(DateTimeUnit.hour), expected);
+    });
+
+    test('minute counts to the top of next minute', () {
+      final expected = DateTime.utc(
+        2026,
+        10,
+        11,
+        5,
+        10,
+      ).difference(utc).inMicroseconds;
+
+      expect(utc.next(DateTimeUnit.minute), expected);
+    });
+
+    test('second counts to the top of next second', () {
+      // 04.123456 → 05.000000
+      expect(utc.next(DateTimeUnit.second), 876544);
+    });
+
+    test('msec counts to the next millisecond', () {
+      // .123456 → .124000
+      expect(utc.next(DateTimeUnit.msec), 544);
+    });
+
+    test('usec counts exactly one microsecond', () {
+      expect(utc.next(DateTimeUnit.usec), 1);
+    });
+
+    test('is strictly positive on an exact boundary', () {
+      final boundary = DateTime.utc(2026, 10, 11);
+
+      expect(
+        boundary.next(DateTimeUnit.day),
+        const Duration(days: 1).inMicroseconds,
+      );
+    });
+
+    test('cascades rollover through month and year', () {
+      final newYearsEve = DateTime.utc(2026, 12, 31, 23, 59, 59, 999, 999);
+
+      expect(newYearsEve.next(DateTimeUnit.usec), 1);
+      expect(newYearsEve.next(DateTimeUnit.second), 1);
+      expect(
+        newYearsEve.add(
+          Duration(microseconds: newYearsEve.next(DateTimeUnit.day)),
+        ),
+        DateTime.utc(2027),
+      );
+    });
+
+    test('preserves local zone', () {
+      final boundary = local.add(
+        Duration(microseconds: local.next(DateTimeUnit.day)),
+      );
+
+      expect(boundary.isUtc, isFalse);
+      expect(boundary.isAtSameMomentAs(DateTime(2026, 10, 12)), isTrue);
+    });
+  });
+
+  group('DateTimeExt.repeatEvery', () {
+    test('returns this when task stops on the first tick', () {
+      FakeAsync().run((async) {
+        DateTime? result;
+        var calls = 0;
+
+        utc
             .repeatEvery(DateTimeUnit.usec, () {
-              runCount++;
+              calls++;
               return false;
             })
-            .then((result) {
-              finalBasis = result;
-            });
+            .then((value) => result = value);
 
-        async.elapse(const Duration(milliseconds: 1));
-        expect(runCount, equals(1));
-        expect(finalBasis, equals(start));
+        async.elapse(const Duration(microseconds: 10));
+
+        expect(calls, 1);
+        expect(result, utc);
+      });
+    });
+
+    test('re-bases on the live UTC clock after each tick', () {
+      FakeAsync().run((async) {
+        DateTime? result;
+        var calls = 0;
+
+        utc
+            .repeatEvery(DateTimeUnit.usec, () {
+              calls++;
+              return calls < 3;
+            })
+            .then((value) => result = value);
+
+        async.elapse(const Duration(microseconds: 10));
+
+        expect(calls, 3);
+        expect(result, isNotNull);
+        expect(result!.isUtc, isTrue);
+        expect(result, isNot(utc));
+      });
+    });
+
+    test('re-bases on the live local clock after each tick', () {
+      FakeAsync().run((async) {
+        DateTime? result;
+        var calls = 0;
+
+        local
+            .repeatEvery(DateTimeUnit.usec, () {
+              calls++;
+              return calls < 2;
+            })
+            .then((value) => result = value);
+
+        async.elapse(const Duration(microseconds: 10));
+
+        expect(calls, 2);
+        expect(result, isNotNull);
+        expect(result!.isUtc, isFalse);
+        expect(result, isNot(local));
+      });
+    });
+
+    test('waits the full boundary before the first tick', () {
+      FakeAsync().run((async) {
+        var calls = 0;
+
+        utc.repeatEvery(DateTimeUnit.second, () {
+          calls++;
+          return false;
+        });
+
+        // 04.123456 → 05.000000 is 876_544 µs.
+        async.elapse(const Duration(microseconds: 876543));
+        expect(calls, 0);
+
+        async.elapse(const Duration(microseconds: 1));
+        expect(calls, 1);
       });
     });
   });
 
-  group('timeStamp', () {
-    test('formats time string without milliseconds', () {
-      final dt = DateTime(2026, 1, 1, 9, 5, 7, 45);
-      expect(dt.timeStamp(), equals('09:05:07'));
-      expect(dt.timeStamp(showMilliseconds: false), equals('09:05:07'));
+  group('DateTimeExt.timeStamp', () {
+    test('formats HH:mm:ss without milliseconds by default', () {
+      expect(utc.timeStamp(), '05:09:04');
     });
 
-    test('formats time string with milliseconds', () {
-      final dt = DateTime(2026, 1, 1, 14, 30, 45, 7);
-      expect(dt.timeStamp(showMilliseconds: true), equals('14:30:45.007'));
+    test('appends zero-padded milliseconds when requested', () {
+      expect(utc.timeStamp(showMilliseconds: true), '05:09:04.123');
+    });
+
+    test('pads every component', () {
+      final early = DateTime.utc(2026, 1, 1, 0, 0, 0, 7);
+
+      expect(early.timeStamp(showMilliseconds: true), '00:00:00.007');
     });
   });
 
-  group('truncate', () {
-    test('truncates local and UTC DateTime at various unit precisions', () {
-      final local = DateTime(2026, 8, 15, 14, 30, 45, 123, 456);
-      final utc = DateTime.utc(2026, 8, 15, 14, 30, 45, 123, 456);
+  group('DateTimeExt.truncate', () {
+    test('defaults to second', () {
+      expect(utc.truncate(), DateTime.utc(2026, 10, 11, 5, 9, 4));
+    });
 
-      // Default truncate (atDateTimeUnit = DateTimeUnit.second)
-      final truncatedDefault = local.truncate();
-      expect(truncatedDefault, equals(DateTime(2026, 8, 15, 14, 30, 45, 0, 0)));
-      expect(truncatedDefault.isUtc, isFalse);
-
-      final truncatedUtcDefault = utc.truncate();
-      expect(
-        truncatedUtcDefault,
-        equals(DateTime.utc(2026, 8, 15, 14, 30, 45, 0, 0)),
-      );
-      expect(truncatedUtcDefault.isUtc, isTrue);
-
-      // Truncate at year
+    test('year keeps only the year', () {
       expect(
         utc.truncate(atDateTimeUnit: DateTimeUnit.year),
-        equals(DateTime.utc(2026, 1, 1, 0, 0, 0, 0, 0)),
+        DateTime.utc(2026),
       );
+    });
 
-      // Truncate at month
+    test('month keeps year and month', () {
       expect(
         utc.truncate(atDateTimeUnit: DateTimeUnit.month),
-        equals(DateTime.utc(2026, 8, 1, 0, 0, 0, 0, 0)),
+        DateTime.utc(2026, 10),
       );
+    });
 
-      // Truncate at day
+    test('day keeps through day', () {
       expect(
         utc.truncate(atDateTimeUnit: DateTimeUnit.day),
-        equals(DateTime.utc(2026, 8, 15, 0, 0, 0, 0, 0)),
+        DateTime.utc(2026, 10, 11),
       );
+    });
 
-      // Truncate at hour
+    test('hour keeps through hour', () {
       expect(
         utc.truncate(atDateTimeUnit: DateTimeUnit.hour),
-        equals(DateTime.utc(2026, 8, 15, 14, 0, 0, 0, 0)),
+        DateTime.utc(2026, 10, 11, 5),
       );
+    });
 
-      // Truncate at minute
+    test('minute keeps through minute', () {
       expect(
         utc.truncate(atDateTimeUnit: DateTimeUnit.minute),
-        equals(DateTime.utc(2026, 8, 15, 14, 30, 0, 0, 0)),
+        DateTime.utc(2026, 10, 11, 5, 9),
       );
+    });
 
-      // Truncate at msec
+    test('second keeps through second', () {
+      expect(
+        utc.truncate(atDateTimeUnit: DateTimeUnit.second),
+        DateTime.utc(2026, 10, 11, 5, 9, 4),
+      );
+    });
+
+    test('msec keeps through millisecond', () {
       expect(
         utc.truncate(atDateTimeUnit: DateTimeUnit.msec),
-        equals(DateTime.utc(2026, 8, 15, 14, 30, 45, 123, 0)),
+        DateTime.utc(2026, 10, 11, 5, 9, 4, 123),
       );
+    });
 
-      // Truncate at usec (finest unit, next is null -> preserves everything)
-      expect(
-        utc.truncate(atDateTimeUnit: DateTimeUnit.usec),
-        equals(DateTime.utc(2026, 8, 15, 14, 30, 45, 123, 456)),
-      );
+    test('usec keeps everything', () {
+      expect(utc.truncate(atDateTimeUnit: DateTimeUnit.usec), utc);
+    });
+
+    test('preserves UTC', () {
+      expect(utc.truncate().isUtc, isTrue);
+    });
+
+    test('preserves local', () {
+      final truncated = local.truncate(atDateTimeUnit: DateTimeUnit.hour);
+
+      expect(truncated.isUtc, isFalse);
+      expect(truncated, DateTime(2026, 10, 11, 5));
     });
   });
 }

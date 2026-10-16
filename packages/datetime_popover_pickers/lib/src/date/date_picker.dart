@@ -13,7 +13,7 @@ class DatePicker extends StatefulWidget {
   /// Constructor
   const DatePicker({
     required this.onDateChanged,
-    required this.size,
+    this.size = .regular,
     this.initialDate,
     this.minimumYear = defaultMinimumYear,
     this.maximumYear = defaultMaximumYear,

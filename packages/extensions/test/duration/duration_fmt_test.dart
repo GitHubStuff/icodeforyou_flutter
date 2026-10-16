@@ -142,6 +142,51 @@ void main() {
           expect(duration.toFormattedString(), '0');
         });
       });
+
+      group('when alwaysShowDays is true', () {
+        test('renders hours-only durations with a zero day count', () {
+          const Duration duration = Duration(hours: 4, minutes: 5, seconds: 6);
+
+          expect(
+            duration.toFormattedString(alwaysShowDays: true),
+            '0 04:05:06',
+          );
+        });
+
+        test('renders minutes-only durations with a zero day count', () {
+          const Duration duration = Duration(minutes: 7, seconds: 30);
+
+          expect(
+            duration.toFormattedString(alwaysShowDays: true),
+            '0 00:07:30',
+          );
+        });
+
+        test('renders seconds-only durations padded with a zero day count', () {
+          const Duration duration = Duration(seconds: 6);
+
+          expect(
+            duration.toFormattedString(alwaysShowDays: true),
+            '0 00:00:06',
+          );
+        });
+
+        test('renders Duration.zero in full', () {
+          expect(
+            Duration.zero.toFormattedString(alwaysShowDays: true),
+            '0 00:00:00',
+          );
+        });
+
+        test('is a no-op when days are already present', () {
+          const Duration duration = Duration(days: 1200, hours: 1);
+
+          expect(
+            duration.toFormattedString(alwaysShowDays: true),
+            '1,200 01:00:00',
+          );
+        });
+      });
     });
   });
 }

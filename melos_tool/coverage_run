@@ -3,26 +3,29 @@
 # Full-workspace coverage pipeline for the icodeforyou_flutter monorepo:
 # runs coverage for packages + plugins + programs, merges everything,
 # strips generated files, renders HTML to coverage/html.
-# Version: 0.9.0
+# Version: 0.9.1
 #
 # Usage:
 #   coverage_run run       — execute the full coverage pipeline
 #   coverage_run version   — print version
 #   coverage_run           — this usage text
 #
+# 0.9.1 — step-by-step validation & error visibility:
+#   * Each phase explicitly halts on non-zero exit so failures don't cascade
+#     into cryptic lcov/genhtml missing-file errors.
+#   * Validates coverage/all_lcov.info exists before running lcov --remove.
+#
 # 0.9.0 — initial version:
 #   * Generated files (*.g.dart, *.gr.dart, *.gen.dart, *.freezed.dart,
 #     *.mocks.dart, *.config.dart) are stripped from the merged tracefile
-#     between merge and genhtml — flutter test --coverage records every
-#     compiled file, Drift and json_serializable parts included, and the
-#     merge passes them through untouched. This is the choke point.
+#     between merge and genhtml.
 #   * Output logged to Z_coverage_run_<timestamp>.txt in the CWD.
 #   * Cache-busting query strings appended to intra-report hrefs so
 #     browsers don't serve stale pages from a previous run.
 
 set -uo pipefail
 
-readonly VERSION="0.9.0"
+readonly VERSION="0.9.1"
 readonly ACTION="${1:-}"
 
 usage() {
@@ -41,15 +44,24 @@ action_run() {
   local log="$(pwd)/Z_coverage_run_$(date +%Y%m%d_%H%M%S).txt"
   print "📝 Log: $log"
   {
-    melos test_coverage
-    melos test_plugin_coverage
-    melos test_programs_coverage
-    NO_HTML=true melos coverage_merge_all
+    print "▶️ [1/6] Running package tests with coverage..."
+    melos test_coverage || { print -u2 "❌ Failed at: melos test_coverage"; exit 1; }
 
-    # Strip generated files from the merged tracefile before any report
-    # reads it. flutter test --coverage records every compiled file —
-    # Drift and json_serializable .g.dart parts included — and the merge
-    # passes them through. This is the choke point between merge and report.
+    print "▶️ [2/6] Running plugin tests with coverage..."
+    melos test_plugin_coverage || { print -u2 "❌ Failed at: melos test_plugin_coverage"; exit 1; }
+
+    print "▶️ [3/6] Running program tests with coverage..."
+    melos test_programs_coverage || { print -u2 "❌ Failed at: melos test_programs_coverage"; exit 1; }
+
+    print "▶️ [4/6] Merging all coverage manifests..."
+    NO_HTML=true melos coverage_merge_all || { print -u2 "❌ Failed at: melos coverage_merge_all"; exit 1; }
+
+    if [[ ! -s "coverage/all_lcov.info" ]]; then
+      print -u2 "❌ Failed: coverage/all_lcov.info does not exist or is empty after merge"
+      exit 1
+    fi
+
+    print "▶️ [5/6] Stripping generated code from tracefile..."
     lcov \
       --remove coverage/all_lcov.info \
       '*.g.dart' \
@@ -61,6 +73,7 @@ action_run() {
       --output-file coverage/all_lcov.info \
       --ignore-errors empty,inconsistent,format,unused
 
+    print "▶️ [6/6] Generating HTML report..."
     rm -rf coverage/html
     genhtml --ignore-errors source,empty,inconsistent,category \
       coverage/all_lcov.info -o coverage/html
@@ -70,7 +83,7 @@ action_run() {
       -exec sed -i '' -E "s/(href=\"[^\"#]+\.html)\"/\1?v=${ts}\"/g" {} +
 
     open "file://$(pwd)/coverage/html/index.html"
-  } > "$log" 2>&1 && print "✅ Done" || print "❌ Failed — check $log"
+  } > "$log" 2>&1 && print "✅ Done" || { print "❌ Failed — check $log"; exit 1; }
 }
 
 # ─── dispatch ───────────────────────────────────────────────────────────────

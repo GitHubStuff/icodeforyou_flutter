@@ -1,4 +1,4 @@
-// packages/app_navigation/lib/src/rail/deprecated/rail_button_settings.dart
+// packages/app_navigation/lib/src/rail/deprecated/rail_button_settings.dep.dart
 
 import 'package:app_navigation/src/shared/dual_nav_button.dart';
 import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;

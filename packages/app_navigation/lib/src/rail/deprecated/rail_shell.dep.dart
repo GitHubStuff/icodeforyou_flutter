@@ -1,4 +1,4 @@
-// packages/rail_navigation/lib/src/widgets/rail_shell.dart
+// packages/app_navigation/lib/src/rail/deprecated/rail_shell.dep.dart
 
 import 'package:app_navigation/src/rail/deprecated/rail_widget.dep.dart';
 import 'package:flutter/material.dart';

@@ -1,3 +1,5 @@
+// packages/sincewhen_screens/lib/src/widgets/widgets.dart
+
 export 'event_timestamp_row.dart' show EventTimestampRow;
 export 'since_when_mini_action_bar.dart' show SinceWhenMiniActionBar;
 export 'since_when_mini_text_column.dart' show SinceWhenMiniTextColumn;

@@ -15,6 +15,8 @@ dependencies:
   color_grid: ^1.0.0
   custom_widgets: ^1.0.0
   data_grid: ^1.0.0
+  datetime_popover_pickers: ^1.0.0
+  dual_selection: ^1.0.0
   extensions: ^1.0.0
   flutter:
     sdk: flutter
@@ -34,6 +36,7 @@ dependencies:
   sincewhen_models: ^1.0.0
   sincewhen_screens: ^1.0.0
   sincewhen_widgets: ^1.0.0
+  sliders: ^1.0.0
   splash_framework: ^1.0.0
   sqlite_viewer: ^1.0.0
   stacking_widgets: ^1.0.0

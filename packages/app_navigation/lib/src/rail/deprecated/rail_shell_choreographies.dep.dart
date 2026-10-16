@@ -1,4 +1,4 @@
-// packages/rail_navigation/lib/src/widgets/rail_shell_choreographies.dart
+// packages/app_navigation/lib/src/rail/deprecated/rail_shell_choreographies.dep.dart
 
 part of 'rail_shell.dep.dart';
 

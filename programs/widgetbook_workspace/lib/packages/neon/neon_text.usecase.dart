@@ -1,4 +1,4 @@
-// widgetbook_workspace/lib/neon/neon_text.usecase.dart
+// programs/widgetbook_workspace/lib/packages/neon/neon_text.usecase.dart
 import 'package:flutter/material.dart';
 import 'package:neon/neon.dart';
 import 'package:widgetbook/widgetbook.dart';

@@ -136,7 +136,7 @@ class _PingPongState extends State<PingPong>
         _configureIfChanged(context, constraints.biggest);
         return ListenableBuilder(
           listenable: widget.controller,
-          builder: (_, __) => _buildArena(),
+          builder: (_, _) => _buildArena(),
         );
       },
     );

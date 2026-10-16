@@ -33,7 +33,9 @@ class GlossaryEditCubit extends Cubit<GlossaryEditState> {
   /// Defaults to [RandomColorGenerator.generate] if none is provided.
   final Color Function() _generateColor;
 
-  final Future<DateTime> Function() _uniqueTime;
+  /// Function used to generate a unique, monotonically increasing timestamp.
+  /// Synchronous: `DateTimeExt.unique` never touches the clock asynchronously.
+  final DateTime Function() _uniqueTime;
 
   /// Request a number of random colors
   Future<void> requestRandomColors({required int count}) async {
@@ -57,8 +59,8 @@ class GlossaryEditCubit extends Cubit<GlossaryEditState> {
 
   /// If the user has selected a color then emit state where they can complete
   /// the content of the Glossary Edit
-  Future<void> requestNewId({required int usingColor}) async {
-    final int ts = (await _uniqueTime()).microsecondsSinceEpoch;
+  void requestNewId({required int usingColor}) {
+    final int ts = _uniqueTime().microsecondsSinceEpoch;
     emit(GlossaryEditPopover(usingColor, ts));
   }
 

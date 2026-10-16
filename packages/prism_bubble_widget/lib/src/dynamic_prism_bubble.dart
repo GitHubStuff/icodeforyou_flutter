@@ -39,31 +39,16 @@ class DynamicPrismBubble extends StatefulWidget {
   final Widget? child;
 
   /// The organic fluid dynamic curve preset applied to movement.
-  ///
-  /// Defaults to [BubbleFluidDynamicEnum.serene].
   final BubbleFluidDynamicEnum dynamicPreset;
 
   /// The tint color applied to the rim boundary, flourish arcs, and
   /// spectral blend.
-  ///
-  /// * For dark backgrounds: Use [Colors.white] (default) or bright pastels
-  ///   to produce luminous highlights.
-  /// * For light or white backgrounds: Use a muted, semi-transparent tone
-  ///   (such as `const Color(0x33000000)` or a subtle slate tint) to provide
-  ///   perimeter contrast without washing out.
-  ///
-  /// The alpha channel of [tintColor] modulates how strongly the tint blends
-  /// into the base pastel spectrum.
   final Color tintColor;
 
   /// Opacity of the accent flourish arcs (0.0 to 1.0).
-  ///
-  /// Defaults to `0.3`.
   final double arcOpacity;
 
   /// Global speed multiplier for phase rotation and breathing cycles.
-  ///
-  /// Defaults to `1.0`.
   final double baseSpeed;
 
   @override
@@ -100,14 +85,18 @@ class _DynamicPrismBubbleState extends State<DynamicPrismBubble>
           t: t,
         );
 
-        return PrismBubbleWidget(
+        return SizedBox(
           width: widget.width,
           height: widget.height,
-          tintColor: widget.tintColor,
-          arcOpacity: widget.arcOpacity,
-          diffusion: dynamics.diffusion,
-          phaseAngle: dynamics.phaseAngle,
-          child: widget.child,
+          child: PrismBubbleWidget(
+            width: widget.width,
+            height: widget.height,
+            tintColor: widget.tintColor,
+            arcOpacity: widget.arcOpacity,
+            diffusion: dynamics.diffusion,
+            phaseAngle: dynamics.phaseAngle,
+            child: widget.child,
+          ),
         );
       },
     );

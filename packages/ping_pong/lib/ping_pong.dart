@@ -25,7 +25,6 @@
 /// could never fit inside the widget.
 library;
 
-export 'example/ping_pong_example.dart' show PingPongExample;
 export 'src/ball_too_large_error.dart' show BallTooLargeError;
 export 'src/ping_pong.dart' show PingPong;
 export 'src/ping_pong_ball.dart' show PingPongBall;

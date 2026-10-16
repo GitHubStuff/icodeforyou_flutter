@@ -1,13 +1,15 @@
 // programs/since_when_dev/lib/app_dock_navigation/dock_destination_enum.dart
 
+// NOTE: This is the horizontal direction menu items
+
 import 'package:app_navigation/app_navigation.dart'
     show NavigableDestinationAbstract;
-import 'package:black_velvet/app_screens/shared_search_body.dart'
-    show SharedSearchBody;
 import 'package:custom_widgets/custom_widgets.dart' show DefaultWelcomeScreen;
 import 'package:flutter/material.dart';
-import 'package:mypickdf/mypickdf.dart' show ArcheTypes;
-import 'package:ping_pong/example/ping_pong_example.dart' show PingPongExample;
+import 'package:since_when_dev/app_shared_navigation/shared_search_body.dart'
+    show SharedSearchBody;
+import 'package:since_when_dev/example/ping_pong_example.dart'
+    show PingPongExample;
 import 'package:sincewhen_widgets/sincewhen_widgets.dart' show GlossaryEditPage;
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 

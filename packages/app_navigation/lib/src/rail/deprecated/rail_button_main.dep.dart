@@ -1,4 +1,4 @@
-// packages/app_navigation/lib/src/rail/deprecated/rail_button_main.dart
+// packages/app_navigation/lib/src/rail/deprecated/rail_button_main.dep.dart
 
 import 'package:app_navigation/src/shared/dual_nav_button.dart'
     show DualNavButton;

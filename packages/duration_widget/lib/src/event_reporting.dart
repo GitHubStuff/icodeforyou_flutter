@@ -5,8 +5,9 @@ import 'package:extensions/duration/duration_fmt.dart' show DurationFormatting;
 /// A utility class that calculates the temporal difference and relative
 /// direction between an event timestamp and a reference timestamp.
 ///
-/// Use this class to determine whether an event is in the past, present, or future
-/// relative to [currentTime], and to generate human-readable duration strings.
+/// Use this class to determine whether an event is in the past, present, or
+/// future relative to [currentTime], and to generate human-readable duration
+/// strings.
 ///
 /// ### Example
 ///
@@ -17,10 +18,12 @@ import 'package:extensions/duration/duration_fmt.dart' show DurationFormatting;
 /// );
 ///
 /// print(reporting.eventDirection()); // 'Since'
-/// print(reporting.durationString(showLeadingZero: true)); // '00:30:00' (depending on format)
+/// print(reporting.durationString(alwaysShowDays: false)); // '30:00'
+/// print(reporting.durationString(alwaysShowDays: true)); // '0 00:30:00'
 /// ```
 class EventReporting {
-  /// Creates an [EventReporting] instance with the specified [eventTime] and [currentTime].
+  /// Creates an [EventReporting] instance with the specified [eventTime]
+  /// and [currentTime].
   const EventReporting({required this.eventTime, required this.currentTime});
 
   /// The target timestamp of the event.
@@ -33,18 +36,23 @@ class EventReporting {
   /// and [currentTime] into a readable string.
   ///
   /// Uses [DurationFormatting.toFormattedString] from `package:extensions`.
-  /// If [showLeadingZero] is `true`, single-digit units are padded with a leading zero.
-  String durationString({required bool showLeadingZero}) => eventTime
+  /// When [alwaysShowDays] is `true` the full `D HH:MM:SS` form is always
+  /// used, with a `0` day count where there are no whole days; otherwise the
+  /// adaptive form is used.
+  String durationString({required bool alwaysShowDays}) => eventTime
       .difference(currentTime)
       .abs()
-      .toFormattedString(showLeadingZero: showLeadingZero);
+      .toFormattedString(alwaysShowDays: alwaysShowDays);
 
   /// Returns a descriptive direction label indicating the temporal relation
   /// of [eventTime] relative to [currentTime].
   ///
-  /// * Returns `'Since'` if [eventTime] occurred before [currentTime] (past event).
-  /// * Returns `'Until'` if [eventTime] occurs after [currentTime] (future countdown).
-  /// * Returns an empty string (`''`) if [eventTime] is identical to [currentTime].
+  /// * Returns `'Since'` if [eventTime] occurred before [currentTime]
+  ///   (past event).
+  /// * Returns `'Until'` if [eventTime] occurs after [currentTime]
+  ///   (future countdown).
+  /// * Returns an empty string (`''`) if [eventTime] is identical to
+  ///   [currentTime].
   String eventDirection() {
     if (eventTime.isBefore(currentTime)) return 'Since';
     if (eventTime.isAfter(currentTime)) return 'Until';

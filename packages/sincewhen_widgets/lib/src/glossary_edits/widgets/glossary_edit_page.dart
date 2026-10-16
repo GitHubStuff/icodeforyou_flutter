@@ -1,4 +1,4 @@
-// packages/sincewhen_widgets/lib/src/glossary_edits/glossary_edit_page.dart
+// packages/sincewhen_widgets/lib/src/glossary_edits/widgets/glossary_edit_page.dart
 
 import 'package:dependency_resolver/dependency_resolver.dart'
     show DependencyResolver;

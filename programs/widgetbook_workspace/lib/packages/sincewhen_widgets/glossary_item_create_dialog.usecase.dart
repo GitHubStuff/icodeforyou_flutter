@@ -1,4 +1,4 @@
-// packages/sincewhen_widgets/lib/src/glossary_edits/widgets/glossary_item_create_dialog.usecase.dart
+// programs/widgetbook_workspace/lib/packages/sincewhen_widgets/glossary_item_create_dialog.usecase.dart
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart' show Gap;

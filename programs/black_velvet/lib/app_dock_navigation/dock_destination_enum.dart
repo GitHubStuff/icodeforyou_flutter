@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
 /// Placeholder view for the library destination.
-/// TODO: Replace with the real screen, then delete this function.
+///
+/// TODO(Steven): Replace with the real screen, then delete this function.
 Widget _libraryView() => const Center(child: Text('Library'));
 
 /// Placeholder view for the database destination.

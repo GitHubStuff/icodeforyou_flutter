@@ -1,32 +1,41 @@
 // packages/extensions/lib/datetime/src/datetime_ext.dart
 import 'package:extensions/datetime/src/datetime_unit.dart' show DateTimeUnit;
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart' show DateFormat;
 
 /// Extension on [DateTime] providing uniqueness guarantees, formatting,
 /// and precision truncation utilities.
 extension DateTimeExt on DateTime {
   static int _lastMicroseconds = 0;
 
+  /// Default pattern used by [toDisplay]: `Sun 27-Mar-2026 5:09:04 AM`.
+  static const String displayPattern = 'EEE dd-MMM-yyyy h:mm:ss a';
+
   /// Returns a [DateTime] guaranteed to be unique across successive calls.
   ///
   /// [now] returns the current time and is injectable so the method can be
   /// driven by a fake clock in tests; it defaults to [DateTime.now].
-  static Future<DateTime> unique({
+  static DateTime unique({
     DateTime Function() now = DateTime.now,
-  }) async {
-    int currentMicros = now().microsecondsSinceEpoch;
+  }) {
+    var currentMicros = now().microsecondsSinceEpoch;
     if (currentMicros <= _lastMicroseconds) {
       currentMicros = _lastMicroseconds + 1;
     }
     _lastMicroseconds = currentMicros;
-    return DateTime.fromMicrosecondsSinceEpoch(_lastMicroseconds);
+    return DateTime.fromMicrosecondsSinceEpoch(currentMicros);
   }
 
   /// Resets all static state to defaults. Intended for use in tests only.
   @visibleForTesting
-  static void reset() {
-    _lastMicroseconds = 0;
-  }
+  static void reset() => _lastMicroseconds = 0;
+
+  /// Formats this [DateTime].
+  ///
+  /// With no argument the cached [displayPattern] formatter is used. Passing
+  /// [formatString] builds a one-off [DateFormat] for that pattern.
+  String toDisplay([String? formatString]) =>
+      DateFormat(formatString ?? displayPattern).format(this);
 
   /// Whether [year] falls on a Gregorian leap year.
   bool get isLeapYear => year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
@@ -100,12 +109,61 @@ extension DateTimeExt on DateTime {
     }
   }
 
+  /// Returns a formatted timestamp string in `HH:mm:ss` format, with
+  /// `.SSS` appended when [showMilliseconds] is `true`.
+  String timeStamp({bool showMilliseconds = false}) {
+    final ms = showMilliseconds
+        ? '.${millisecond.toString().padLeft(3, '0')}'
+        : '';
+    return '${hour.toString().padLeft(2, '0')}:'
+        '${minute.toString().padLeft(2, '0')}:'
+        '${second.toString().padLeft(2, '0')}'
+        '$ms';
+  }
+
+  /// Truncates this [DateTime] to the precision of [atDateTimeUnit].
+  ///
+  /// All units finer than [atDateTimeUnit] are zeroed (or set to their
+  /// minimum valid value). Preserves UTC vs. local time.
+  ///
+  /// [DateTimeUnit] is declared coarsest-to-finest, so a unit is kept when
+  /// its index is at or below [atDateTimeUnit]'s. Year is the coarsest unit
+  /// and is therefore always kept.
+  DateTime truncate({DateTimeUnit atDateTimeUnit = DateTimeUnit.second}) {
+    final keep = atDateTimeUnit.index;
+    int at(DateTimeUnit unit, int value, [int floor = 0]) =>
+        unit.index <= keep ? value : floor;
+    return _make(
+      year,
+      at(DateTimeUnit.month, month, 1),
+      at(DateTimeUnit.day, day, 1),
+      at(DateTimeUnit.hour, hour),
+      at(DateTimeUnit.minute, minute),
+      at(DateTimeUnit.second, second),
+      at(DateTimeUnit.msec, millisecond),
+      at(DateTimeUnit.usec, microsecond),
+    );
+  }
+
+  /// The calendar constructor matching this instant's zone.
+  DateTime Function(
+    int year, [
+    int month,
+    int day,
+    int hour,
+    int minute,
+    int second,
+    int millisecond,
+    int microsecond,
+  ])
+  get _make => isUtc ? DateTime.utc : DateTime.new;
+
   /// Builds the next boundary [DateTime] for [unit], preserving this instant's
   /// UTC/local zone. Out-of-range component values (e.g. `second + 1 == 60`)
   /// are normalised by the [DateTime] constructor, which cascades the rollover
   /// up through minutes, hours, days, months, and years as needed.
   DateTime _nextBoundary(DateTimeUnit unit) {
-    final make = isUtc ? DateTime.utc : DateTime.new;
+    final make = _make;
     return switch (unit) {
       DateTimeUnit.year => make(year + 1),
       DateTimeUnit.month => make(year, month + 1),
@@ -133,35 +191,5 @@ extension DateTimeExt on DateTime {
         microsecond + 1,
       ),
     };
-  }
-
-  /// Returns a formatted timestamp string in `HH:mm:ss.SSS` format.
-  String timeStamp({bool showMilliseconds = false}) {
-    final ms = showMilliseconds
-        ? '.${millisecond.toString().padLeft(3, '0')}'
-        : '';
-    return '${hour.toString().padLeft(2, '0')}:'
-        '${minute.toString().padLeft(2, '0')}:'
-        '${second.toString().padLeft(2, '0')}'
-        '$ms';
-  }
-
-  /// Truncates this [DateTime] to the precision of [atDateTimeUnit].
-  ///
-  /// All units finer than [atDateTimeUnit] are zeroed (or set to their
-  /// minimum valid value). Preserves UTC vs. local time.
-  DateTime truncate({DateTimeUnit atDateTimeUnit = DateTimeUnit.second}) {
-    final skipUnits = atDateTimeUnit.next?.sublist() ?? {};
-    final m = isUtc ? DateTime.utc : DateTime.new;
-    return m(
-      skipUnits.contains(DateTimeUnit.year) ? 0 : year,
-      skipUnits.contains(DateTimeUnit.month) ? 1 : month,
-      skipUnits.contains(DateTimeUnit.day) ? 1 : day,
-      skipUnits.contains(DateTimeUnit.hour) ? 0 : hour,
-      skipUnits.contains(DateTimeUnit.minute) ? 0 : minute,
-      skipUnits.contains(DateTimeUnit.second) ? 0 : second,
-      skipUnits.contains(DateTimeUnit.msec) ? 0 : millisecond,
-      skipUnits.contains(DateTimeUnit.usec) ? 0 : microsecond,
-    );
   }
 }

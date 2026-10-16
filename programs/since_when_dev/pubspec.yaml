@@ -2,7 +2,7 @@ name: since_when_dev
 description: "Development app"
 publish_to: none
 resolution: workspace
-version: 1.0.0
+version: 1.0.1
 
 environment:
   sdk: ^3.12.0
@@ -14,10 +14,11 @@ dependencies:
   dependency_resolver: ^1.0.0
   flutter:
     sdk: flutter
-  mypickdf: ^1.0.0
   ping_pong: ^1.0.0
+  prism_bubble_widget: ^1.0.0
   shared_preferences: ^2.5.5
   sincewhen_widgets: ^1.0.0
+  sliders: ^1.0.0
   splash_framework: ^1.0.0
   status_bar_chameleon: ^1.0.1
   theme_framework: ^1.0.0
@@ -28,47 +29,35 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   icodeforyou_lints: ^1.0.0
-  
 
 flutter:
   uses-material-design: true
   assets:
     - assets/iconer.png
 
-# Flutter Gen to create const assets
-# From terminal: % dart run build_runner build
 flutter_gen:
   output: lib/gen/
-
   integrations:
-     image: true
-     flutter_svg: true
-     rive: true           # Interactive vector animations (aka .riv files)
+    image: true
+    flutter_svg: true
+    rive: true
 
-
-# Launcher Icons
-# From terminal: % dart run flutter_launcher_icons
 flutter_launcher_icons:
   image_path: assets/iconer.png
   remove_alpha_ios: true
-
   android: true
   adaptive_icon_background: "#FFFFFF"
   adaptive_icon_foreground: assets/iconer_foreground.png
   adaptive_icon_monochrome: assets/iconer_monochrome.png
   min_sdk_android: 21
-
   ios: true
-
   web:
     generate: true
     background_color: "#FFFFFF"
     theme_color: "#FFFFFF"
-
   macos:
     generate: true
     image_path: assets/iconer.png
-
   windows:
     generate: true
     image_path: assets/iconer.png

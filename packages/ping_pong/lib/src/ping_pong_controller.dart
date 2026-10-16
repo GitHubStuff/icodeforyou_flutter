@@ -30,13 +30,12 @@ import 'package:ping_pong/src/ping_physics.dart' show PingPhysics;
 class PingPongController extends ChangeNotifier {
   /// Creates a controller.
   ///
-  /// Pass a seeded [random] for deterministic tests. [physics] can be
+  /// Pass a seeded [random] for deterministic tests. [_physics] can be
   /// replaced to test the controller in isolation.
   PingPongController({
     Random? random,
-    PingPhysics physics = const PingPhysics(),
-  }) : _random = random ?? Random(),
-       _physics = physics;
+    this._physics = const PingPhysics(),
+  }) : _random = random ?? Random();
 
   final Random _random;
   final PingPhysics _physics;

@@ -1,8 +1,9 @@
 // programs/black_velvet/lib/app_screens/shared_search_body.dart
 import 'package:custom_widgets/custom_widgets.dart' show IceChip;
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
-import 'package:prism_bubble_widget/prism_bubble_widget.dart';
+import 'package:gap/gap.dart' show Gap;
+import 'package:prism_bubble_widget/prism_bubble_widget.dart'
+    show AnimatedPrismBubble, DynamicPrismBubble;
 
 /// Simple/sample body for the 'Search' button/option
 class SharedSearchBody extends StatefulWidget {
@@ -19,7 +20,7 @@ class _SharedSearchBody extends State<SharedSearchBody> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      title: const Text('SEARCH PAGE'),
+      title: const Text('BLACK VELVET'),
       centerTitle: true, // Centers the title horizontally
     ),
     body: SafeArea(
@@ -32,7 +33,7 @@ class _SharedSearchBody extends State<SharedSearchBody> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               IceChip(
-                const Text('Sample'),
+                const Text('Share'),
                 backgroundColor: Colors.purpleAccent,
                 showBorder: showBorder,
                 onPress: () => setState(() {

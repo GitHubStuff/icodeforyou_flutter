@@ -1,3 +1,5 @@
+// packages/extensions/lib/duration/duration_fmt.dart
+
 /// Human-readable formatting for [Duration] values.
 ///
 /// Dart's built-in [Duration.toString] produces an ISO-ish
@@ -35,7 +37,8 @@ library;
 /// Example:
 ///
 /// ```dart
-/// const Duration(days: 2, hours: 3, minutes: 4, seconds: 5).toFormattedString();
+/// const Duration(days: 2, hours: 3, minutes: 4, seconds: 5)
+///          .toFormattedString();
 /// // => '2 03:04:05'
 ///
 /// const Duration(hours: 1, seconds: 9).toFormattedString();
@@ -63,6 +66,11 @@ extension DurationFormatting on Duration {
   ///
   /// Fractional seconds are truncated. A [Duration.zero] input yields `'0'`.
   ///
+  /// When [alwaysShowDays] is `true` the adaptive selection is bypassed and
+  /// every value is rendered in the full `D HH:MM:SS` form, with a day count
+  /// of `0` where there are no whole days (e.g. `0 00:00:05`). Use this when
+  /// a column of durations must align regardless of magnitude.
+  ///
   /// This method is pure and allocation-light: it performs no locale lookup
   /// and the thousands separator is always a comma (`,`), regardless of the
   /// current locale. If locale-aware grouping is required, format the day
@@ -70,7 +78,7 @@ extension DurationFormatting on Duration {
   ///
   /// See the [DurationFormatting] documentation for the full format table
   /// and behavioural caveats regarding negative durations.
-  String toFormattedString({bool showLeadingZero = true}) {
+  String toFormattedString({bool alwaysShowDays = false}) {
     // Decompose the duration into its clock components. Each component is
     // reduced modulo the next-larger unit so that, for example, `hours` is
     // always in the range 0–23 rather than the total hour count.
@@ -85,7 +93,7 @@ extension DurationFormatting on Duration {
     final String minStr = minutes.toString().padLeft(2, '0');
     final String hrStr = hours.toString().padLeft(2, '0');
 
-    if (days > 0 || showLeadingZero) {
+    if (days > 0 || alwaysShowDays) {
       // Insert a comma before every group of three digits that is followed
       // only by complete groups of three (e.g. 1200 -> 1,200, 1200000 ->
       // 1,200,000). `\B` prevents a leading comma; the lookahead ensures the

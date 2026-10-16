@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// A [Cubit] that emits an updated [DateTime] at a fixed periodic [interval].
 ///
-/// Starting from an initial [DateTime], this cubit maintains an internal [Timer]
-/// that increments the emitted state by [interval] on every tick.
+/// Starting from an initial [DateTime], this cubit maintains an internal
+/// [Timer]n that increments the emitted state by [interval] on every tick.
 ///
 /// ### Example
 ///

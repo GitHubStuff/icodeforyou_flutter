@@ -11,7 +11,7 @@ import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 /// TODO: Replace with the real screen, then delete this function.
 Widget _searchView() => Center(
   child: IceChip(
-    const Text('Sample'),
+    const Text('Rail'),
     backgroundColor: Colors.purpleAccent,
     showBorder: true,
     onPress: () {},

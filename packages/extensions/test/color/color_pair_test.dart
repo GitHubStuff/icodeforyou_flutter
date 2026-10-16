@@ -1,77 +1,134 @@
 // packages/extensions/test/color/color_pair_test.dart
-import 'package:extensions/extensions.dart' show ColorPair;
+import 'package:extensions/color/color_pair.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Using "final" instead of "const" to to test constructor', () {
-    // Purposefully omitting 'const' here to force runtime evaluation
-    // and register a hit in LCOV, while leaving production code optimized.
-    final pair = ColorPair(dark: Colors.black, light: Colors.white);
-    expect(pair, isNotNull);
-  });
+  const dark = Color(0xFF111111);
+  const light = Color(0xFFEEEEEE);
 
-  group('ColorPair Tests', () {
-    testWidgets('returns dark color and correct booleans when theme is dark', (
-      WidgetTester tester,
-    ) async {
-      // 1. Instantiate to cover Line 7
-      const colorPair = ColorPair(
-        dark: Colors.black,
-        light: Colors.white,
-      );
-
-      late BuildContext testContext;
-
-      // 2. Pump a widget with a Dark Theme
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: ThemeData(brightness: Brightness.dark),
-          home: Builder(
-            builder: (BuildContext context) {
-              testContext = context;
-              return const SizedBox.shrink();
-            },
-          ),
+  /// Pumps [child] inside a [MaterialApp] whose theme has [brightness], and
+  /// hands the resulting [BuildContext] to [body].
+  Future<void> pumpWithBrightness(
+    WidgetTester tester,
+    Brightness brightness,
+    void Function(BuildContext context) body,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(brightness: brightness),
+        home: Builder(
+          builder: (context) {
+            body(context);
+            return const SizedBox.shrink();
+          },
         ),
-      );
+      ),
+    );
+  }
 
-      // 3. Verify coverage for lines 16, 19, 20, and 23
-      expect(colorPair.dark, Colors.black);
-      expect(colorPair.light, Colors.white);
-      expect(colorPair.isDark(testContext), isTrue);
-      expect(colorPair.isLight(testContext), isFalse);
-      expect(colorPair.current(testContext), Colors.black);
+  group('ColorPair', () {
+    group('constructor', () {
+      test('stores dark and light', () {
+        const pair = ColorPair(dark: dark, light: light);
+
+        expect(pair.dark, dark);
+        expect(pair.light, light);
+      });
+
+      test('executes at runtime when constructed non-const', () {
+        // A const invocation is folded at compile time and never hits the
+        // constructor line in LCOV; a non-const invocation does.
+        // ignore: prefer_const_constructors
+        final pair = ColorPair(dark: dark, light: light);
+
+        expect(pair.dark, dark);
+        expect(pair.light, light);
+      });
     });
 
-    testWidgets('returns light color and correct booleans when theme is light', (
-      WidgetTester tester,
-    ) async {
-      // 1. Instantiate again
-      const colorPair = ColorPair(
-        dark: Colors.black,
-        light: Colors.white,
-      );
+    group('isDark', () {
+      testWidgets('returns true under a dark theme', (tester) async {
+        const pair = ColorPair(dark: dark, light: light);
+        late bool result;
 
-      late BuildContext testContext;
+        await pumpWithBrightness(
+          tester,
+          Brightness.dark,
+          (context) => result = pair.isDark(context),
+        );
 
-      // 2. Pump a widget with a Light Theme
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: ThemeData(brightness: Brightness.light),
-          home: Builder(
-            builder: (BuildContext context) {
-              testContext = context;
-              return const SizedBox.shrink();
-            },
-          ),
-        ),
-      );
+        expect(result, isTrue);
+      });
 
-      // 3. Verify coverage for lines 16, 19, 20, and 23 in the alternate branch
-      expect(colorPair.isDark(testContext), isFalse);
-      expect(colorPair.isLight(testContext), isTrue);
-      expect(colorPair.current(testContext), Colors.white);
+      testWidgets('returns false under a light theme', (tester) async {
+        const pair = ColorPair(dark: dark, light: light);
+        late bool result;
+
+        await pumpWithBrightness(
+          tester,
+          Brightness.light,
+          (context) => result = pair.isDark(context),
+        );
+
+        expect(result, isFalse);
+      });
+    });
+
+    group('isLight', () {
+      testWidgets('returns true under a light theme', (tester) async {
+        const pair = ColorPair(dark: dark, light: light);
+        late bool result;
+
+        await pumpWithBrightness(
+          tester,
+          Brightness.light,
+          (context) => result = pair.isLight(context),
+        );
+
+        expect(result, isTrue);
+      });
+
+      testWidgets('returns false under a dark theme', (tester) async {
+        const pair = ColorPair(dark: dark, light: light);
+        late bool result;
+
+        await pumpWithBrightness(
+          tester,
+          Brightness.dark,
+          (context) => result = pair.isLight(context),
+        );
+
+        expect(result, isFalse);
+      });
+    });
+
+    group('current', () {
+      testWidgets('returns dark under a dark theme', (tester) async {
+        const pair = ColorPair(dark: dark, light: light);
+        late Color result;
+
+        await pumpWithBrightness(
+          tester,
+          Brightness.dark,
+          (context) => result = pair.current(context),
+        );
+
+        expect(result, dark);
+      });
+
+      testWidgets('returns light under a light theme', (tester) async {
+        const pair = ColorPair(dark: dark, light: light);
+        late Color result;
+
+        await pumpWithBrightness(
+          tester,
+          Brightness.light,
+          (context) => result = pair.current(context),
+        );
+
+        expect(result, light);
+      });
     });
   });
 }

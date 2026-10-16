@@ -1,4 +1,4 @@
-// packages/tool_kit/lib/src/file_walker_cubit.dart
+// packages/tool_kit/lib/src/file_walker/file_walker_cubit.dart
 
 import 'dart:async';
 import 'dart:io';

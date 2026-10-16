@@ -14,3 +14,8 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
+
+linter:
+  rules:
+    flutter_style_todos: true
+

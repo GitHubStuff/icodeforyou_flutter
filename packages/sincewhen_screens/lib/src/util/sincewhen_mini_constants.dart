@@ -7,7 +7,7 @@
 /// pixels). Centralizing the numbers keeps the widgets literal-free and
 /// gives a future small-screen variant one place to retune.
 /// {@endtemplate}
-final class SinceWhenMiniDimensions {
+abstract class SinceWhenMiniDimensions {
   const SinceWhenMiniDimensions._();
 
   // ── Screen chrome ────────────────────────────────────────────────

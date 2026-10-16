@@ -1,4 +1,4 @@
-// packages/rail_navigation/lib/src/widgets/rail_overflow_button.dart
+// packages/app_navigation/lib/src/rail/deprecated/rail_overflow_button.dep.dart
 
 import 'package:app_navigation/src/shared/dual_more_button.dart';
 import 'package:app_navigation/src/shared/dual_show_popover.dart';

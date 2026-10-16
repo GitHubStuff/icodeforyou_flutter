@@ -1,4 +1,4 @@
-// packages/duration_widget/lib/duration_widget.dart
+// packages/duration_widget/lib/src/duration_widget.dart
 
 import 'package:duration_widget/src/event_reporting.dart';
 import 'package:flutter/widgets.dart';
@@ -16,25 +16,26 @@ import 'package:flutter/widgets.dart';
 /// DurationWidget(
 ///   eventTime: DateTime(2026, 1, 1, 12, 0),
 ///   currentTime: DateTime(2026, 1, 1, 12, 5),
-///   showLeadingZero: true,
+///   textStyle: const TextStyle(fontSize: 24),
+///   alwaysShowDays: true,
 /// )
 /// ```
 ///
 /// See also:
 ///
-///  * [EventReporting], the underlying utility handling the duration string formatting.
+///  * [EventReporting], the underlying utility handling the duration string
+///    formatting.
 ///  * [Text], the leaf widget used to render the resulting text.
 class DurationWidget extends StatelessWidget {
   /// Creates a [DurationWidget].
   ///
-  /// The [eventTime] and [currentTime] arguments must not be null.
-  /// [showLeadingZero] defaults to `false`.
+  /// [alwaysShowDays] defaults to `false`.
   const DurationWidget({
     required this.eventTime,
     required this.currentTime,
     required this.textStyle,
     super.key,
-    this.showLeadingZero = false,
+    this.alwaysShowDays = false,
   });
 
   /// The target timestamp of the event being measured against.
@@ -53,10 +54,13 @@ class DurationWidget extends StatelessWidget {
   /// The style to display the text
   final TextStyle textStyle;
 
-  /// Whether numeric units less than 10 should be padded with a leading zero.
+  /// Whether to always render the full `D HH:MM:SS` form, with a `0` day
+  /// count where there are no whole days.
   ///
-  /// Defaults to `false` (e.g., outputs `"5m"` instead of `"05m"`).
-  final bool showLeadingZero;
+  /// Defaults to `false`, which uses the adaptive form (e.g. `05:00` for a
+  /// five-minute duration rather than `0 00:05:00`). Set to `true` when a
+  /// column of durations must align regardless of magnitude.
+  final bool alwaysShowDays;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +70,7 @@ class DurationWidget extends StatelessWidget {
     );
 
     return Text(
-      eventReport.durationString(showLeadingZero: showLeadingZero),
+      eventReport.durationString(alwaysShowDays: alwaysShowDays),
       style: textStyle,
       maxLines: 2,
       overflow: TextOverflow.ellipsis,

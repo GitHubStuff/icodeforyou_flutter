@@ -22,7 +22,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// TickingDurationWidget(
 ///   eventTime: DateTime(2026, 1, 1, 12, 0),
 ///   currentTime: DateTime.now(),
-///   showLeadingZero: true,
+///   textStyle: const TextStyle(fontSize: 24),
+///   alwaysShowDays: true,
 /// )
 /// ```
 ///
@@ -33,14 +34,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class TickingDurationWidget extends StatelessWidget {
   /// Creates a [TickingDurationWidget].
   ///
-  /// The [eventTime] and [currentTime] arguments must not be null.
-  /// [showLeadingZero] defaults to `false` and [interval] to one second.
+  /// [alwaysShowDays] defaults to `false` and [interval] to one second.
   const TickingDurationWidget({
     required this.eventTime,
     required this.currentTime,
     required this.textStyle,
     super.key,
-    this.showLeadingZero = false,
+    this.alwaysShowDays = false,
     this.interval = const Duration(seconds: 1),
   });
 
@@ -59,10 +59,14 @@ class TickingDurationWidget extends StatelessWidget {
   /// Text style to control display
   final TextStyle textStyle;
 
-  /// Whether numeric units less than 10 should be padded with a leading zero.
+  /// Whether to always render the full `D HH:MM:SS` form, with a `0` day
+  /// count where there are no whole days.
   ///
-  /// Defaults to `false` (e.g., outputs `"5m"` instead of `"05m"`).
-  final bool showLeadingZero;
+  /// Defaults to `false`, which uses the adaptive form (e.g. `05:00` for a
+  /// five-minute duration rather than `0 00:05:00`). Set to `true` when the
+  /// displayed width must not change as the duration crosses a unit
+  /// boundary.
+  final bool alwaysShowDays;
 
   /// How often the displayed duration advances.
   ///
@@ -78,7 +82,7 @@ class TickingDurationWidget extends StatelessWidget {
           eventTime: eventTime,
           currentTime: tickedTime,
           textStyle: textStyle,
-          showLeadingZero: showLeadingZero,
+          alwaysShowDays: alwaysShowDays,
         ),
       ),
     );

@@ -1,4 +1,4 @@
-// programs/since_when_dev/lib/screens/animated_splash_screen.dart
+// programs/since_when_dev/lib/splash/animated_splash_screen.dart
 
 import 'dart:async' show unawaited;
 

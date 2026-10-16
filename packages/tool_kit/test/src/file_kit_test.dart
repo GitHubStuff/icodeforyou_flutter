@@ -1,144 +1,192 @@
 // packages/tool_kit/test/src/file_kit_test.dart
 import 'dart:io';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:tool_kit/src/file_kit.dart';
+
+import 'package:test/test.dart';
+import 'package:tool_kit/tool_kit.dart';
 
 void main() {
-  late FileKit fileKit;
   late Directory tempDir;
 
   setUp(() async {
-    fileKit = FileKit();
     tempDir = await Directory.systemTemp.createTemp('file_kit_test_');
   });
 
   tearDown(() async {
-    if (await tempDir.exists()) {
-      await tempDir.delete(recursive: true);
-    }
+    await tempDir.delete(recursive: true);
   });
 
-  File createTempFile(String name, String content) {
-    final file = File('${tempDir.path}/$name');
-    file.writeAsStringSync(content);
-    return file;
-  }
+  File tempFile(String name) => File('${tempDir.path}/$name');
 
-  group('areFilesIdentical', () {
-    test('returns false when file1 does not exist', () async {
-      final file1 = File('${tempDir.path}/missing1.txt');
-      final file2 = createTempFile('present2.txt', 'hello');
+  group('FileKit', () {
+    group('constructor', () {
+      test('defaults isMacOSOverride to Platform.isMacOS', () {
+        final FileKit kit = FileKit();
 
-      final result = await fileKit.areFilesIdentical(file1, file2);
+        expect(kit.isMacOSOverride(), Platform.isMacOS);
+      });
 
-      expect(result, isFalse);
+      test('defaults operatingSystemOverride to Platform.operatingSystem', () {
+        final FileKit kit = FileKit();
+
+        expect(kit.operatingSystemOverride(), Platform.operatingSystem);
+      });
+
+      test('uses supplied overrides', () {
+        final FileKit kit = FileKit(
+          isMacOSOverride: () => false,
+          operatingSystemOverride: () => 'haiku',
+        );
+
+        expect(kit.isMacOSOverride(), isFalse);
+        expect(kit.operatingSystemOverride(), 'haiku');
+      });
     });
 
-    test('returns false when file2 does not exist', () async {
-      final file1 = createTempFile('present1.txt', 'hello');
-      final file2 = File('${tempDir.path}/missing2.txt');
+    group('areFilesIdentical', () {
+      test('returns false when the first file does not exist', () async {
+        final File existing = tempFile('a.txt')..writeAsStringSync('hello');
+        final File missing = tempFile('missing.txt');
 
-      final result = await fileKit.areFilesIdentical(file1, file2);
-
-      expect(result, isFalse);
-    });
-
-    test('returns false when both files have different lengths', () async {
-      final file1 = createTempFile('short.txt', 'abc');
-      final file2 = createTempFile('longer.txt', 'abcdef');
-
-      final result = await fileKit.areFilesIdentical(file1, file2);
-
-      expect(result, isFalse);
-    });
-
-    test(
-      'returns false when files have same length but different contents',
-      () async {
-        final file1 = createTempFile('content_a.txt', 'abcd');
-        final file2 = createTempFile('content_b.txt', 'abce');
-
-        final result = await fileKit.areFilesIdentical(file1, file2);
-
-        expect(result, isFalse);
-      },
-    );
-
-    test('returns true when files have identical contents', () async {
-      final file1 = createTempFile('identical_a.txt', 'same exact content');
-      final file2 = createTempFile('identical_b.txt', 'same exact content');
-
-      final result = await fileKit.areFilesIdentical(file1, file2);
-
-      expect(result, isTrue);
-    });
-  });
-
-  group('compareViaMacOsCmp', () {
-    test('throws UnsupportedError when not running on macOS', () async {
-      final file1 = createTempFile('cmp_a.txt', 'data');
-      final file2 = createTempFile('cmp_b.txt', 'data');
-
-      final nonMacKit = FileKit(
-        isMacOSOverride: () => false,
-        operatingSystemOverride: () => 'linux',
-      );
-
-      expect(
-        () => nonMacKit.compareViaMacOsCmp(file1.path, file2.path),
-        throwsA(
-          isA<UnsupportedError>().having(
-            (e) => e.message,
-            'message',
-            contains(
-              'compareViaMacOsCmp is only supported on macOS. Current platform:'
-              ' linux',
-            ),
-          ),
-        ),
-      );
-    });
-
-    test(
-      'returns true when cmp finds files identical on macOS',
-      testOn: 'mac-os',
-      () async {
-        final file1 = createTempFile('cmp_same_1.txt', 'matching text');
-        final file2 = createTempFile('cmp_same_2.txt', 'matching text');
-
-        final result = await fileKit.compareViaMacOsCmp(file1.path, file2.path);
-
-        expect(result, isTrue);
-      },
-    );
-
-    test(
-      'returns false when cmp finds files different on macOS',
-      testOn: 'mac-os',
-      () async {
-        final file1 = createTempFile('cmp_diff_1.txt', 'first file');
-        final file2 = createTempFile('cmp_diff_2.txt', 'second file');
-
-        final result = await fileKit.compareViaMacOsCmp(file1.path, file2.path);
-
-        expect(result, isFalse);
-      },
-    );
-
-    test(
-      'returns false when cmp targets a non-existent file on macOS',
-      testOn: 'mac-os',
-      () async {
-        final file1 = createTempFile('exists.txt', 'first file');
-        final missingPath = '${tempDir.path}/does_not_exist.txt';
-
-        final result = await fileKit.compareViaMacOsCmp(
-          file1.path,
-          missingPath,
+        final bool result = await FileKit().areFilesIdentical(
+          missing,
+          existing,
         );
 
         expect(result, isFalse);
-      },
-    );
+      });
+
+      test('returns false when the second file does not exist', () async {
+        final File existing = tempFile('a.txt')..writeAsStringSync('hello');
+        final File missing = tempFile('missing.txt');
+
+        final bool result = await FileKit().areFilesIdentical(
+          existing,
+          missing,
+        );
+
+        expect(result, isFalse);
+      });
+
+      test('returns false when byte lengths differ', () async {
+        final File short = tempFile('short.txt')..writeAsStringSync('hi');
+        final File long = tempFile('long.txt')..writeAsStringSync('hello');
+
+        final bool result = await FileKit().areFilesIdentical(short, long);
+
+        expect(result, isFalse);
+      });
+
+      test('returns false when lengths match but contents differ', () async {
+        final File first = tempFile('first.txt')..writeAsStringSync('abcde');
+        final File second = tempFile('second.txt')..writeAsStringSync('abcdx');
+
+        final bool result = await FileKit().areFilesIdentical(first, second);
+
+        expect(result, isFalse);
+      });
+
+      test('returns true when contents are byte-for-byte identical', () async {
+        final File first = tempFile('first.txt')..writeAsStringSync('abcde');
+        final File second = tempFile('second.txt')..writeAsStringSync('abcde');
+
+        final bool result = await FileKit().areFilesIdentical(first, second);
+
+        expect(result, isTrue);
+      });
+
+      test('returns true when comparing a file with itself', () async {
+        final File file = tempFile('self.txt')..writeAsStringSync('same');
+
+        final bool result = await FileKit().areFilesIdentical(file, file);
+
+        expect(result, isTrue);
+      });
+
+      test('returns true for two empty files', () async {
+        final File first = tempFile('empty1.txt')..writeAsStringSync('');
+        final File second = tempFile('empty2.txt')..writeAsStringSync('');
+
+        final bool result = await FileKit().areFilesIdentical(first, second);
+
+        expect(result, isTrue);
+      });
+    });
+
+    group('compareViaMacOsCmp', () {
+      test('throws UnsupportedError with the overridden platform name', () {
+        final FileKit kit = FileKit(
+          isMacOSOverride: () => false,
+          operatingSystemOverride: () => 'windows',
+        );
+
+        expect(
+          () => kit.compareViaMacOsCmp('a', 'b'),
+          throwsA(
+            isA<UnsupportedError>().having(
+              (UnsupportedError e) => e.message,
+              'message',
+              contains('Current platform: windows'),
+            ),
+          ),
+        );
+      });
+
+      test(
+        'throws UnsupportedError reporting Platform.operatingSystem when no '
+        'operatingSystemOverride is supplied',
+        () {
+          final FileKit kit = FileKit(isMacOSOverride: () => false);
+
+          expect(
+            () => kit.compareViaMacOsCmp('a', 'b'),
+            throwsA(
+              isA<UnsupportedError>().having(
+                (UnsupportedError e) => e.message,
+                'message',
+                contains('Current platform: ${Platform.operatingSystem}'),
+              ),
+            ),
+          );
+        },
+      );
+
+      test('returns true when cmp reports identical files', () async {
+        final File first = tempFile('first.txt')..writeAsStringSync('abcde');
+        final File second = tempFile('second.txt')..writeAsStringSync('abcde');
+        final FileKit kit = FileKit(isMacOSOverride: () => true);
+
+        final bool result = await kit.compareViaMacOsCmp(
+          first.path,
+          second.path,
+        );
+
+        expect(result, isTrue);
+      });
+
+      test('returns false when cmp reports differing files', () async {
+        final File first = tempFile('first.txt')..writeAsStringSync('abcde');
+        final File second = tempFile('second.txt')..writeAsStringSync('abcdx');
+        final FileKit kit = FileKit(isMacOSOverride: () => true);
+
+        final bool result = await kit.compareViaMacOsCmp(
+          first.path,
+          second.path,
+        );
+
+        expect(result, isFalse);
+      });
+
+      test('returns false when a path does not exist', () async {
+        final File existing = tempFile('a.txt')..writeAsStringSync('hello');
+        final FileKit kit = FileKit(isMacOSOverride: () => true);
+
+        final bool result = await kit.compareViaMacOsCmp(
+          existing.path,
+          tempFile('missing.txt').path,
+        );
+
+        expect(result, isFalse);
+      });
+    });
   });
 }

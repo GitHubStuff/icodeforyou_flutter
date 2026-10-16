@@ -69,7 +69,7 @@ class SinceWhenMiniCubit extends Cubit<SinceWhenMiniState> {
   /// Mints the create-mode stamps and promotes the state to
   /// [SinceWhenMiniReady].
   Future<void> _mintCreateDraft() async {
-    final minted = await DateTimeExt.unique(now: _now);
+    final minted = DateTimeExt.unique(now: _now);
     if (isClosed) {
       return;
     }
@@ -142,13 +142,13 @@ class SinceWhenMiniCubit extends Cubit<SinceWhenMiniState> {
           editedTimestamp: current.editedTimestamp,
         );
       case SinceWhenMiniAction.update:
-        final stamp = await _mint();
+        final stamp = _mint();
         return current.toItem(
           reviewedTimestamp: stamp,
           editedTimestamp: stamp,
         );
       case SinceWhenMiniAction.reviewed:
-        final stamp = await _mint();
+        final stamp = _mint();
         return current.toItem(
           reviewedTimestamp: stamp,
           editedTimestamp: current.editedTimestamp,
@@ -157,8 +157,8 @@ class SinceWhenMiniCubit extends Cubit<SinceWhenMiniState> {
   }
 
   /// Mints one unique timestamp in microseconds since epoch.
-  Future<int> _mint() async {
-    final minted = await DateTimeExt.unique(now: _now);
+  int _mint() {
+    final minted = DateTimeExt.unique(now: _now);
     return minted.microsecondsSinceEpoch;
   }
 }

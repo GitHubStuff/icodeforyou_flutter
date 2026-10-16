@@ -1,4 +1,5 @@
 // packages/tool_kit/lib/src/macos_select_file.dart
+import 'dart:async';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
@@ -74,20 +75,32 @@ class _MacOSSelectFileState extends State<MacOSSelectFile> {
   String? _selectedPath;
   bool _isLoading = false;
 
-  Future<void> _pickFile() async {
+  /// Synchronous tap handler.
+  ///
+  /// Performs the platform guard synchronously so an [UnsupportedError]
+  /// propagates through the gesture system and is reported via
+  /// [FlutterError.onError], then hands off to the asynchronous picker.
+  void _onPressed() {
+    _assertMacOS();
+    unawaited(_pickFile());
+  }
+
+  void _assertMacOS() {
     final bool isMacOS = widget.isMacOSOverride != null
         ? widget.isMacOSOverride!()
         : Platform.isMacOS;
 
-    if (!isMacOS) {
-      final String os = widget.operatingSystemOverride != null
-          ? widget.operatingSystemOverride!()
-          : Platform.operatingSystem;
-      throw UnsupportedError(
-        'MacOSSelectFile is only supported on macOS. Current platform: $os',
-      );
-    }
+    if (isMacOS) return;
 
+    final String os = widget.operatingSystemOverride != null
+        ? widget.operatingSystemOverride!()
+        : Platform.operatingSystem;
+    throw UnsupportedError(
+      'MacOSSelectFile is only supported on macOS. Current platform: $os',
+    );
+  }
+
+  Future<void> _pickFile() async {
     setState(() => _isLoading = true);
 
     try {
@@ -98,16 +111,21 @@ class _MacOSSelectFileState extends State<MacOSSelectFile> {
         allowedExtensions: widget.allowedExtensions,
       );
 
-      if (file != null) {
-        final String? path = file.path;
-        final bool isHidden = file.name.startsWith(_kHiddenFilePrefix);
+      // The widget may have been removed while the native sheet was open.
+      // There is nothing left to update and no owner to notify.
+      if (!mounted) return;
 
-        if (path != null && (widget.includeHidden || !isHidden)) {
-          setState(() => _selectedPath = path);
-          widget.onFileSelected(path);
-        }
-      } else {
+      if (file == null) {
         widget.onCancel?.call();
+        return;
+      }
+
+      final String? path = file.path;
+      final bool isHidden = file.name.startsWith(_kHiddenFilePrefix);
+
+      if (path != null && (widget.includeHidden || !isHidden)) {
+        setState(() => _selectedPath = path);
+        widget.onFileSelected(path);
       }
     } finally {
       if (mounted) {
@@ -123,7 +141,7 @@ class _MacOSSelectFileState extends State<MacOSSelectFile> {
       mainAxisSize: MainAxisSize.min,
       children: [
         CupertinoButton.filled(
-          onPressed: _isLoading ? null : _pickFile,
+          onPressed: _isLoading ? null : _onPressed,
           child: _isLoading
               ? const CupertinoActivityIndicator(
                   color: CupertinoColors.white,

@@ -127,11 +127,21 @@ class _PrismBubbleWidgetState extends State<PrismBubbleWidget> {
           return SizedBox(
             width: widget.width,
             height: widget.height,
-            child: Tooltip(
-              message: snapshot.error.toString(),
-              child: const Icon(
-                Icons.error_outline,
-                color: Colors.red,
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              color: Colors.red.withAlpha(30),
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Text(
+                    'Shader Load Error:\n${snapshot.error}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.redAccent,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
             ),
           );
