@@ -1,6 +1,7 @@
 404HotFound - 68
 Abby Lovee7 - 53 --- Ugly tats
 Alexa Bunny - X
+Alissa Martinez7 - 7
 Alisa Wonderland - 167
 Angelica Heaven - 73
 Ariana Lopes - X
@@ -46,6 +47,7 @@ Nelary Love - 51
 Only Love
 Owl Crystal
 PinkRose - 16 {tat between tits 🤮}
+Samy Sun7 - X
 Sarah Arabic - X
 Shinaryen - 200+
 Shirley Musk - 59

@@ -77,6 +77,8 @@ import 'package:widgetbook_workspace/packages/app_preferences/hive_preferences.u
     as _widgetbook_workspace_packages_app_preferences_hive_preferences_usecase;
 import 'package:widgetbook_workspace/packages/app_preferences/mock_preferences.usecase.dart'
     as _widgetbook_workspace_packages_app_preferences_mock_preferences_usecase;
+import 'package:widgetbook_workspace/packages/border_caption/border_caption.usecase.dart'
+    as _widgetbook_workspace_packages_border_caption_border_caption_usecase;
 import 'package:widgetbook_workspace/packages/color_grid/color_grid.usecase.dart'
     as _widgetbook_workspace_packages_color_grid_color_grid_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/anchored/anchored.usecase.dart'
@@ -115,6 +117,8 @@ import 'package:widgetbook_workspace/packages/data_grid/data_grid.usecase.dart'
     as _widgetbook_workspace_packages_data_grid_data_grid_usecase;
 import 'package:widgetbook_workspace/packages/dual_selection/dual_selection.usecase.dart'
     as _widgetbook_workspace_packages_dual_selection_dual_selection_usecase;
+import 'package:widgetbook_workspace/packages/dual_selection/single_selection.usecase.dart'
+    as _widgetbook_workspace_packages_dual_selection_single_selection_usecase;
 import 'package:widgetbook_workspace/packages/extensions/color_ext/color_pair.usecase.dart'
     as _widgetbook_workspace_packages_extensions_color_ext_color_pair_usecase;
 import 'package:widgetbook_workspace/packages/extensions/widget_ext/widget_ext.usecase.dart'
@@ -169,8 +173,10 @@ import 'package:widgetbook_workspace/packages/sincewhen_widgets/glossary_card.us
     as _widgetbook_workspace_packages_sincewhen_widgets_glossary_card_usecase;
 import 'package:widgetbook_workspace/packages/sincewhen_widgets/glossary_item_create_dialog.usecase.dart'
     as _widgetbook_workspace_packages_sincewhen_widgets_glossary_item_create_dialog_usecase;
-import 'package:widgetbook_workspace/packages/sliders/horizontal_slider.usecase.dart'
-    as _widgetbook_workspace_packages_sliders_horizontal_slider_usecase;
+import 'package:widgetbook_workspace/packages/sliders/hslider_with_buttons.usecase.dart'
+    as _widgetbook_workspace_packages_sliders_hslider_with_buttons_usecase;
+import 'package:widgetbook_workspace/packages/sliders/slider_button.usecase.dart'
+    as _widgetbook_workspace_packages_sliders_slider_button_usecase;
 import 'package:widgetbook_workspace/packages/splash_framework/splash_screen.usecase.dart'
     as _widgetbook_workspace_packages_splash_framework_splash_screen_usecase;
 import 'package:widgetbook_workspace/packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_page/sqlite_viewer_page.usecase.dart'
@@ -272,6 +278,35 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookComponent(
+    name: 'DualSelection',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Interactive',
+        builder:
+            _widgetbook_workspace_packages_dual_selection_dual_selection_usecase
+                .buildDualSelectionInteractiveUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'No Fade',
+        builder:
+            _widgetbook_workspace_packages_dual_selection_dual_selection_usecase
+                .buildDualSelectionNoFadeUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Seeded With Second',
+        builder:
+            _widgetbook_workspace_packages_dual_selection_dual_selection_usecase
+                .buildDualSelectionSeededWithSecondUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Square Corners, No Border',
+        builder:
+            _widgetbook_workspace_packages_dual_selection_dual_selection_usecase
+                .buildDualSelectionSquareNoBorderUseCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
     name: 'DynamicPrismBubble',
     useCases: [
       _widgetbook.WidgetbookUseCase(
@@ -288,7 +323,7 @@ final directories = <_widgetbook.WidgetbookNode>[
       _widgetbook.WidgetbookUseCase(
         name: 'Interactive',
         builder:
-            _widgetbook_workspace_packages_sliders_horizontal_slider_usecase
+            _widgetbook_workspace_packages_sliders_hslider_with_buttons_usecase
                 .buildHSliderWithButtonsInteractiveUseCase,
       ),
     ],
@@ -393,6 +428,45 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookComponent(
+    name: 'SingleSelection',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Bounded Scrollable Body',
+        builder:
+            _widgetbook_workspace_packages_dual_selection_single_selection_usecase
+                .buildSingleSelectionScrollableBodyUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Defaults',
+        builder:
+            _widgetbook_workspace_packages_dual_selection_single_selection_usecase
+                .buildSingleSelectionDefaultsUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Interactive',
+        builder:
+            _widgetbook_workspace_packages_dual_selection_single_selection_usecase
+                .buildSingleSelectionInteractiveUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Square Corners, No Border',
+        builder:
+            _widgetbook_workspace_packages_dual_selection_single_selection_usecase
+                .buildSingleSelectionSquareNoBorderUseCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
+    name: 'SliderButton',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Interactive',
+        builder: _widgetbook_workspace_packages_sliders_slider_button_usecase
+            .buildSliderButtonInteractiveUseCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
     name: 'SplashScreen',
     useCases: [
       _widgetbook.WidgetbookUseCase(
@@ -437,22 +511,27 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookCategory(
-    name: 'dual_selection',
+    name: 'Packages',
     children: [
-      _widgetbook.WidgetbookComponent(
-        name: 'DualSelection',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Date / Time pickers',
-            builder:
-                _widgetbook_workspace_packages_dual_selection_dual_selection_usecase
-                    .buildDualSelectionDateTime,
-          ),
-          _widgetbook.WidgetbookUseCase(
-            name: 'Interactive',
-            builder:
-                _widgetbook_workspace_packages_dual_selection_dual_selection_usecase
-                    .buildDualSelectionInteractive,
+      _widgetbook.WidgetbookFolder(
+        name: 'border_caption',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'BorderCaption',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Gallery',
+                builder:
+                    _widgetbook_workspace_packages_border_caption_border_caption_usecase
+                        .galleryBorderCaption,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Interactive',
+                builder:
+                    _widgetbook_workspace_packages_border_caption_border_caption_usecase
+                        .interactiveBorderCaption,
+              ),
+            ],
           ),
         ],
       ),
