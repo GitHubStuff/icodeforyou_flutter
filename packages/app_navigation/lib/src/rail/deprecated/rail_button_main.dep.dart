@@ -2,8 +2,8 @@
 
 import 'package:app_navigation/src/shared/dual_nav_button.dart'
     show DualNavButton;
-import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
 /// The default caption label for [MainRailButton].
 const String _kMainLabel = 'Main';

@@ -3,8 +3,8 @@
 
 import 'package:extensions/enum/src/window_size_category.dart'
     show WindowSizeCategory;
-import 'package:extensions/extensions.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
 import '_suffix_slot.dart';
 

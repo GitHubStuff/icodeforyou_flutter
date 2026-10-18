@@ -1,9 +1,8 @@
-// packages/extensions/test/enum/src/haptic_intensity_test.dart
+// packages/haptic_intensity/test/src/haptic_intensity_test.dart
 
-import 'package:extensions/enum/src/haptic_intensity.dart'
-    show HapticIntensity;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

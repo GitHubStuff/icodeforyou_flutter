@@ -2,9 +2,9 @@
 import 'dart:async';
 
 import 'package:app_navigation/src/shared/dual_show_popover.dart';
-import 'package:extensions/enum/src/haptic_intensity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
 void main() {
   Widget buildApp({

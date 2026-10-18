@@ -2,10 +2,10 @@
 
 import 'package:custom_widgets/custom_widgets.dart'
     show ExpandingTextField, IceChip;
-import 'package:extensions/extensions.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart' show Gap;
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 import 'package:sincewhen_models/sincewhen_models.dart' show GlossaryItem;
 
 const int _minTagLength = 3;

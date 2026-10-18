@@ -1,7 +1,7 @@
 // packages/ping_pong/lib/src/ping_pong.dart
-import 'package:extensions/extensions.dart' show HapticIntensity;
 import 'package:flutter/scheduler.dart' show Ticker;
 import 'package:flutter/widgets.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 import 'package:ping_pong/src/arena_config.dart' show ArenaConfig;
 import 'package:ping_pong/src/ball_spec.dart' show BallSpec;
 import 'package:ping_pong/src/ball_state.dart' show BallState;

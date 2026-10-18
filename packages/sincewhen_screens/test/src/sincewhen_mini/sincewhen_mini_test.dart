@@ -1,5 +1,7 @@
 // packages/sincewhen_screens/test/src/sincewhen_mini/sincewhen_mini_test.dart
 
+import 'dart:async';
+
 import 'package:extensions/datetime/src/datetime_ext.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,7 +65,7 @@ void main() {
   }) {
     return MaterialApp(
       navigatorObservers: [
-        if (navigatorObserver != null) navigatorObserver,
+        ?navigatorObserver,
       ],
       home: child,
     );
@@ -129,7 +131,7 @@ void main() {
             child: SinceWhenMini(
               item: null,
               now: () {
-                observer.lastCreatedBloc?.close();
+                unawaited(observer.lastCreatedBloc?.close());
                 return fixedNow;
               },
             ),

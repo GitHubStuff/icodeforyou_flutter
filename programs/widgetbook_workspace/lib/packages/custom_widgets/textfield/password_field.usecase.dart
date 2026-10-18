@@ -1,9 +1,9 @@
 // programs/widgetbook_workspace/lib/packages/custom_widgets/textfield/password_field.usecase.dart
 // ignore_for_file: public_member_api_docs
 import 'package:custom_widgets/custom_widgets.dart' show PasswordField;
-import 'package:extensions/extensions.dart'
-    show HapticIntensity, WindowSizeCategory;
+import 'package:extensions/extensions.dart' show WindowSizeCategory;
 import 'package:flutter/material.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 

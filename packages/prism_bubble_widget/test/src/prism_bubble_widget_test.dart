@@ -24,8 +24,8 @@ BubbleShaderPainter _painter(WidgetTester tester) {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUp(() => BubbleShaderManager.instance.resetForTesting());
-  tearDown(() => BubbleShaderManager.instance.resetForTesting());
+  setUp(BubbleShaderManager.instance.resetForTesting);
+  tearDown(BubbleShaderManager.instance.resetForTesting);
 
   group('PrismBubbleWidget', () {
     group('constructors', () {

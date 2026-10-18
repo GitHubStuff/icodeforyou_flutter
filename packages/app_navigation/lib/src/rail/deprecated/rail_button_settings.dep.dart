@@ -1,8 +1,8 @@
 // packages/app_navigation/lib/src/rail/deprecated/rail_button_settings.dep.dart
 
 import 'package:app_navigation/src/shared/dual_nav_button.dart';
-import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
 /// The default caption label for [SettingsRailButton].
 const String _kSettingsLabel = 'Settings';

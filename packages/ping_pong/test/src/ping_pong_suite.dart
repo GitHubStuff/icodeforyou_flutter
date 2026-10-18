@@ -1,9 +1,9 @@
 // packages/ping_pong/test/src/ping_pong_test.dart
 
-import 'package:extensions/extensions.dart' show HapticIntensity;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 import 'package:ping_pong/src/arena_config.dart' show ArenaConfig;
 import 'package:ping_pong/src/ball_spec.dart' show BallSpec;
 import 'package:ping_pong/src/ball_too_large_error.dart' show BallTooLargeError;

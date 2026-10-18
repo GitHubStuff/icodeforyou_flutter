@@ -28,7 +28,7 @@ Future<void> _pumpScreen(
   Widget? intermediateWidget,
   Widget? timeoutWidget,
   Widget Function(BuildContext, Object, StackTrace)?
-      backgroundTaskFailedWidgetBuilder,
+  backgroundTaskFailedWidgetBuilder,
 }) {
   return tester.pumpWidget(
     MaterialApp(
@@ -49,9 +49,9 @@ Future<void> _pumpScreen(
 
 /// The [Stack] produced by [SplashScreen]'s centered layout builder.
 Finder _switcherStack() => find.descendant(
-      of: find.byType(AnimatedSwitcher),
-      matching: find.byType(Stack),
-    );
+  of: find.byType(AnimatedSwitcher),
+  matching: find.byType(Stack),
+);
 
 /// Whether the switcher still holds an outgoing child alongside the current
 /// one.
@@ -94,8 +94,9 @@ Future<void> _tearDownScreen(WidgetTester tester) =>
 
 void main() {
   group('SplashScreen', () {
-    testWidgets('shows the splash widget, then lands once tasks finish',
-        (tester) async {
+    testWidgets('shows the splash widget, then lands once tasks finish', (
+      tester,
+    ) async {
       final task = Completer<void>();
       await _pumpScreen(tester, tasks: [task.future]);
 
@@ -110,26 +111,29 @@ void main() {
       expect(find.byKey(_splashKey), findsNothing);
     });
 
-    testWidgets('shows the default progress indicator while tasks are pending',
-        (tester) async {
-      final task = Completer<void>();
-      await _pumpScreen(tester, tasks: [task.future]);
+    testWidgets(
+      'shows the default progress indicator while tasks are pending',
+      (tester) async {
+        final task = Completer<void>();
+        await _pumpScreen(tester, tasks: [task.future]);
 
-      await tester.pump(_config.splashDuration);
-      await _pumpCrossfade(tester);
+        await tester.pump(_config.splashDuration);
+        await _pumpCrossfade(tester);
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      expect(find.byKey(_splashKey), findsNothing);
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        expect(find.byKey(_splashKey), findsNothing);
 
-      task.complete();
-      await _pumpCrossfade(tester);
+        task.complete();
+        await _pumpCrossfade(tester);
 
-      expect(find.byKey(_landingKey), findsOneWidget);
-      expect(find.byType(CircularProgressIndicator), findsNothing);
-    });
+        expect(find.byKey(_landingKey), findsOneWidget);
+        expect(find.byType(CircularProgressIndicator), findsNothing);
+      },
+    );
 
-    testWidgets('shows a custom intermediate widget while tasks are pending',
-        (tester) async {
+    testWidgets('shows a custom intermediate widget while tasks are pending', (
+      tester,
+    ) async {
       final task = Completer<void>();
       await _pumpScreen(
         tester,
@@ -151,8 +155,9 @@ void main() {
       expect(find.byKey(_intermediateKey), findsNothing);
     });
 
-    testWidgets('shows the configured timeout text after the timeout',
-        (tester) async {
+    testWidgets('shows the configured timeout text after the timeout', (
+      tester,
+    ) async {
       final task = Completer<void>();
       await _pumpScreen(tester, tasks: [task.future]);
 
@@ -166,8 +171,9 @@ void main() {
       await _tearDownScreen(tester);
     });
 
-    testWidgets('shows a custom timeout widget after the timeout',
-        (tester) async {
+    testWidgets('shows a custom timeout widget after the timeout', (
+      tester,
+    ) async {
       final task = Completer<void>();
       await _pumpScreen(
         tester,
@@ -185,8 +191,9 @@ void main() {
       await _tearDownScreen(tester);
     });
 
-    testWidgets('shows the configured failure text when a task fails',
-        (tester) async {
+    testWidgets('shows the configured failure text when a task fails', (
+      tester,
+    ) async {
       final task = Completer<void>();
       await _pumpScreen(tester, tasks: [task.future]);
 
@@ -197,8 +204,9 @@ void main() {
       expect(find.byKey(_splashKey), findsNothing);
     });
 
-    testWidgets('passes the error and stack trace to the failure builder',
-        (tester) async {
+    testWidgets('passes the error and stack trace to the failure builder', (
+      tester,
+    ) async {
       final task = Completer<void>();
       final thrown = Exception('boom');
       final trace = StackTrace.current;
@@ -224,8 +232,9 @@ void main() {
       expect(receivedTrace, same(trace));
     });
 
-    testWidgets('crossfades with both children stacked and centered',
-        (tester) async {
+    testWidgets('crossfades with both children stacked and centered', (
+      tester,
+    ) async {
       final task = Completer<void>();
       await _pumpScreen(tester, tasks: [task.future]);
 
@@ -249,8 +258,9 @@ void main() {
       expect(find.byKey(_landingKey), findsOneWidget);
     });
 
-    testWidgets('renders non-landing phases full-screen and centered',
-        (tester) async {
+    testWidgets('renders non-landing phases full-screen and centered', (
+      tester,
+    ) async {
       final task = Completer<void>();
       await _pumpScreen(tester, tasks: [task.future]);
 

@@ -115,6 +115,12 @@ import 'package:widgetbook_workspace/packages/custom_widgets/uninhertied_text/un
     as _widgetbook_workspace_packages_custom_widgets_uninhertied_text_uninherited_text_usecase;
 import 'package:widgetbook_workspace/packages/data_grid/data_grid.usecase.dart'
     as _widgetbook_workspace_packages_data_grid_data_grid_usecase;
+import 'package:widgetbook_workspace/packages/datetime_popover_pickers/date_picker.usecase.dart'
+    as _widgetbook_workspace_packages_datetime_popover_pickers_date_picker_usecase;
+import 'package:widgetbook_workspace/packages/datetime_popover_pickers/fat_picker.usecase.dart'
+    as _widgetbook_workspace_packages_datetime_popover_pickers_fat_picker_usecase;
+import 'package:widgetbook_workspace/packages/datetime_popover_pickers/time_picker.usecase.dart'
+    as _widgetbook_workspace_packages_datetime_popover_pickers_time_picker_usecase;
 import 'package:widgetbook_workspace/packages/dual_selection/dual_selection.usecase.dart'
     as _widgetbook_workspace_packages_dual_selection_dual_selection_usecase;
 import 'package:widgetbook_workspace/packages/dual_selection/single_selection.usecase.dart'
@@ -133,6 +139,8 @@ import 'package:widgetbook_workspace/packages/neon/neon_text.usecase.dart'
     as _widgetbook_workspace_packages_neon_neon_text_usecase;
 import 'package:widgetbook_workspace/packages/ping_pong/ping_pong.usecase.dart'
     as _widgetbook_workspace_packages_ping_pong_ping_pong_usecase;
+import 'package:widgetbook_workspace/packages/position_popover/position_popover.usecase.dart'
+    as _widgetbook_workspace_packages_position_popover_position_popover_usecase;
 import 'package:widgetbook_workspace/packages/prism_bubble_widget/animated_prism_bubble.usecase.dart'
     as _widgetbook_workspace_packages_prism_bubble_widget_animated_prism_bubble_usecase;
 import 'package:widgetbook_workspace/packages/prism_bubble_widget/dynamic_prism_bubble.usecase.dart'
@@ -537,6 +545,34 @@ final directories = <_widgetbook.WidgetbookNode>[
       ),
     ],
   ),
+  _widgetbook.WidgetbookCategory(
+    name: 'position_popover',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'PositionPopover',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Alignment Gallery',
+            builder:
+                _widgetbook_workspace_packages_position_popover_position_popover_usecase
+                    .buildPositionPopoverAlignmentGalleryUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Date Field',
+            builder:
+                _widgetbook_workspace_packages_position_popover_position_popover_usecase
+                    .buildPositionPopoverDateFieldUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Interactive',
+            builder:
+                _widgetbook_workspace_packages_position_popover_position_popover_usecase
+                    .buildPositionPopoverInteractiveUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
   _widgetbook.WidgetbookFolder(
     name: 'anchored',
     children: [
@@ -752,6 +788,28 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookFolder(
+    name: 'date',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'DatePicker',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Playground',
+            builder:
+                _widgetbook_workspace_packages_datetime_popover_pickers_date_picker_usecase
+                    .datePickerPlaygroundUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Size Gallery',
+            builder:
+                _widgetbook_workspace_packages_datetime_popover_pickers_date_picker_usecase
+                    .datePickerSizeGalleryUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
     name: 'default_welcome_screen',
     children: [
       _widgetbook.WidgetbookComponent(
@@ -852,6 +910,34 @@ final directories = <_widgetbook.WidgetbookNode>[
                         .faderWidgetUseCase,
               ),
             ],
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
+    name: 'fat_picker',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'FatPicker',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Playground',
+            builder:
+                _widgetbook_workspace_packages_datetime_popover_pickers_fat_picker_usecase
+                    .fatPickerPlaygroundUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Size Gallery',
+            builder:
+                _widgetbook_workspace_packages_datetime_popover_pickers_fat_picker_usecase
+                    .fatPickerSizeGalleryUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Without Seconds',
+            builder:
+                _widgetbook_workspace_packages_datetime_popover_pickers_fat_picker_usecase
+                    .fatPickerWithoutSecondsUseCase,
           ),
         ],
       ),
@@ -1399,6 +1485,34 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder:
                 _widgetbook_workspace_packages_custom_widgets_textfield_password_field_usecase
                     .buildPasswordFieldUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
+    name: 'time',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'TimePicker',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Playground',
+            builder:
+                _widgetbook_workspace_packages_datetime_popover_pickers_time_picker_usecase
+                    .timePickerPlaygroundUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Size Gallery',
+            builder:
+                _widgetbook_workspace_packages_datetime_popover_pickers_time_picker_usecase
+                    .timePickerSizeGalleryUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Without Seconds',
+            builder:
+                _widgetbook_workspace_packages_datetime_popover_pickers_time_picker_usecase
+                    .timePickerWithoutSecondsUseCase,
           ),
         ],
       ),

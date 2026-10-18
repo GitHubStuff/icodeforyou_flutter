@@ -1,8 +1,8 @@
 // programs/widgetbook_workspace/lib/packages/data_grid/data_grid.usecase.dart
 // ignore_for_file: public_member_api_docs
 import 'package:data_grid/data_grid.dart' show DataDensity, DataGrid;
-import 'package:extensions/extensions.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 import 'package:oktoast/oktoast.dart' show showToast;
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;

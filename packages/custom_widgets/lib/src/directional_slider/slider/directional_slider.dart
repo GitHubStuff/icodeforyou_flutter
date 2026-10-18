@@ -1,8 +1,8 @@
 // packages/custom_widgets/lib/src/directional_slider/slider/directional_slider.dart
 
 import 'package:extensions/enum/src/placement.dart' show Placement;
-import 'package:extensions/extensions.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
 import 'directional_controller.dart';
 import 'step_grid.dart';

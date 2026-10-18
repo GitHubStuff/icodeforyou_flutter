@@ -3,9 +3,9 @@
 import 'package:dual_selection/dual_selection.dart'
     show DualSelection, DualSelectionEnum;
 import 'package:dual_selection/src/defaults.dart' show Defaults;
-import 'package:extensions/extensions.dart' show HapticIntensity;
 //import 'package:extensions/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 

@@ -1,7 +1,7 @@
 // programs/widgetbook_workspace/lib/packages/sliders/hslider_with_buttons.usecase.dart
-import 'package:extensions/extensions.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart' show Gap;
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 import 'package:sliders/sliders.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;

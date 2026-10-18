@@ -1,8 +1,8 @@
 // packages/sliders/test/src/hslider_with_buttons_test.dart
-import 'package:extensions/enum/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show MethodCall, SystemChannels;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 import 'package:sliders/sliders.dart';
 
 void main() {

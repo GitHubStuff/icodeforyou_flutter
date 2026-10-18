@@ -4,9 +4,9 @@ library;
 
 import 'dart:async';
 
-import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:extensions/enum/src/placement.dart';
 import 'package:flutter/material.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 import 'package:status_bar_chameleon/status_bar_chameleon.dart'
     show StatusBarChameleon;
 

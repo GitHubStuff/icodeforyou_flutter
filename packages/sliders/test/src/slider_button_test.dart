@@ -1,8 +1,8 @@
-// packages/sliders/test/src/slider_button_test.dart
-import 'package:extensions/extensions.dart' show HapticIntensity;
+// packages/sliders/test/src/slider_button_test.dartimport 'package:extensions/extensions.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show MethodCall, SystemChannels;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 import 'package:sliders/sliders.dart';
 
 void main() {

@@ -1,6 +1,6 @@
 // packages/sliders/lib/src/slider_button.dart
-import 'package:extensions/extensions.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 import 'package:sliders/src/constants.dart' show Constants;
 
 /// One of the two buttons flanking a slider.

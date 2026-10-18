@@ -13,11 +13,11 @@ dependencies:
   custom_widgets: ^1.0.0
   dependency_resolver: ^1.0.0
   equatable: ^2.1.0
-  extensions: ^1.0.4
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
   gap: ^3.0.1
+  haptic_intensity: ^1.0.0
   random_color_generator: ^1.0.1
   sincewhen_drift_framework: ^1.0.0
   sincewhen_models: ^1.0.0

@@ -180,7 +180,8 @@ extension _SliderThemeDataMerge on SliderThemeData {
       disabledActiveTrackColor: other.disabledActiveTrackColor,
       disabledInactiveTickMarkColor: other.disabledInactiveTickMarkColor,
       disabledInactiveTrackColor: other.disabledInactiveTrackColor,
-      disabledSecondaryActiveTrackColor: other.disabledSecondaryActiveTrackColor,
+      disabledSecondaryActiveTrackColor:
+          other.disabledSecondaryActiveTrackColor,
       disabledThumbColor: other.disabledThumbColor,
       inactiveTickMarkColor: other.inactiveTickMarkColor,
       inactiveTrackColor: other.inactiveTrackColor,

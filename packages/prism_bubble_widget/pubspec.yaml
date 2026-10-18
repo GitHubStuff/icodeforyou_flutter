@@ -22,4 +22,3 @@ flutter:
   shaders:
     - shaders/bubble_dark.frag
     - shaders/bubble_light.frag
- 

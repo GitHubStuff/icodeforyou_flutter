@@ -3,8 +3,8 @@
 import 'dart:async';
 
 import 'package:custom_widgets/custom_widgets.dart' show StepperTheme;
-import 'package:extensions/extensions.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
 /// A circular icon button that fires [onPressed] once on tap and
 /// auto-repeats while the pointer remains pressed (long-press).

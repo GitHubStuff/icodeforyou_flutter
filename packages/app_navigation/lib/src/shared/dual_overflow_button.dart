@@ -4,8 +4,8 @@ import 'package:app_navigation/src/shared/dual_more_button.dart'
     show DualMoreButton;
 import 'package:app_navigation/src/shared/dual_show_popover.dart'
     show dualShowPopover;
-import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
 /// The default caption label, mirroring `MoreRailButton`.
 const String _kMoreLabel = 'More';

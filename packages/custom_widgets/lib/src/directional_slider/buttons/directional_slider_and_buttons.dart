@@ -5,8 +5,8 @@ import 'package:custom_widgets/src/directional_slider/slider/directional_control
     show DirectionalController;
 import 'package:custom_widgets/src/directional_slider/slider/directional_slider.dart'
     show DirectionalSlider;
-import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
 import 'step_button.dart';
 

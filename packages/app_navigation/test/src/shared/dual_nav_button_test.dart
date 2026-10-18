@@ -1,8 +1,8 @@
 // packages/app_navigation/test/src/shared/dual_nav_button_test.dart
 import 'package:app_navigation/src/shared/dual_nav_button.dart';
-import 'package:extensions/enum/src/haptic_intensity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
 void main() {
   Widget buildSubject({

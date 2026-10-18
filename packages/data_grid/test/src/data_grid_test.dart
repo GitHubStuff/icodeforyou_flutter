@@ -1,9 +1,9 @@
 // packages/data_grid/test/src/data_grid_test.dart
 
 import 'package:data_grid/data_grid.dart' show DataDensity, DataGrid;
-import 'package:extensions/extensions.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
 /// Rows crafted so every comparator branch is provable from display order:
 ///

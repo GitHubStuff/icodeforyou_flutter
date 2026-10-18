@@ -1,6 +1,6 @@
 // packages/dual_selection/lib/src/defaults.dart
 
-import 'package:extensions/extensions.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
 import 'dual_selection_enum.dart';
 

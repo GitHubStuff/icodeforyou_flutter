@@ -1,7 +1,7 @@
 // packages/app_navigation/lib/src/shared/dual_popover_tile.dart
 
-import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
 /// The fixed height of a tile.
 ///

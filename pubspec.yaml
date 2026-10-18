@@ -2,7 +2,7 @@
 name: icodeforyou_flutter
 publish_to: none
 description: "Collection of flutter packages"
-version: 9.6.0
+version: 9.6.2
 
 workspace:
   - packages/abstractions
@@ -23,6 +23,7 @@ workspace:
   - packages/duration_widget
   - packages/ext_string
   - packages/extensions
+  - packages/haptic_intensity
   - packages/icodeforyou_lints
   - packages/infinite_scroll_picking
   - packages/infinite_scroll_picking_settings
@@ -30,6 +31,7 @@ workspace:
   - packages/neon
   - packages/ping_pong
   - packages/platform_utils
+  - packages/position_popover
   - packages/prism_bubble_widget
   - packages/random_color_generator
   - packages/remind_me
