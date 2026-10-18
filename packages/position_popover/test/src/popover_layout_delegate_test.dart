@@ -136,7 +136,7 @@ void main() {
     });
 
     testWidgets('lays out a real child at the computed origin', (
-      WidgetTester tester,
+      tester,
     ) async {
       await tester.binding.setSurfaceSize(area);
       addTearDown(() => tester.binding.setSurfaceSize(null));

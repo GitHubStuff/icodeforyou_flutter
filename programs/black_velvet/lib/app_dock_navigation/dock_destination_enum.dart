@@ -10,11 +10,11 @@ import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
 /// Placeholder view for the library destination.
 ///
-/// TODO(Steven): Replace with the real screen, then delete this function.
+// TODO(Steven): Replace with the real screen, then delete this function.
 Widget _libraryView() => const Center(child: Text('Library'));
 
 /// Placeholder view for the database destination.
-/// TODO: Replace with the real screen, then delete this function.
+// TODO(Steven): Replace with the real screen, then delete this function.
 Widget _databaseView() => const Center(child: Text('Database'));
 
 /// {@template dock_destination_enum}
@@ -45,7 +45,7 @@ Widget _databaseView() => const Center(child: Text('Database'));
 ///  2. Add it to [visible] or [overflowed] to give it an entry point.
 /// Nothing else in the app needs to be touched.
 /// {@endtemplate}
-/// TODO: Add/remove/reorder members and adjust the statics below.
+// TODO(Steven): Add/remove/reorder members and adjust the statics below.
 enum DockDestinationEnum implements NavigableDestinationAbstract {
   /// The home destination.
   home(
@@ -96,7 +96,7 @@ enum DockDestinationEnum implements NavigableDestinationAbstract {
   /// primary destinations get buttons, secondary ones live behind the
   /// overflow button. Moving a member between the two lists is the
   /// whole change needed to promote or demote it. Must not be empty.
-  /// TODO: Control the order of the DOCK buttons.
+  // TODO(Steven): Control the order of the DOCK buttons.
   static const List<DockDestinationEnum> visible = [
     home,
     settings,
@@ -109,7 +109,7 @@ enum DockDestinationEnum implements NavigableDestinationAbstract {
   /// slot; tapping it opens a popover listing these as tiles. When
   /// empty, no overflow button appears. Must not share a member with
   /// [visible].
-  /// TODO: Control the order of the DOCK-OVERFLOW buttons.
+  // TODO(Steven): Control the order of the DOCK-OVERFLOW buttons.
   static const List<DockDestinationEnum> overflowed = [
     library,
     database,

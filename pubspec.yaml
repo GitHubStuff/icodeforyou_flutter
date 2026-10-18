@@ -15,12 +15,14 @@ workspace:
   - packages/biometric_gate_service
   - packages/border_caption
   - packages/color_grid
+  - packages/counter_ring
   - packages/custom_widgets
   - packages/data_grid
   - packages/datetime_popover_pickers
   - packages/dependency_resolver
   - packages/dual_selection
   - packages/duration_widget
+  - packages/ext_duration
   - packages/ext_string
   - packages/extensions
   - packages/haptic_intensity

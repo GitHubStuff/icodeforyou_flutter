@@ -1,0 +1,21 @@
+# packages/counter_ring/pubspec.yaml
+name: counter_ring
+description: "Display a percent-ring for a value"
+publish_to: none
+resolution: workspace
+version: 1.0.0
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  equatable: ^2.1.0
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.1.1
+  gap: ^3.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0

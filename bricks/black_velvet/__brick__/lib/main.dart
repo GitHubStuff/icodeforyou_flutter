@@ -24,10 +24,10 @@ Future<void> main() async {
   // Preferenes are created here because it is an async task.
   final preferences = await SharedPreferences.getInstance();
 
-  /// TODO: And any background tasks to run while the splash screen is displayed
+  // TODO(steven): And any background tasks to run while the splash screen is displayed
   final List<Future<void> Function()> tasks = [];
 
-  /// TODO: There are two available services providers (aka resolvers) that
+  // TODO(steven): There are two available services providers (aka resolvers) that
   /// can be use to register services that become accessable using:
   ///   context.read<DependencyResolver>()
   ///

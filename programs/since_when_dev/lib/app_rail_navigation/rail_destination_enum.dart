@@ -11,7 +11,7 @@ import 'package:sincewhen_widgets/sincewhen_widgets.dart' show GlossaryEditPage;
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
 /// Placeholder view for the search destination.
-/// TODO: Replace with the real screen, then delete this function.
+// TODO(steven): Replace with the real screen, then delete this function.
 Widget _searchView() => Center(
   child: IceChip(
     const Text('Rail'),
@@ -52,7 +52,7 @@ Widget _libraryView() => const Center(child: Text('Library'));
 ///  2. Add it to [visible] or [overflowed] to give it an entry point.
 /// Nothing else in the app needs to be touched.
 /// {@endtemplate}
-/// TODO: Add/remove/reorder members and adjust the statics below.
+// TODO(steven): Add/remove/reorder members and adjust the statics below.
 enum RailDestinationEnum implements NavigableDestinationAbstract {
   /// The home destination.
   home(
@@ -103,7 +103,7 @@ enum RailDestinationEnum implements NavigableDestinationAbstract {
   /// primary destinations get buttons, secondary ones live behind the
   /// overflow button. Moving a member between the two lists is the
   /// whole change needed to promote or demote it. Must not be empty.
-  /// TODO: Control the order of the RAIL buttons.
+  // TODO(steven): Control the order of the RAIL buttons.
   static const List<RailDestinationEnum> visible = [
     home,
     database,
@@ -116,7 +116,7 @@ enum RailDestinationEnum implements NavigableDestinationAbstract {
   /// slot; tapping it opens a popover listing these as tiles. When
   /// empty, no overflow button appears. Must not share a member with
   /// [visible].
-  /// TODO: Control the order of the RAIL-OVERFLOW buttons.
+  // TODO(steven): Control the order of the RAIL-OVERFLOW buttons.
   static const List<RailDestinationEnum> overflowed = [
     library,
   ];

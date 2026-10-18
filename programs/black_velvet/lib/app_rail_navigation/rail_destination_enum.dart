@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
 /// Placeholder view for the search destination.
-/// TODO: Replace with the real screen, then delete this function.
+// TODO(steven): Replace with the real screen, then delete this function.
 Widget _searchView() => Center(
   child: IceChip(
     const Text('Rail'),
@@ -19,11 +19,11 @@ Widget _searchView() => Center(
 );
 
 /// Placeholder view for the library destination.
-/// TODO: Replace with the real screen, then delete this function.
+// TODO(steven): Replace with the real screen, then delete this function.
 Widget _libraryView() => const Center(child: Text('Library'));
 
 /// Placeholder view for the database destination.
-/// TODO: Replace with the real screen, then delete this function.
+// TODO(steven): Replace with the real screen, then delete this function.
 Widget _databaseView() => const Center(child: Text('Database'));
 
 /// {@template rail_destination_enum}
@@ -54,7 +54,7 @@ Widget _databaseView() => const Center(child: Text('Database'));
 ///  2. Add it to [visible] or [overflowed] to give it an entry point.
 /// Nothing else in the app needs to be touched.
 /// {@endtemplate}
-/// TODO: Add/remove/reorder members and adjust the statics below.
+// TODO(steven): Add/remove/reorder members and adjust the statics below.
 enum RailDestinationEnum implements NavigableDestinationAbstract {
   /// The home destination.
   home(
@@ -100,7 +100,7 @@ enum RailDestinationEnum implements NavigableDestinationAbstract {
   });
 
   /// The destination shown when the app screen first appears.
-  /// TODO: Change the first RAIL-Button to appear.
+  // TODO(steven): Change the first RAIL-Button to appear.
   static const RailDestinationEnum initial = home;
 
   /// The destinations shown as rail buttons, in rail order.
@@ -109,7 +109,7 @@ enum RailDestinationEnum implements NavigableDestinationAbstract {
   /// primary destinations get buttons, secondary ones live behind the
   /// overflow button. Moving a member between the two lists is the
   /// whole change needed to promote or demote it. Must not be empty.
-  /// TODO: Control the order of the RAIL buttons.
+  // TODO(steven): Control the order of the RAIL buttons.
   static const List<RailDestinationEnum> visible = [
     home,
     settings,
@@ -121,7 +121,7 @@ enum RailDestinationEnum implements NavigableDestinationAbstract {
   /// slot; tapping it opens a popover listing these as tiles. When
   /// empty, no overflow button appears. Must not share a member with
   /// [visible].
-  /// TODO: Control the order of the RAIL-OVERFLOW buttons.
+  // TODO(steven): Control the order of the RAIL-OVERFLOW buttons.
   static const List<RailDestinationEnum> overflowed = [
     library,
     database,

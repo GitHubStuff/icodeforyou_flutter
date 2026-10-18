@@ -14,7 +14,7 @@ import 'package:sincewhen_widgets/sincewhen_widgets.dart' show GlossaryEditPage;
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
 /// Placeholder view for the library destination.
-/// TODO: Replace with the real screen, then delete this function.
+// TODO(steven): Replace with the real screen, then delete this function.
 //Widget _libraryView() => const Center(child: Text('Library'));
 
 /// {@template dock_destination_enum}
@@ -45,7 +45,7 @@ import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 ///  2. Add it to [visible] or [overflowed] to give it an entry point.
 /// Nothing else in the app needs to be touched.
 /// {@endtemplate}
-/// TODO: Add/remove/reorder members and adjust the statics below.
+// TODO(steven): Add/remove/reorder members and adjust the statics below.
 enum DockDestinationEnum implements NavigableDestinationAbstract {
   /// The home destination.
   home(
@@ -93,7 +93,7 @@ enum DockDestinationEnum implements NavigableDestinationAbstract {
   });
 
   /// The destination shown when the app screen first appears.
-  /// TODO: Change the first DOCK-Button to appear.
+  // TODO(steven): Change the first DOCK-Button to appear.
   static const DockDestinationEnum initial = home;
 
   /// The destinations shown as dock buttons, in dock order.
@@ -102,7 +102,7 @@ enum DockDestinationEnum implements NavigableDestinationAbstract {
   /// primary destinations get buttons, secondary ones live behind the
   /// overflow button. Moving a member between the two lists is the
   /// whole change needed to promote or demote it. Must not be empty.
-  /// TODO: Control the order of the DOCK buttons.
+  // TODO(steven): Control the order of the DOCK buttons.
   static const List<DockDestinationEnum> visible = [
     home,
     settings,
@@ -115,7 +115,7 @@ enum DockDestinationEnum implements NavigableDestinationAbstract {
   /// slot; tapping it opens a popover listing these as tiles. When
   /// empty, no overflow button appears. Must not share a member with
   /// [visible].
-  /// TODO: Control the order of the DOCK-OVERFLOW buttons.
+  // TODO(steven): Control the order of the DOCK-OVERFLOW buttons.
   static const List<DockDestinationEnum> overflowed = [
     search,
     library,

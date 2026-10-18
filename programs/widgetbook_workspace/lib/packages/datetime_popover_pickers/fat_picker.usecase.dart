@@ -1,7 +1,5 @@
 // programs/widgetbook_workspace/lib/package/datetime_popover_pickers/fat_picker.usecase.dart
 
-// ignore_for_file: public_member_api_docs
-
 import 'package:datetime_popover_pickers/datetime_popover_pickers.dart'
     show DatePicker, FatPicker, PickerSize;
 import 'package:flutter/material.dart';

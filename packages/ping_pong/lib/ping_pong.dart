@@ -29,3 +29,4 @@ export 'src/ball_too_large_error.dart' show BallTooLargeError;
 export 'src/ping_pong.dart' show PingPong;
 export 'src/ping_pong_ball.dart' show PingPongBall;
 export 'src/ping_pong_controller.dart' show PingPongController;
+export 'src/title_subtitle_text.dart' show TitleSubtitleText;

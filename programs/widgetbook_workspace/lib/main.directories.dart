@@ -76,6 +76,10 @@ import 'package:widgetbook_workspace/packages/border_caption/border_caption.usec
     as _widgetbook_workspace_packages_border_caption_border_caption_usecase;
 import 'package:widgetbook_workspace/packages/color_grid/color_grid.usecase.dart'
     as _widgetbook_workspace_packages_color_grid_color_grid_usecase;
+import 'package:widgetbook_workspace/packages/counter_ring/counter_ring.usecase.dart'
+    as _widgetbook_workspace_packages_counter_ring_counter_ring_usecase;
+import 'package:widgetbook_workspace/packages/counter_ring/range_progress_ring.usecase.dart'
+    as _widgetbook_workspace_packages_counter_ring_range_progress_ring_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/anchored/anchored.usecase.dart'
     as _widgetbook_workspace_packages_custom_widgets_anchored_anchored_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/crash_screen/crash_screen.usecase.dart'
@@ -574,6 +578,45 @@ final directories = <WidgetbookNode>[
             builder:
                 _widgetbook_workspace_packages_color_grid_color_grid_usecase
                     .buildColorGridUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  WidgetbookFolder(
+    name: 'counter_ring',
+    children: [
+      WidgetbookComponent(
+        name: 'CounterRing',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Interactive',
+            builder:
+                _widgetbook_workspace_packages_counter_ring_counter_ring_usecase
+                    .buildCounterRingInteractiveUseCase,
+          ),
+          WidgetbookUseCase(
+            name: 'Preset Gallery',
+            builder:
+                _widgetbook_workspace_packages_counter_ring_counter_ring_usecase
+                    .buildCounterRingPresetGalleryUseCase,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'RangeProgressRing',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Interactive',
+            builder:
+                _widgetbook_workspace_packages_counter_ring_range_progress_ring_usecase
+                    .buildRangeProgressRingInteractiveUseCase,
+          ),
+          WidgetbookUseCase(
+            name: 'Preset Gallery',
+            builder:
+                _widgetbook_workspace_packages_counter_ring_range_progress_ring_usecase
+                    .buildRangeProgressRingPresetGalleryUseCase,
           ),
         ],
       ),

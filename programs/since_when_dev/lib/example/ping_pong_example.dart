@@ -3,11 +3,8 @@
 import 'dart:math' show Random;
 
 import 'package:flutter/material.dart';
-import 'package:ping_pong/ping_pong.dart' show PingPong;
-import 'package:ping_pong/src/ping_pong_ball.dart' show PingPongBall;
-import 'package:ping_pong/src/ping_pong_controller.dart'
-    show PingPongController;
-import 'package:ping_pong/src/title_subtitle_text.dart' show TitleSubtitleText;
+import 'package:ping_pong/ping_pong.dart'
+    show PingPong, PingPongBall, PingPongController, TitleSubtitleText;
 
 final Random _random = Random();
 
@@ -177,7 +174,7 @@ class _KnobsBar extends StatelessWidget {
         child: Row(
           children: [
             Text('Balls: $ballCount'),
-            
+
             Expanded(
               child: Slider(
                 value: ballCount.toDouble(),
