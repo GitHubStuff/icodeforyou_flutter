@@ -4,9 +4,9 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:abstractions/abstractions.dart' show ExtendedStatefulWidget;
 import 'package:analog_clock_widget/src/clock_style.dart' show ClockStyle;
-import 'package:extensions/extensions.dart';
+import 'package:ext_widget/ext_widget.dart'
+    show ExtWidget, ExtendedStatefulWidget;
 import 'package:flutter/material.dart';
 
 part 'clock_constants.dart';

@@ -12,6 +12,7 @@ import 'package:since_when_dev/example/ping_pong_example.dart'
     show PingPongExample;
 import 'package:sincewhen_widgets/sincewhen_widgets.dart' show GlossaryEditPage;
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
+import 'package:tools/tools.dart' show DurationStopwatchDemo;
 
 /// Placeholder view for the library destination.
 // TODO(steven): Replace with the real screen, then delete this function.
@@ -77,6 +78,13 @@ enum DockDestinationEnum implements NavigableDestinationAbstract {
     viewBuilder: SettingsScreen.withTheme,
   ),
 
+  /// From tools package - show/demo widgets
+  tools(
+    iconData: Icons.handyman_outlined,
+    caption: 'Tools',
+    viewBuilder: DurationStopwatchDemo.new,
+  ),
+
   /// The database destination.
   database(
     iconData: Icons.storage,
@@ -106,6 +114,7 @@ enum DockDestinationEnum implements NavigableDestinationAbstract {
   static const List<DockDestinationEnum> visible = [
     home,
     settings,
+    tools,
     database,
   ];
 

@@ -1,392 +1,678 @@
-// packages/sliders/test/src/hslider_with_buttons_test.dart
+// packages/sliders/test/hslider_with_buttons_test.dart
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show MethodCall, SystemChannels;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
-import 'package:sliders/sliders.dart';
+import 'package:sliders/sliders.dart'
+    show Constants, HSliderWithButtons, HorizontalSlider, SliderButton;
+
+Widget _harness(Widget child, {double? width}) => MaterialApp(
+  home: Scaffold(
+    body: Center(
+      child: width == null ? child : SizedBox(width: width, child: child),
+    ),
+  ),
+);
+
+Finder get _decreaseFinder =>
+    find.widgetWithIcon(IconButton, Icons.remove_circle_outline);
+
+Finder get _increaseFinder =>
+    find.widgetWithIcon(IconButton, Icons.add_circle_outline);
+
+IconButton _decrease(WidgetTester tester) =>
+    tester.widget<IconButton>(_decreaseFinder);
+
+IconButton _increase(WidgetTester tester) =>
+    tester.widget<IconButton>(_increaseFinder);
+
+Slider _slider(WidgetTester tester) =>
+    tester.widget<Slider>(find.byType(Slider));
+
+HorizontalSlider _horizontal(WidgetTester tester) =>
+    tester.widget<HorizontalSlider>(find.byType(HorizontalSlider));
 
 void main() {
   group('HSliderWithButtons', () {
-    group('construction', () {
-      test('asserts min < max', () {
+    group('constructor', () {
+      test('defaults', () {
+        const widget = HSliderWithButtons(step: 1);
+
+        expect(widget.initialValue, isNull);
+        expect(widget.min, 0);
+        expect(widget.max, 1);
+        expect(widget.divisions, isNull);
+        expect(widget.onChanged, isNull);
+        expect(widget.color, isNull);
+        expect(widget.haptic, HapticIntensity.light);
+        expect(widget.sliderThemeData, isNull);
+      });
+
+      test('asserts that min is less than max', () {
         expect(
           () => HSliderWithButtons(step: 1, min: 1, max: 1),
           throwsAssertionError,
         );
+        expect(
+          () => HSliderWithButtons(step: 1, min: 5, max: 1),
+          throwsAssertionError,
+        );
       });
 
-      test('asserts step > 0', () {
-        expect(
-          () => HSliderWithButtons(step: 0),
-          throwsAssertionError,
+      test('asserts that step is positive', () {
+        expect(() => HSliderWithButtons(step: 0), throwsAssertionError);
+        expect(() => HSliderWithButtons(step: -1), throwsAssertionError);
+      });
+    });
+
+    group('layout', () {
+      testWidgets('renders two buttons around one slider', (tester) async {
+        await tester.pumpWidget(
+          _harness(HSliderWithButtons(step: 1, onChanged: (_) {})),
         );
-        expect(
-          () => HSliderWithButtons(step: -1),
-          throwsAssertionError,
+
+        expect(find.byType(SliderButton), findsNWidgets(2));
+        expect(find.byType(HorizontalSlider), findsOneWidget);
+        expect(_decreaseFinder, findsOneWidget);
+        expect(_increaseFinder, findsOneWidget);
+        expect(find.byTooltip('Decrease'), findsOneWidget);
+        expect(find.byTooltip('Increase'), findsOneWidget);
+      });
+
+      testWidgets('places decrease, slider, increase in order', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _harness(HSliderWithButtons(step: 1, onChanged: (_) {})),
         );
+
+        final decreaseX = tester.getCenter(_decreaseFinder).dx;
+        final sliderX = tester.getCenter(find.byType(Slider)).dx;
+        final increaseX = tester.getCenter(_increaseFinder).dx;
+
+        expect(decreaseX, lessThan(sliderX));
+        expect(sliderX, lessThan(increaseX));
+      });
+
+      testWidgets('asserts when narrower than Constants.sliderWidth', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(step: 1, onChanged: (_) {}),
+            width: Constants.sliderWidth - 1,
+          ),
+        );
+
+        expect(tester.takeException(), isA<AssertionError>());
+      });
+
+      testWidgets('lays out at exactly Constants.sliderWidth', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(step: 1, onChanged: (_) {}),
+            width: Constants.sliderWidth,
+          ),
+        );
+
+        expect(tester.takeException(), isNull);
+        expect(find.byType(Slider), findsOneWidget);
       });
     });
 
     group('initial value', () {
-      testWidgets('defaults to the midpoint of [min, max]', (tester) async {
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(step: 1, min: 5, max: 10, onChanged: (_) {}),
-        );
-
-        expect(sliderOf(tester).value, 7.5);
-      });
-
-      testWidgets('uses initialValue when given', (tester) async {
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(
-            step: 1,
-            min: 0,
-            max: 10,
-            initialValue: 3,
-            onChanged: (_) {},
+      testWidgets('defaults to the midpoint of the range', (tester) async {
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(step: 1, min: 2, max: 10, onChanged: (_) {}),
           ),
         );
 
-        expect(sliderOf(tester).value, 3);
+        expect(_slider(tester).value, 6);
       });
 
-      testWidgets('clamps initialValue above max', (tester) async {
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(step: 1, initialValue: 42, onChanged: (_) {}),
+      testWidgets('uses initialValue when given', (tester) async {
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              max: 10,
+              initialValue: 3,
+              onChanged: (_) {},
+            ),
+          ),
         );
 
-        expect(sliderOf(tester).value, 1);
+        expect(_slider(tester).value, 3);
       });
 
-      testWidgets('clamps initialValue below min', (tester) async {
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(step: 1, initialValue: -42, onChanged: (_) {}),
+      testWidgets('clamps an initialValue above max', (tester) async {
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              max: 10,
+              initialValue: 42,
+              onChanged: (_) {},
+            ),
+          ),
         );
 
-        expect(sliderOf(tester).value, 0);
+        expect(_slider(tester).value, 10);
+      });
+
+      testWidgets('clamps an initialValue below min', (tester) async {
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              min: 5,
+              max: 10,
+              initialValue: -1,
+              onChanged: (_) {},
+            ),
+          ),
+        );
+
+        expect(_slider(tester).value, 5);
+      });
+
+      testWidgets('ignores later changes to initialValue', (tester) async {
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              max: 10,
+              initialValue: 2,
+              onChanged: (_) {},
+            ),
+          ),
+        );
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              max: 10,
+              initialValue: 9,
+              onChanged: (_) {},
+            ),
+          ),
+        );
+
+        expect(_slider(tester).value, 2);
+      });
+
+      testWidgets('a new Key resets to the new initialValue', (tester) async {
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              key: const ValueKey(1),
+              step: 1,
+              max: 10,
+              initialValue: 2,
+              onChanged: (_) {},
+            ),
+          ),
+        );
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              key: const ValueKey(2),
+              step: 1,
+              max: 10,
+              initialValue: 9,
+              onChanged: (_) {},
+            ),
+          ),
+        );
+
+        expect(_slider(tester).value, 9);
+      });
+    });
+
+    group('range updates', () {
+      testWidgets('clamps the value when max drops below it', (tester) async {
+        final reported = <double>[];
+
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              max: 10,
+              initialValue: 8,
+              onChanged: reported.add,
+            ),
+          ),
+        );
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              max: 5,
+              initialValue: 8,
+              onChanged: reported.add,
+            ),
+          ),
+        );
+
+        expect(_slider(tester).value, 5);
+        expect(reported, isEmpty);
+      });
+
+      testWidgets('clamps the value when min rises above it', (tester) async {
+        final reported = <double>[];
+
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              max: 10,
+              initialValue: 2,
+              onChanged: reported.add,
+            ),
+          ),
+        );
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              min: 4,
+              max: 10,
+              initialValue: 2,
+              onChanged: reported.add,
+            ),
+          ),
+        );
+
+        expect(_slider(tester).value, 4);
+        expect(reported, isEmpty);
+      });
+
+      testWidgets('keeps the value when it is still in range', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              max: 10,
+              initialValue: 3,
+              onChanged: (_) {},
+            ),
+          ),
+        );
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              max: 20,
+              initialValue: 3,
+              onChanged: (_) {},
+            ),
+          ),
+        );
+
+        expect(_slider(tester).value, 3);
       });
     });
 
     group('buttons', () {
-      testWidgets('increase adds step and notifies', (tester) async {
+      testWidgets('increase adds step and reports it', (tester) async {
         final reported = <double>[];
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(
-            step: 2,
-            min: 0,
-            max: 10,
-            initialValue: 4,
-            onChanged: reported.add,
+
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 2,
+              max: 10,
+              initialValue: 3,
+              onChanged: reported.add,
+            ),
           ),
         );
+        await tester.tap(_increaseFinder);
+        await tester.pump();
 
-        await tapIncrease(tester);
-
-        expect(sliderOf(tester).value, 6);
-        expect(reported, [6]);
+        expect(reported, [5]);
+        expect(_slider(tester).value, 5);
       });
 
-      testWidgets('decrease subtracts step and notifies', (tester) async {
+      testWidgets('decrease subtracts step and reports it', (tester) async {
         final reported = <double>[];
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(
-            step: 2,
-            min: 0,
-            max: 10,
-            initialValue: 4,
-            onChanged: reported.add,
+
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 2,
+              max: 10,
+              initialValue: 3,
+              onChanged: reported.add,
+            ),
           ),
         );
+        await tester.tap(_decreaseFinder);
+        await tester.pump();
 
-        await tapDecrease(tester);
-
-        expect(sliderOf(tester).value, 2);
-        expect(reported, [2]);
+        expect(reported, [1]);
+        expect(_slider(tester).value, 1);
       });
 
       testWidgets('increase clamps an overshoot to max', (tester) async {
         final reported = <double>[];
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(
-            step: 5,
-            min: 0,
-            max: 10,
-            initialValue: 8,
-            onChanged: reported.add,
+
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 4,
+              max: 10,
+              initialValue: 8,
+              onChanged: reported.add,
+            ),
           ),
         );
+        await tester.tap(_increaseFinder);
+        await tester.pump();
 
-        await tapIncrease(tester);
-
-        expect(sliderOf(tester).value, 10);
         expect(reported, [10]);
+        expect(_slider(tester).value, 10);
       });
 
       testWidgets('decrease clamps an overshoot to min', (tester) async {
         final reported = <double>[];
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(
-            step: 5,
-            min: 0,
-            max: 10,
-            initialValue: 2,
-            onChanged: reported.add,
+
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 4,
+              max: 10,
+              initialValue: 2,
+              onChanged: reported.add,
+            ),
           ),
         );
+        await tester.tap(_decreaseFinder);
+        await tester.pump();
 
-        await tapDecrease(tester);
-
-        expect(sliderOf(tester).value, 0);
         expect(reported, [0]);
+        expect(_slider(tester).value, 0);
       });
 
-      testWidgets('increase is disabled at max, decrease enabled', (
-        tester,
-      ) async {
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(step: 1, initialValue: 1, onChanged: (_) {}),
-        );
+      testWidgets('repeated taps accumulate', (tester) async {
+        final reported = <double>[];
 
-        expect(increaseButton(tester).onPressed, isNull);
-        expect(decreaseButton(tester).onPressed, isNotNull);
-      });
-
-      testWidgets('decrease is disabled at min, increase enabled', (
-        tester,
-      ) async {
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(step: 1, initialValue: 0, onChanged: (_) {}),
-        );
-
-        expect(decreaseButton(tester).onPressed, isNull);
-        expect(increaseButton(tester).onPressed, isNotNull);
-      });
-
-      testWidgets('re-enable after stepping away from a bound', (tester) async {
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(
-            step: 1,
-            min: 0,
-            max: 10,
-            initialValue: 10,
-            onChanged: (_) {},
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              max: 10,
+              initialValue: 5,
+              onChanged: reported.add,
+            ),
           ),
         );
-        expect(increaseButton(tester).onPressed, isNull);
+        await tester.tap(_increaseFinder);
+        await tester.pump();
+        await tester.tap(_increaseFinder);
+        await tester.pump();
+        await tester.tap(_decreaseFinder);
+        await tester.pump();
 
-        await tapDecrease(tester);
-
-        expect(increaseButton(tester).onPressed, isNotNull);
+        expect(reported, [6, 7, 6]);
+        expect(_slider(tester).value, 6);
       });
 
-      testWidgets('forward haptic and fire it on tap', (tester) async {
-        final haptics = <String>[];
-        recordHaptics(tester, into: haptics);
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(
-            step: 1,
-            haptic: .heavy,
-            onChanged: (_) {},
+      testWidgets('step is independent of divisions', (tester) async {
+        final reported = <double>[];
+
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 0.5,
+              max: 10,
+              divisions: 10,
+              initialValue: 5,
+              onChanged: reported.add,
+            ),
+          ),
+        );
+        await tester.tap(_increaseFinder);
+        await tester.pump();
+
+        expect(reported, [5.5]);
+        expect(_slider(tester).value, 5.5);
+      });
+    });
+
+    group('enabled state', () {
+      testWidgets('both buttons enabled strictly inside the range', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              max: 10,
+              initialValue: 5,
+              onChanged: (_) {},
+            ),
           ),
         );
 
-        final buttons = tester.widgetList<SliderButton>(
-          find.byType(SliderButton),
-        );
-        expect(
-          buttons.map((b) => b.haptic),
-          everyElement(HapticIntensity.heavy),
+        expect(_decrease(tester).onPressed, isNotNull);
+        expect(_increase(tester).onPressed, isNotNull);
+        expect(_slider(tester).onChanged, isNotNull);
+      });
+
+      testWidgets('decrease is disabled at min', (tester) async {
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              max: 10,
+              initialValue: 0,
+              onChanged: (_) {},
+            ),
+          ),
         );
 
-        await tapIncrease(tester);
+        expect(_decrease(tester).onPressed, isNull);
+        expect(_increase(tester).onPressed, isNotNull);
+        expect(_slider(tester).onChanged, isNotNull);
+      });
 
-        expect(haptics, ['HapticFeedbackType.heavyImpact']);
+      testWidgets('increase is disabled at max', (tester) async {
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              max: 10,
+              initialValue: 10,
+              onChanged: (_) {},
+            ),
+          ),
+        );
+
+        expect(_decrease(tester).onPressed, isNotNull);
+        expect(_increase(tester).onPressed, isNull);
+        expect(_slider(tester).onChanged, isNotNull);
+      });
+
+      testWidgets('buttons toggle as the value reaches a bound', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              max: 2,
+              initialValue: 1,
+              onChanged: (_) {},
+            ),
+          ),
+        );
+        await tester.tap(_increaseFinder);
+        await tester.pump();
+
+        expect(_increase(tester).onPressed, isNull);
+        expect(_decrease(tester).onPressed, isNotNull);
+
+        await tester.tap(_decreaseFinder);
+        await tester.pump();
+
+        expect(_increase(tester).onPressed, isNotNull);
+        expect(_decrease(tester).onPressed, isNotNull);
+      });
+
+      testWidgets('a null onChanged disables everything', (tester) async {
+        await tester.pumpWidget(
+          _harness(
+            const HSliderWithButtons(step: 1, max: 10, initialValue: 5),
+          ),
+        );
+
+        expect(_decrease(tester).onPressed, isNull);
+        expect(_increase(tester).onPressed, isNull);
+        expect(_slider(tester).onChanged, isNull);
+      });
+
+      testWidgets('tapping a disabled button changes nothing', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _harness(
+            const HSliderWithButtons(step: 1, max: 10, initialValue: 5),
+          ),
+        );
+        await tester.tap(_increaseFinder);
+        await tester.pump();
+
+        expect(_slider(tester).value, 5);
       });
     });
 
     group('slider', () {
-      testWidgets('drag updates the value and notifies', (tester) async {
-        final reported = <double>[];
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(
-            step: 1,
-            initialValue: 0,
-            onChanged: reported.add,
-          ),
-        );
-
-        await tester.drag(find.byType(Slider), const Offset(50, 0));
-        await tester.pump();
-
-        expect(reported, isNotEmpty);
-        expect(reported.last, greaterThan(0));
-        expect(sliderOf(tester).value, reported.last);
-      });
-
-      testWidgets('forward divisions and sliderThemeData', (tester) async {
-        const themeData = SliderThemeData(trackHeight: 8);
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(
-            step: 1,
-            divisions: 4,
-            sliderThemeData: themeData,
-            onChanged: (_) {},
-          ),
-        );
-
-        final slider = tester.widget<HorizontalSlider>(
-          find.byType(HorizontalSlider),
-        );
-        expect(slider.divisions, 4);
-        expect(slider.sliderTheme, same(themeData));
-      });
-    });
-
-    group('disabled', () {
-      testWidgets('null onChanged disables slider and both buttons', (
+      testWidgets('dragging updates the value and reports it', (
         tester,
       ) async {
-        await pumpSlider(
-          tester,
-          const HSliderWithButtons(step: 1, initialValue: 0.5),
-        );
-
-        expect(sliderOf(tester).onChanged, isNull);
-        expect(decreaseButton(tester).onPressed, isNull);
-        expect(increaseButton(tester).onPressed, isNull);
-      });
-    });
-
-    group('colour', () {
-      testWidgets('tints both icons and the slider', (tester) async {
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(
-            step: 1,
-            color: Colors.red,
-            onChanged: (_) {},
-          ),
-        );
-
-        final icons = tester.widgetList<Icon>(find.byType(Icon));
-        expect(icons, hasLength(2));
-        expect(icons.map((i) => i.color), everyElement(Colors.red));
-
-        final slider = tester.widget<HorizontalSlider>(
-          find.byType(HorizontalSlider),
-        );
-        expect(slider.color, Colors.red);
-      });
-    });
-
-    group('range change', () {
-      testWidgets('re-clamps the value without notifying', (tester) async {
         final reported = <double>[];
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(
-            step: 1,
-            min: 0,
-            max: 1,
-            initialValue: 0.8,
-            onChanged: reported.add,
+
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              max: 10,
+              initialValue: 0,
+              onChanged: reported.add,
+            ),
           ),
         );
-        expect(sliderOf(tester).value, 0.8);
+        await tester.drag(find.byType(Slider), const Offset(60, 0));
+        await tester.pumpAndSettle();
 
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(
-            step: 1,
-            min: 0,
-            max: 0.5,
-            initialValue: 0.8,
-            onChanged: reported.add,
-          ),
-        );
-
-        expect(sliderOf(tester).value, 0.5);
-        expect(reported, isEmpty);
+        expect(reported, isNotEmpty);
+        expect(_slider(tester).value, reported.last);
+        for (final value in reported) {
+          expect(value, inInclusiveRange(0, 10));
+        }
       });
 
-      testWidgets('ignores a changed initialValue', (tester) async {
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(step: 1, initialValue: 0.2, onChanged: (_) {}),
+      testWidgets('dragging with divisions reports snapped values', (
+        tester,
+      ) async {
+        final reported = <double>[];
+
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              max: 10,
+              divisions: 10,
+              initialValue: 0,
+              onChanged: reported.add,
+            ),
+          ),
+        );
+        await tester.drag(find.byType(Slider), const Offset(60, 0));
+        await tester.pumpAndSettle();
+
+        expect(reported, isNotEmpty);
+        for (final value in reported) {
+          expect(value, closeTo(value.roundToDouble(), 1e-9));
+        }
+      });
+    });
+
+    group('forwarding', () {
+      testWidgets('min, max and divisions reach HorizontalSlider', (
+        tester,
+      ) async {
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              min: 1,
+              max: 9,
+              divisions: 8,
+              onChanged: (_) {},
+            ),
+          ),
         );
 
-        await pumpSlider(
-          tester,
-          HSliderWithButtons(step: 1, initialValue: 0.9, onChanged: (_) {}),
+        final slider = _horizontal(tester);
+        expect(slider.min, 1);
+        expect(slider.max, 9);
+        expect(slider.divisions, 8);
+      });
+
+      testWidgets('color reaches both icons and the slider', (tester) async {
+        const color = Colors.deepOrange;
+
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(step: 1, color: color, onChanged: (_) {}),
+          ),
         );
 
-        expect(sliderOf(tester).value, 0.2);
+        final icons = tester.widgetList<Icon>(find.byType(Icon)).toList();
+        expect(icons, hasLength(2));
+        for (final icon in icons) {
+          expect(icon.color, color);
+        }
+        expect(_horizontal(tester).color, color);
+      });
+
+      testWidgets('haptic reaches both buttons', (tester) async {
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(step: 1, haptic: .heavy, onChanged: (_) {}),
+          ),
+        );
+
+        final buttons = tester
+            .widgetList<SliderButton>(find.byType(SliderButton))
+            .toList();
+        expect(buttons, hasLength(2));
+        for (final button in buttons) {
+          expect(button.haptic, HapticIntensity.heavy);
+        }
+      });
+
+      testWidgets('sliderThemeData reaches HorizontalSlider', (tester) async {
+        const themeData = SliderThemeData(trackHeight: 7);
+
+        await tester.pumpWidget(
+          _harness(
+            HSliderWithButtons(
+              step: 1,
+              sliderThemeData: themeData,
+              onChanged: (_) {},
+            ),
+          ),
+        );
+
+        expect(_horizontal(tester).sliderTheme, same(themeData));
       });
     });
   });
-}
-
-/// Pumps [child] inside the Material scaffolding the widget needs.
-Future<void> pumpSlider(WidgetTester tester, Widget child) {
-  return tester.pumpWidget(
-    MaterialApp(
-      home: Scaffold(body: Center(child: child)),
-    ),
-  );
-}
-
-/// The Material [Slider] the widget ultimately renders.
-Slider sliderOf(WidgetTester tester) =>
-    tester.widget<Slider>(find.byType(Slider));
-
-/// The [IconButton] behind the decrease [SliderButton].
-IconButton decreaseButton(WidgetTester tester) => tester.widget<IconButton>(
-  find.widgetWithIcon(IconButton, Icons.remove_circle_outline),
-);
-
-/// The [IconButton] behind the increase [SliderButton].
-IconButton increaseButton(WidgetTester tester) => tester.widget<IconButton>(
-  find.widgetWithIcon(IconButton, Icons.add_circle_outline),
-);
-
-Future<void> tapDecrease(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.remove_circle_outline));
-  await tester.pump();
-}
-
-Future<void> tapIncrease(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.add_circle_outline));
-  await tester.pump();
-}
-
-/// Intercepts the platform channel so haptic calls land in [into] (as
-/// their `HapticFeedbackType` argument) instead of going nowhere.
-void recordHaptics(WidgetTester tester, {required List<String> into}) {
-  final messenger = tester.binding.defaultBinaryMessenger;
-
-  Future<Object?> handler(MethodCall call) async {
-    if (call.method == 'HapticFeedback.vibrate') {
-      into.add(call.arguments as String);
-    }
-    return null;
-  }
-
-  messenger.setMockMethodCallHandler(SystemChannels.platform, handler);
-  addTearDown(
-    () => messenger.setMockMethodCallHandler(SystemChannels.platform, null),
-  );
 }

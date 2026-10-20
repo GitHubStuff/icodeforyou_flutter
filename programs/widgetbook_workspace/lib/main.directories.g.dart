@@ -129,10 +129,16 @@ import 'package:widgetbook_workspace/packages/dual_selection/dual_selection.usec
     as _widgetbook_workspace_packages_dual_selection_dual_selection_usecase;
 import 'package:widgetbook_workspace/packages/dual_selection/single_selection.usecase.dart'
     as _widgetbook_workspace_packages_dual_selection_single_selection_usecase;
+import 'package:widgetbook_workspace/packages/ext_duration/ext_duration.usecase.dart'
+    as _widgetbook_workspace_packages_ext_duration_ext_duration_usecase;
+import 'package:widgetbook_workspace/packages/ext_duration/scanners.usecase.dart'
+    as _widgetbook_workspace_packages_ext_duration_scanners_usecase;
+import 'package:widgetbook_workspace/packages/ext_string/ext_string.usecase.dart'
+    as _widgetbook_workspace_packages_ext_string_ext_string_usecase;
+import 'package:widgetbook_workspace/packages/ext_widget/extended_stateful_widget.usecase.dart'
+    as _widgetbook_workspace_packages_ext_widget_extended_stateful_widget_usecase;
 import 'package:widgetbook_workspace/packages/extensions/color_ext/color_pair.usecase.dart'
     as _widgetbook_workspace_packages_extensions_color_ext_color_pair_usecase;
-import 'package:widgetbook_workspace/packages/extensions/widget_ext/widget_ext.usecase.dart'
-    as _widgetbook_workspace_packages_extensions_widget_ext_widget_ext_usecase;
 import 'package:widgetbook_workspace/packages/infinite_scroll_picking/lib/src/infinite_scroll_picker.usecase.dart'
     as _widgetbook_workspace_packages_infinite_scroll_picking_lib_src_infinite_scroll_picker_usecase;
 import 'package:widgetbook_workspace/packages/infinite_scroll_picking_settings/settings_screen.usecase.dart'
@@ -347,13 +353,36 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookComponent(
+    name: 'ExtendedStatefulWidget<StatefulWidget>',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Hook Event Log',
+        builder:
+            _widgetbook_workspace_packages_ext_widget_extended_stateful_widget_usecase
+                .buildExtendedStatefulWidgetHookEventLogUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Initial Values',
+        builder:
+            _widgetbook_workspace_packages_ext_widget_extended_stateful_widget_usecase
+                .buildExtendedStatefulWidgetInitialValuesUseCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
     name: 'HSliderWithButtons',
     useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Gallery',
+        builder:
+            _widgetbook_workspace_packages_sliders_hslider_with_buttons_usecase
+                .buildHSliderWithButtonsGallery,
+      ),
       _widgetbook.WidgetbookUseCase(
         name: 'Interactive',
         builder:
             _widgetbook_workspace_packages_sliders_hslider_with_buttons_usecase
-                .buildHSliderWithButtonsInteractiveUseCase,
+                .buildHSliderWithButtonsInteractive,
       ),
     ],
   ),
@@ -506,9 +535,14 @@ final directories = <_widgetbook.WidgetbookNode>[
     name: 'SliderButton',
     useCases: [
       _widgetbook.WidgetbookUseCase(
+        name: 'Gallery',
+        builder: _widgetbook_workspace_packages_sliders_slider_button_usecase
+            .buildSliderButtonGallery,
+      ),
+      _widgetbook.WidgetbookUseCase(
         name: 'Interactive',
         builder: _widgetbook_workspace_packages_sliders_slider_button_usecase
-            .buildSliderButtonInteractiveUseCase,
+            .buildSliderButtonInteractive,
       ),
     ],
   ),
@@ -1181,6 +1215,95 @@ final directories = <_widgetbook.WidgetbookNode>[
         ],
       ),
       _widgetbook.WidgetbookFolder(
+        name: 'ext_duration',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'DurationFormatShowcase',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Interactive',
+                builder:
+                    _widgetbook_workspace_packages_ext_duration_ext_duration_usecase
+                        .buildDurationFormatInteractiveUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Preset Gallery',
+                builder:
+                    _widgetbook_workspace_packages_ext_duration_ext_duration_usecase
+                        .buildDurationFormatPresetGalleryUseCase,
+              ),
+            ],
+          ),
+          _widgetbook.WidgetbookComponent(
+            name: 'DurationUnitShowcase',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Interactive',
+                builder:
+                    _widgetbook_workspace_packages_ext_duration_ext_duration_usecase
+                        .buildDurationUnitInteractiveUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Preset Gallery',
+                builder:
+                    _widgetbook_workspace_packages_ext_duration_ext_duration_usecase
+                        .buildDurationUnitPresetGalleryUseCase,
+              ),
+            ],
+          ),
+          _widgetbook.WidgetbookComponent(
+            name: 'TokenScannerPlayground',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Live Parse',
+                builder:
+                    _widgetbook_workspace_packages_ext_duration_scanners_usecase
+                        .buildTokenScannerPlaygroundUseCase,
+              ),
+            ],
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookFolder(
+        name: 'ext_string',
+        children: [
+          _widgetbook.WidgetbookComponent(
+            name: 'MicrosecondsShowcase',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Interactive',
+                builder:
+                    _widgetbook_workspace_packages_ext_string_ext_string_usecase
+                        .buildMicrosecondsInteractiveUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Preset Gallery',
+                builder:
+                    _widgetbook_workspace_packages_ext_string_ext_string_usecase
+                        .buildMicrosecondsPresetGalleryUseCase,
+              ),
+            ],
+          ),
+          _widgetbook.WidgetbookComponent(
+            name: 'PixelSizeShowcase',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Interactive',
+                builder:
+                    _widgetbook_workspace_packages_ext_string_ext_string_usecase
+                        .buildPixelSizeInteractiveUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Preset Gallery',
+                builder:
+                    _widgetbook_workspace_packages_ext_string_ext_string_usecase
+                        .buildPixelSizePresetGalleryUseCase,
+              ),
+            ],
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookFolder(
         name: 'random_color_generator',
         children: [
           _widgetbook.WidgetbookComponent(
@@ -1733,17 +1856,6 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder:
                 _widgetbook_workspace_packages_sincewhen_screens_widgets_timestamp_row_usecase
                     .buildTimestampRowUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'Widget',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Widget Extensions',
-            builder:
-                _widgetbook_workspace_packages_extensions_widget_ext_widget_ext_usecase
-                    .buildWidgetExtUseCase,
           ),
         ],
       ),

@@ -5,7 +5,6 @@ description: "Collection of flutter packages"
 version: 9.6.2
 
 workspace:
-  - packages/abstractions
   - packages/analog_clock_widget
   - packages/animated_widgets
   - packages/app_navigation
@@ -14,6 +13,7 @@ workspace:
   - packages/archetypes
   - packages/biometric_gate_service
   - packages/border_caption
+  - packages/caption_switch
   - packages/color_grid
   - packages/counter_ring
   - packages/custom_widgets
@@ -24,6 +24,7 @@ workspace:
   - packages/duration_widget
   - packages/ext_duration
   - packages/ext_string
+  - packages/ext_widget
   - packages/extensions
   - packages/haptic_intensity
   - packages/icodeforyou_lints
@@ -52,6 +53,7 @@ workspace:
   - packages/three_d_sphere
   - packages/time_spans
   - packages/tool_kit
+  - packages/tools
   - packages/widget_animation_framework
   - plugins/status_bar_chameleon
   - programs/black_velvet

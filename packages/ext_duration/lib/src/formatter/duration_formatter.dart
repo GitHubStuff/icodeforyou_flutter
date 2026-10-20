@@ -190,7 +190,6 @@ final class _Parser {
   List<_Token> parse() {
     final tokens = <_Token>[];
     final literal = StringBuffer();
-
     while (_index < _pattern.length) {
       final char = _pattern.codeUnitAt(_index);
       if (char != _percent) {

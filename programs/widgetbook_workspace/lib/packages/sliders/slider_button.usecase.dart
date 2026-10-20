@@ -1,104 +1,174 @@
-// programs/widgetbook_workspace/lib/packages/sliders/slider_button.usecase.dart
+// programs/widgetbook_workspace/lib/sliders/slider_button.usecase.dart
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart' show Gap;
 import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
-import 'package:sliders/sliders.dart';
+import 'package:sliders/sliders.dart' show SliderButton;
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
-/// Icons offered by the "Icon" knob.
-enum _IconChoice {
-  decrease('Decrease (−)', Icons.remove_circle_outline),
-  increase('Increase (+)', Icons.add_circle_outline),
-  chevronLeft('Chevron left', Icons.chevron_left),
-  chevronRight('Chevron right', Icons.chevron_right),
-  reset('Reset', Icons.restart_alt);
-
-  const _IconChoice(this.label, this.icon);
-
-  final String label;
-  final IconData icon;
-}
-
-@widgetbook.UseCase(name: 'Interactive', type: SliderButton)
-Widget buildSliderButtonInteractiveUseCase(BuildContext context) {
-  final enabled = context.knobs.boolean(
-    label: 'Enabled',
-    initialValue: true,
-  );
-  final hint = context.knobs.string(label: 'hint', initialValue: 'Increase');
-  final choice = context.knobs.object.dropdown<_IconChoice>(
+/// Knob-driven [SliderButton] with a tap counter.
+///
+/// Every knob maps to one constructor parameter, so the use case doubles as
+/// a live reading of the widget's API.
+@UseCase(name: 'Interactive', type: SliderButton)
+Widget buildSliderButtonInteractive(BuildContext context) {
+  final enabled = context.knobs.boolean(label: 'Enabled', initialValue: true);
+  final hint = context.knobs.string(label: 'Hint', initialValue: 'Increase');
+  final color = context.knobs.colorOrNull(label: 'Icon color');
+  final icon = context.knobs.object.dropdown<_ButtonIcon>(
     label: 'Icon',
-    options: _IconChoice.values,
-    initialOption: _IconChoice.increase,
-    labelBuilder: (choice) => choice.label,
+    options: _ButtonIcon.values,
+    initialOption: .addCircleOutline,
+    labelBuilder: (icon) => icon.name,
   );
-  final color = context.knobs.colorOrNull(label: 'Icon colour');
   final haptic = context.knobs.object.dropdown<HapticIntensity>(
-    label: 'haptic',
+    label: 'Haptic',
     options: HapticIntensity.values,
     initialOption: .light,
     labelBuilder: (haptic) => haptic.name,
   );
 
-  return _SliderButtonHarness(
-    enabled: enabled,
-    hint: hint,
-    icon: Icon(choice.icon, color: color),
-    haptic: haptic,
+  return _TapCounter(
+    builder: (onTap) => SliderButton(
+      icon: Icon(icon.data, color: color),
+      hint: hint,
+      haptic: haptic,
+      onTap: enabled ? onTap : null,
+    ),
   );
 }
 
-/// Hosts a [SliderButton] and counts its taps.
-///
-/// The button is stateless and only observable through `onTap`, so the
-/// count is the proof that the callback fired.
-class _SliderButtonHarness extends StatefulWidget {
-  const _SliderButtonHarness({
-    required this.enabled,
-    required this.hint,
-    required this.icon,
-    required this.haptic,
-  });
-
-  final bool enabled;
-  final String hint;
-  final Widget icon;
-  final HapticIntensity haptic;
-
-  @override
-  State<_SliderButtonHarness> createState() => _SliderButtonHarnessState();
+/// Every visual state of [SliderButton] side by side.
+@UseCase(name: 'Gallery', type: SliderButton)
+Widget buildSliderButtonGallery(BuildContext context) {
+  return _Gallery(
+    rows: [
+      (
+        'Enabled',
+        SliderButton(
+          icon: const Icon(Icons.add_circle_outline),
+          hint: 'Increase',
+          onTap: () {},
+        ),
+      ),
+      (
+        'Disabled',
+        const SliderButton(
+          icon: Icon(Icons.add_circle_outline),
+          hint: 'Increase',
+        ),
+      ),
+      (
+        'Tinted',
+        SliderButton(
+          icon: const Icon(Icons.remove_circle_outline, color: Colors.teal),
+          hint: 'Decrease',
+          onTap: () {},
+        ),
+      ),
+      (
+        'Silent (no haptic)',
+        SliderButton(
+          icon: const Icon(Icons.volume_off_outlined),
+          hint: 'Mute',
+          haptic: .none,
+          onTap: () {},
+        ),
+      ),
+      (
+        'Heavy haptic',
+        SliderButton(
+          icon: const Icon(Icons.vibration),
+          hint: 'Thump',
+          haptic: .heavy,
+          onTap: () {},
+        ),
+      ),
+    ],
+  );
 }
 
-class _SliderButtonHarnessState extends State<_SliderButtonHarness> {
+/// The icons offered by the `Icon` knob.
+///
+/// An enum rather than a `Map<IconData, String>`: [IconData] overrides `==`
+/// and so cannot be a const map key, whereas an enum value is a legal const
+/// key, carries its own label via [Enum.name], and keeps the knob's option
+/// identity stable across rebuilds.
+enum _ButtonIcon {
+  addCircleOutline(Icons.add_circle_outline),
+  removeCircleOutline(Icons.remove_circle_outline),
+  chevronLeft(Icons.chevron_left),
+  chevronRight(Icons.chevron_right),
+  volumeDown(Icons.volume_down),
+  volumeUp(Icons.volume_up);
+
+  const _ButtonIcon(this.data);
+
+  /// The Material icon this option renders.
+  final IconData data;
+}
+
+/// Hosts a button and shows how many times it has been tapped.
+class _TapCounter extends StatefulWidget {
+  const _TapCounter({required this.builder});
+
+  final Widget Function(VoidCallback onTap) builder;
+
+  @override
+  State<_TapCounter> createState() => _TapCounterState();
+}
+
+class _TapCounterState extends State<_TapCounter> {
   int _taps = 0;
 
   void _onTap() => setState(() => _taps++);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24),
+    return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SliderButton(
-            icon: widget.icon,
-            hint: widget.hint,
-            haptic: widget.haptic,
-            onTap: widget.enabled ? _onTap : null,
-          ),
-          const Gap(8),
-          Text(
-            'onTap called $_taps time${_taps == 1 ? '' : 's'}',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          const Gap(4),
-          Text(
-            'Long-press the button to see the tooltip.',
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
+          widget.builder(_onTap),
+          const SizedBox(height: 16),
+          Text('Taps: $_taps', style: Theme.of(context).textTheme.bodyLarge),
         ],
+      ),
+    );
+  }
+}
+
+/// A labelled column of widgets, one per row.
+class _Gallery extends StatelessWidget {
+  const _Gallery({required this.rows});
+
+  final List<(String, Widget)> rows;
+
+  @override
+  Widget build(BuildContext context) {
+    final labelStyle = Theme.of(context).textTheme.labelLarge;
+
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final (label, child) in rows)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      width: 160,
+                      child: Text(label, style: labelStyle),
+                    ),
+                    child,
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
