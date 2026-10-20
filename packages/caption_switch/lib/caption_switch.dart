@@ -27,9 +27,10 @@ class CaptionSwitch extends StatelessWidget {
     TextStyle? subtitleStyle,
     super.key,
   }) : caption = Text(caption, style: textStyle),
-       subtitle = subtitle == null
-           ? null
-           : Text(subtitle, style: subtitleStyle);
+       subtitle = _optionalText(subtitle, subtitleStyle);
+
+  static Text? _optionalText(String? data, TextStyle? style) =>
+      data == null ? null : Text(data, style: style);
 
   /// Text shown beside the switch.
   final Widget caption;

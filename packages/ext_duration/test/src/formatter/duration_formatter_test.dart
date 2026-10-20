@@ -1,149 +1,151 @@
 // packages/ext_duration/test/src/formatter/duration_formatter_test.dart
 
-import 'package:ext_duration/src/formatter/duration_formatter.dart'
-    show DurationFormatter;
-import 'package:flutter_test/flutter_test.dart';
+import 'package:ext_duration/src/formatter/duration_formatter.dart';
+import 'package:test/test.dart';
+
+/// 1 day, 2 h, 5 min, 9 s, 42 ms, 7 µs.
+///
+/// Totals: 26 h · 1565 min · 93909 s · 93909042 ms · 93909042007 µs.
+const _sample = Duration(
+  days: 1,
+  hours: 2,
+  minutes: 5,
+  seconds: 9,
+  milliseconds: 42,
+  microseconds: 7,
+);
+
+Matcher _formatException({
+  required String message,
+  required String source,
+  required int offset,
+}) => throwsA(
+  isA<FormatException>()
+      .having((e) => e.message, 'message', message)
+      .having((e) => e.source, 'source', source)
+      .having((e) => e.offset, 'offset', offset),
+);
 
 void main() {
   group('DurationFormatter', () {
-    // 26h 5m 9s 42ms — the fixture used by the library documentation.
-    const sample = Duration(
-      hours: 26,
-      minutes: 5,
-      seconds: 9,
-      milliseconds: 42,
-    );
-
-    group('constructor', () {
+    group('construction', () {
       test('exposes the pattern it was built from', () {
-        const pattern = '%02H:%02m';
-        final formatter = DurationFormatter(pattern);
-
-        expect(formatter.pattern, pattern);
+        expect(DurationFormatter('%d').pattern, '%d');
       });
 
-      test('accepts an empty pattern', () {
-        expect(DurationFormatter('').format(sample), '');
+      test('an instance can be reused for many durations', () {
+        final formatter = DurationFormatter('%S');
+
+        expect(formatter.format(const Duration(seconds: 1)), '1');
+        expect(formatter.format(const Duration(seconds: 2)), '2');
+        expect(formatter.format(Duration.zero), '0');
+      });
+    });
+
+    group('literals', () {
+      test('empty pattern yields empty string', () {
+        expect(DurationFormatter('').format(_sample), '');
       });
 
-      test('accepts a pattern with no conversions', () {
-        expect(
-          DurationFormatter('plain text').format(sample),
-          'plain text',
-        );
+      test('pattern without conversions is returned verbatim', () {
+        expect(DurationFormatter('hello world').format(_sample), 'hello world');
       });
 
-      test('throws FormatException for a trailing bare percent', () {
-        expect(
-          () => DurationFormatter('abc%'),
-          throwsA(
-            isA<FormatException>()
-                .having(
-                  (e) => e.message,
-                  'message',
-                  'Incomplete conversion specifier',
-                )
-                .having((e) => e.source, 'source', 'abc%')
-                .having((e) => e.offset, 'offset', 3),
-          ),
-        );
+      test('literal before a conversion', () {
+        expect(DurationFormatter('days=%d').format(_sample), 'days=1');
       });
 
-      test('throws FormatException when only flags follow the percent', () {
-        expect(
-          () => DurationFormatter('%-0'),
-          throwsA(
-            isA<FormatException>()
-                .having(
-                  (e) => e.message,
-                  'message',
-                  'Incomplete conversion specifier',
-                )
-                .having((e) => e.offset, 'offset', 0),
-          ),
-        );
+      test('literal after a conversion', () {
+        expect(DurationFormatter('%d days').format(_sample), '1 days');
       });
 
-      test('throws FormatException when only a width follows the percent', () {
-        expect(
-          () => DurationFormatter('x%12'),
-          throwsA(
-            isA<FormatException>()
-                .having(
-                  (e) => e.message,
-                  'message',
-                  'Incomplete conversion specifier',
-                )
-                .having((e) => e.offset, 'offset', 1),
-          ),
-        );
+      test('literals between conversions', () {
+        expect(DurationFormatter('%d-%h-%m').format(_sample), '1-2-5');
       });
 
-      test('throws FormatException for an unknown conversion', () {
-        expect(
-          () => DurationFormatter('%02x'),
-          throwsA(
-            isA<FormatException>()
-                .having(
-                  (e) => e.message,
-                  'message',
-                  'Unknown conversion specifier "%x"',
-                )
-                .having((e) => e.source, 'source', '%02x')
-                .having((e) => e.offset, 'offset', 0),
-          ),
-        );
+      test('adjacent conversions without literals', () {
+        expect(DurationFormatter('%d%h%m').format(_sample), '125');
       });
 
-      test('reports the offset of the percent that started the bad field', () {
-        expect(
-          () => DurationFormatter('%d and %q'),
-          throwsA(
-            isA<FormatException>().having((e) => e.offset, 'offset', 7),
-          ),
-        );
-      });
-
-      test('parses eagerly so a bad pattern fails before format is called', () {
-        expect(() => DurationFormatter('%z'), throwsFormatException);
+      test('non-ASCII literals are preserved', () {
+        expect(DurationFormatter('⏱ %s s').format(_sample), '⏱ 9 s');
       });
     });
 
     group('conversions', () {
-      test('%d emits whole days', () {
-        expect(DurationFormatter('%d').format(sample), '1');
-        expect(
-          DurationFormatter('%d').format(const Duration(hours: 23)),
-          '0',
-        );
-        expect(
-          DurationFormatter('%d').format(const Duration(days: 10, hours: 5)),
-          '10',
-        );
+      test('d — whole days', () {
+        expect(DurationFormatter('%d').format(_sample), '1');
       });
 
-      test('%h emits hours within the day', () {
-        expect(DurationFormatter('%h').format(sample), '2');
-        expect(
-          DurationFormatter('%h').format(const Duration(hours: 23)),
-          '23',
-        );
-        expect(
-          DurationFormatter('%h').format(const Duration(hours: 24)),
-          '0',
-        );
+      test('h — hours within the day', () {
+        expect(DurationFormatter('%h').format(_sample), '2');
       });
 
-      test('%H emits total hours', () {
-        expect(DurationFormatter('%H').format(sample), '26');
-        expect(
-          DurationFormatter('%H').format(const Duration(days: 2)),
-          '48',
-        );
+      test('H — total hours', () {
+        expect(DurationFormatter('%H').format(_sample), '26');
       });
 
-      test('%m emits minutes within the hour', () {
-        expect(DurationFormatter('%m').format(sample), '5');
+      test('m — minutes within the hour', () {
+        expect(DurationFormatter('%m').format(_sample), '5');
+      });
+
+      test('M — total minutes', () {
+        expect(DurationFormatter('%M').format(_sample), '1565');
+      });
+
+      test('s — seconds within the minute', () {
+        expect(DurationFormatter('%s').format(_sample), '9');
+      });
+
+      test('S — total seconds', () {
+        expect(DurationFormatter('%S').format(_sample), '93909');
+      });
+
+      test('l — milliseconds within the second', () {
+        expect(DurationFormatter('%l').format(_sample), '42');
+      });
+
+      test('L — total milliseconds', () {
+        expect(DurationFormatter('%L').format(_sample), '93909042');
+      });
+
+      test('u — microseconds within the millisecond', () {
+        expect(DurationFormatter('%u').format(_sample), '7');
+      });
+
+      test('U — total microseconds', () {
+        expect(DurationFormatter('%U').format(_sample), '93909042007');
+      });
+
+      test('n — empty for non-negative', () {
+        expect(DurationFormatter('%n').format(_sample), '');
+        expect(DurationFormatter('%n').format(Duration.zero), '');
+      });
+
+      test('n — minus for negative', () {
+        expect(DurationFormatter('%n').format(-_sample), '-');
+      });
+
+      test('% — literal percent sign', () {
+        expect(DurationFormatter('%%').format(_sample), '%');
+        expect(DurationFormatter('100%%').format(_sample), '100%');
+      });
+
+      test('numeric conversions use the absolute value', () {
+        final formatter = DurationFormatter('%d|%h|%H|%m|%M|%s|%S|%l|%L|%u|%U');
+        const expected = '1|2|26|5|1565|9|93909|42|93909042|7|93909042007';
+
+        expect(formatter.format(_sample), expected);
+        expect(formatter.format(-_sample), expected);
+      });
+
+      test('h wraps at 24 hours', () {
+        expect(DurationFormatter('%h').format(const Duration(hours: 23)), '23');
+        expect(DurationFormatter('%h').format(const Duration(hours: 24)), '0');
+        expect(DurationFormatter('%h').format(const Duration(hours: 25)), '1');
+      });
+
+      test('m wraps at 60 minutes', () {
         expect(
           DurationFormatter('%m').format(const Duration(minutes: 59)),
           '59',
@@ -152,18 +154,13 @@ void main() {
           DurationFormatter('%m').format(const Duration(minutes: 60)),
           '0',
         );
-      });
-
-      test('%M emits total minutes', () {
-        expect(DurationFormatter('%M').format(sample), '1565');
         expect(
-          DurationFormatter('%M').format(const Duration(hours: 2)),
-          '120',
+          DurationFormatter('%m').format(const Duration(minutes: 61)),
+          '1',
         );
       });
 
-      test('%s emits seconds within the minute', () {
-        expect(DurationFormatter('%s').format(sample), '9');
+      test('s wraps at 60 seconds', () {
         expect(
           DurationFormatter('%s').format(const Duration(seconds: 59)),
           '59',
@@ -172,18 +169,13 @@ void main() {
           DurationFormatter('%s').format(const Duration(seconds: 60)),
           '0',
         );
-      });
-
-      test('%S emits total seconds', () {
-        expect(DurationFormatter('%S').format(sample), '93909');
         expect(
-          DurationFormatter('%S').format(const Duration(minutes: 2)),
-          '120',
+          DurationFormatter('%s').format(const Duration(seconds: 61)),
+          '1',
         );
       });
 
-      test('%l emits milliseconds within the second', () {
-        expect(DurationFormatter('%l').format(sample), '42');
+      test('l wraps at 1000 milliseconds', () {
         expect(
           DurationFormatter('%l').format(const Duration(milliseconds: 999)),
           '999',
@@ -192,20 +184,13 @@ void main() {
           DurationFormatter('%l').format(const Duration(milliseconds: 1000)),
           '0',
         );
-      });
-
-      test('%L emits total milliseconds', () {
-        expect(DurationFormatter('%L').format(sample), '93909042');
         expect(
-          DurationFormatter('%L').format(const Duration(seconds: 2)),
-          '2000',
+          DurationFormatter('%l').format(const Duration(milliseconds: 1001)),
+          '1',
         );
       });
 
-      test('%u emits microseconds within the millisecond', () {
-        const d = Duration(milliseconds: 1, microseconds: 7);
-
-        expect(DurationFormatter('%u').format(d), '7');
+      test('u wraps at 1000 microseconds', () {
         expect(
           DurationFormatter('%u').format(const Duration(microseconds: 999)),
           '999',
@@ -214,188 +199,198 @@ void main() {
           DurationFormatter('%u').format(const Duration(microseconds: 1000)),
           '0',
         );
-      });
-
-      test('%U emits total microseconds', () {
-        const d = Duration(milliseconds: 1, microseconds: 7);
-
-        expect(DurationFormatter('%U').format(d), '1007');
-        expect(DurationFormatter('%U').format(sample), '93909042000');
-      });
-
-      test('%n emits a minus sign only for negative durations', () {
-        expect(DurationFormatter('%n').format(sample), '');
-        expect(DurationFormatter('%n').format(-sample), '-');
-        expect(DurationFormatter('%n').format(Duration.zero), '');
-      });
-
-      test('%% emits a literal percent sign', () {
-        expect(DurationFormatter('%%').format(sample), '%');
-        expect(DurationFormatter('100%%').format(sample), '100%');
-        expect(DurationFormatter('%%%%').format(sample), '%%');
-      });
-
-      test('numeric conversions use the absolute value', () {
-        const negative = Duration(hours: -26, minutes: -5, seconds: -9);
-
-        expect(DurationFormatter('%d').format(negative), '1');
-        expect(DurationFormatter('%h').format(negative), '2');
-        expect(DurationFormatter('%H').format(negative), '26');
-        expect(DurationFormatter('%m').format(negative), '5');
-        expect(DurationFormatter('%M').format(negative), '1565');
-        expect(DurationFormatter('%s').format(negative), '9');
-        expect(DurationFormatter('%S').format(negative), '93909');
-        expect(DurationFormatter('%l').format(negative), '0');
-        expect(DurationFormatter('%L').format(negative), '93909000');
-        expect(DurationFormatter('%u').format(negative), '0');
-        expect(DurationFormatter('%U').format(negative), '93909000000');
-      });
-
-      test('every conversion formats Duration.zero without error', () {
-        const all = '%d%h%H%m%M%s%S%l%L%u%U%n%%';
-
-        expect(DurationFormatter(all).format(Duration.zero), '00000000000%');
-      });
-    });
-
-    group('width and flags', () {
-      test('width of zero applies no padding', () {
-        expect(DurationFormatter('%0d').format(sample), '1');
-        expect(DurationFormatter('%-d').format(sample), '1');
-      });
-
-      test('pads with spaces on the left by default', () {
-        expect(DurationFormatter('%5S').format(sample), '93909');
-        expect(DurationFormatter('%3h').format(sample), '  2');
-        expect(DurationFormatter('%7M').format(sample), '   1565');
-      });
-
-      test('zero flag pads with zeros on the left', () {
-        expect(DurationFormatter('%02h').format(sample), '02');
-        expect(DurationFormatter('%03l').format(sample), '042');
-        expect(DurationFormatter('%06S').format(sample), '093909');
-      });
-
-      test('minus flag left-justifies with trailing spaces', () {
-        expect(DurationFormatter('%-3d').format(sample), '1  ');
-        expect(DurationFormatter('%-4h|').format(sample), '2   |');
-      });
-
-      test('minus flag overrides zero flag regardless of flag order', () {
-        expect(DurationFormatter('%-05d').format(sample), '1    ');
-        expect(DurationFormatter('%0-5d').format(sample), '1    ');
-      });
-
-      test('repeated flags are idempotent', () {
-        expect(DurationFormatter('%003h').format(sample), '002');
-        expect(DurationFormatter('%--3h').format(sample), '2  ');
-      });
-
-      test('does not truncate values wider than the field', () {
-        expect(DurationFormatter('%1S').format(sample), '93909');
-        expect(DurationFormatter('%-1S').format(sample), '93909');
-        expect(DurationFormatter('%01S').format(sample), '93909');
-      });
-
-      test('parses multi-digit widths', () {
         expect(
-          DurationFormatter('%12S').format(sample),
-          '       93909',
-        );
-        expect(
-          DurationFormatter('%010L').format(sample),
-          '0093909042',
+          DurationFormatter('%u').format(const Duration(microseconds: 1001)),
+          '1',
         );
       });
 
-      test('width applies to %n and %% as well', () {
-        expect(DurationFormatter('%2n').format(-sample), ' -');
-        expect(DurationFormatter('%-2n|').format(-sample), '- |');
-        expect(DurationFormatter('%3%').format(sample), '  %');
-        expect(DurationFormatter('%03%').format(sample), '00%');
-      });
-    });
-
-    group('literals', () {
-      test('preserves literal text around conversions', () {
+      test('zero duration', () {
         expect(
-          DurationFormatter('[%H] hours, [%m] minutes').format(sample),
-          '[26] hours, [5] minutes',
-        );
-      });
-
-      test('preserves leading and trailing literals', () {
-        expect(DurationFormatter('>>%d<<').format(sample), '>>1<<');
-      });
-
-      test('handles adjacent conversions with no literal between them', () {
-        expect(DurationFormatter('%d%h%m').format(sample), '125');
-      });
-
-      test('preserves non-ASCII literal text', () {
-        expect(
-          DurationFormatter('⏱ %H h — %02m min ✓').format(sample),
-          '⏱ 26 h — 05 min ✓',
-        );
-      });
-
-      test('preserves whitespace and newlines', () {
-        expect(
-          DurationFormatter('  %d\n\t%h ').format(sample),
-          '  1\n\t2 ',
+          DurationFormatter(
+            '%d|%h|%H|%m|%M|%s|%S|%l|%L|%u|%U|%n',
+          ).format(Duration.zero),
+          '0|0|0|0|0|0|0|0|0|0|0|',
         );
       });
     });
 
-    group('documentation examples', () {
-      test('%02H:%02m:%02s → 26:05:09', () {
-        expect(DurationFormatter('%02H:%02m:%02s').format(sample), '26:05:09');
+    group('width', () {
+      test('no width means no padding', () {
+        expect(DurationFormatter('%S').format(_sample), '93909');
       });
 
-      test('%d day(s) %02h:%02m → 1 day(s) 02:05', () {
+      test('width equal to length adds nothing', () {
+        expect(DurationFormatter('%5S').format(_sample), '93909');
+      });
+
+      test('width smaller than length adds nothing', () {
+        expect(DurationFormatter('%1S').format(_sample), '93909');
+      });
+
+      test('width pads with spaces on the left by default', () {
+        expect(DurationFormatter('%7S').format(_sample), '  93909');
+      });
+
+      test('multi-digit width is parsed as a decimal number', () {
+        expect(DurationFormatter('%12U').format(_sample), ' 93909042007');
+      });
+
+      test('width applies to the sign conversion', () {
+        expect(DurationFormatter('%2n|').format(-_sample), ' -|');
+        expect(DurationFormatter('%2n|').format(_sample), '  |');
+      });
+
+      test('width applies to the percent conversion', () {
+        expect(DurationFormatter('%3%').format(_sample), '  %');
+      });
+    });
+
+    group('flags', () {
+      test('0 pads with zeros', () {
+        expect(DurationFormatter('%02h').format(_sample), '02');
+        expect(DurationFormatter('%07S').format(_sample), '0093909');
+      });
+
+      test('0 without width is a no-op', () {
+        expect(DurationFormatter('%0h').format(_sample), '2');
+      });
+
+      test('- left-justifies with spaces', () {
+        expect(DurationFormatter('%-7S|').format(_sample), '93909  |');
+      });
+
+      test('- without width is a no-op', () {
+        expect(DurationFormatter('%-h|').format(_sample), '2|');
+      });
+
+      test('- takes precedence over 0', () {
+        expect(DurationFormatter('%-07S|').format(_sample), '93909  |');
+        expect(DurationFormatter('%0-7S|').format(_sample), '93909  |');
+      });
+
+      test('repeated flags are accepted', () {
+        expect(DurationFormatter('%--3d|').format(_sample), '1  |');
+        expect(DurationFormatter('%003d').format(_sample), '001');
+      });
+
+      test('documentation examples', () {
+        const d = Duration(hours: 26, minutes: 5, seconds: 9, milliseconds: 42);
+
+        expect(DurationFormatter('%02H:%02m:%02s').format(d), '26:05:09');
         expect(
-          DurationFormatter('%d day(s) %02h:%02m').format(sample),
+          DurationFormatter('%d day(s) %02h:%02m').format(d),
           '1 day(s) 02:05',
         );
-      });
-
-      test('%S.%03l s → 93909.042 s', () {
-        expect(DurationFormatter('%S.%03l s').format(sample), '93909.042 s');
-      });
-
-      test('%n%M min → 1565 min', () {
-        expect(DurationFormatter('%n%M min').format(sample), '1565 min');
-      });
-
-      test('(-d) %n%M min → -1565 min', () {
-        expect(DurationFormatter('%n%M min').format(-sample), '-1565 min');
-      });
-
-      test('100%% → 100%', () {
-        expect(DurationFormatter('100%%').format(sample), '100%');
+        expect(DurationFormatter('%S.%03l s').format(d), '93909.042 s');
+        expect(DurationFormatter('%n%M min').format(d), '1565 min');
+        expect(DurationFormatter('%n%M min').format(-d), '-1565 min');
+        expect(DurationFormatter('100%%').format(d), '100%');
       });
     });
 
-    group('reuse', () {
-      test('one instance formats many durations consistently', () {
-        final formatter = DurationFormatter('%02H:%02m:%02s');
-
-        expect(formatter.format(Duration.zero), '00:00:00');
-        expect(formatter.format(const Duration(seconds: 1)), '00:00:01');
-        expect(formatter.format(const Duration(minutes: 1)), '00:01:00');
-        expect(formatter.format(const Duration(hours: 1)), '01:00:00');
-        expect(formatter.format(const Duration(hours: 100)), '100:00:00');
-        expect(formatter.format(sample), '26:05:09');
+    group('errors', () {
+      test('lone percent at end of pattern', () {
+        expect(
+          () => DurationFormatter('%'),
+          _formatException(
+            message: 'Incomplete conversion specifier',
+            source: '%',
+            offset: 0,
+          ),
+        );
       });
 
-      test('format has no side effects between calls', () {
-        final formatter = DurationFormatter('%d|%h');
+      test('percent followed only by flags', () {
+        expect(
+          () => DurationFormatter('abc%0'),
+          _formatException(
+            message: 'Incomplete conversion specifier',
+            source: 'abc%0',
+            offset: 3,
+          ),
+        );
+        expect(
+          () => DurationFormatter('%-'),
+          _formatException(
+            message: 'Incomplete conversion specifier',
+            source: '%-',
+            offset: 0,
+          ),
+        );
+      });
 
-        final first = formatter.format(sample);
-        final second = formatter.format(sample);
+      test('percent followed only by width', () {
+        expect(
+          () => DurationFormatter('%5'),
+          _formatException(
+            message: 'Incomplete conversion specifier',
+            source: '%5',
+            offset: 0,
+          ),
+        );
+      });
 
-        expect(first, '1|2');
-        expect(second, first);
+      test('percent followed by flags and width but no conversion', () {
+        expect(
+          () => DurationFormatter('x%-012'),
+          _formatException(
+            message: 'Incomplete conversion specifier',
+            source: 'x%-012',
+            offset: 1,
+          ),
+        );
+      });
+
+      test('unknown conversion', () {
+        expect(
+          () => DurationFormatter('%x'),
+          _formatException(
+            message: 'Unknown conversion specifier "%x"',
+            source: '%x',
+            offset: 0,
+          ),
+        );
+      });
+
+      test('unknown conversion after flags and width reports start offset', () {
+        expect(
+          () => DurationFormatter('ab %-02q'),
+          _formatException(
+            message: 'Unknown conversion specifier "%q"',
+            source: 'ab %-02q',
+            offset: 3,
+          ),
+        );
+      });
+
+      test('unknown conversion with a space symbol', () {
+        expect(
+          () => DurationFormatter('% d'),
+          _formatException(
+            message: 'Unknown conversion specifier "% "',
+            source: '% d',
+            offset: 0,
+          ),
+        );
+      });
+
+      test('error is raised for the first bad specifier only', () {
+        expect(
+          () => DurationFormatter('%d %x %y'),
+          _formatException(
+            message: 'Unknown conversion specifier "%x"',
+            source: '%d %x %y',
+            offset: 3,
+          ),
+        );
+      });
+
+      test('a valid pattern never throws', () {
+        expect(
+          () => DurationFormatter('%d %h %H %m %M %s %S %l %L %u %U %n %%'),
+          returnsNormally,
+        );
       });
     });
   });

@@ -2,5 +2,3 @@
 
 export 'src/duration_units.dart' show DurationUnits;
 export 'src/ext_duration.dart' show ExtDuration;
-export 'src/formatter/compose_format.dart' show composeFormat;
-export 'src/formatter/token_scanners.dart' show tokenPatterns, valuePatterns;

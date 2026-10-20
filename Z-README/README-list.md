@@ -14,6 +14,7 @@ Billie Star - 16
 Blondessa - 200+
 BootyFrutti - 200+
 Britney Amber - 200+
+BukowskiDirtyWife - 150
 Bunny Rabbits - 101
 BunnyBlondyX - 111
 Carla Cute - 114
@@ -25,6 +26,7 @@ Emma Hix - 42
 Endorphin Baby - 138
 Eva Soda - 93
 Fiamurr
+Forgotten sweetness - X
 FoxAlinaLive
 FunsizedMegan - X
 Hope Heaven - 29
@@ -43,7 +45,9 @@ Kukupaiii - 38
 Kuporovaa Krupa - 150
 Labonitas - 109
 Lana Myers - 160
+Lana Young - X
 Laura Quest - X
+Lelya Mult - X
 Lily Cute - 200+
 LivAnders69 - X {hide face}
 Lizzy Wild
@@ -58,7 +62,7 @@ Melanie Queen - 199 (oct 2026) / Sweety Titties
 Merida Sat- 147
 Mila Solana - 77
 Milfetta
-Miss Driada - 200+ / Urakadaki - 151
+Miss Driada - 200+ / Urakadaki - 152 {19-oct}
 Misslexa - X
 MissRedStar - 163
 MyAnny - X {hides face/nice tits}
@@ -77,6 +81,7 @@ Solazola - 61
 Space Lady
 Spirite Moon - 33 [ugly tats]
 Sumiko Smile - X
+TwixenXX - 30
 Verlonis - 156 = ??
 VeronikaVengeance - 14
 Vesperessa - X

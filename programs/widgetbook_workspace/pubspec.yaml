@@ -13,6 +13,7 @@ dependencies:
   app_preferences: ^1.0.0
   audioplayers: ^6.8.1
   border_caption: ^1.0.0
+  caption_switch: ^1.0.0
   color_grid: ^1.0.0
   counter_ring: ^1.0.0
   custom_widgets: ^1.0.0
@@ -51,6 +52,7 @@ dependencies:
   status_bar_chameleon: ^1.0.0
   theme_framework: ^1.0.0
   three_d_sphere: ^1.0.0
+  tools: ^1.0.0
   widget_animation_framework: ^1.0.0
   widgetbook: ^3.25.0
   widgetbook_annotation: ^3.11.0

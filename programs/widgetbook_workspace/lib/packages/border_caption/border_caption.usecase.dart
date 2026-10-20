@@ -1,236 +1,365 @@
 // widgetbook_workspace/lib/border_caption/border_caption.usecase.dart
-import 'package:border_caption/border_caption.dart'
-    show BorderCaption, BorderPosition;
+
+import 'package:border_caption/border_caption.dart';
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
-/// Alignments offered by the Interactive use case's dropdown.
-const _alignments = <AlignmentDirectional>[
-  AlignmentDirectional.centerStart,
-  AlignmentDirectional.center,
-  AlignmentDirectional.centerEnd,
-];
+// ---------------------------------------------------------------------------
+// Shared knobs
+// ---------------------------------------------------------------------------
 
-String _alignmentLabel(AlignmentDirectional alignment) => switch (alignment) {
-  AlignmentDirectional.centerStart => 'Start',
-  AlignmentDirectional.center => 'Center',
-  AlignmentDirectional.centerEnd => 'End',
-  _ => alignment.toString(),
+const _alignments = <String, AlignmentGeometry>{
+  'centerStart': AlignmentDirectional.centerStart,
+  'center': AlignmentDirectional.center,
+  'centerEnd': AlignmentDirectional.centerEnd,
 };
 
-String _borderPositionLabel(BorderPosition border) => switch (border) {
-  BorderPosition.top => 'Top',
-  BorderPosition.bottom => 'Bottom',
-};
+BorderPosition _positionKnob(BuildContext context) =>
+    context.knobs.object.dropdown<BorderPosition>(
+      label: 'borderPosition',
+      options: BorderPosition.values,
+      initialOption: BorderPosition.bottom,
+      labelBuilder: (option) => option.name,
+    );
 
-/// Content shared by every use case so the presets differ only in the
-/// [BorderCaption] parameters under inspection.
-Widget _content() => const Padding(
-  padding: EdgeInsets.all(16),
-  child: Text('Some static stuff'),
-);
-
-@widgetbook.UseCase(
-  name: 'Interactive',
-  type: BorderCaption,
-  path: '[Packages]/border_caption',
-)
-Widget interactiveBorderCaption(BuildContext context) {
-  final label = context.knobs.string(
-    label: 'label',
-    initialValue: 'some text',
-  );
-  final borderPosition = context.knobs.object.dropdown<BorderPosition>(
-    label: 'borderPosition',
-    options: BorderPosition.values,
-    initialOption: BorderPosition.bottom,
-    labelBuilder: _borderPositionLabel,
-  );
-  final labelAlignment = context.knobs.object.dropdown<AlignmentDirectional>(
+AlignmentGeometry _alignmentKnob(
+  BuildContext context, {
+  required String initialOption,
+}) {
+  final selected = context.knobs.object.dropdown<String>(
     label: 'labelAlignment',
-    options: _alignments,
-    initialOption: AlignmentDirectional.centerStart,
-    labelBuilder: _alignmentLabel,
+    options: _alignments.keys.toList(),
+    initialOption: initialOption,
+    labelBuilder: (option) => option,
   );
-  final labelInset = context.knobs.double.slider(
-    label: 'labelInset',
-    initialValue: 16,
-    max: 64,
-  );
-  final labelHorizontalPadding = context.knobs.double.slider(
-    label: 'labelPadding (horizontal)',
+  return _alignments[selected]!;
+}
+
+double _insetKnob(BuildContext context) => context.knobs.double.slider(
+      label: 'labelInset',
+      initialValue: 16,
+      min: 0,
+      max: 64,
+    );
+
+EdgeInsets _labelPaddingKnob(BuildContext context) {
+  final horizontal = context.knobs.double.slider(
+    label: 'labelPadding.horizontal',
     initialValue: 4,
+    min: 0,
     max: 24,
   );
-  final labelVerticalPadding = context.knobs.double.slider(
-    label: 'labelPadding (vertical)',
+  final vertical = context.knobs.double.slider(
+    label: 'labelPadding.vertical',
+    initialValue: 0,
+    min: 0,
     max: 24,
   );
-  final labelFontSize = context.knobs.double.slider(
-    label: 'labelStyle.fontSize',
-    initialValue: 14,
-    min: 8,
-    max: 32,
+  return EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical);
+}
+
+TextStyle? _labelStyleKnob(BuildContext context) {
+  final textTheme = Theme.of(context).textTheme;
+  final options = <String, TextStyle?>{
+    'inherit': null,
+    'labelSmall': textTheme.labelSmall,
+    'labelLarge': textTheme.labelLarge,
+    'titleMedium': textTheme.titleMedium,
+    'titleLarge': textTheme.titleLarge,
+    'bold primary': TextStyle(
+      fontWeight: FontWeight.bold,
+      color: Theme.of(context).colorScheme.primary,
+    ),
+  };
+  final selected = context.knobs.object.dropdown<String>(
+    label: 'labelStyle',
+    options: options.keys.toList(),
+    initialOption: 'inherit',
+    labelBuilder: (option) => option,
   );
-  final useThemeBackground = context.knobs.boolean(
-    label: 'backgroundColor from Theme',
-    initialValue: true,
-  );
-  final backgroundColor = context.knobs.color(
+  return options[selected];
+}
+
+Color? _backgroundColorKnob(BuildContext context) {
+  final scheme = Theme.of(context).colorScheme;
+  final options = <String, Color?>{
+    'scaffold (default)': null,
+    'surface': scheme.surface,
+    'surfaceContainer': scheme.surfaceContainer,
+    'primaryContainer': scheme.primaryContainer,
+    'mismatch (red)': Colors.red,
+  };
+  final selected = context.knobs.object.dropdown<String>(
     label: 'backgroundColor',
-    initialValue: Theme.of(context).scaffoldBackgroundColor,
+    options: options.keys.toList(),
+    initialOption: 'scaffold (default)',
+    labelBuilder: (option) => option,
   );
-  final borderColor = context.knobs.color(
-    label: 'borderColor',
-    initialValue: Theme.of(context).colorScheme.outline,
-  );
-  final borderWidth = context.knobs.double.slider(
-    label: 'borderWidth',
-    initialValue: 1,
-    min: 1,
-    max: 8,
-  );
-  final borderRadius = context.knobs.double.slider(
-    label: 'borderRadius',
+  return options[selected];
+}
+
+TextDirection _directionKnob(BuildContext context) =>
+    context.knobs.object.dropdown<TextDirection>(
+      label: 'Directionality',
+      options: TextDirection.values,
+      initialOption: TextDirection.ltr,
+      labelBuilder: (option) => option.name,
+    );
+
+// ---------------------------------------------------------------------------
+// Shared presentation
+// ---------------------------------------------------------------------------
+
+/// Centres [child] on the scaffold background and applies [textDirection].
+class _Stage extends StatelessWidget {
+  const _Stage({required this.child, this.textDirection = TextDirection.ltr});
+
+  final Widget child;
+  final TextDirection textDirection;
+
+  @override
+  Widget build(BuildContext context) => Directionality(
+        textDirection: textDirection,
+        child: Center(
+          child: Padding(padding: const EdgeInsets.all(32), child: child),
+        ),
+      );
+}
+
+/// A bordered box that brings its own outline, for the general constructor.
+class _BorderedContent extends StatelessWidget {
+  const _BorderedContent({this.radius = 8});
+
+  final double radius;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          border: Border.all(color: Theme.of(context).colorScheme.outline),
+          borderRadius: BorderRadius.circular(radius),
+        ),
+        child: const Text('Some static stuff'),
+      );
+}
+
+// ---------------------------------------------------------------------------
+// General constructor
+// ---------------------------------------------------------------------------
+
+@widgetbook.UseCase(name: 'Interactive', type: BorderCaption)
+Widget interactiveBorderCaptionUseCase(BuildContext context) {
+  final label = context.knobs.string(label: 'label', initialValue: 'some text');
+  final radius = context.knobs.double.slider(
+    label: 'child borderRadius',
     initialValue: 8,
+    min: 0,
     max: 32,
   );
 
-  return Center(
-    child: ColoredBox(
-      color: useThemeBackground
-          ? Theme.of(context).scaffoldBackgroundColor
-          : backgroundColor,
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: BorderCaption.outlined(
-          label: label,
-          borderPosition: borderPosition,
-          labelAlignment: labelAlignment,
-          labelInset: labelInset,
-          labelStyle: TextStyle(fontSize: labelFontSize),
-          labelPadding: EdgeInsets.symmetric(
-            horizontal: labelHorizontalPadding,
-            vertical: labelVerticalPadding,
-          ),
-          backgroundColor: useThemeBackground ? null : backgroundColor,
-          borderColor: borderColor,
-          borderWidth: borderWidth,
-          borderRadius: BorderRadius.circular(borderRadius),
-          padding: EdgeInsets.zero,
-          child: _content(),
+  return _Stage(
+    textDirection: _directionKnob(context),
+    child: BorderCaption(
+      label: label,
+      borderPosition: _positionKnob(context),
+      labelAlignment: _alignmentKnob(context, initialOption: 'centerEnd'),
+      labelInset: _insetKnob(context),
+      labelStyle: _labelStyleKnob(context),
+      labelPadding: _labelPaddingKnob(context),
+      backgroundColor: _backgroundColorKnob(context),
+      child: _BorderedContent(radius: radius),
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Interactive child', type: BorderCaption)
+Widget interactiveChildBorderCaptionUseCase(BuildContext context) =>
+    _Stage(
+      child: BorderCaption(
+        label: 'tap anywhere, even on me',
+        labelAlignment: _alignmentKnob(context, initialOption: 'center'),
+        borderPosition: _positionKnob(context),
+        child: const _TapCounter(),
+      ),
+    );
+
+/// Proves the label never intercepts pointer events.
+class _TapCounter extends StatefulWidget {
+  const _TapCounter();
+
+  @override
+  State<_TapCounter> createState() => _TapCounterState();
+}
+
+class _TapCounterState extends State<_TapCounter> {
+  var _taps = 0;
+
+  @override
+  Widget build(BuildContext context) => OutlinedButton(
+        onPressed: () => setState(() => _taps++),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 24),
+          child: Text('Tapped $_taps time(s)'),
         ),
+      );
+}
+
+@widgetbook.UseCase(name: 'Both borders', type: BorderCaption)
+Widget bothBordersBorderCaptionUseCase(BuildContext context) => _Stage(
+      child: BorderCaption(
+        label: 'Title',
+        borderPosition: BorderPosition.top,
+        labelAlignment: AlignmentDirectional.centerStart,
+        labelStyle: Theme.of(context).textTheme.titleSmall,
+        child: BorderCaption(
+          label: 'some text',
+          labelAlignment: AlignmentDirectional.center,
+          child: const _BorderedContent(),
+        ),
+      ),
+    );
+
+@widgetbook.UseCase(name: 'Alignment gallery', type: BorderCaption)
+Widget alignmentGalleryBorderCaptionUseCase(BuildContext context) {
+  final direction = _directionKnob(context);
+
+  return _Stage(
+    textDirection: direction,
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (final position in BorderPosition.values)
+          for (final entry in _alignments.entries)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: SizedBox(
+                width: 320,
+                child: BorderCaption(
+                  label: '${position.name} · ${entry.key}',
+                  borderPosition: position,
+                  labelAlignment: entry.value,
+                  child: const _BorderedContent(),
+                ),
+              ),
+            ),
+      ],
+    ),
+  );
+}
+
+@widgetbook.UseCase(name: 'Long label', type: BorderCaption)
+Widget longLabelBorderCaptionUseCase(BuildContext context) {
+  final width = context.knobs.double.slider(
+    label: 'child width',
+    initialValue: 240,
+    min: 80,
+    max: 480,
+  );
+
+  return _Stage(
+    child: SizedBox(
+      width: width,
+      child: BorderCaption(
+        label: 'A label that is considerably longer than its child',
+        labelAlignment: AlignmentDirectional.center,
+        child: const _BorderedContent(),
       ),
     ),
   );
 }
 
-@widgetbook.UseCase(
-  name: 'Gallery',
-  type: BorderCaption,
-  path: '[Packages]/border_caption',
-)
-Widget galleryBorderCaption(BuildContext context) {
-  final outline = Theme.of(context).colorScheme.outline;
+@widgetbook.UseCase(name: 'On a Card', type: BorderCaption)
+Widget onACardBorderCaptionUseCase(BuildContext context) => _Stage(
+      child: BorderCaption(
+        label: 'Card footer',
+        labelAlignment: AlignmentDirectional.centerEnd,
+        child: const Card(
+          margin: EdgeInsets.zero,
+          child: Padding(
+            padding: EdgeInsets.all(24),
+            child: Text('A Card draws its own outline and elevation.'),
+          ),
+        ),
+      ),
+    );
 
-  return SingleChildScrollView(
-    padding: const EdgeInsets.all(32),
-    child: Wrap(
-      spacing: 32,
-      runSpacing: 32,
-      children: [
-        BorderCaption.outlined(
-          label: 'Bottom · Start',
-          borderColor: outline,
-          padding: EdgeInsets.zero,
-          child: _content(),
-        ),
-        BorderCaption.outlined(
-          label: 'Bottom · Center',
-          labelAlignment: AlignmentDirectional.center,
-          borderColor: outline,
-          padding: EdgeInsets.zero,
-          child: _content(),
-        ),
-        BorderCaption.outlined(
-          label: 'Bottom · End',
-          labelAlignment: AlignmentDirectional.centerEnd,
-          borderColor: outline,
-          padding: EdgeInsets.zero,
-          child: _content(),
-        ),
-        BorderCaption.outlined(
-          label: 'Top · Start',
-          borderPosition: BorderPosition.top,
-          borderColor: outline,
-          padding: EdgeInsets.zero,
-          child: _content(),
-        ),
-        BorderCaption.outlined(
-          label: 'Top · Center',
-          borderPosition: BorderPosition.top,
-          labelAlignment: AlignmentDirectional.center,
-          borderColor: outline,
-          padding: EdgeInsets.zero,
-          child: _content(),
-        ),
-        BorderCaption.outlined(
-          label: 'Top · End',
-          borderPosition: BorderPosition.top,
-          labelAlignment: AlignmentDirectional.centerEnd,
-          borderColor: outline,
-          padding: EdgeInsets.zero,
-          child: _content(),
-        ),
-        BorderCaption.outlined(
-          label: 'Thick border',
-          labelAlignment: AlignmentDirectional.center,
-          labelPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          borderColor: outline,
-          borderWidth: 4,
-          padding: EdgeInsets.zero,
-          child: _content(),
-        ),
-        BorderCaption.outlined(
-          label: 'Square corners',
-          labelInset: 4,
-          borderColor: outline,
-          borderRadius: BorderRadius.zero,
-          padding: EdgeInsets.zero,
-          child: _content(),
-        ),
-        BorderCaption.outlined(
-          label: 'Styled label',
-          labelAlignment: AlignmentDirectional.center,
-          labelStyle: TextStyle(
-            color: Theme.of(context).colorScheme.primary,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 1.2,
-          ),
-          borderColor: outline,
-          padding: EdgeInsets.zero,
-          child: _content(),
-        ),
-        Directionality(
-          textDirection: TextDirection.rtl,
-          child: BorderCaption.outlined(
-            label: 'RTL · Start',
-            borderColor: outline,
-            padding: EdgeInsets.zero,
-            child: _content(),
-          ),
-        ),
-        BorderCaption(
-          label: 'Custom child (Card)',
-          labelAlignment: AlignmentDirectional.center,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          child: Card(
-            margin: EdgeInsets.zero,
-            child: _content(),
-          ),
-        ),
-      ],
+// ---------------------------------------------------------------------------
+// Outlined constructor
+// ---------------------------------------------------------------------------
+
+@widgetbook.UseCase(name: 'Outlined interactive', type: BorderCaption)
+Widget outlinedInteractiveBorderCaptionUseCase(BuildContext context) {
+  final label = context.knobs.string(label: 'label', initialValue: 'some text');
+  final content = context.knobs.string(
+    label: 'content',
+    initialValue: 'Some static stuff',
+  );
+  final themeColor = context.knobs.boolean(
+    label: 'borderColor = colorScheme.outline',
+    initialValue: true,
+  );
+  final borderWidth = context.knobs.double.slider(
+    label: 'borderWidth',
+    initialValue: 1,
+    min: 0.5,
+    max: 8,
+  );
+  final borderRadius = context.knobs.double.slider(
+    label: 'borderRadius',
+    initialValue: 8,
+    min: 0,
+    max: 32,
+  );
+  final padding = context.knobs.double.slider(
+    label: 'padding',
+    initialValue: 16,
+    min: 0,
+    max: 48,
+  );
+
+  return _Stage(
+    textDirection: _directionKnob(context),
+    child: BorderCaption.outlined(
+      label: label,
+      borderPosition: _positionKnob(context),
+      labelAlignment: _alignmentKnob(context, initialOption: 'centerStart'),
+      labelInset: _insetKnob(context),
+      labelStyle: _labelStyleKnob(context),
+      labelPadding: _labelPaddingKnob(context),
+      backgroundColor: _backgroundColorKnob(context),
+      borderColor: themeColor
+          ? Theme.of(context).colorScheme.outline
+          : const Color(0xFF000000),
+      borderWidth: borderWidth,
+      borderRadius: BorderRadius.circular(borderRadius),
+      padding: EdgeInsets.all(padding),
+      child: Text(content),
     ),
   );
 }
+
+@widgetbook.UseCase(name: 'Outlined form section', type: BorderCaption)
+Widget outlinedFormSectionBorderCaptionUseCase(BuildContext context) =>
+    _Stage(
+      child: SizedBox(
+        width: 360,
+        child: BorderCaption.outlined(
+          label: 'Account',
+          borderPosition: BorderPosition.top,
+          labelStyle: Theme.of(context).textTheme.labelLarge,
+          borderColor: Theme.of(context).colorScheme.outline,
+          child: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(decoration: InputDecoration(labelText: 'Username')),
+              SizedBox(height: 12),
+              TextField(
+                decoration: InputDecoration(labelText: 'Password'),
+                obscureText: true,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );

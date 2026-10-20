@@ -79,6 +79,8 @@ import 'package:widgetbook_workspace/packages/app_preferences/mock_preferences.u
     as _widgetbook_workspace_packages_app_preferences_mock_preferences_usecase;
 import 'package:widgetbook_workspace/packages/border_caption/border_caption.usecase.dart'
     as _widgetbook_workspace_packages_border_caption_border_caption_usecase;
+import 'package:widgetbook_workspace/packages/caption_switch/caption_switch.usecase.dart'
+    as _widgetbook_workspace_packages_caption_switch_caption_switch_usecase;
 import 'package:widgetbook_workspace/packages/color_grid/color_grid.usecase.dart'
     as _widgetbook_workspace_packages_color_grid_color_grid_usecase;
 import 'package:widgetbook_workspace/packages/counter_ring/counter_ring.usecase.dart'
@@ -131,8 +133,8 @@ import 'package:widgetbook_workspace/packages/dual_selection/single_selection.us
     as _widgetbook_workspace_packages_dual_selection_single_selection_usecase;
 import 'package:widgetbook_workspace/packages/ext_duration/ext_duration.usecase.dart'
     as _widgetbook_workspace_packages_ext_duration_ext_duration_usecase;
-import 'package:widgetbook_workspace/packages/ext_duration/scanners.usecase.dart'
-    as _widgetbook_workspace_packages_ext_duration_scanners_usecase;
+import 'package:widgetbook_workspace/packages/ext_int/ext_int.usecase.dart'
+    as _widgetbook_workspace_packages_ext_int_ext_int_usecase;
 import 'package:widgetbook_workspace/packages/ext_string/ext_string.usecase.dart'
     as _widgetbook_workspace_packages_ext_string_ext_string_usecase;
 import 'package:widgetbook_workspace/packages/ext_widget/extended_stateful_widget.usecase.dart'
@@ -211,6 +213,10 @@ import 'package:widgetbook_workspace/packages/theme_framework/theme_setting_scre
     as _widgetbook_workspace_packages_theme_framework_theme_setting_screen_usecase;
 import 'package:widgetbook_workspace/packages/three_d_sphere/three_d_sphere.usecase.dart'
     as _widgetbook_workspace_packages_three_d_sphere_three_d_sphere_usecase;
+import 'package:widgetbook_workspace/packages/tools/duration_demo.usecase.dart'
+    as _widgetbook_workspace_packages_tools_duration_demo_usecase;
+import 'package:widgetbook_workspace/packages/tools/duration_stopwatch_demo.usecase.dart'
+    as _widgetbook_workspace_packages_tools_duration_stopwatch_demo_usecase;
 import 'package:widgetbook_workspace/packages/widget_animation_framework/animation_combiner_on_widget.usecase.dart'
     as _widgetbook_workspace_packages_widget_animation_framework_animation_combiner_on_widget_usecase;
 import 'package:widgetbook_workspace/packages/widget_animation_framework/animation_controller_widget.usecase.dart'
@@ -272,6 +278,82 @@ final directories = <_widgetbook.WidgetbookNode>[
         builder:
             _widgetbook_workspace_packages_prism_bubble_widget_animated_prism_bubble_usecase
                 .buildAnimatedPrismBubbleUseCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
+    name: 'BorderCaption',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Alignment gallery',
+        builder:
+            _widgetbook_workspace_packages_border_caption_border_caption_usecase
+                .alignmentGalleryBorderCaptionUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Both borders',
+        builder:
+            _widgetbook_workspace_packages_border_caption_border_caption_usecase
+                .bothBordersBorderCaptionUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Interactive',
+        builder:
+            _widgetbook_workspace_packages_border_caption_border_caption_usecase
+                .interactiveBorderCaptionUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Interactive child',
+        builder:
+            _widgetbook_workspace_packages_border_caption_border_caption_usecase
+                .interactiveChildBorderCaptionUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Long label',
+        builder:
+            _widgetbook_workspace_packages_border_caption_border_caption_usecase
+                .longLabelBorderCaptionUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'On a Card',
+        builder:
+            _widgetbook_workspace_packages_border_caption_border_caption_usecase
+                .onACardBorderCaptionUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Outlined form section',
+        builder:
+            _widgetbook_workspace_packages_border_caption_border_caption_usecase
+                .outlinedFormSectionBorderCaptionUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Outlined interactive',
+        builder:
+            _widgetbook_workspace_packages_border_caption_border_caption_usecase
+                .outlinedInteractiveBorderCaptionUseCase,
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookComponent(
+    name: 'CaptionSwitch',
+    useCases: [
+      _widgetbook.WidgetbookUseCase(
+        name: 'Custom caption widget',
+        builder:
+            _widgetbook_workspace_packages_caption_switch_caption_switch_usecase
+                .customCaptionWidgetCaptionSwitchUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Disabled',
+        builder:
+            _widgetbook_workspace_packages_caption_switch_caption_switch_usecase
+                .disabledCaptionSwitchUseCase,
+      ),
+      _widgetbook.WidgetbookUseCase(
+        name: 'Interactive (text)',
+        builder:
+            _widgetbook_workspace_packages_caption_switch_caption_switch_usecase
+                .interactiveTextCaptionSwitchUseCase,
       ),
     ],
   ),
@@ -587,33 +669,6 @@ final directories = <_widgetbook.WidgetbookNode>[
         builder:
             _widgetbook_workspace_packages_three_d_sphere_three_d_sphere_usecase
                 .buildThreeDSphereUseCase,
-      ),
-    ],
-  ),
-  _widgetbook.WidgetbookCategory(
-    name: 'Packages',
-    children: [
-      _widgetbook.WidgetbookFolder(
-        name: 'border_caption',
-        children: [
-          _widgetbook.WidgetbookComponent(
-            name: 'BorderCaption',
-            useCases: [
-              _widgetbook.WidgetbookUseCase(
-                name: 'Gallery',
-                builder:
-                    _widgetbook_workspace_packages_border_caption_border_caption_usecase
-                        .galleryBorderCaption,
-              ),
-              _widgetbook.WidgetbookUseCase(
-                name: 'Interactive',
-                builder:
-                    _widgetbook_workspace_packages_border_caption_border_caption_usecase
-                        .interactiveBorderCaption,
-              ),
-            ],
-          ),
-        ],
       ),
     ],
   ),
@@ -935,6 +990,60 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookFolder(
+    name: 'duration',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'DurationDemo',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Constrained width',
+            builder: _widgetbook_workspace_packages_tools_duration_demo_usecase
+                .constrainedWidthDurationDemoUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder: _widgetbook_workspace_packages_tools_duration_demo_usecase
+                .defaultDurationDemoUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Text scaling',
+            builder: _widgetbook_workspace_packages_tools_duration_demo_usecase
+                .textScalingDurationDemoUseCase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'DurationStopwatchDemo',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Constrained width',
+            builder:
+                _widgetbook_workspace_packages_tools_duration_stopwatch_demo_usecase
+                    .constrainedWidthDurationStopwatchDemoUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Default',
+            builder:
+                _widgetbook_workspace_packages_tools_duration_stopwatch_demo_usecase
+                    .defaultDurationStopwatchDemoUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Seeded',
+            builder:
+                _widgetbook_workspace_packages_tools_duration_stopwatch_demo_usecase
+                    .seededDurationStopwatchDemoUseCase,
+          ),
+          _widgetbook.WidgetbookUseCase(
+            name: 'Text scaling',
+            builder:
+                _widgetbook_workspace_packages_tools_duration_stopwatch_demo_usecase
+                    .textScalingDurationStopwatchDemoUseCase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
     name: 'expanding_textfield',
     children: [
       _widgetbook.WidgetbookComponent(
@@ -1218,47 +1327,94 @@ final directories = <_widgetbook.WidgetbookNode>[
         name: 'ext_duration',
         children: [
           _widgetbook.WidgetbookComponent(
+            name: 'ComposeFormatShowcase',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Countdown preset',
+                builder:
+                    _widgetbook_workspace_packages_ext_duration_ext_duration_usecase
+                        .countdownPresetComposeFormatShowcaseUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Interactive',
+                builder:
+                    _widgetbook_workspace_packages_ext_duration_ext_duration_usecase
+                        .interactiveComposeFormatShowcaseUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'Signed delta preset',
+                builder:
+                    _widgetbook_workspace_packages_ext_duration_ext_duration_usecase
+                        .signedDeltaPresetComposeFormatShowcaseUseCase,
+              ),
+            ],
+          ),
+          _widgetbook.WidgetbookComponent(
+            name: 'ConversionReference',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'All conversions',
+                builder:
+                    _widgetbook_workspace_packages_ext_duration_ext_duration_usecase
+                        .allConversionsConversionReferenceUseCase,
+              ),
+            ],
+          ),
+          _widgetbook.WidgetbookComponent(
             name: 'DurationFormatShowcase',
             useCases: [
               _widgetbook.WidgetbookUseCase(
                 name: 'Interactive',
                 builder:
                     _widgetbook_workspace_packages_ext_duration_ext_duration_usecase
-                        .buildDurationFormatInteractiveUseCase,
-              ),
-              _widgetbook.WidgetbookUseCase(
-                name: 'Preset Gallery',
-                builder:
-                    _widgetbook_workspace_packages_ext_duration_ext_duration_usecase
-                        .buildDurationFormatPresetGalleryUseCase,
+                        .interactiveDurationFormatShowcaseUseCase,
               ),
             ],
           ),
           _widgetbook.WidgetbookComponent(
-            name: 'DurationUnitShowcase',
+            name: 'DurationUnitsTable',
+            useCases: [
+              _widgetbook.WidgetbookUseCase(
+                name: 'Table',
+                builder:
+                    _widgetbook_workspace_packages_ext_duration_ext_duration_usecase
+                        .tableDurationUnitsTableUseCase,
+              ),
+            ],
+          ),
+          _widgetbook.WidgetbookComponent(
+            name: 'StopwatchDisplayShowcase',
             useCases: [
               _widgetbook.WidgetbookUseCase(
                 name: 'Interactive',
                 builder:
                     _widgetbook_workspace_packages_ext_duration_ext_duration_usecase
-                        .buildDurationUnitInteractiveUseCase,
-              ),
-              _widgetbook.WidgetbookUseCase(
-                name: 'Preset Gallery',
-                builder:
-                    _widgetbook_workspace_packages_ext_duration_ext_duration_usecase
-                        .buildDurationUnitPresetGalleryUseCase,
+                        .interactiveStopwatchDisplayShowcaseUseCase,
               ),
             ],
           ),
+        ],
+      ),
+      _widgetbook.WidgetbookFolder(
+        name: 'ext_int',
+        children: [
           _widgetbook.WidgetbookComponent(
-            name: 'TokenScannerPlayground',
+            name: 'ExtIntShowcase',
             useCases: [
               _widgetbook.WidgetbookUseCase(
-                name: 'Live Parse',
-                builder:
-                    _widgetbook_workspace_packages_ext_duration_scanners_usecase
-                        .buildTokenScannerPlaygroundUseCase,
+                name: 'toColor',
+                builder: _widgetbook_workspace_packages_ext_int_ext_int_usecase
+                    .toColorUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'toSpeech / toSimpleSpeech',
+                builder: _widgetbook_workspace_packages_ext_int_ext_int_usecase
+                    .toSpeechUseCase,
+              ),
+              _widgetbook.WidgetbookUseCase(
+                name: 'toUtc',
+                builder: _widgetbook_workspace_packages_ext_int_ext_int_usecase
+                    .toUtcUseCase,
               ),
             ],
           ),

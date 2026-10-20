@@ -1,119 +1,51 @@
 // widgetbook_workspace/lib/ext_duration/ext_duration.usecase.dart
 
-import 'package:ext_duration/ext_duration.dart' show DurationUnits, ExtDuration;
+import 'package:ext_duration/ext_duration.dart';
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 // ---------------------------------------------------------------------------
-// Duration.format
+// Shared knobs
 // ---------------------------------------------------------------------------
 
-/// Showcase for [ExtDuration.format].
-///
-/// Renders the [pattern], the [duration] it is applied to, and the formatted
-/// result. A [FormatException] raised by an invalid pattern is caught and
-/// shown in the error colour instead of crashing the Widgetbook.
-class DurationFormatShowcase extends StatelessWidget {
-  /// Creates a showcase that formats [duration] with [pattern].
-  const DurationFormatShowcase({
-    required this.pattern,
-    required this.duration,
-    super.key,
-  });
-
-  /// The `sprintf`-style pattern handed to [ExtDuration.format].
-  final String pattern;
-
-  /// The duration being formatted.
-  final Duration duration;
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-
-    String? result;
-    FormatException? error;
-    try {
-      result = duration.format(pattern);
-    } on FormatException catch (e) {
-      error = e;
-    }
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("pattern  '$pattern'", style: textTheme.bodySmall),
-        Text(
-          'duration $duration'
-          '${duration.isNegative ? ' (negative)' : ''}',
-          style: textTheme.bodySmall,
-        ),
-        const SizedBox(height: 6),
-        if (result != null)
-          Text(
-            result,
-            style: textTheme.headlineSmall?.copyWith(
-              color: colorScheme.primary,
-              fontFeatures: const [FontFeature.tabularFigures()],
-            ),
-          ),
-        if (error != null)
-          Text(
-            'FormatException: ${error.message}'
-            '${error.offset == null ? '' : ' (offset ${error.offset})'}',
-            style: textTheme.titleSmall?.copyWith(color: colorScheme.error),
-          ),
-      ],
-    );
-  }
-}
-
-/// Interactive use case for [ExtDuration.format] with a free-text pattern
-/// knob and one slider per [Duration] component.
-@widgetbook.UseCase(name: 'Interactive', type: DurationFormatShowcase)
-Widget buildDurationFormatInteractiveUseCase(BuildContext context) {
-  final pattern = context.knobs.string(
-    label: 'Pattern',
-    initialValue: '%n%d d %02h:%02m:%02s.%03l',
-  );
+/// Builds the subject [Duration] from one slider per unit plus a sign toggle.
+Duration _durationKnob(BuildContext context) {
   final days = context.knobs.int.slider(
     label: 'Days',
     initialValue: 1,
     min: 0,
-    max: 30,
+    max: 400,
   );
   final hours = context.knobs.int.slider(
     label: 'Hours',
     initialValue: 2,
     min: 0,
-    max: 47,
+    max: 23,
   );
   final minutes = context.knobs.int.slider(
     label: 'Minutes',
     initialValue: 5,
     min: 0,
-    max: 119,
+    max: 59,
   );
   final seconds = context.knobs.int.slider(
     label: 'Seconds',
     initialValue: 9,
     min: 0,
-    max: 119,
+    max: 59,
   );
   final milliseconds = context.knobs.int.slider(
     label: 'Milliseconds',
     initialValue: 42,
     min: 0,
-    max: 1999,
+    max: 999,
   );
   final microseconds = context.knobs.int.slider(
     label: 'Microseconds',
-    initialValue: 0,
+    initialValue: 7,
     min: 0,
-    max: 1999,
+    max: 999,
   );
   final negative = context.knobs.boolean(
     label: 'Negative',
@@ -128,223 +60,499 @@ Widget buildDurationFormatInteractiveUseCase(BuildContext context) {
     milliseconds: milliseconds,
     microseconds: microseconds,
   );
-
-  return Padding(
-    padding: const EdgeInsets.all(24),
-    child: DurationFormatShowcase(
-      pattern: pattern,
-      duration: negative ? -magnitude : magnitude,
-    ),
-  );
-}
-
-/// Gallery of fixed [ExtDuration.format] scenarios: every documented
-/// example, each conversion in isolation, flag and width behaviour, and the
-/// two [FormatException] cases.
-@widgetbook.UseCase(name: 'Preset Gallery', type: DurationFormatShowcase)
-Widget buildDurationFormatPresetGalleryUseCase(BuildContext context) {
-  const sample = Duration(hours: 26, minutes: 5, seconds: 9, milliseconds: 42);
-  // Unary minus on Duration is not a const operation, so the negative
-  // fixture is spelled out to keep the gallery tree fully const.
-  const negativeSample = Duration(
-    hours: -26,
-    minutes: -5,
-    seconds: -9,
-    milliseconds: -42,
-  );
-  const micro = Duration(milliseconds: 1, microseconds: 7);
-
-  return const SingleChildScrollView(
-    padding: EdgeInsets.all(24),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _GallerySection(
-          title: 'Documentation examples',
-          children: [
-            DurationFormatShowcase(
-              pattern: '%02H:%02m:%02s',
-              duration: sample,
-            ),
-            DurationFormatShowcase(
-              pattern: '%d day(s) %02h:%02m',
-              duration: sample,
-            ),
-            DurationFormatShowcase(pattern: '%S.%03l s', duration: sample),
-            DurationFormatShowcase(pattern: '%n%M min', duration: sample),
-            DurationFormatShowcase(
-              pattern: '%n%M min',
-              duration: negativeSample,
-            ),
-            DurationFormatShowcase(pattern: '100%%', duration: sample),
-          ],
-        ),
-        _GallerySection(
-          title: 'Each conversion in isolation',
-          children: [
-            DurationFormatShowcase(pattern: '%%d → %d', duration: sample),
-            DurationFormatShowcase(pattern: '%%h → %h', duration: sample),
-            DurationFormatShowcase(pattern: '%%H → %H', duration: sample),
-            DurationFormatShowcase(pattern: '%%m → %m', duration: sample),
-            DurationFormatShowcase(pattern: '%%M → %M', duration: sample),
-            DurationFormatShowcase(pattern: '%%s → %s', duration: sample),
-            DurationFormatShowcase(pattern: '%%S → %S', duration: sample),
-            DurationFormatShowcase(pattern: '%%l → %l', duration: sample),
-            DurationFormatShowcase(pattern: '%%L → %L', duration: sample),
-            DurationFormatShowcase(pattern: '%%u → %u', duration: micro),
-            DurationFormatShowcase(pattern: '%%U → %U', duration: micro),
-            DurationFormatShowcase(
-              pattern: "%%n → '%n'",
-              duration: negativeSample,
-            ),
-          ],
-        ),
-        _GallerySection(
-          title: 'Width and flags',
-          children: [
-            DurationFormatShowcase(pattern: '[%5S]', duration: sample),
-            DurationFormatShowcase(pattern: '[%06S]', duration: sample),
-            DurationFormatShowcase(pattern: '[%-6S]', duration: sample),
-            DurationFormatShowcase(pattern: '[%-06S]', duration: sample),
-            DurationFormatShowcase(
-              pattern: '[%3h][%03h][%-3h]',
-              duration: sample,
-            ),
-          ],
-        ),
-        _GallerySection(
-          title: 'Invalid patterns',
-          children: [
-            DurationFormatShowcase(pattern: 'elapsed %', duration: sample),
-            DurationFormatShowcase(pattern: '%02x', duration: sample),
-          ],
-        ),
-      ],
-    ),
-  );
+  return negative ? -magnitude : magnitude;
 }
 
 // ---------------------------------------------------------------------------
-// DurationUnit
+// Shared presentation
 // ---------------------------------------------------------------------------
 
-/// Showcase for [DurationUnit].
-///
-/// Displays [DurationUnit.inMicroseconds] for [unit] and the [Duration]
-/// produced by [DurationUnit.times] for [count].
-class DurationUnitShowcase extends StatelessWidget {
-  /// Creates a showcase for [unit] multiplied by [count].
-  const DurationUnitShowcase({
-    required this.unit,
-    required this.count,
-    super.key,
-  });
+class _Mono extends StatelessWidget {
+  const _Mono(this.text, {this.color});
 
-  /// The unit under inspection.
-  final DurationUnits unit;
-
-  /// The multiplier passed to [DurationUnit.times].
-  final int count;
+  final String text;
+  final Color? color;
 
   @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-    final product = unit.times(count);
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text('DurationUnit.${unit.name}', style: textTheme.titleMedium),
-        const SizedBox(height: 4),
-        Text(
-          'inMicroseconds → ${unit.inMicroseconds}',
-          style: textTheme.bodyMedium?.copyWith(
-            fontFeatures: const [FontFeature.tabularFigures()],
-          ),
-        ),
-        Text(
-          'times($count) → $product',
-          style: textTheme.bodyMedium?.copyWith(
-            color: colorScheme.primary,
-            fontFeatures: const [FontFeature.tabularFigures()],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-/// Interactive use case for [DurationUnit] with a unit dropdown and a count
-/// slider.
-@widgetbook.UseCase(name: 'Interactive', type: DurationUnitShowcase)
-Widget buildDurationUnitInteractiveUseCase(BuildContext context) {
-  final unit = context.knobs.object.dropdown<DurationUnits>(
-    label: 'Unit',
-    options: DurationUnits.values,
-    initialOption: DurationUnits.minutes,
-    labelBuilder: (unit) => unit.name,
-  );
-  final count = context.knobs.int.slider(
-    label: 'Count',
-    initialValue: 90,
-    min: -100,
-    max: 1000,
-  );
-
-  return Padding(
-    padding: const EdgeInsets.all(24),
-    child: DurationUnitShowcase(unit: unit, count: count),
-  );
-}
-
-/// Gallery of every [DurationUnit] at a fixed count, so the microsecond
-/// scale of each unit can be compared at a glance.
-@widgetbook.UseCase(name: 'Preset Gallery', type: DurationUnitShowcase)
-Widget buildDurationUnitPresetGalleryUseCase(BuildContext context) {
-  return SingleChildScrollView(
-    padding: const EdgeInsets.all(24),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (final unit in DurationUnits.values)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: DurationUnitShowcase(unit: unit, count: 3),
-          ),
-      ],
+  Widget build(BuildContext context) => Text(
+    text,
+    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+      fontFamily: 'monospace',
+      fontFeatures: const [FontFeature.tabularFigures()],
+      color: color,
     ),
   );
 }
 
-// ---------------------------------------------------------------------------
-// Shared helpers
-// ---------------------------------------------------------------------------
-
-/// A titled group of showcases used by the preset galleries above.
-class _GallerySection extends StatelessWidget {
-  const _GallerySection({required this.title, required this.children});
+class _Section extends StatelessWidget {
+  const _Section({required this.title, required this.child});
 
   final String title;
-  final List<Widget> children;
+  final Widget child;
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 32),
+  Widget build(BuildContext context) => Card(
+    margin: const EdgeInsets.only(bottom: 16),
+    child: Padding(
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: Theme.of(context).textTheme.titleLarge),
-          const Divider(),
-          for (final child in children)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: child,
-            ),
+          Text(title, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 12),
+          child,
         ],
       ),
+    ),
+  );
+}
+
+class _Row extends StatelessWidget {
+  const _Row({required this.label, required this.value});
+
+  final String label;
+  final Widget value;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(width: 220, child: _Mono(label)),
+        Expanded(child: value),
+      ],
+    ),
+  );
+}
+
+class _Page extends StatelessWidget {
+  const _Page({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) => ListView(
+    padding: const EdgeInsets.all(16),
+    children: children,
+  );
+}
+
+/// Renders a formatted result, or the [FormatException] it raised.
+class _FormatResult extends StatelessWidget {
+  const _FormatResult({required this.duration, required this.pattern});
+
+  final Duration duration;
+  final String pattern;
+
+  @override
+  Widget build(BuildContext context) {
+    try {
+      return _Mono(duration.format(pattern));
+    } on FormatException catch (e) {
+      return _Mono(
+        '${e.message} (offset ${e.offset})',
+        color: Theme.of(context).colorScheme.error,
+      );
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// ExtDuration.format
+// ---------------------------------------------------------------------------
+
+/// Showcases `Duration.format(pattern)`.
+class DurationFormatShowcase extends StatelessWidget {
+  const DurationFormatShowcase({
+    required this.duration,
+    required this.pattern,
+    super.key,
+  });
+
+  final Duration duration;
+  final String pattern;
+
+  static const _referencePatterns = <String, String>{
+    'Clock': '%02H:%02m:%02s',
+    'Day and clock': '%d day(s) %02h:%02m',
+    'Seconds with millis': '%S.%03l s',
+    'Signed minutes': '%n%M min',
+    'Micro precision': '%n%S.%03l%03u',
+    'Right-aligned': '[%8S]',
+    'Left-aligned': '[%-8S]',
+    'Zero-padded total hours': '%05H h',
+    'Literal percent': '%d%% of a day',
+  };
+
+  @override
+  Widget build(BuildContext context) => _Page(
+    children: [
+      _Section(
+        title: 'Input',
+        child: Column(
+          children: [
+            _Row(label: 'duration', value: _Mono('$duration')),
+            _Row(label: 'pattern', value: _Mono(pattern)),
+          ],
+        ),
+      ),
+      _Section(
+        title: 'Output',
+        child: _FormatResult(duration: duration, pattern: pattern),
+      ),
+      _Section(
+        title: 'Reference patterns',
+        child: Column(
+          children: [
+            for (final entry in _referencePatterns.entries)
+              _Row(
+                label: '${entry.key}\n${entry.value}',
+                value: _FormatResult(
+                  duration: duration,
+                  pattern: entry.value,
+                ),
+              ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+@widgetbook.UseCase(name: 'Interactive', type: DurationFormatShowcase)
+Widget interactiveDurationFormatShowcaseUseCase(BuildContext context) {
+  final pattern = context.knobs.string(
+    label: 'Pattern',
+    initialValue: '%n%d %02h:%02m:%02s.%03l',
+    description: 'sprintf-style; try %x to see the FormatException.',
+  );
+
+  return DurationFormatShowcase(
+    duration: _durationKnob(context),
+    pattern: pattern,
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Conversion reference
+// ---------------------------------------------------------------------------
+
+/// One row per `DurationFormatter` conversion, evaluated for [duration].
+class ConversionReference extends StatelessWidget {
+  const ConversionReference({required this.duration, super.key});
+
+  final Duration duration;
+
+  static const _conversions = <String, String>{
+    '%d': 'whole days',
+    '%h': 'hours within the day (0–23)',
+    '%H': 'total hours',
+    '%m': 'minutes within the hour (0–59)',
+    '%M': 'total minutes',
+    '%s': 'seconds within the minute (0–59)',
+    '%S': 'total seconds',
+    '%l': 'milliseconds within the second (0–999)',
+    '%L': 'total milliseconds',
+    '%u': 'microseconds within the millisecond (0–999)',
+    '%U': 'total microseconds',
+    '%n': 'sign (- or empty)',
+    '%%': 'literal percent',
+  };
+
+  static const _flags = <String, String>{
+    '%5S': 'width 5, space-padded',
+    '%05S': 'width 5, zero-padded',
+    '%-5S|': 'width 5, left-aligned',
+    '%-05S|': '- overrides 0',
+  };
+
+  @override
+  Widget build(BuildContext context) => _Page(
+    children: [
+      _Section(
+        title: 'Subject',
+        child: _Mono('$duration'),
+      ),
+      _Section(
+        title: 'Conversions',
+        child: Column(
+          children: [
+            for (final entry in _conversions.entries)
+              _Row(
+                label: '${entry.key}  ${entry.value}',
+                value: _Mono("'${duration.format(entry.key)}'"),
+              ),
+          ],
+        ),
+      ),
+      _Section(
+        title: 'Flags and width',
+        child: Column(
+          children: [
+            for (final entry in _flags.entries)
+              _Row(
+                label: '${entry.key}  ${entry.value}',
+                value: _Mono("'${duration.format(entry.key)}'"),
+              ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+@widgetbook.UseCase(name: 'All conversions', type: ConversionReference)
+Widget allConversionsConversionReferenceUseCase(BuildContext context) =>
+    ConversionReference(duration: _durationKnob(context));
+
+// ---------------------------------------------------------------------------
+// ExtDuration.composeFormat
+// ---------------------------------------------------------------------------
+
+/// Showcases `composeFormat` — the template it builds and what that
+/// template renders to via `format`.
+class ComposeFormatShowcase extends StatelessWidget {
+  const ComposeFormatShowcase({
+    required this.duration,
+    required this.showPlusSign,
+    required this.showLeaderZero,
+    required this.padHours,
+    super.key,
+  });
+
+  final Duration duration;
+  final bool showPlusSign;
+  final bool showLeaderZero;
+  final bool padHours;
+
+  static const _ladder = <String, Duration>{
+    'zero': Duration.zero,
+    'seconds': Duration(seconds: 9),
+    'minutes': Duration(minutes: 5, seconds: 9),
+    'hours': Duration(hours: 1, minutes: 5, seconds: 9),
+    'days': Duration(days: 2, hours: 3),
+    'negative seconds': Duration(seconds: -9),
+    'negative days': Duration(days: -2, hours: -3),
+  };
+
+  String _template(Duration d) => d.composeFormat(
+    showPlusSign: showPlusSign,
+    showLeaderZero: showLeaderZero,
+    padHours: padHours,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final template = _template(duration);
+
+    return _Page(
+      children: [
+        _Section(
+          title: 'Input',
+          child: Column(
+            children: [
+              _Row(label: 'duration', value: _Mono('$duration')),
+              _Row(label: 'showPlusSign', value: _Mono('$showPlusSign')),
+              _Row(label: 'showLeaderZero', value: _Mono('$showLeaderZero')),
+              _Row(label: 'padHours', value: _Mono('$padHours')),
+            ],
+          ),
+        ),
+        _Section(
+          title: 'Template → rendered',
+          child: Column(
+            children: [
+              _Row(label: 'composeFormat()', value: _Mono(template)),
+              _Row(
+                label: 'format(template)',
+                value: _Mono(duration.format(template)),
+              ),
+            ],
+          ),
+        ),
+        _Section(
+          title: 'Leading-unit ladder (same flags)',
+          child: Column(
+            children: [
+              for (final entry in _ladder.entries)
+                _Row(
+                  label: entry.key,
+                  value: _Mono(
+                    '${_template(entry.value).padRight(20)} '
+                    '→ ${entry.value.format(_template(entry.value))}',
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
+
+@widgetbook.UseCase(name: 'Interactive', type: ComposeFormatShowcase)
+Widget interactiveComposeFormatShowcaseUseCase(BuildContext context) =>
+    ComposeFormatShowcase(
+      duration: _durationKnob(context),
+      showPlusSign: context.knobs.boolean(
+        label: 'showPlusSign',
+        initialValue: false,
+      ),
+      showLeaderZero: context.knobs.boolean(
+        label: 'showLeaderZero',
+        initialValue: false,
+      ),
+      padHours: context.knobs.boolean(
+        label: 'padHours',
+        initialValue: false,
+      ),
+    );
+
+@widgetbook.UseCase(name: 'Countdown preset', type: ComposeFormatShowcase)
+Widget countdownPresetComposeFormatShowcaseUseCase(BuildContext context) =>
+    ComposeFormatShowcase(
+      duration: _durationKnob(context),
+      showPlusSign: false,
+      showLeaderZero: true,
+      padHours: true,
+    );
+
+@widgetbook.UseCase(name: 'Signed delta preset', type: ComposeFormatShowcase)
+Widget signedDeltaPresetComposeFormatShowcaseUseCase(BuildContext context) =>
+    ComposeFormatShowcase(
+      duration: _durationKnob(context),
+      showPlusSign: true,
+      showLeaderZero: false,
+      padHours: false,
+    );
+
+// ---------------------------------------------------------------------------
+// ExtDuration.toStopwatchDisplay
+// ---------------------------------------------------------------------------
+
+/// Showcases `toStopwatchDisplay`.
+class StopwatchDisplayShowcase extends StatelessWidget {
+  const StopwatchDisplayShowcase({
+    required this.duration,
+    required this.showPlusSign,
+    super.key,
+  });
+
+  final Duration duration;
+  final bool showPlusSign;
+
+  static const _gallery = <String, Duration>{
+    'zero': Duration.zero,
+    'five seconds': Duration(seconds: 5),
+    'sub-second (truncated)': Duration(milliseconds: 999),
+    'one hour': Duration(hours: 1),
+    'day boundary': Duration(hours: 24),
+    'long': Duration(days: 146, hours: 23, minutes: 17, seconds: 14),
+    'negative': Duration(hours: -1, minutes: -2, seconds: -3),
+    'negative with days': Duration(days: -1, hours: -2),
+  };
+
+  @override
+  Widget build(BuildContext context) => _Page(
+    children: [
+      _Section(
+        title: 'Input',
+        child: Column(
+          children: [
+            _Row(label: 'duration', value: _Mono('$duration')),
+            _Row(label: 'showPlusSign', value: _Mono('$showPlusSign')),
+          ],
+        ),
+      ),
+      _Section(
+        title: 'Output',
+        child: Text(
+          duration.toStopwatchDisplay(showPlusSign: showPlusSign),
+          style: Theme.of(context).textTheme.displayMedium?.copyWith(
+            fontFamily: 'monospace',
+            fontFeatures: const [FontFeature.tabularFigures()],
+          ),
+        ),
+      ),
+      _Section(
+        title: 'Gallery (same showPlusSign)',
+        child: Column(
+          children: [
+            for (final entry in _gallery.entries)
+              _Row(
+                label: entry.key,
+                value: _Mono(
+                  entry.value.toStopwatchDisplay(
+                    showPlusSign: showPlusSign,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+@widgetbook.UseCase(name: 'Interactive', type: StopwatchDisplayShowcase)
+Widget interactiveStopwatchDisplayShowcaseUseCase(BuildContext context) =>
+    StopwatchDisplayShowcase(
+      duration: _durationKnob(context),
+      showPlusSign: context.knobs.boolean(
+        label: 'showPlusSign',
+        initialValue: false,
+      ),
+    );
+
+// ---------------------------------------------------------------------------
+// DurationUnits
+// ---------------------------------------------------------------------------
+
+/// Tabulates every [DurationUnits] value.
+class DurationUnitsTable extends StatelessWidget {
+  const DurationUnitsTable({required this.count, super.key});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) => _Page(
+    children: [
+      _Section(
+        title: 'inMicroseconds',
+        child: Column(
+          children: [
+            for (final unit in DurationUnits.values)
+              _Row(
+                label: unit.name,
+                value: _Mono('${unit.inMicroseconds}'),
+              ),
+          ],
+        ),
+      ),
+      _Section(
+        title: 'times($count)',
+        child: Column(
+          children: [
+            for (final unit in DurationUnits.values)
+              _Row(
+                label: unit.name,
+                value: _Mono('${unit.times(count)}'),
+              ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+@widgetbook.UseCase(name: 'Table', type: DurationUnitsTable)
+Widget tableDurationUnitsTableUseCase(BuildContext context) =>
+    DurationUnitsTable(
+      count: context.knobs.int.slider(
+        label: 'count',
+        initialValue: 3,
+        min: -10,
+        max: 100,
+      ),
+    );
