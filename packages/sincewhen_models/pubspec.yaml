@@ -3,14 +3,14 @@ name: sincewhen_models
 description: "Pure Dart classes for sincewhen_framework"
 publish_to: none
 resolution: workspace
-version: 1.0.0
+version: 1.0.1
 
 environment:
   sdk: ^3.12.0
 
 dependencies:
   equatable: ^2.1.0
-  extensions: ^1.0.4
+  ext_int: ^1.0.0
   flutter:
     sdk: flutter
 

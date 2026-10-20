@@ -1,15 +1,8 @@
 // packages/border_caption/lib/src/border_caption.dart
-import 'package:ext_string/ext_string.dart';
+
+import 'package:border_caption/src/border_position.dart' show BorderPosition;
+import 'package:ext_string/ext_string.dart' show ExtString;
 import 'package:flutter/material.dart';
-
-/// Which border of the child a [BorderCaption] label is drawn into.
-enum LabelBorder {
-  /// The label interrupts the top border of the child.
-  top,
-
-  /// The label interrupts the bottom border of the child.
-  bottom,
-}
 
 /// Overlays a short text label "in" the top or bottom border of [child].
 ///
@@ -39,6 +32,11 @@ enum LabelBorder {
 /// slot exactly as wide as [child], and [labelAlignment] positions it
 /// within that slot, so a centred or end-aligned label stays correct no
 /// matter what width the child ends up with.
+///
+/// The label is purely decorative and never participates in hit testing.
+/// [child] may therefore be interactive — a button, a [GestureDetector],
+/// an [InkWell] — and pointer events over the label fall through to it
+/// exactly as if the label were not there.
 ///
 /// ## Parameters
 ///
@@ -101,7 +99,7 @@ class BorderCaption extends StatelessWidget {
   const BorderCaption({
     required this.label,
     required this.child,
-    this.labelBorder = LabelBorder.bottom,
+    this.borderPosition = BorderPosition.bottom,
     this.labelAlignment = AlignmentDirectional.centerEnd,
     this.labelInset = 16,
     this.labelStyle,
@@ -110,8 +108,8 @@ class BorderCaption extends StatelessWidget {
     super.key,
   });
 
-  /// Creates a widget that draws a rectangular outline around [child] and
-  /// shows [label] in that outline.
+  /// Creates a widget that draws a rectangular outline around [child] widget
+  /// and shows [label] in that outline.
   ///
   /// This is the general constructor with the bordered container supplied
   /// for you: [child] is the *content*, and the border is described by
@@ -135,7 +133,7 @@ class BorderCaption extends StatelessWidget {
   BorderCaption.outlined({
     required this.label,
     required Widget child,
-    this.labelBorder = LabelBorder.bottom,
+    this.borderPosition = BorderPosition.bottom,
     this.labelAlignment = AlignmentDirectional.centerStart,
     this.labelInset = 16,
     this.labelStyle,
@@ -161,7 +159,7 @@ class BorderCaption extends StatelessWidget {
   final String label;
 
   /// Which border of [child] carries the label.
-  final LabelBorder labelBorder;
+  final BorderPosition borderPosition;
 
   /// Horizontal placement of the label along the border of [child].
   final AlignmentGeometry labelAlignment;
@@ -190,7 +188,7 @@ class BorderCaption extends StatelessWidget {
       textScaler: MediaQuery.textScalerOf(context),
     );
     final overhang = (textSize.height + labelPadding.vertical) / 2;
-    final isTop = labelBorder == LabelBorder.top;
+    final isTop = borderPosition == BorderPosition.top;
     final fill = backgroundColor ?? Theme.of(context).scaffoldBackgroundColor;
 
     return Stack(
@@ -208,18 +206,21 @@ class BorderCaption extends StatelessWidget {
           end: labelInset,
           top: isTop ? 0 : null,
           bottom: isTop ? null : 0,
-          child: Align(
-            alignment: labelAlignment,
-            heightFactor: 1,
-            child: ColoredBox(
-              color: fill,
-              child: Padding(
-                padding: labelPadding,
-                child: Text(
-                  label,
-                  style: style,
-                  maxLines: 1,
-                  softWrap: false,
+          child: IgnorePointer(
+            // Allows the child to be interactive
+            child: Align(
+              alignment: labelAlignment,
+              heightFactor: 1,
+              child: ColoredBox(
+                color: fill,
+                child: Padding(
+                  padding: labelPadding,
+                  child: Text(
+                    label,
+                    style: style,
+                    maxLines: 1,
+                    softWrap: false,
+                  ),
                 ),
               ),
             ),

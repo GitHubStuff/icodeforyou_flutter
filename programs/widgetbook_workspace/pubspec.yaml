@@ -1,7 +1,7 @@
 name: widgetbook_workspace
 description: "Flutter widget book"
 publish_to: 'none'
-version: 1.0.0
+version: 1.0.12
 resolution: workspace
 
 environment:
@@ -20,6 +20,7 @@ dependencies:
   datetime_popover_pickers: ^1.0.0
   dual_selection: ^1.0.0
   ext_duration: ^1.0.0
+  ext_int: ^1.0.0
   ext_string: ^1.0.0
   ext_widget: ^1.0.0
   extensions: ^1.0.0

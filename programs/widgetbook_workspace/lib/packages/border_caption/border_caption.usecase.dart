@@ -1,6 +1,6 @@
 // widgetbook_workspace/lib/border_caption/border_caption.usecase.dart
 import 'package:border_caption/border_caption.dart'
-    show BorderCaption, LabelBorder;
+    show BorderCaption, BorderPosition;
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
@@ -19,9 +19,9 @@ String _alignmentLabel(AlignmentDirectional alignment) => switch (alignment) {
   _ => alignment.toString(),
 };
 
-String _labelBorderLabel(LabelBorder border) => switch (border) {
-  LabelBorder.top => 'Top',
-  LabelBorder.bottom => 'Bottom',
+String _borderPositionLabel(BorderPosition border) => switch (border) {
+  BorderPosition.top => 'Top',
+  BorderPosition.bottom => 'Bottom',
 };
 
 /// Content shared by every use case so the presets differ only in the
@@ -41,11 +41,11 @@ Widget interactiveBorderCaption(BuildContext context) {
     label: 'label',
     initialValue: 'some text',
   );
-  final labelBorder = context.knobs.object.dropdown<LabelBorder>(
-    label: 'labelBorder',
-    options: LabelBorder.values,
-    initialOption: LabelBorder.bottom,
-    labelBuilder: _labelBorderLabel,
+  final borderPosition = context.knobs.object.dropdown<BorderPosition>(
+    label: 'borderPosition',
+    options: BorderPosition.values,
+    initialOption: BorderPosition.bottom,
+    labelBuilder: _borderPositionLabel,
   );
   final labelAlignment = context.knobs.object.dropdown<AlignmentDirectional>(
     label: 'labelAlignment',
@@ -106,7 +106,7 @@ Widget interactiveBorderCaption(BuildContext context) {
         padding: const EdgeInsets.all(32),
         child: BorderCaption.outlined(
           label: label,
-          labelBorder: labelBorder,
+          borderPosition: borderPosition,
           labelAlignment: labelAlignment,
           labelInset: labelInset,
           labelStyle: TextStyle(fontSize: labelFontSize),
@@ -162,14 +162,14 @@ Widget galleryBorderCaption(BuildContext context) {
         ),
         BorderCaption.outlined(
           label: 'Top · Start',
-          labelBorder: LabelBorder.top,
+          borderPosition: BorderPosition.top,
           borderColor: outline,
           padding: EdgeInsets.zero,
           child: _content(),
         ),
         BorderCaption.outlined(
           label: 'Top · Center',
-          labelBorder: LabelBorder.top,
+          borderPosition: BorderPosition.top,
           labelAlignment: AlignmentDirectional.center,
           borderColor: outline,
           padding: EdgeInsets.zero,
@@ -177,7 +177,7 @@ Widget galleryBorderCaption(BuildContext context) {
         ),
         BorderCaption.outlined(
           label: 'Top · End',
-          labelBorder: LabelBorder.top,
+          borderPosition: BorderPosition.top,
           labelAlignment: AlignmentDirectional.centerEnd,
           borderColor: outline,
           padding: EdgeInsets.zero,

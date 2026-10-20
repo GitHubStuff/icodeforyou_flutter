@@ -1,5 +1,7 @@
 // packages/border_caption/test/border_caption_test.dart
-import 'package:border_caption/border_caption.dart';
+import 'package:border_caption/border_caption.dart' show BorderCaption;
+import 'package:border_caption/src/border_position.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -47,9 +49,12 @@ double _expectedOverhang(WidgetTester tester, EdgeInsets labelPadding) {
 }
 
 void main() {
-  group('LabelBorder', () {
+  group('BorderPosition', () {
     test('exposes top and bottom', () {
-      expect(LabelBorder.values, [LabelBorder.top, LabelBorder.bottom]);
+      expect(BorderPosition.values, [
+        BorderPosition.top,
+        BorderPosition.bottom,
+      ]);
     });
   });
 
@@ -71,7 +76,7 @@ void main() {
       );
 
       final subject = tester.widget<BorderCaption>(find.byType(BorderCaption));
-      expect(subject.labelBorder, LabelBorder.bottom);
+      expect(subject.borderPosition, BorderPosition.bottom);
       expect(subject.labelAlignment, AlignmentDirectional.centerEnd);
       expect(subject.labelInset, 16);
       expect(subject.labelStyle, isNull);
@@ -110,7 +115,7 @@ void main() {
         tester,
         BorderCaption(
           label: _label,
-          labelBorder: LabelBorder.top,
+          borderPosition: BorderPosition.top,
           child: _buildBorderedChild(),
         ),
       );
@@ -187,7 +192,7 @@ void main() {
         tester,
         BorderCaption(
           label: _label,
-          labelBorder: LabelBorder.top,
+          borderPosition: BorderPosition.top,
           child: _buildBorderedChild(),
         ),
       );
@@ -368,7 +373,7 @@ void main() {
       );
 
       final subject = tester.widget<BorderCaption>(find.byType(BorderCaption));
-      expect(subject.labelBorder, LabelBorder.bottom);
+      expect(subject.borderPosition, BorderPosition.bottom);
       expect(subject.labelAlignment, AlignmentDirectional.centerStart);
       expect(subject.labelInset, 16);
       expect(subject.labelStyle, isNull);
@@ -388,7 +393,7 @@ void main() {
         tester,
         BorderCaption.outlined(
           label: _label,
-          labelBorder: LabelBorder.top,
+          borderPosition: BorderPosition.top,
           labelAlignment: AlignmentDirectional.centerEnd,
           labelInset: 32,
           labelStyle: labelStyle,
@@ -403,7 +408,7 @@ void main() {
       );
 
       final subject = tester.widget<BorderCaption>(find.byType(BorderCaption));
-      expect(subject.labelBorder, LabelBorder.top);
+      expect(subject.borderPosition, BorderPosition.top);
       expect(subject.labelAlignment, AlignmentDirectional.centerEnd);
       expect(subject.labelInset, 32);
       expect(subject.labelStyle, labelStyle);

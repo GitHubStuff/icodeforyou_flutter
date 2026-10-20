@@ -1,0 +1,14 @@
+# packages/ext_int/pubspec.yaml
+name: ext_int
+description: "Extensions for int"
+publish_to: none
+resolution: workspace
+version: 1.0.0
+
+environment:
+  sdk: ^3.12.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0

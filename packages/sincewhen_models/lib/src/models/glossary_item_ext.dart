@@ -1,5 +1,5 @@
 // packages/sincewhen_models/lib/src/models/glossary_item_ext.dart
-import 'package:extensions/int/int_ext.dart' show IntExt;
+import 'package:ext_int/ext_int.dart' show ExtInt;
 import 'package:flutter/widgets.dart' show Color;
 import 'package:sincewhen_models/sincewhen_models.dart';
 
