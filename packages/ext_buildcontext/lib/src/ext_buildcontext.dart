@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 
 /// Convenience accessors on [BuildContext] for keyboard state, render-box
 /// geometry, and Material window-size resolution.
-extension BuildContextExt on BuildContext {
+extension ExtBuildContext on BuildContext {
   Orientation get orientation => MediaQuery.orientationOf(this);
 
   /// Whether the on-screen keyboard is currently insetting the view.

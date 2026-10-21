@@ -4,6 +4,7 @@ import 'package:ext_widget/ext_widget.dart' show ExtWidget;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+// TODO(steven): Redo these tests
 void main() {
   const child = SizedBox(width: 10, height: 10);
 
@@ -36,7 +37,7 @@ void main() {
 
   group('WidgetExt.withBackground', () {
     test('wraps in a DecoratedBox carrying the color', () {
-      final result = child.withBackground(color: Colors.amber);
+      final result = child.withBackground(Colors.amber);
       expect(result, isA<DecoratedBox>());
       final decoration = (result as DecoratedBox).decoration as BoxDecoration;
       expect(decoration.color, Colors.amber);
@@ -47,7 +48,7 @@ void main() {
   group('WidgetExt.withBorder', () {
     test('wraps in a Container with border and radius', () {
       final result = child.withBorder(
-        color: Colors.black,
+        Colors.black,
         width: 2,
         radius: 8,
       );
@@ -58,7 +59,7 @@ void main() {
     });
 
     test('applies default width, radius, and style', () {
-      final result = child.withBorder(color: Colors.black);
+      final result = child.withBorder(Colors.black);
       final decoration = (result as Container).decoration! as BoxDecoration;
       expect(decoration.border, Border.all(color: Colors.black, width: 1.5));
       expect(decoration.borderRadius, BorderRadius.zero);
@@ -66,14 +67,14 @@ void main() {
 
     test('throws ArgumentError for a negative width', () {
       expect(
-        () => child.withBorder(color: Colors.black, width: -1),
+        () => child.withBorder(Colors.black, width: -1),
         throwsArgumentError,
       );
     });
 
     test('throws ArgumentError for a negative radius', () {
       expect(
-        () => child.withBorder(color: Colors.black, radius: -1),
+        () => child.withBorder(Colors.black, radius: -1),
         throwsArgumentError,
       );
     });
@@ -111,7 +112,7 @@ void main() {
 
   group('WidgetExt.withPaddingOnly', () {
     test('wraps in per-side padding', () {
-      final result = child.withPaddingOnly(
+      final result = child.withPadding(
         left: 1,
         top: 2,
         right: 3,
@@ -124,15 +125,15 @@ void main() {
     });
 
     test('throws ArgumentError for a negative left value', () {
-      expect(() => child.withPaddingOnly(left: -1), throwsArgumentError);
+      expect(() => child.withPadding(left: -1), throwsArgumentError);
     });
 
     test('throws ArgumentError for a negative top value', () {
-      expect(() => child.withPaddingOnly(top: -1), throwsArgumentError);
+      expect(() => child.withPadding(top: -1), throwsArgumentError);
     });
 
     test('throws ArgumentError for a negative right value', () {
-      expect(() => child.withPaddingOnly(right: -1), throwsArgumentError);
+      expect(() => child.withPadding(right: -1), throwsArgumentError);
     });
 
     test('throws ArgumentError for a negative bottom value', () {
@@ -142,7 +143,7 @@ void main() {
 
   group('WidgetExt.withPaddingSymmetric', () {
     test('wraps in symmetric padding', () {
-      final result = child.withPaddingSymmetric(horizontal: 24, vertical: 12);
+      final result = child.withSymmetricPadding(horizontal: 24, vertical: 12);
       expect(
         (result as Padding).padding,
         const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -151,16 +152,20 @@ void main() {
 
     test('throws ArgumentError for a negative horizontal value', () {
       expect(
-        () => child.withPaddingSymmetric(horizontal: -1),
+        () => child.withSymmetricPadding(horizontal: -1),
         throwsArgumentError,
       );
     });
 
     test('throws ArgumentError for a negative vertical value', () {
       expect(
-        () => child.withPaddingSymmetric(vertical: -1),
+        () => child.withSymmetricPadding(vertical: -1),
         throwsArgumentError,
       );
     });
   });
+}
+
+extension on SizedBox {
+  void withPaddingOnly({required int bottom}) {}
 }

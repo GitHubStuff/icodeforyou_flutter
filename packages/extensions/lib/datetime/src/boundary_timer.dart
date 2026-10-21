@@ -1,8 +1,6 @@
 // packages/extensions/lib/datetime/src/boundary_timer.dart
 import 'dart:async';
 
-import 'package:extensions/datetime/src/datetime_ext.dart' show DateTimeExt;
-import 'package:ext_datetime/src/datetime_unit.dart';
 
 /// A self-correcting, boundary-aligned repeating timer.
 ///

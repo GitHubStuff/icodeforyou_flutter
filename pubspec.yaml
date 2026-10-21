@@ -19,6 +19,7 @@ workspace:
   - packages/custom_widgets
   - packages/data_grid
   - packages/datetime_popover_pickers
+  - packages/demo
   - packages/dependency_resolver
   - packages/dual_selection
   - packages/duration_widget
@@ -49,8 +50,8 @@ workspace:
   - packages/sincewhen_models
   - packages/sincewhen_screens
   - packages/sincewhen_widgets
-  - packages/sized_spinner
   - packages/sliders
+  - packages/spinners
   - packages/splash_framework
   - packages/sqlite_viewer
   - packages/stacking_widgets
@@ -58,7 +59,6 @@ workspace:
   - packages/three_d_sphere
   - packages/time_spans
   - packages/tool_kit
-  - packages/tools
   - packages/widget_animation_framework
   - plugins/status_bar_chameleon
   - programs/black_velvet

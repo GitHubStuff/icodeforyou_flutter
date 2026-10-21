@@ -19,6 +19,7 @@ dependencies:
   custom_widgets: ^1.0.0
   data_grid: ^1.0.0
   datetime_popover_pickers: ^1.0.0
+  demo: ^1.0.0
   dual_selection: ^1.0.0
   ext_duration: ^1.0.0
   ext_int: ^1.0.0
@@ -46,13 +47,13 @@ dependencies:
   sincewhen_screens: ^1.0.0
   sincewhen_widgets: ^1.0.0
   sliders: ^1.0.0
+  spinners: ^1.0.0
   splash_framework: ^1.0.0
   sqlite_viewer: ^1.0.0
   stacking_widgets: ^1.0.0
   status_bar_chameleon: ^1.0.0
   theme_framework: ^1.0.0
   three_d_sphere: ^1.0.0
-  tools: ^1.0.0
   widget_animation_framework: ^1.0.0
   widgetbook: ^3.25.0
   widgetbook_annotation: ^3.11.0

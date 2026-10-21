@@ -37,11 +37,11 @@ AlignmentGeometry _alignmentKnob(
 }
 
 double _insetKnob(BuildContext context) => context.knobs.double.slider(
-      label: 'labelInset',
-      initialValue: 16,
-      min: 0,
-      max: 64,
-    );
+  label: 'labelInset',
+  initialValue: 16,
+  min: 0,
+  max: 64,
+);
 
 EdgeInsets _labelPaddingKnob(BuildContext context) {
   final horizontal = context.knobs.double.slider(
@@ -120,11 +120,11 @@ class _Stage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Directionality(
-        textDirection: textDirection,
-        child: Center(
-          child: Padding(padding: const EdgeInsets.all(32), child: child),
-        ),
-      );
+    textDirection: textDirection,
+    child: Center(
+      child: Padding(padding: const EdgeInsets.all(32), child: child),
+    ),
+  );
 }
 
 /// A bordered box that brings its own outline, for the general constructor.
@@ -135,13 +135,13 @@ class _BorderedContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          border: Border.all(color: Theme.of(context).colorScheme.outline),
-          borderRadius: BorderRadius.circular(radius),
-        ),
-        child: const Text('Some static stuff'),
-      );
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      border: Border.all(color: Theme.of(context).colorScheme.outline),
+      borderRadius: BorderRadius.circular(radius),
+    ),
+    child: const Text('Some static stuff'),
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -174,15 +174,14 @@ Widget interactiveBorderCaptionUseCase(BuildContext context) {
 }
 
 @widgetbook.UseCase(name: 'Interactive child', type: BorderCaption)
-Widget interactiveChildBorderCaptionUseCase(BuildContext context) =>
-    _Stage(
-      child: BorderCaption(
-        label: 'tap anywhere, even on me',
-        labelAlignment: _alignmentKnob(context, initialOption: 'center'),
-        borderPosition: _positionKnob(context),
-        child: const _TapCounter(),
-      ),
-    );
+Widget interactiveChildBorderCaptionUseCase(BuildContext context) => _Stage(
+  child: BorderCaption(
+    label: 'tap anywhere, even on me',
+    labelAlignment: _alignmentKnob(context, initialOption: 'center'),
+    borderPosition: _positionKnob(context),
+    child: const _TapCounter(),
+  ),
+);
 
 /// Proves the label never intercepts pointer events.
 class _TapCounter extends StatefulWidget {
@@ -197,28 +196,28 @@ class _TapCounterState extends State<_TapCounter> {
 
   @override
   Widget build(BuildContext context) => OutlinedButton(
-        onPressed: () => setState(() => _taps++),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 24),
-          child: Text('Tapped $_taps time(s)'),
-        ),
-      );
+    onPressed: () => setState(() => _taps++),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 24),
+      child: Text('Tapped $_taps time(s)'),
+    ),
+  );
 }
 
 @widgetbook.UseCase(name: 'Both borders', type: BorderCaption)
 Widget bothBordersBorderCaptionUseCase(BuildContext context) => _Stage(
-      child: BorderCaption(
-        label: 'Title',
-        borderPosition: BorderPosition.top,
-        labelAlignment: AlignmentDirectional.centerStart,
-        labelStyle: Theme.of(context).textTheme.titleSmall,
-        child: BorderCaption(
-          label: 'some text',
-          labelAlignment: AlignmentDirectional.center,
-          child: const _BorderedContent(),
-        ),
-      ),
-    );
+  child: BorderCaption(
+    label: 'Title',
+    borderPosition: BorderPosition.top,
+    labelAlignment: AlignmentDirectional.centerStart,
+    labelStyle: Theme.of(context).textTheme.titleSmall,
+    child: const BorderCaption(
+      label: 'some text',
+      labelAlignment: AlignmentDirectional.center,
+      child: _BorderedContent(),
+    ),
+  ),
+);
 
 @widgetbook.UseCase(name: 'Alignment gallery', type: BorderCaption)
 Widget alignmentGalleryBorderCaptionUseCase(BuildContext context) {
@@ -260,29 +259,29 @@ Widget longLabelBorderCaptionUseCase(BuildContext context) {
   return _Stage(
     child: SizedBox(
       width: width,
-      child: BorderCaption(
+      child: const BorderCaption(
         label: 'A label that is considerably longer than its child',
         labelAlignment: AlignmentDirectional.center,
-        child: const _BorderedContent(),
+        child: _BorderedContent(),
       ),
     ),
   );
 }
 
 @widgetbook.UseCase(name: 'On a Card', type: BorderCaption)
-Widget onACardBorderCaptionUseCase(BuildContext context) => _Stage(
-      child: BorderCaption(
-        label: 'Card footer',
-        labelAlignment: AlignmentDirectional.centerEnd,
-        child: const Card(
-          margin: EdgeInsets.zero,
-          child: Padding(
-            padding: EdgeInsets.all(24),
-            child: Text('A Card draws its own outline and elevation.'),
-          ),
-        ),
+Widget onACardBorderCaptionUseCase(BuildContext context) => const _Stage(
+  child: BorderCaption(
+    label: 'Card footer',
+    labelAlignment: AlignmentDirectional.centerEnd,
+    child: Card(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: EdgeInsets.all(24),
+        child: Text('A Card draws its own outline and elevation.'),
       ),
-    );
+    ),
+  ),
+);
 
 // ---------------------------------------------------------------------------
 // Outlined constructor
@@ -340,26 +339,25 @@ Widget outlinedInteractiveBorderCaptionUseCase(BuildContext context) {
 }
 
 @widgetbook.UseCase(name: 'Outlined form section', type: BorderCaption)
-Widget outlinedFormSectionBorderCaptionUseCase(BuildContext context) =>
-    _Stage(
-      child: SizedBox(
-        width: 360,
-        child: BorderCaption.outlined(
-          label: 'Account',
-          borderPosition: BorderPosition.top,
-          labelStyle: Theme.of(context).textTheme.labelLarge,
-          borderColor: Theme.of(context).colorScheme.outline,
-          child: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(decoration: InputDecoration(labelText: 'Username')),
-              SizedBox(height: 12),
-              TextField(
-                decoration: InputDecoration(labelText: 'Password'),
-                obscureText: true,
-              ),
-            ],
+Widget outlinedFormSectionBorderCaptionUseCase(BuildContext context) => _Stage(
+  child: SizedBox(
+    width: 360,
+    child: BorderCaption.outlined(
+      label: 'Account',
+      borderPosition: BorderPosition.top,
+      labelStyle: Theme.of(context).textTheme.labelLarge,
+      borderColor: Theme.of(context).colorScheme.outline,
+      child: const Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(decoration: InputDecoration(labelText: 'Username')),
+          SizedBox(height: 12),
+          TextField(
+            decoration: InputDecoration(labelText: 'Password'),
+            obscureText: true,
           ),
-        ),
+        ],
       ),
-    );
+    ),
+  ),
+);

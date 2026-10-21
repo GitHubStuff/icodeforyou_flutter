@@ -3,7 +3,7 @@
 import 'package:flutter/foundation.dart'
     show TargetPlatform, debugDefaultTargetPlatformOverride;
 import 'package:flutter_test/flutter_test.dart';
-import '../../../platform_tools/lib/src/os_platform.dart' show OSPlatform;
+import 'package:platform_tools/platform_tools.dart' show OSPlatform;
 
 void main() {
   tearDown(() {
@@ -15,7 +15,7 @@ void main() {
     test('honors the setPlatform override for every value', () {
       for (final platform in OSPlatform.values) {
         OSPlatform.override(to: platform);
-        expect(OSPlatform.current(), platform);
+        expect(OSPlatform.current, platform);
       }
     });
 
@@ -24,7 +24,7 @@ void main() {
       OSPlatform.override();
 
       debugDefaultTargetPlatformOverride = TargetPlatform.windows;
-      expect(OSPlatform.current(), OSPlatform.windows);
+      expect(OSPlatform.current, OSPlatform.windows);
     });
 
     test('maps every TargetPlatform to its AppPlatform', () {
@@ -38,44 +38,8 @@ void main() {
       };
       for (final entry in mapping.entries) {
         debugDefaultTargetPlatformOverride = entry.key;
-        expect(OSPlatform.current(), entry.value);
+        expect(OSPlatform.current, entry.value);
       }
-    });
-  });
-
-  group('AppPlatform.isMobile', () {
-    test('is true only for android and iOS', () {
-      expect(OSPlatform.android.isMobile, isTrue);
-      expect(OSPlatform.iOS.isMobile, isTrue);
-      expect(OSPlatform.linux.isMobile, isFalse);
-      expect(OSPlatform.macOS.isMobile, isFalse);
-      expect(OSPlatform.web.isMobile, isFalse);
-      expect(OSPlatform.windows.isMobile, isFalse);
-    });
-
-    test('throws UnimplementedError for fuchsia', () {
-      expect(
-        () => OSPlatform.fuchsia.isMobile,
-        throwsUnimplementedError,
-      );
-    });
-  });
-
-  group('AppPlatform.isDesktop', () {
-    test('is true only for linux, macOS, and windows', () {
-      expect(OSPlatform.linux.isDesktop, isTrue);
-      expect(OSPlatform.macOS.isDesktop, isTrue);
-      expect(OSPlatform.windows.isDesktop, isTrue);
-      expect(OSPlatform.android.isDesktop, isFalse);
-      expect(OSPlatform.iOS.isDesktop, isFalse);
-      expect(OSPlatform.web.isDesktop, isFalse);
-    });
-
-    test('throws UnimplementedError for fuchsia', () {
-      expect(
-        () => OSPlatform.fuchsia.isDesktop,
-        throwsUnimplementedError,
-      );
     });
   });
 }

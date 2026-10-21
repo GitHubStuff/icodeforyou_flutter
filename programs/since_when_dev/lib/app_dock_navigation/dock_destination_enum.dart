@@ -5,6 +5,7 @@
 import 'package:app_navigation/app_navigation.dart'
     show NavigableDestinationAbstract;
 import 'package:custom_widgets/custom_widgets.dart' show DefaultWelcomeScreen;
+import 'package:demo/demo.dart' show DurationStopwatchDemo, SpinWidgetDemo;
 import 'package:flutter/material.dart';
 import 'package:since_when_dev/app_shared_navigation/shared_search_body.dart'
     show SharedSearchBody;
@@ -12,7 +13,6 @@ import 'package:since_when_dev/example/ping_pong_example.dart'
     show PingPongExample;
 import 'package:sincewhen_widgets/sincewhen_widgets.dart' show GlossaryEditPage;
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
-import 'package:tools/tools.dart' show DurationStopwatchDemo, SpinWidgetDemo;
 
 /// Placeholder view for the library destination.
 // TODO(steven): Replace with the real screen, then delete this function.

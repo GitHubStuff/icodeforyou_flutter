@@ -103,8 +103,6 @@ import 'package:widgetbook_workspace/packages/custom_widgets/ice_chip/ice_chip/i
     as _widgetbook_workspace_packages_custom_widgets_ice_chip_ice_chip_ice_chip_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/orientation_flex/orientation_flex.usecase.dart'
     as _widgetbook_workspace_packages_custom_widgets_orientation_flex_orientation_flex_usecase;
-import 'package:widgetbook_workspace/packages/custom_widgets/sized_spinner/sized_spinner.usecase.dart'
-    as _widgetbook_workspace_packages_custom_widgets_sized_spinner_sized_spinner_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/slide_index_stack/slide_index_stack.usecase.dart'
     as _widgetbook_workspace_packages_custom_widgets_slide_index_stack_slide_index_stack_usecase;
 import 'package:widgetbook_workspace/packages/custom_widgets/solid_screen_color/solid_screen_color.usecase.dart'
@@ -1688,22 +1686,6 @@ final directories = <_widgetbook.WidgetbookNode>[
             builder:
                 _widgetbook_workspace_packages_sincewhen_screens_sincewhen_mini_since_when_mini_usecase
                     .buildSinceWhenMiniEditFlowUseCase,
-          ),
-        ],
-      ),
-    ],
-  ),
-  _widgetbook.WidgetbookFolder(
-    name: 'sized_spinner',
-    children: [
-      _widgetbook.WidgetbookComponent(
-        name: 'SizedSpinner',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder:
-                _widgetbook_workspace_packages_custom_widgets_sized_spinner_sized_spinner_usecase
-                    .buildSizedSpinnerUseCase,
           ),
         ],
       ),

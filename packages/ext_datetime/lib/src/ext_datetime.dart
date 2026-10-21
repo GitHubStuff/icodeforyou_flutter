@@ -9,7 +9,9 @@ import 'package:intl/intl.dart' show DateFormat;
 extension ExtDateTime on DateTime {
   static int _lastMicroseconds = 0;
 
+  /// String pattern for dates displayed (Convience String)
   static const String uiPattern = 'EEE dd-MMM-yyyy h:mm:ss a';
+
   // static const String uiDate = 'EEE dd-MMM-yyyy';
   // static const String uiTime = 'h:mm:ss a';
   // static const String fatPattern = 'yyyy-MMM-dd HH:mm:ss';

@@ -1188,7 +1188,7 @@ class $$GlossaryItemsTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$GlossaryItemsTable, GlossaryItem>(table),
                   $$GlossaryItemsTableReferences(db, table, e),
                 ),
               )
@@ -1605,7 +1605,7 @@ class $$SinceWhenItemsTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$SinceWhenItemsTable, SinceWhenItem>(table),
                   $$SinceWhenItemsTableReferences(db, table, e),
                 ),
               )
@@ -1946,7 +1946,7 @@ class $$TagItemsTableTableManager
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
-                  e.readTable(table),
+                  e.readTable<$TagItemsTable, TagItem>(table),
                   $$TagItemsTableReferences(db, table, e),
                 ),
               )
