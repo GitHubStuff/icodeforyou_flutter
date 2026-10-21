@@ -5,7 +5,7 @@
 
 import 'package:extensions/datetime/src/datetime_delta.dart'
     show DateTimeDelta;
-import 'package:extensions/datetime/src/datetime_unit.dart' show DateTimeUnit;
+import 'package:ext_datetime/src/datetime_unit.dart' show DateTimeUnit;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

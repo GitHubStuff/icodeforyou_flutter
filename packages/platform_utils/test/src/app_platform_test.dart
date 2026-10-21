@@ -3,59 +3,59 @@
 import 'package:flutter/foundation.dart'
     show TargetPlatform, debugDefaultTargetPlatformOverride;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:platform_utils/src/app_platform.dart' show AppPlatform;
+import '../../../platform_tools/lib/src/os_platform.dart' show OSPlatform;
 
 void main() {
   tearDown(() {
-    AppPlatform.setPlatform();
+    OSPlatform.override();
     debugDefaultTargetPlatformOverride = null;
   });
 
   group('AppPlatform.current', () {
     test('honors the setPlatform override for every value', () {
-      for (final platform in AppPlatform.values) {
-        AppPlatform.setPlatform(to: platform);
-        expect(AppPlatform.current(), platform);
+      for (final platform in OSPlatform.values) {
+        OSPlatform.override(to: platform);
+        expect(OSPlatform.current(), platform);
       }
     });
 
     test('setPlatform with no argument clears the override', () {
-      AppPlatform.setPlatform(to: AppPlatform.iOS);
-      AppPlatform.setPlatform();
+      OSPlatform.override(to: OSPlatform.iOS);
+      OSPlatform.override();
 
       debugDefaultTargetPlatformOverride = TargetPlatform.windows;
-      expect(AppPlatform.current(), AppPlatform.windows);
+      expect(OSPlatform.current(), OSPlatform.windows);
     });
 
     test('maps every TargetPlatform to its AppPlatform', () {
       const mapping = {
-        TargetPlatform.android: AppPlatform.android,
-        TargetPlatform.fuchsia: AppPlatform.fuchsia,
-        TargetPlatform.iOS: AppPlatform.iOS,
-        TargetPlatform.linux: AppPlatform.linux,
-        TargetPlatform.macOS: AppPlatform.macOS,
-        TargetPlatform.windows: AppPlatform.windows,
+        TargetPlatform.android: OSPlatform.android,
+        TargetPlatform.fuchsia: OSPlatform.fuchsia,
+        TargetPlatform.iOS: OSPlatform.iOS,
+        TargetPlatform.linux: OSPlatform.linux,
+        TargetPlatform.macOS: OSPlatform.macOS,
+        TargetPlatform.windows: OSPlatform.windows,
       };
       for (final entry in mapping.entries) {
         debugDefaultTargetPlatformOverride = entry.key;
-        expect(AppPlatform.current(), entry.value);
+        expect(OSPlatform.current(), entry.value);
       }
     });
   });
 
   group('AppPlatform.isMobile', () {
     test('is true only for android and iOS', () {
-      expect(AppPlatform.android.isMobile, isTrue);
-      expect(AppPlatform.iOS.isMobile, isTrue);
-      expect(AppPlatform.linux.isMobile, isFalse);
-      expect(AppPlatform.macOS.isMobile, isFalse);
-      expect(AppPlatform.web.isMobile, isFalse);
-      expect(AppPlatform.windows.isMobile, isFalse);
+      expect(OSPlatform.android.isMobile, isTrue);
+      expect(OSPlatform.iOS.isMobile, isTrue);
+      expect(OSPlatform.linux.isMobile, isFalse);
+      expect(OSPlatform.macOS.isMobile, isFalse);
+      expect(OSPlatform.web.isMobile, isFalse);
+      expect(OSPlatform.windows.isMobile, isFalse);
     });
 
     test('throws UnimplementedError for fuchsia', () {
       expect(
-        () => AppPlatform.fuchsia.isMobile,
+        () => OSPlatform.fuchsia.isMobile,
         throwsUnimplementedError,
       );
     });
@@ -63,17 +63,17 @@ void main() {
 
   group('AppPlatform.isDesktop', () {
     test('is true only for linux, macOS, and windows', () {
-      expect(AppPlatform.linux.isDesktop, isTrue);
-      expect(AppPlatform.macOS.isDesktop, isTrue);
-      expect(AppPlatform.windows.isDesktop, isTrue);
-      expect(AppPlatform.android.isDesktop, isFalse);
-      expect(AppPlatform.iOS.isDesktop, isFalse);
-      expect(AppPlatform.web.isDesktop, isFalse);
+      expect(OSPlatform.linux.isDesktop, isTrue);
+      expect(OSPlatform.macOS.isDesktop, isTrue);
+      expect(OSPlatform.windows.isDesktop, isTrue);
+      expect(OSPlatform.android.isDesktop, isFalse);
+      expect(OSPlatform.iOS.isDesktop, isFalse);
+      expect(OSPlatform.web.isDesktop, isFalse);
     });
 
     test('throws UnimplementedError for fuchsia', () {
       expect(
-        () => AppPlatform.fuchsia.isDesktop,
+        () => OSPlatform.fuchsia.isDesktop,
         throwsUnimplementedError,
       );
     });

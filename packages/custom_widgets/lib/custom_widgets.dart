@@ -11,7 +11,6 @@ export 'src/expanding_textfield/expanding_textfield.dart'
 export 'src/ice_chip/ice_chip.dart' show IceChip;
 export 'src/orientation_flex/orientation_flex.dart'
     show AspectShape, OrientationFlex;
-export 'src/sized_spinner/sized_spinner.dart' show SizedSpinner;
 export 'src/slide_index_stack/slide_index_stack.dart' show SlideIndexedStack;
 export 'src/solid_screen_color/sollid_screen_color.dart' show SolidScreenColor;
 export 'src/stepper_theme/stepper_theme.dart' show StepperTheme;

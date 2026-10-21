@@ -18,10 +18,12 @@ BukowskiDirtyWife - 150
 Bunny Rabbits - 101
 BunnyBlondyX - 111
 Carla Cute - 114
+CrepuXCulo - X
 CyberlyCrush - 121
 Danielle Renae - 200+
 Dollorgasm - 15
 Dolly Rud - 103
+Elena Ross - 200+
 Emma Hix - 42
 Endorphin Baby - 138
 Eva Soda - 93
@@ -52,8 +54,9 @@ Lily Cute - 200+
 LivAnders69 - X {hide face}
 Lizzy Wild
 Loly Lips
-L11olyamateur - 200+
+Lolyamateur - 200+
 Luna Berg - 153 {+ 13-Oct}
+Luna Roul - 151
 Madiiitay - 25
 Magdalene Delight - X
 Mandy Foxxx - X {ugly tatts}
@@ -87,6 +90,7 @@ VeronikaVengeance - 14
 Vesperessa - X
 Viktoria Vares - 11
 Yuiwoo - 73 (oct 2026)
+Yulia Zorina - 26
 YunaverseX - 200+ [ugly tats]
 Zoe Nell - X
 Zoe Wilde VIP - X

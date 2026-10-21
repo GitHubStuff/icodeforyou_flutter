@@ -185,4 +185,18 @@ extension ExtString on String {
   ///   a [DateTime].
   int? toMicrosecondsOrNull() =>
       DateTime.tryParse(this)?.microsecondsSinceEpoch;
+
+  ///
+  //TODO(steven): Dartdoc and add test
+  Widget asGlyph() => FittedBox(
+    fit: BoxFit.contain,
+    child: Text(
+      this,
+      textAlign: TextAlign.center,
+      // height: 1 on the style tightens the line box so FittedBox scales
+      // the glyph itself rather than the glyph plus leading, which gets
+      // the largest glyph that fits.
+      style: const TextStyle(height: 1),
+    ),
+  );
 }

@@ -1,6 +1,6 @@
 // packages/platform_utils/lib/src/platform_optimizer.dart
 import 'package:flutter/widgets.dart' show BuildContext, View;
-import 'package:platform_utils/platform_utils.dart' show AppPlatform;
+import 'package:platform_tools/platform_tools.dart' show OSPlatform;
 import 'package:platform_utils/src/frame_refresh.dart' show FrameRefreshRate;
 
 /// Provides platform-aware tuning values for animation-heavy widgets.
@@ -25,7 +25,7 @@ class PlatformOptimizer {
   PlatformOptimizer({this._platform});
 
   /// Injected platform override, or `null` to detect at call time.
-  final AppPlatform? _platform;
+  final OSPlatform? _platform;
 
   /// Frame duration cached by [resolveFrameRate], or `null` if the display
   /// refresh rate has not yet been resolved.
@@ -33,7 +33,7 @@ class PlatformOptimizer {
 
   /// The effective platform: the injected override when present, otherwise
   /// the platform detected at call time.
-  AppPlatform get _current => _platform ?? AppPlatform.current();
+  OSPlatform get _current => _platform ?? OSPlatform.current;
 
   /// Shared instance backing the static convenience methods.
   static final _default = PlatformOptimizer();
@@ -68,14 +68,13 @@ class PlatformOptimizer {
   /// mobile renders the fewest (0.6× width). Unrecognized platforms
   /// default to a 1:1 ratio.
   int calculateOptimalParticleCount(double widgetWidth) => switch (_current) {
-    AppPlatform.web => (widgetWidth * 0.8).round(),
-    _ when _current.isMobile => (widgetWidth * 0.6).round(),
-    _ when _current.isDesktop => (widgetWidth * 1.2).round(),
-    // Required for exhaustiveness (guards don't count toward it), but no
-    // AppPlatform value can reach here: web matches first, android/iOS
-    // are mobile, the desktops are desktop, and fuchsia throws in the
-    // first guard.
-    _ => widgetWidth.round(), // coverage:ignore-line
+    OSPlatform.android => (widgetWidth * 0.6).round(),
+    OSPlatform.fuchsia => throw Exception('FUCHSIA is unsupported'),
+    OSPlatform.iOS => (widgetWidth * 0.6).round(),
+    OSPlatform.linux => (widgetWidth * 1.2).round(),
+    OSPlatform.macOS => (widgetWidth * 1.2).round(),
+    OSPlatform.web => (widgetWidth * 0.8).round(),
+    OSPlatform.windows => (widgetWidth * 1.2).round(),
   };
 
   /// Returns the per-frame movement step, in logical pixels, for particle
@@ -85,20 +84,23 @@ class PlatformOptimizer {
   /// step (2.5), mobile a moderate step (2.0), and desktop the finest
   /// step (1.5). Unrecognized platforms default to 2.0.
   double calculateParticleStep() => switch (_current) {
-    AppPlatform.web => 2.5,
-    _ when _current.isMobile => 2.0,
-    _ when _current.isDesktop => 1.5,
-    // Required for exhaustiveness (guards don't count toward it), but no
-    // AppPlatform value can reach here — see calculateOptimalParticleCount.
-    _ => 2.0, // coverage:ignore-line
+    OSPlatform.android => 2.0,
+    OSPlatform.fuchsia => throw Exception('FUCHSIA is unsupported'),
+    OSPlatform.iOS => 2.0,
+    OSPlatform.linux => 1.5,
+    OSPlatform.macOS => 1.5,
+    OSPlatform.web => 2.5,
+    OSPlatform.windows => 1.5,
   };
+
+  final Set<OSPlatform> _deskTop = {.linux, .macOS, .windows};
 
   /// Whether the current platform qualifies for high-performance rendering.
   ///
   /// Returns `true` only for native desktop platforms; web is excluded
   /// even when [AppPlatform.isDesktop] reports a desktop browser.
   bool isHighPerformanceModeEnabled() =>
-      _current != AppPlatform.web && _current.isDesktop;
+      _current != OSPlatform.web && (_deskTop.contains(_current));
 
   /// Returns the display name of the effective platform.
   String getCurrentPlatformName() => _current.name;

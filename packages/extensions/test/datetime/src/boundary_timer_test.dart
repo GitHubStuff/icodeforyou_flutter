@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:extensions/datetime/src/boundary_timer.dart' show BoundaryTimer;
-import 'package:extensions/datetime/src/datetime_unit.dart' show DateTimeUnit;
+import 'package:ext_datetime/src/datetime_unit.dart' show DateTimeUnit;
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

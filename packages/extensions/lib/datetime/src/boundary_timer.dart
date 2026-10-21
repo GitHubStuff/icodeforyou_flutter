@@ -2,7 +2,7 @@
 import 'dart:async';
 
 import 'package:extensions/datetime/src/datetime_ext.dart' show DateTimeExt;
-import 'package:extensions/datetime/src/datetime_unit.dart';
+import 'package:ext_datetime/src/datetime_unit.dart';
 
 /// A self-correcting, boundary-aligned repeating timer.
 ///

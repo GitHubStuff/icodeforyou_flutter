@@ -1,7 +1,7 @@
 // packages/extensions/test/datetime/src/datetime_ext_test.dart
 
 import 'package:extensions/datetime/src/datetime_ext.dart' show DateTimeExt;
-import 'package:extensions/datetime/src/datetime_unit.dart' show DateTimeUnit;
+import 'package:ext_datetime/src/datetime_unit.dart' show DateTimeUnit;
 import 'package:fake_async/fake_async.dart' show FakeAsync;
 import 'package:flutter_test/flutter_test.dart';
 

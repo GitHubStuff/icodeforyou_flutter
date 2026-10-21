@@ -1,5 +1,5 @@
 // packages/extensions/test/datetime/src/datetime_unit_test.dart
-import 'package:extensions/datetime/src/datetime_unit.dart';
+import 'package:ext_datetime/src/datetime_unit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -1,5 +1,5 @@
 // packages/extensions/lib/datetime/src/datetime_ext.dart
-import 'package:extensions/datetime/src/datetime_unit.dart' show DateTimeUnit;
+import 'package:ext_datetime/src/datetime_unit.dart' show DateTimeUnit;
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart' show DateFormat;
 

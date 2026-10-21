@@ -12,7 +12,7 @@ import 'package:since_when_dev/example/ping_pong_example.dart'
     show PingPongExample;
 import 'package:sincewhen_widgets/sincewhen_widgets.dart' show GlossaryEditPage;
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
-import 'package:tools/tools.dart' show DurationStopwatchDemo;
+import 'package:tools/tools.dart' show DurationStopwatchDemo, SpinWidgetDemo;
 
 /// Placeholder view for the library destination.
 // TODO(steven): Replace with the real screen, then delete this function.
@@ -85,6 +85,13 @@ enum DockDestinationEnum implements NavigableDestinationAbstract {
     viewBuilder: DurationStopwatchDemo.new,
   ),
 
+  /// Spins a widget
+  spinDemo(
+    iconData: Icons.rotate_right_outlined,
+    caption: 'Spinner',
+    viewBuilder: SpinWidgetDemo.new,
+  ),
+
   /// The database destination.
   database(
     iconData: Icons.storage,
@@ -115,6 +122,7 @@ enum DockDestinationEnum implements NavigableDestinationAbstract {
     home,
     settings,
     tools,
+    spinDemo,
     database,
   ];
 

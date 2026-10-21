@@ -15,6 +15,7 @@ dependencies:
   flutter:
     sdk: flutter
   gap: ^3.0.1
+  sized_spinner: ^1.0.0
   sliders: ^1.0.0
 
 dev_dependencies:

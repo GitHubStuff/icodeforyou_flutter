@@ -2,7 +2,7 @@
 name: icodeforyou_flutter
 publish_to: none
 description: "Collection of flutter packages"
-version: 9.6.4
+version: 9.6.7
 
 workspace:
   - packages/analog_clock_widget
@@ -22,6 +22,7 @@ workspace:
   - packages/dependency_resolver
   - packages/dual_selection
   - packages/duration_widget
+  - packages/ext_datetime
   - packages/ext_duration
   - packages/ext_int
   - packages/ext_string
@@ -34,6 +35,8 @@ workspace:
   - packages/my_logger
   - packages/neon
   - packages/ping_pong
+  - packages/platform_logs
+  - packages/platform_tools
   - packages/platform_utils
   - packages/position_popover
   - packages/prism_bubble_widget
@@ -46,6 +49,7 @@ workspace:
   - packages/sincewhen_models
   - packages/sincewhen_screens
   - packages/sincewhen_widgets
+  - packages/sized_spinner
   - packages/sliders
   - packages/splash_framework
   - packages/sqlite_viewer
