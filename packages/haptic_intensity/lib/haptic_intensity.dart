@@ -30,6 +30,17 @@ import 'package:flutter/widgets.dart' show ValueChanged, VoidCallback;
 /// `null` callback straight through, which keeps a disabled control disabled
 /// without any extra branching at the call site.
 ///
+/// ## The app-wide intensity
+///
+/// [primary] is not a strength of its own. It defers to [primaryTarget], a
+/// single process-wide setting, so every control that declares `.primary`
+/// follows one switch. Set it once at start-up (or from a settings screen)
+/// and every `.primary` control changes with it:
+///
+/// ```dart
+/// HapticIntensity.primaryTarget = .medium;
+/// ```
+///
 /// ## Platform behaviour
 ///
 /// Every call is fire-and-forget. [HapticFeedback] resolves to a no-op on
@@ -68,6 +79,13 @@ enum HapticIntensity {
   /// than acknowledgements.
   vibrate,
 
+  /// Whatever [primaryTarget] is currently set to.
+  ///
+  /// Declare this on controls that should follow the app-wide setting
+  /// rather than a fixed strength. [resolve] returns the concrete value it
+  /// stands for at the moment of the call.
+  primary,
+
   /// No feedback at all.
   ///
   /// [trigger] returns immediately and [wrap] and [wrapValue] still decorate
@@ -75,11 +93,56 @@ enum HapticIntensity {
   /// how it wires the control.
   none;
 
+  /// The value [primaryTarget] holds until something sets it.
+  static const HapticIntensity initialPrimaryTarget = HapticIntensity.light;
+
+  static HapticIntensity _primaryTarget = initialPrimaryTarget;
+
+  /// The concrete intensity that [primary] resolves to.
+  ///
+  /// Process-wide: changing it affects every control that declares
+  /// [primary] from the next trigger onward. Starts as
+  /// [initialPrimaryTarget].
+  static HapticIntensity get primaryTarget => _primaryTarget;
+
+  /// Sets the intensity that [primary] resolves to.
+  ///
+  /// Throws an [ArgumentError] for [primary] itself, which would otherwise
+  /// make [trigger] recurse without end. [none] is accepted and silences
+  /// every [primary] control at once.
+  static set primaryTarget(HapticIntensity value) {
+    if (value == HapticIntensity.primary) {
+      throw ArgumentError.value(
+        value,
+        'value',
+        'primaryTarget must be a concrete intensity, not primary',
+      );
+    }
+    _primaryTarget = value;
+  }
+
+  /// Restores [primaryTarget] to [initialPrimaryTarget].
+  ///
+  /// Intended for test tear-down, so one test's setting cannot leak into
+  /// the next.
+  static void resetPrimaryTarget() => _primaryTarget = initialPrimaryTarget;
+
+  /// The concrete intensity this value fires as.
+  ///
+  /// Every value resolves to itself except [primary], which resolves to
+  /// [primaryTarget]. The result is never [primary].
+  HapticIntensity resolve() => this == .primary ? _primaryTarget : this;
+
   /// Fires the feedback for this intensity.
   ///
-  /// Returns at once; the platform call is not awaited. [none] does nothing.
+  /// Returns at once; the platform call is not awaited. [none] does nothing,
+  /// and [primary] fires whatever [primaryTarget] resolves to.
+  ///
+  /// Throws a [StateError] if [resolve] ever yields [primary]. That cannot
+  /// happen while the [primaryTarget] setter rejects it; the throw guards
+  /// the invariant against a future change that forgets to.
   void trigger() {
-    switch (this) {
+    switch (resolve()) {
       case .light:
         unawaited(HapticFeedback.lightImpact());
       case .medium:
@@ -90,6 +153,11 @@ enum HapticIntensity {
         unawaited(HapticFeedback.selectionClick());
       case .vibrate:
         unawaited(HapticFeedback.vibrate());
+      case .primary:
+        throw StateError(
+          'HapticIntensity.primary resolved to itself; '
+          'primaryTarget must never be primary',
+        );
       case .none:
         return;
     }
@@ -110,7 +178,9 @@ enum HapticIntensity {
   ///
   /// The feedback fires on every invocation of the returned closure, and
   /// fires even when this is [none] in the sense that the closure is still
-  /// created; only the platform call is skipped.
+  /// created; only the platform call is skipped. [primary] is resolved at
+  /// each invocation, not when the closure is created, so a later change to
+  /// [primaryTarget] is picked up by already-built widgets.
   ///
   /// See also:
   ///

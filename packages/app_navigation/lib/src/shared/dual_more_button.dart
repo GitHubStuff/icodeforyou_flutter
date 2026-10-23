@@ -27,9 +27,9 @@ class DualMoreButton extends StatelessWidget {
   /// Creates a [DualMoreButton].
   const DualMoreButton({
     required this.onPressed,
+    required this.size,
     super.key,
     this.caption = const Text(_kMoreLabel),
-    this.size = const Size(48, 48),
     this.isSelected = false,
     this.tint,
     this.hapticIntensity = HapticIntensity.light,

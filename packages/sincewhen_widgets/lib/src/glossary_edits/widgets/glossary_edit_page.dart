@@ -2,7 +2,7 @@
 
 import 'package:dependency_resolver/dependency_resolver.dart'
     show DependencyResolver;
-import 'package:extensions/datetime/src/datetime_ext.dart' show DateTimeExt;
+import 'package:ext_datetime/ext_datetime.dart' show ExtDateTime;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sincewhen_models/sincewhen_models.dart' show GlossaryRepository;
@@ -29,7 +29,7 @@ class GlossaryEditPage extends StatelessWidget {
       create: (context) => GlossaryEditCubit(
         // Resolve the repository contract lazily from DI
         glossaryRepo: resolver.get<GlossaryRepository>(),
-        uniqueTime: DateTimeExt.unique,
+        uniqueTime: ExtDateTime.unique,
       ),
       child: const GlossaryEditView(),
     );

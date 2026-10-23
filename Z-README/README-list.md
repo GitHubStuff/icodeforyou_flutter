@@ -6,6 +6,7 @@ Alissa Martinez7 - 7
 Angelica Heaven - 73
 AnissaMiller1 - 106
 Anny Walker - X
+ArdatB - X
 Ariana Lopes - X
 Arisha Mills
 AvaDyson
@@ -19,19 +20,22 @@ Bunny Rabbits - 101
 BunnyBlondyX - 111
 Carla Cute - 114
 CentauriHadar - X
+Cory Chase - 200+
 CrepuXCulo - X
 CyberlyCrush - 121
 Danielle Renae - 200+
 Dollorgasm - 15
 Dolly Rud - 103
 Elena Ross - 200+
+Elly Clutch Two - 33
 Emma Hix - 42
 Endorphin Baby - 138
 Eva Soda - 93
-Fiamurr
+Fiamurr - 47
 Forgotten sweetness - X
 FoxAlinaLive
 FunsizedMegan - X
+Ghomestory - X
 Hope Heaven - 29
 horny69rabbits - 200+
 HotPrincessUA - X
@@ -70,8 +74,10 @@ Milfetta
 Miss Driada - 200+ / Urakadaki - 152 {19-oct}
 Misslexa - X
 MissRedStar - 163
+Molly Pills - 133
+MurkovskiStore - X
 MyAnny - X {hides face/nice tits}
-NaughtyBlossom - 200+
+NaughtyBlossom - X
 Nelary Love - 51
 Only Love - 200+
 Owl Crystal
@@ -86,7 +92,9 @@ Solazola - 61
 Space Lady
 Spirite Moon - 33 [ugly tats]
 Sumiko Smile - X
+Thelymia - 90
 TwixenXX - 30
+Vallery Ray - 200+
 Verlonis - 156 = ??
 VeronikaVengeance - 14
 Vesperessa - X

@@ -2,10 +2,10 @@
 
 import 'dart:async';
 
-import 'package:extensions/extensions.dart' show DateTimeExt;
+import 'package:ext_datetime/ext_datetime.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sincewhen_models/sincewhen_models.dart' show SinceWhenItem;
-import 'package:sincewhen_screens/src/cubit/state.dart'
+import 'package:sincewhen_screens/sincewhen_screens.dart'
     show
         SinceWhenMiniAction,
         SinceWhenMiniLoading,
@@ -69,7 +69,7 @@ class SinceWhenMiniCubit extends Cubit<SinceWhenMiniState> {
   /// Mints the create-mode stamps and promotes the state to
   /// [SinceWhenMiniReady].
   Future<void> _mintCreateDraft() async {
-    final minted = DateTimeExt.unique(now: _now);
+    final minted = ExtDateTime.unique(now: _now);
     if (isClosed) {
       return;
     }
@@ -158,7 +158,7 @@ class SinceWhenMiniCubit extends Cubit<SinceWhenMiniState> {
 
   /// Mints one unique timestamp in microseconds since epoch.
   int _mint() {
-    final minted = DateTimeExt.unique(now: _now);
+    final minted = ExtDateTime.unique(now: _now);
     return minted.microsecondsSinceEpoch;
   }
 }

@@ -1,9 +1,8 @@
-// programs/widgetbook_workspace/lib/packages/dual_selection/dual_selection.usecase.dart
+// packages/dual_selection/widgetbook/lib/dual_selection.usecase.dart
+// (placeholder path — use your actual usecase location)
 
 import 'package:dual_selection/dual_selection.dart'
-    show DualSelection, DualSelectionEnum;
-import 'package:dual_selection/src/defaults.dart' show Defaults;
-//import 'package:extensions/extensions.dart';
+    show Defaults, DualSelection, DualSelectionEnum;
 import 'package:flutter/material.dart';
 import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 import 'package:widgetbook/widgetbook.dart';
@@ -12,17 +11,31 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 @UseCase(name: 'Interactive', type: DualSelection)
 Widget buildDualSelectionInteractiveUseCase(BuildContext context) {
   final knobs = context.knobs;
+  final colorScheme = Theme.of(context).colorScheme;
+
+  // Null means "follow the active theme"; a picked value overrides it.
+  // These must stay `colorOrNull` — a `color` knob with a concrete
+  // initialValue freezes on first build and stops tracking theme changes.
+  final borderColor =
+      knobs.colorOrNull(label: 'borderColor') ?? colorScheme.outline;
+  final selectedHeaderColor =
+      knobs.colorOrNull(label: 'selectedHeaderColor') ??
+      colorScheme.primaryContainer;
+  final unselectedHeaderColor =
+      knobs.colorOrNull(label: 'unselectedHeaderColor') ??
+      colorScheme.surfaceContainerHighest;
+  final headerTextColor =
+      knobs.colorOrNull(label: 'headerTextColor') ?? colorScheme.onSurface;
 
   return Center(
     child: DualSelection(
-      first: const _HeaderButton(label: 'First'),
-      second: const _HeaderButton(label: 'Second'),
+      first: _HeaderLabel('First', color: headerTextColor),
+      second: _HeaderLabel('Second', color: headerTextColor),
       firstChild: const _Body(label: 'First body', color: Colors.blue),
       secondChild: const _Body(label: 'Second body', color: Colors.orange),
-      borderColor: knobs.color(
-        label: 'borderColor',
-        initialValue: Colors.black,
-      ),
+      borderColor: borderColor,
+      selectedHeaderColor: selectedHeaderColor,
+      unselectedHeaderColor: unselectedHeaderColor,
       selection: knobs.object.dropdown<DualSelectionEnum>(
         label: 'selection',
         options: DualSelectionEnum.values,
@@ -79,63 +92,21 @@ Widget buildDualSelectionInteractiveUseCase(BuildContext context) {
   );
 }
 
-@UseCase(name: 'Seeded With Second', type: DualSelection)
-Widget buildDualSelectionSeededWithSecondUseCase(BuildContext context) {
-  return const Center(
-    child: DualSelection(
-      first: _HeaderButton(label: 'First'),
-      second: _HeaderButton(label: 'Second'),
-      firstChild: _Body(label: 'First body', color: Colors.blue),
-      secondChild: _Body(label: 'Second body', color: Colors.orange),
-      borderColor: Colors.black,
-      selection: .second,
-    ),
-  );
-}
-
-@UseCase(name: 'No Fade', type: DualSelection)
-Widget buildDualSelectionNoFadeUseCase(BuildContext context) {
-  return const Center(
-    child: DualSelection(
-      first: _HeaderButton(label: 'First'),
-      second: _HeaderButton(label: 'Second'),
-      firstChild: _Body(label: 'First body', color: Colors.blue),
-      secondChild: _Body(label: 'Second body', color: Colors.orange),
-      borderColor: Colors.black,
-      fadeDuration: Duration.zero,
-    ),
-  );
-}
-
-@UseCase(name: 'Square Corners, No Border', type: DualSelection)
-Widget buildDualSelectionSquareNoBorderUseCase(BuildContext context) {
-  return const Center(
-    child: DualSelection(
-      first: _HeaderButton(label: 'First'),
-      second: _HeaderButton(label: 'Second'),
-      firstChild: _Body(label: 'First body', color: Colors.blue),
-      secondChild: _Body(label: 'Second body', color: Colors.orange),
-      borderColor: Colors.transparent,
-      cornerRadius: 0,
-      borderWidth: 0,
-    ),
-  );
-}
-
-class _HeaderButton extends StatelessWidget {
-  const _HeaderButton({required this.label});
+/// Header slot content: foreground only. The background is painted by
+/// [DualSelection] from `selectedHeaderColor` / `unselectedHeaderColor`,
+/// so this must not paint its own.
+class _HeaderLabel extends StatelessWidget {
+  const _HeaderLabel(this.label, {required this.color});
 
   final String label;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: Colors.grey.shade300,
-      child: Center(
-        child: Text(
-          label,
-          style: const TextStyle(fontWeight: FontWeight.w600),
-        ),
+    return Center(
+      child: Text(
+        label,
+        style: TextStyle(fontWeight: FontWeight.w600, color: color),
       ),
     );
   }
@@ -154,7 +125,7 @@ class _Body extends StatelessWidget {
       child: Center(
         child: Text(
           label,
-          style: const TextStyle(color: Colors.white, fontSize: 18),
+          style: const TextStyle(color: Colors.white),
         ),
       ),
     );

@@ -2,6 +2,7 @@
 analyzer:
   errors:
     deprecated_consistency: ignore
+    prefer_asserts_with_message: ignore
   exclude:
     - build/**
     - android/**

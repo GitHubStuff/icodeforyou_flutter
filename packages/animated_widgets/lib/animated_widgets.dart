@@ -1,6 +1,5 @@
 // packages/animated_widgets/lib/animated_widgets.dart
 
-export 'src/animated_barrier/animated_barrier.dart';
 export 'src/animated_checkbox/src/animated_checkbox.dart' show AnimatedCheckbox;
 export 'src/combination_animation/combination_animation.dart'
     show AnimatedSteps, AnimatesWidgetExt, AnimationSequence;

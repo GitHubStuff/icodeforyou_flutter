@@ -41,7 +41,6 @@ dependencies:
   prism_bubble_widget: ^1.0.0
   random_color_generator: ^1.0.0
   remind_me: ^1.0.0
-  scrolling_datetime_pickers: ^1.0.0
   settings_widget: ^1.0.0
   sincewhen_models: ^1.0.0
   sincewhen_screens: ^1.0.0

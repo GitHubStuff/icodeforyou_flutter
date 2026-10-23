@@ -2,7 +2,7 @@
 
 import 'package:custom_widgets/custom_widgets.dart' show PasswordField;
 import 'package:custom_widgets/src/textfield/_suffix_slot.dart' show SuffixSlot;
-import 'package:extensions/enum/src/window_size_category.dart'
+import 'package:ext_buildcontext/src/window_size_category.dart'
     show WindowSizeCategory;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

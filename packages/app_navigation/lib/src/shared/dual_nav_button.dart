@@ -3,11 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
-/// The default fixed footprint of a [DualNavButton].
-///
-/// Matches the Material minimum touch target of 48x48.
-const Size _kDefaultSize = Size(48, 48);
-
 /// Padding between the button edge and its content.
 const EdgeInsets _kContentPadding = EdgeInsets.all(4);
 
@@ -40,10 +35,10 @@ class DualNavButton extends StatelessWidget {
   /// At least one of [icon] or [caption] must be non-null.
   const DualNavButton({
     required this.onPressed,
+    required this.size,
     super.key,
     this.icon,
     this.caption,
-    this.size = _kDefaultSize,
     this.isSelected = false,
     this.tint,
     this.hapticIntensity = HapticIntensity.light,

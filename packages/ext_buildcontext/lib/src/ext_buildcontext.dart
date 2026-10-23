@@ -1,11 +1,13 @@
 // packages/ext_buildcontext/lib/src/ext_buildcontext.dart
 
-import 'package:extensions/enum/enum.dart' show WindowSizeCategory;
+import 'package:ext_buildcontext/window_size_category.dart'
+    show WindowSizeCategory;
 import 'package:flutter/widgets.dart';
 
 /// Convenience accessors on [BuildContext] for keyboard state, render-box
 /// geometry, and Material window-size resolution.
 extension ExtBuildContext on BuildContext {
+  /// Short-hand to get device orientation
   Orientation get orientation => MediaQuery.orientationOf(this);
 
   /// Whether the on-screen keyboard is currently insetting the view.

@@ -37,38 +37,6 @@ class DateTimeDifference {
   /// Private constructor: this class exposes only static members.
   DateTimeDifference._(); // coverage:ignore-line
 
-  /// Every [DateTimeUnit], ordered coarsest to finest.
-  ///
-  /// Used to compare two units by magnitude via [List.indexOf]: a lower
-  /// index is a coarser unit. Mirrors the declaration order of
-  /// [DateTimeUnit] itself.
-  static const List<DateTimeUnit> _unitHierarchy = [
-    DateTimeUnit.year,
-    DateTimeUnit.month,
-    DateTimeUnit.day,
-    DateTimeUnit.hour,
-    DateTimeUnit.minute,
-    DateTimeUnit.second,
-    DateTimeUnit.msec,
-    DateTimeUnit.usec,
-  ];
-
-  /// Maps each [DateTimeUnit] to the key used for it in the component map
-  /// returned by [_calculateTimeDifference].
-  ///
-  /// Keeps the string keys in one place so [_applyFiltering] never has to
-  /// spell them out.
-  static const Map<DateTimeUnit, String> _unitNames = {
-    DateTimeUnit.year: 'years',
-    DateTimeUnit.month: 'months',
-    DateTimeUnit.day: 'days',
-    DateTimeUnit.hour: 'hours',
-    DateTimeUnit.minute: 'minutes',
-    DateTimeUnit.second: 'seconds',
-    DateTimeUnit.msec: 'milliseconds',
-    DateTimeUnit.usec: 'microseconds',
-  };
-
   /// Returns the calendar difference between [startTime] and [endTime] as a
   /// [DateTimeDelta].
   ///
@@ -156,10 +124,7 @@ class DateTimeDifference {
       );
     }
 
-    final firstUnitIndex = _unitHierarchy.indexOf(firstDateTimeUnit);
-    final precisionIndex = _unitHierarchy.indexOf(precision);
-
-    if (firstUnitIndex > precisionIndex) {
+    if (firstDateTimeUnit.index > precision.index) {
       throw ArgumentError(
         'firstDateTimeUnit ($firstDateTimeUnit) cannot be smaller than '
         'precision ($precision). Either set precision to $firstDateTimeUnit '
@@ -173,17 +138,16 @@ class DateTimeDifference {
       return DateTimeDelta(isFuture: isFuture);
     }
 
-    final calcStart = startTime.isAfter(resolvedEnd) ? resolvedEnd : startTime;
-    final calcEnd = startTime.isAfter(resolvedEnd) ? startTime : resolvedEnd;
-
-    final result = _calculateTimeDifference(calcStart, calcEnd);
+    final (calcStart, calcEnd) = isFuture
+        ? (startTime, resolvedEnd)
+        : (resolvedEnd, startTime);
 
     return _applyFiltering(
-      result,
-      firstDateTimeUnit,
-      precision,
-      isFuture,
-      truncate,
+      _calculateTimeDifference(calcStart, calcEnd),
+      firstDateTimeUnit: firstDateTimeUnit,
+      precision: precision,
+      isFuture: isFuture,
+      truncate: truncate,
     );
   }
 
@@ -203,11 +167,13 @@ class DateTimeDifference {
   /// 3. Negative seconds borrow 1 minute (+60 s).
   /// 4. Negative minutes borrow 1 hour (+60 min).
   /// 5. Negative hours borrow 1 day (+24 h).
-  /// 6. Negative days borrow 1 month, adding the number of days in the month
-  ///    *preceding* [end]'s month. This runs in a loop because a single
-  ///    borrow is not always enough (e.g. a 31-day shortfall against a
-  ///    28-day February). The `DateTime(year, month + 1, 0)` idiom resolves
-  ///    to the last day of `month`, giving its length.
+  /// 6. Negative days borrow 1 month at a time, adding the length of the
+  ///    month *preceding* the current borrow cursor, which starts at [end]'s
+  ///    month and walks backward on each pass. This runs in a loop because a
+  ///    single borrow is not always enough (e.g. a 31-day shortfall against a
+  ///    28-day February), and each successive borrow must consult the next
+  ///    earlier month. The `DateTime.utc(year, month, 0)` idiom resolves to
+  ///    the last day of the month before `month`, giving its length.
   /// 7. Negative months borrow 1 year (+12 months).
   ///
   /// Every component in the returned map is therefore non-negative and
@@ -215,9 +181,8 @@ class DateTimeDifference {
   ///
   /// ### Returns
   ///
-  /// A map keyed by the plural unit names in [_unitNames]
-  /// (`'years'`, `'months'`, …, `'microseconds'`).
-  static Map<String, int> _calculateTimeDifference(
+  /// A map with one entry per [DateTimeUnit].
+  static Map<DateTimeUnit, int> _calculateTimeDifference(
     DateTime start,
     DateTime end,
   ) {
@@ -251,15 +216,13 @@ class DateTimeDifference {
       hours += 24;
     }
 
+    // Last day of the month preceding `end`'s month; walks back one month
+    // per borrow so repeated borrows consult successive earlier months.
+    var borrowMonth = DateTime.utc(end.year, end.month, 0);
     while (days < 0) {
       months--;
-      var prevMonth = end.month - 1;
-      var prevYear = end.year;
-      if (prevMonth <= 0) {
-        prevMonth = 12;
-        prevYear--;
-      }
-      days += DateTime(prevYear, prevMonth + 1, 0).day;
+      days += borrowMonth.day;
+      borrowMonth = DateTime.utc(borrowMonth.year, borrowMonth.month, 0);
     }
 
     if (months < 0) {
@@ -268,14 +231,14 @@ class DateTimeDifference {
     }
 
     return {
-      'years': years,
-      'months': months,
-      'days': days,
-      'hours': hours,
-      'minutes': minutes,
-      'seconds': seconds,
-      'milliseconds': milliseconds,
-      'microseconds': microseconds,
+      DateTimeUnit.year: years,
+      DateTimeUnit.month: months,
+      DateTimeUnit.day: days,
+      DateTimeUnit.hour: hours,
+      DateTimeUnit.minute: minutes,
+      DateTimeUnit.second: seconds,
+      DateTimeUnit.msec: milliseconds,
+      DateTimeUnit.usec: microseconds,
     };
   }
 
@@ -284,36 +247,35 @@ class DateTimeDifference {
   ///
   /// For each [DateTimeUnit] the value is resolved as follows:
   ///
-  /// * Units coarser than [firstDateTimeUnit] — i.e. not in
-  ///   `firstDateTimeUnit.sublist()` — are **omitted** (`null`).
+  /// * Units coarser than [firstDateTimeUnit] are **omitted** (`null`).
   /// * Units finer than [precision] are **zeroed** when [truncate] is `true`,
   ///   or **omitted** (`null`) when it is `false`.
   /// * Every other unit carries its computed value from [differences].
+  ///
+  /// Coarseness is compared via [DateTimeUnit.index], which is declared
+  /// coarsest-to-finest.
   ///
   /// [isFuture] is passed straight through to [DateTimeDelta.isFuture].
   ///
   /// This is a pure projection: it never alters magnitudes, only decides
   /// which ones are visible.
   static DateTimeDelta _applyFiltering(
-    Map<String, int> differences,
-    DateTimeUnit firstDateTimeUnit,
-    DateTimeUnit precision,
-    bool isFuture,
-    bool truncate,
-  ) {
-    final fieldSet = firstDateTimeUnit.sublist();
+    Map<DateTimeUnit, int> differences, {
+    required DateTimeUnit firstDateTimeUnit,
+    required DateTimeUnit precision,
+    required bool isFuture,
+    required bool truncate,
+  }) {
+    final firstIndex = firstDateTimeUnit.index;
+    final precisionIndex = precision.index;
 
     /// Resolves the reported value for [unit] per the rules documented on
     /// the enclosing method.
     int? getValue(DateTimeUnit unit) {
-      if (!fieldSet.contains(unit)) return null;
-
-      final unitIndex = _unitHierarchy.indexOf(unit);
-      final precisionIndex = _unitHierarchy.indexOf(precision);
-
-      if (unitIndex > precisionIndex) return truncate ? 0 : null;
-
-      return differences[_unitNames[unit]!];
+      final index = unit.index;
+      if (index < firstIndex) return null;
+      if (index > precisionIndex) return truncate ? 0 : null;
+      return differences[unit];
     }
 
     return DateTimeDelta(

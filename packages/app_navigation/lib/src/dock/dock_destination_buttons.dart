@@ -9,16 +9,6 @@ import 'package:app_navigation/src/shared/dual_popover_tile.dart'
     show DualPopoverTile;
 import 'package:flutter/material.dart';
 
-/// The default footprint used for every destination button, including
-/// the overflow button.
-///
-/// 80x60 rather than the [DualNavButton] default of 48x48 because every
-/// destination renders both an icon and a caption. The overflow button
-/// uses the same size so the dock's geometry stays uniform whether or
-/// not it appears. A visible destination escapes this footprint only
-/// through an explicit [DockDestinationButtons.sizeOverrides] entry.
-const Size _kButtonSize = Size(80, 60);
-
 /// {@template dock_destination_buttons}
 /// The dock's destination buttons: one [DualNavButton] per member of
 /// [visible], in order, followed — when [overflowed] is non-empty —
@@ -134,7 +124,7 @@ class DockDestinationButtons<T extends NavigableDestinationAbstract>
   /// The dock button for [destination], sized by its [sizeOverrides]
   /// entry when one exists and [_kButtonSize] otherwise.
   Widget _dockButton(T destination) => DualNavButton(
-    size: sizeOverrides[destination] ?? _kButtonSize,
+    size: sizeOverrides[destination] ?? const Size(60, 80),
     isSelected: destination == selected,
     icon: Icon(destination.iconData),
     caption: Text(destination.caption),
@@ -172,7 +162,8 @@ class DockDestinationButtons<T extends NavigableDestinationAbstract>
         for (final destination in visible) _dockButton(destination),
         if (overflowed.isNotEmpty)
           DualOverflowButton<T>(
-            size: _kButtonSize,
+            // TODO(steven): refactor the constants out
+            size: const Size(80, 60),
             isSelected: selectedOverflowIndex != -1,
             initialScrollIndex: selectedOverflowIndex != -1
                 ? selectedOverflowIndex

@@ -94,8 +94,6 @@ import 'package:widgetbook_workspace/packages/custom_widgets/ice_chip/ice_chip/i
     as custom_widgets_ice_chip_ice_chip_ice_chip;
 import 'package:widgetbook_workspace/packages/custom_widgets/orientation_flex/orientation_flex.usecase.dart'
     as custom_widgets_orientation_flex_orientation_flex;
-import 'package:widgetbook_workspace/packages/custom_widgets/sized_spinner/sized_spinner.usecase.dart'
-    as custom_widgets_sized_spinner_sized_spinner;
 import 'package:widgetbook_workspace/packages/custom_widgets/slide_index_stack/slide_index_stack.usecase.dart'
     as custom_widgets_slide_index_stack_slide_index_stack;
 import 'package:widgetbook_workspace/packages/custom_widgets/solid_screen_color/solid_screen_color.usecase.dart'
@@ -112,12 +110,12 @@ import 'package:widgetbook_workspace/packages/custom_widgets/uninhertied_text/un
     as custom_widgets_uninhertied_text_uninherited_text;
 import 'package:widgetbook_workspace/packages/data_grid/data_grid.usecase.dart'
     as data_grid_data_grid;
-import 'package:widgetbook_workspace/packages/datetime_popover_pickers/date_picker.usecase.dart'
-    as datetime_popover_pickers_date_picker;
-import 'package:widgetbook_workspace/packages/datetime_popover_pickers/fat_picker.usecase.dart'
-    as datetime_popover_pickers_fat_picker;
-import 'package:widgetbook_workspace/packages/datetime_popover_pickers/time_picker.usecase.dart'
-    as datetime_popover_pickers_time_picker;
+import 'package:widgetbook_workspace/packages/datetime_pickers/date_picker.usecase.dart'
+    as datetime_pickers_date_picker;
+import 'package:widgetbook_workspace/packages/datetime_pickers/fat_picker.usecase.dart'
+    as datetime_pickers_fat_picker;
+import 'package:widgetbook_workspace/packages/datetime_pickers/time_picker.usecase.dart'
+    as datetime_pickers_time_picker;
 import 'package:widgetbook_workspace/packages/dual_selection/dual_selection.usecase.dart'
     as dual_selection_dual_selection;
 import 'package:widgetbook_workspace/packages/dual_selection/single_selection.usecase.dart'
@@ -188,6 +186,10 @@ import 'package:widgetbook_workspace/packages/sliders/hslider_with_buttons.useca
     as sliders_hslider_with_buttons;
 import 'package:widgetbook_workspace/packages/sliders/slider_button.usecase.dart'
     as sliders_slider_button;
+import 'package:widgetbook_workspace/packages/spinners/platform_spinner.usecase.dart'
+    as spinners_platform_spinner;
+import 'package:widgetbook_workspace/packages/spinners/spin_widget.usecase.dart'
+    as spinners_spin_widget;
 import 'package:widgetbook_workspace/packages/splash_framework/splash_screen.usecase.dart'
     as splash_framework_splash_screen;
 import 'package:widgetbook_workspace/packages/sqlite_viewer/lib/src/widgets/sqlite_viewer_page/sqlite_viewer_page.usecase.dart'
@@ -204,10 +206,6 @@ import 'package:widgetbook_workspace/packages/theme_framework/theme_setting_scre
     as theme_framework_theme_setting_screen;
 import 'package:widgetbook_workspace/packages/three_d_sphere/three_d_sphere.usecase.dart'
     as three_d_sphere_three_d_sphere;
-import 'package:widgetbook_workspace/packages/tools/duration_demo.usecase.dart'
-    as tools_duration_demo;
-import 'package:widgetbook_workspace/packages/tools/duration_stopwatch_demo.usecase.dart'
-    as tools_duration_stopwatch_demo;
 import 'package:widgetbook_workspace/packages/widget_animation_framework/animation_combiner_on_widget.usecase.dart'
     as widget_animation_framework_animation_combiner_on_widget;
 import 'package:widgetbook_workspace/packages/widget_animation_framework/animation_controller_widget.usecase.dart'
@@ -752,16 +750,6 @@ final directories = <WidgetbookNode>[
         ],
       ),
       WidgetbookComponent(
-        name: 'SizedSpinner',
-        useCases: [
-          WidgetbookUseCase(
-            name: 'Default',
-            builder: custom_widgets_sized_spinner_sized_spinner
-                .buildSizedSpinnerUseCase,
-          ),
-        ],
-      ),
-      WidgetbookComponent(
         name: 'SlideIndexedStack',
         useCases: [
           WidgetbookUseCase(
@@ -818,20 +806,18 @@ final directories = <WidgetbookNode>[
     ],
   ),
   WidgetbookFolder(
-    name: 'datetime_popover_pickers',
+    name: 'datetime_pickers',
     children: [
       WidgetbookComponent(
         name: 'DatePicker',
         useCases: [
           WidgetbookUseCase(
             name: 'Playground',
-            builder: datetime_popover_pickers_date_picker
-                .datePickerPlaygroundUseCase,
+            builder: datetime_pickers_date_picker.datePickerPlaygroundUseCase,
           ),
           WidgetbookUseCase(
             name: 'Size Gallery',
-            builder: datetime_popover_pickers_date_picker
-                .datePickerSizeGalleryUseCase,
+            builder: datetime_pickers_date_picker.datePickerSizeGalleryUseCase,
           ),
         ],
       ),
@@ -840,18 +826,15 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Playground',
-            builder:
-                datetime_popover_pickers_fat_picker.fatPickerPlaygroundUseCase,
+            builder: datetime_pickers_fat_picker.fatPickerPlaygroundUseCase,
           ),
           WidgetbookUseCase(
             name: 'Size Gallery',
-            builder:
-                datetime_popover_pickers_fat_picker.fatPickerSizeGalleryUseCase,
+            builder: datetime_pickers_fat_picker.fatPickerSizeGalleryUseCase,
           ),
           WidgetbookUseCase(
             name: 'Without Seconds',
-            builder: datetime_popover_pickers_fat_picker
-                .fatPickerWithoutSecondsUseCase,
+            builder: datetime_pickers_fat_picker.fatPickerWithoutSecondsUseCase,
           ),
         ],
       ),
@@ -860,18 +843,16 @@ final directories = <WidgetbookNode>[
         useCases: [
           WidgetbookUseCase(
             name: 'Playground',
-            builder: datetime_popover_pickers_time_picker
-                .timePickerPlaygroundUseCase,
+            builder: datetime_pickers_time_picker.timePickerPlaygroundUseCase,
           ),
           WidgetbookUseCase(
             name: 'Size Gallery',
-            builder: datetime_popover_pickers_time_picker
-                .timePickerSizeGalleryUseCase,
+            builder: datetime_pickers_time_picker.timePickerSizeGalleryUseCase,
           ),
           WidgetbookUseCase(
             name: 'Without Seconds',
-            builder: datetime_popover_pickers_time_picker
-                .timePickerWithoutSecondsUseCase,
+            builder:
+                datetime_pickers_time_picker.timePickerWithoutSecondsUseCase,
           ),
         ],
       ),
@@ -1532,6 +1513,37 @@ final directories = <WidgetbookNode>[
     ],
   ),
   WidgetbookFolder(
+    name: 'spinners',
+    children: [
+      WidgetbookComponent(
+        name: 'PlatformSpinner',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Gallery',
+            builder: spinners_platform_spinner.buildPlatformSpinnerGallery,
+          ),
+          WidgetbookUseCase(
+            name: 'Interactive',
+            builder: spinners_platform_spinner.buildPlatformSpinnerInteractive,
+          ),
+        ],
+      ),
+      WidgetbookComponent(
+        name: 'SpinWidget',
+        useCases: [
+          WidgetbookUseCase(
+            name: 'Controlled',
+            builder: spinners_spin_widget.buildSpinWidgetControlled,
+          ),
+          WidgetbookUseCase(
+            name: 'Interactive',
+            builder: spinners_spin_widget.buildSpinWidgetInteractive,
+          ),
+        ],
+      ),
+    ],
+  ),
+  WidgetbookFolder(
     name: 'splash_framework',
     children: [
       WidgetbookComponent(
@@ -1633,53 +1645,6 @@ final directories = <WidgetbookNode>[
           WidgetbookUseCase(
             name: 'Parametric',
             builder: three_d_sphere_three_d_sphere.buildThreeDSphereUseCase,
-          ),
-        ],
-      ),
-    ],
-  ),
-  WidgetbookFolder(
-    name: 'tools',
-    children: [
-      WidgetbookComponent(
-        name: 'DurationDemo',
-        useCases: [
-          WidgetbookUseCase(
-            name: 'Constrained width',
-            builder: tools_duration_demo.constrainedWidthDurationDemoUseCase,
-          ),
-          WidgetbookUseCase(
-            name: 'Default',
-            builder: tools_duration_demo.defaultDurationDemoUseCase,
-          ),
-          WidgetbookUseCase(
-            name: 'Text scaling',
-            builder: tools_duration_demo.textScalingDurationDemoUseCase,
-          ),
-        ],
-      ),
-      WidgetbookComponent(
-        name: 'DurationStopwatchDemo',
-        useCases: [
-          WidgetbookUseCase(
-            name: 'Constrained width',
-            builder: tools_duration_stopwatch_demo
-                .constrainedWidthDurationStopwatchDemoUseCase,
-          ),
-          WidgetbookUseCase(
-            name: 'Default',
-            builder: tools_duration_stopwatch_demo
-                .defaultDurationStopwatchDemoUseCase,
-          ),
-          WidgetbookUseCase(
-            name: 'Seeded',
-            builder: tools_duration_stopwatch_demo
-                .seededDurationStopwatchDemoUseCase,
-          ),
-          WidgetbookUseCase(
-            name: 'Text scaling',
-            builder: tools_duration_stopwatch_demo
-                .textScalingDurationStopwatchDemoUseCase,
           ),
         ],
       ),

@@ -14,6 +14,7 @@ dependencies:
   intl: ^0.20.3
 
 dev_dependencies:
+  fake_async: ^1.3.3
   flutter_test:
     sdk: flutter
   icodeforyou_lints: ^1.0.0

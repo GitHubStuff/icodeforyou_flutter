@@ -2,7 +2,7 @@
 
 import 'dart:async';
 
-import 'package:extensions/extensions.dart' show DateTimeExt;
+import 'package:ext_datetime/ext_datetime.dart' show ExtDateTime;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sincewhen_models/sincewhen_models.dart' show SinceWhenItem;
@@ -47,7 +47,7 @@ void main() {
     late _TestBlocObserver observer;
 
     setUp(() {
-      DateTimeExt.reset();
+      ExtDateTime.reset();
       fixedNow = DateTime.utc(2026, 1, 1, 12, 0, 0);
       observer = _TestBlocObserver();
       Bloc.observer = observer;

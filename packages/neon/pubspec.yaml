@@ -3,7 +3,7 @@ name: neon
 description: "Neon Colored Tools&#x2F;Widgets"
 publish_to: none
 resolution: workspace
-version: 1.0.0
+version: 1.0.2
 
 environment:
   sdk: ^3.12.0

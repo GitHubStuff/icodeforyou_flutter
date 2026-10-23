@@ -14,10 +14,6 @@ import 'package:since_when_dev/example/ping_pong_example.dart'
 import 'package:sincewhen_widgets/sincewhen_widgets.dart' show GlossaryEditPage;
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
-/// Placeholder view for the library destination.
-// TODO(steven): Replace with the real screen, then delete this function.
-//Widget _libraryView() => const Center(child: Text('Library'));
-
 /// {@template dock_destination_enum}
 /// The set of destinations available in the dock — and the only file
 /// edited when that set changes.
@@ -47,11 +43,13 @@ import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 /// Nothing else in the app needs to be touched.
 /// {@endtemplate}
 // TODO(steven): Add/remove/reorder members and adjust the statics below.
+
 enum DockDestinationEnum implements NavigableDestinationAbstract {
   /// The home destination.
   home(
     iconData: Icons.home_outlined,
     caption: 'Home',
+    size: 
     viewBuilder: DefaultWelcomeScreen.new,
   ),
 
@@ -104,6 +102,8 @@ enum DockDestinationEnum implements NavigableDestinationAbstract {
   const DockDestinationEnum({
     required this.iconData,
     required this.caption,
+    required this.size,
+    required this.inOverflow,
     required this.viewBuilder,
   });
 
@@ -120,10 +120,8 @@ enum DockDestinationEnum implements NavigableDestinationAbstract {
   // TODO(steven): Control the order of the DOCK buttons.
   static const List<DockDestinationEnum> visible = [
     home,
-    settings,
     tools,
     spinDemo,
-    database,
   ];
 
   /// The destinations folded into the overflow popover, in tile order.
@@ -136,6 +134,8 @@ enum DockDestinationEnum implements NavigableDestinationAbstract {
   static const List<DockDestinationEnum> overflowed = [
     search,
     library,
+    settings,
+    database,
   ];
 
   /// The glyph rendered as this destination's button icon.
@@ -161,4 +161,10 @@ enum DockDestinationEnum implements NavigableDestinationAbstract {
   /// kept alive in the view stack for the screen's lifetime.
   @override
   final Widget Function() viewBuilder;
+
+  @override
+  final bool inOverflow;
+
+  @override
+  final Size size;
 }

@@ -1,7 +1,7 @@
 // packages/custom_widgets/lib/src/textfield/password_field.dart
 // ignore_for_file: always_use_package_imports
 
-import 'package:extensions/enum/src/window_size_category.dart'
+import 'package:custom_widgets/ext_buildcontext/lib/src/window_size_category.dart'
     show WindowSizeCategory;
 import 'package:flutter/material.dart';
 import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;

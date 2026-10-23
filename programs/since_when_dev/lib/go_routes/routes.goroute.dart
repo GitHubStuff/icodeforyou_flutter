@@ -26,7 +26,9 @@ GoRoute _appRoute() => GoRoute(
         create: (_) => NavigationCubit(),
         child: NavigationChooser(
           chooser: (context) {
+            // mode with icons on the bottom
             if (MediaQuery.sizeOf(context).width < 600) {
+              //TODO(steven): fix this
               return const DockScreen<DockDestinationEnum>(
                 values: DockDestinationEnum.values,
                 visible: DockDestinationEnum.visible,
@@ -34,6 +36,7 @@ GoRoute _appRoute() => GoRoute(
                 overflowed: DockDestinationEnum.overflowed,
               );
             }
+            // mode with icons along the edge
             return const RailScreen<RailDestinationEnum>(
               values: RailDestinationEnum.values,
               visible: RailDestinationEnum.visible,

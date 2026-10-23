@@ -10,102 +10,21 @@ import 'package:app_navigation/src/shared/dual_popover_tile.dart'
     show DualPopoverTile;
 import 'package:flutter/material.dart';
 
-/// The default footprint used for every destination button, including
-/// the overflow button.
 ///
-/// 64x64 rather than the [DualNavButton] default of 48x48 because every
-/// destination renders both an icon and a caption. The overflow button
-/// uses the same size so the rail's geometry stays uniform whether or
-/// not it appears. A visible destination escapes this footprint only
-/// through an explicit [RailDestinationButtons.sizeOverrides] entry.
-const Size _kButtonSize = Size(80, 60);
-
-/// {@template rail_destination_buttons}
-/// The rail's destination buttons: one [DualNavButton] per member of
-/// [visible], in order, followed — when [overflowed] is non-empty —
-/// by a [RailOverflowButton] whose popover lists the [overflowed]
-/// members as [RailPopoverTile]s.
-///
-/// The caller owns the partition. Which destinations are rail
-/// buttons, which live in the overflow popover, and therefore whether
-/// an overflow button exists at all are stated explicitly through
-/// [visible] and [overflowed]; this widget measures nothing and
-/// guesses nothing. When [overflowed] is empty, the rail is exactly a
-/// row (or column) of [DualNavButton]s. When it is non-empty, the
-/// overflow button always occupies the last slot, after every visible
-/// button.
-///
-/// The caller also owns distribution. The rail fills its main axis
-/// and spreads the buttons per [mainAxisAlignment] — [Axis.horizontal]
-/// with the default [MainAxisAlignment.spaceEvenly] gives the standard
-/// bottom-navigation layout, with equal breathing room around every
-/// button at any screen width.
-///
-/// The caller owns sizing too. Every button defaults to the uniform
-/// 64x64 footprint; a visible destination that genuinely needs a
-/// different footprint gets one through an explicit [sizeOverrides]
-/// entry, declared as const data exactly like the partition itself.
-///
-/// This is the single mapping site between destination data and
-/// widgets. Each member's [RailDestinationEnum.iconData] and
-/// [RailDestinationEnum.caption] are wrapped in an [Icon] and [Text]
-/// here, whether the member renders as a rail button or a popover
-/// tile — the rail widgets render content as provided, so styling is
-/// applied at this site.
-///
-/// Selection behaves as a radio group owned by the parent: [selected]
-/// names the current destination, and every path — rail button tap or
-/// popover tile pick — reports its member through [onSelect]. The
-/// radio-group invariant holds across the partition: when [selected]
-/// is an overflowed member, the overflow button itself renders
-/// selected, and its popover opens scrolled to the selected tile with
-/// its highlight showing.
-///
-/// [visible] must not be empty, no destination may appear in both
-/// [visible] and [overflowed], and [sizeOverrides] may only name
-/// members of [visible]. The constructor is const, so these are
-/// enforced by debug assertions at first build rather than at
-/// construction.
-/// {@endtemplate}
 class RailDestinationButtons<T extends NavigableDestinationAbstract>
     extends StatelessWidget {
   /// {@macro rail_destination_buttons}
   const RailDestinationButtons({
-    required this.visible,
-    required this.selected,
-    required this.onSelect,
+    required this.visibleList,
+    required this.selected, required this.onSelect, this.hiddenList = [],
     super.key,
-    this.overflowed = const [],
-    this.sizeOverrides = const {},
     this.mainAxisAlignment = MainAxisAlignment.spaceEvenly,
   });
 
   /// The destinations rendered as rail buttons, in this order.
   ///
-  /// The caller decides membership and order; typically the app's
-  /// primary destinations. Must not be empty.
-  final List<T> visible;
 
-  /// The destinations folded into the overflow popover, in this order.
-  ///
-  /// Defaults to empty, in which case no overflow button is rendered.
-  /// When non-empty, the overflow button is always the rail's last
-  /// slot, after every [visible] button. Must not share a member with
-  /// [visible].
-  final List<T> overflowed;
-
-  /// Per-destination size overrides for visible rail buttons.
-  ///
-  /// Defaults to empty: every button, including the overflow button,
-  /// renders at the uniform 64x64 footprint. An entry replaces that
-  /// footprint for its destination's rail button only — popover tiles
-  /// size themselves, and the overflow button always keeps the uniform
-  /// footprint — so every key must be a member of [visible].
-  ///
-  /// Prefer the uniform rail; this is the escape hatch for the rare
-  /// destination whose content genuinely needs different geometry, not
-  /// a styling knob to reach for by default.
-  final Map<T, Size> sizeOverrides;
+  final List<T> buttonList;
 
   /// The currently selected destination.
   ///
@@ -138,7 +57,7 @@ class RailDestinationButtons<T extends NavigableDestinationAbstract>
   /// The rail button for [destination], sized by its [sizeOverrides]
   /// entry when one exists and [_kButtonSize] otherwise.
   Widget _railButton(T destination) => DualNavButton(
-    size: sizeOverrides[destination] ?? _kButtonSize,
+    size: const Size(80, 60),
     isSelected: destination == selected,
     icon: Icon(destination.iconData),
     caption: Text(destination.caption),
@@ -155,20 +74,7 @@ class RailDestinationButtons<T extends NavigableDestinationAbstract>
 
   @override
   Widget build(BuildContext context) {
-    assert(
-      visible.isNotEmpty,
-      'visible must contain at least one destination',
-    );
-    assert(
-      !visible.any(overflowed.contains),
-      'A destination cannot be both visible and overflowed',
-    );
-    assert(
-      sizeOverrides.keys.every(visible.contains),
-      'sizeOverrides may only name members of visible',
-    );
-
-    final selectedOverflowIndex = overflowed.indexOf(selected);
+    final selectedOverflowIndex = buttonList.indexOf(selected);
 
     return Flex(
       direction: Axis.vertical,

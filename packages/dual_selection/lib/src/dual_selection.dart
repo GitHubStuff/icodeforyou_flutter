@@ -10,10 +10,18 @@ import 'dual_selection_enum.dart';
 ///
 /// [first] and [second] split the header row evenly: each is laid out to
 /// exactly `width / 2` by [headerHeight] and is responsible for its own
-/// alignment, padding and colours. Tapping one selects it: the widget fires
-/// [haptic], reports the new value through [onSelectionChanged], and
-/// cross-fades the body from the outgoing child to the incoming one over
-/// [fadeDuration].
+/// alignment, padding and foreground colours. Tapping one selects it: the
+/// widget fires [haptic], reports the new value through
+/// [onSelectionChanged], and cross-fades the body from the outgoing child to
+/// the incoming one over [fadeDuration].
+///
+/// The header background is owned by the widget so it can reflect the
+/// current selection: the selected slot is painted [selectedHeaderColor]
+/// and the other slot [unselectedHeaderColor]. Either may be `null`, in
+/// which case that slot paints no background and the content behind the
+/// widget shows through. Callers that need theme-awareness pass colours
+/// derived from their theme; this package deliberately has no Material
+/// dependency and never picks a colour itself.
 ///
 /// [firstChild] and [secondChild] are each laid out to exactly [width] by
 /// [bodyHeight], so children that need bounded constraints (pickers,
@@ -36,6 +44,8 @@ class DualSelection extends StatefulWidget {
     required this.firstChild,
     required this.secondChild,
     required this.borderColor,
+    this.selectedHeaderColor,
+    this.unselectedHeaderColor,
     this.selection = Defaults.kFirstSelection,
     this.fadeDuration = Defaults.kFadeDuration,
     this.cornerRadius = Defaults.kCornerRadius,
@@ -68,6 +78,14 @@ class DualSelection extends StatefulWidget {
 
   /// Colour of the outer border.
   final Color borderColor;
+
+  /// Background painted behind the currently selected header button.
+  /// `null` paints nothing.
+  final Color? selectedHeaderColor;
+
+  /// Background painted behind the header button that is not selected.
+  /// `null` paints nothing.
+  final Color? unselectedHeaderColor;
 
   /// Initial selection. The widget owns the value after first build.
   final DualSelectionEnum selection;
@@ -120,6 +138,12 @@ class _DualSelectionState extends State<DualSelection> {
     setState(() => _selection = selection);
   }
 
+  /// Background for the header slot representing [selection], or `null`
+  /// when the caller supplied no colour for that state.
+  Color? _headerColorFor(DualSelectionEnum selection) => selection == _selection
+      ? widget.selectedHeaderColor
+      : widget.unselectedHeaderColor;
+
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -171,11 +195,16 @@ class _DualSelectionState extends State<DualSelection> {
     required DualSelectionEnum selection,
     required Widget child,
   }) {
+    final color = _headerColorFor(selection);
+    final content = SizedBox.expand(child: child);
+
     return Expanded(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => _select(selection),
-        child: SizedBox.expand(child: child),
+        child: color == null
+            ? content
+            : ColoredBox(color: color, child: content),
       ),
     );
   }

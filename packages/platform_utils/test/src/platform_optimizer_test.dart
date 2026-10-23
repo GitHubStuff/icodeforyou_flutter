@@ -2,7 +2,7 @@
 
 import 'package:flutter/widgets.dart' show Builder, SizedBox;
 import 'package:flutter_test/flutter_test.dart';
-import '../../../platform_tools/lib/src/os_platform.dart' show OSPlatform;
+import 'package:platform_tools/src/os_platform.dart' show OSPlatform;
 import 'package:platform_utils/src/frame_refresh.dart' show FrameRefreshRate;
 import 'package:platform_utils/src/platform_optimizer.dart'
     show PlatformOptimizer;

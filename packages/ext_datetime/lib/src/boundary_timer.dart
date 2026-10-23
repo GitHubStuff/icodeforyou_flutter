@@ -69,8 +69,10 @@ class BoundaryTimer {
     );
   }
 
+  /// Runs one tick. Only ever invoked by a live [Timer], and [stop] cancels
+  /// that timer, so `_running` is always `true` on entry; the only way it
+  /// becomes `false` during a tick is via [stop] or [_onTick] itself.
   Future<void> _onBoundary() async {
-    if (!_running) return;
     try {
       final shouldContinue = await _onTick();
       if (!shouldContinue) {

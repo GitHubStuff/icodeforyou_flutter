@@ -33,11 +33,10 @@ class DualOverflowButton<T> extends StatelessWidget {
   const DualOverflowButton({
     required this.popoverChildren,
     required this.onSelected,
-    super.key,
+    required this.size, super.key,
     this.onCanceled,
     this.initialScrollIndex = 0,
     this.caption = const Text(_kMoreLabel),
-    this.size = const Size(48, 48),
     this.isSelected = false,
     this.tint,
     this.hapticIntensity = HapticIntensity.light,

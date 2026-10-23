@@ -1,177 +1,217 @@
 // packages/sincewhen_screens/test/src/widgets/event_timestamp_row_test.dart
 
+import 'package:datetime_pickers/datetime_pickers.dart' show FatPicker;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scrolling_datetime_pickers/scrolling_datetime_pickers.dart';
-import 'package:sincewhen_screens/src/util/timestamp_display.dart';
-import 'package:sincewhen_screens/src/widgets/event_timestamp_row.dart';
+import 'package:sincewhen_screens/sincewhen_screens.dart'
+    show EventTimestampPickerSheet, EventTimestampRow, TimestampDisplay;
 
 void main() {
+  final fixedNow = DateTime(2026, 1, 1, 12);
+  final event = DateTime(2026, 6, 15, 14, 30);
+  final eventMicros = event.microsecondsSinceEpoch;
+
+  Future<void> pumpRow(
+    WidgetTester tester, {
+    required int? eventTimestamp,
+    ValueChanged<DateTime>? onEventSelected,
+    VoidCallback? onEventCleared,
+  }) {
+    return tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: EventTimestampRow(
+            eventTimestamp: eventTimestamp,
+            onEventSelected: onEventSelected ?? (_) {},
+            onEventCleared: onEventCleared ?? () {},
+            now: () => fixedNow,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> openSheet(
+    WidgetTester tester, {
+    required String fieldText,
+  }) async {
+    await tester.tap(find.text(fieldText));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> tapSheetButton(WidgetTester tester, String label) async {
+    await tester.tap(find.widgetWithText(TextButton, label));
+    await tester.pumpAndSettle();
+  }
+
   group('EventTimestampRow', () {
     test('static constants have expected values', () {
-      expect(EventTimestampRow.fieldLabel, equals('Event'));
+      expect(EventTimestampRow.fieldLabel, equals('Date & time'));
       expect(EventTimestampRow.clearTooltip, equals('Clear event date/time'));
+      expect(EventTimestampRow.focusedBorderWidth, equals(2));
     });
 
-    testWidgets(
-      'renders placeholder and no clear button when eventTimestamp is null',
-      (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: EventTimestampRow(
-                eventTimestamp: null,
-                onEventSelected: (_) {},
-                onEventCleared: () {},
-              ),
-            ),
-          ),
-        );
+    test('now defaults to DateTime.now', () {
+      const row = EventTimestampRow(
+        eventTimestamp: null,
+        onEventSelected: _noopDateTime,
+        onEventCleared: _noop,
+      );
+      expect(row.now, equals(DateTime.now));
+    });
 
-        expect(find.text(TimestampDisplay.noValue), findsOneWidget);
-        expect(find.byType(IconButton), findsNothing);
-        expect(find.byIcon(Icons.clear), findsNothing);
+    group('rendering', () {
+      testWidgets(
+        'shows placeholder and no clear button when eventTimestamp is null',
+        (tester) async {
+          await pumpRow(tester, eventTimestamp: null);
 
-        final pickerField = tester.widget<DateTimePickerField>(
-          find.byType(DateTimePickerField),
-        );
-        expect(pickerField.initialDateTime, isNull);
+          expect(find.text(TimestampDisplay.noValue), findsOneWidget);
+          expect(find.text(EventTimestampRow.fieldLabel), findsOneWidget);
+          expect(find.byType(IconButton), findsNothing);
+          expect(find.byIcon(Icons.clear), findsNothing);
 
-        final inputDecorator = tester.widget<InputDecorator>(
-          find.byType(InputDecorator),
-        );
-        expect(inputDecorator.isEmpty, isTrue);
-        expect(inputDecorator.decoration.suffixIcon, isNull);
-      },
-    );
-
-    testWidgets(
-      'renders formatted timestamp and clear button when eventTimestamp is non-null',
-      (tester) async {
-        final now = DateTime(2026, 6, 15, 14, 30);
-        final timestampMicros = now.microsecondsSinceEpoch;
-
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: EventTimestampRow(
-                eventTimestamp: timestampMicros,
-                onEventSelected: (_) {},
-                onEventCleared: () {},
-              ),
-            ),
-          ),
-        );
-
-        final expectedFormatted = TimestampDisplay.format(timestampMicros);
-        expect(find.text(expectedFormatted), findsOneWidget);
-
-        final clearButtonFinder = find.byTooltip(
-          EventTimestampRow.clearTooltip,
-        );
-        expect(clearButtonFinder, findsOneWidget);
-        expect(find.byIcon(Icons.clear), findsOneWidget);
-
-        final pickerField = tester.widget<DateTimePickerField>(
-          find.byType(DateTimePickerField),
-        );
-        expect(
-          pickerField.initialDateTime?.microsecondsSinceEpoch,
-          equals(timestampMicros),
-        );
-
-        final inputDecorator = tester.widget<InputDecorator>(
-          find.byType(InputDecorator),
-        );
-        expect(inputDecorator.isEmpty, isFalse);
-        expect(inputDecorator.decoration.suffixIcon, isNotNull);
-      },
-    );
-
-    testWidgets('tapping clear button triggers onEventCleared callback', (
-      tester,
-    ) async {
-      var cleared = false;
-      final now = DateTime(2026, 6, 15, 14, 30);
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: EventTimestampRow(
-              eventTimestamp: now.microsecondsSinceEpoch,
-              onEventSelected: (_) {},
-              onEventCleared: () {
-                cleared = true;
-              },
-            ),
-          ),
-        ),
+          final inputDecorator = tester.widget<InputDecorator>(
+            find.byType(InputDecorator),
+          );
+          expect(inputDecorator.isEmpty, isTrue);
+          expect(inputDecorator.decoration.suffixIcon, isNull);
+          expect(
+            inputDecorator.decoration.labelText,
+            equals(EventTimestampRow.fieldLabel),
+          );
+        },
       );
 
-      await tester.tap(find.byTooltip(EventTimestampRow.clearTooltip));
-      await tester.pump();
+      testWidgets(
+        'shows formatted timestamp and clear button when eventTimestamp is set',
+        (tester) async {
+          await pumpRow(tester, eventTimestamp: eventMicros);
 
-      expect(cleared, isTrue);
+          expect(
+            find.text(TimestampDisplay.format(eventMicros)),
+            findsOneWidget,
+          );
+          expect(
+            find.byTooltip(EventTimestampRow.clearTooltip),
+            findsOneWidget,
+          );
+          expect(find.byIcon(Icons.clear), findsOneWidget);
+
+          final inputDecorator = tester.widget<InputDecorator>(
+            find.byType(InputDecorator),
+          );
+          expect(inputDecorator.isEmpty, isFalse);
+          expect(inputDecorator.decoration.suffixIcon, isNotNull);
+        },
+      );
     });
 
-    testWidgets(
-      'calls onEventSelected when DateTimePickerField emits non-null date',
-      (tester) async {
-        DateTime? selectedDate;
-        final targetDate = DateTime(2026, 10, 20, 8, 45);
-
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: EventTimestampRow(
-                eventTimestamp: null,
-                onEventSelected: (dt) {
-                  selectedDate = dt;
-                },
-                onEventCleared: () {},
-              ),
-            ),
-          ),
+    group('clearing', () {
+      testWidgets('tapping clear button calls onEventCleared', (tester) async {
+        var cleared = false;
+        await pumpRow(
+          tester,
+          eventTimestamp: eventMicros,
+          onEventCleared: () => cleared = true,
         );
 
-        final pickerField = tester.widget<DateTimePickerField>(
-          find.byType(DateTimePickerField),
-        );
-
-        pickerField.onDateTimeSelected(targetDate);
+        await tester.tap(find.byTooltip(EventTimestampRow.clearTooltip));
         await tester.pump();
 
-        expect(selectedDate, equals(targetDate));
-      },
-    );
+        expect(cleared, isTrue);
+        expect(find.byType(EventTimestampPickerSheet), findsNothing);
+      });
+    });
 
-    testWidgets('ignores null dismissal signal from DateTimePickerField', (
-      tester,
-    ) async {
-      var wasCalled = false;
+    group('picking', () {
+      testWidgets(
+        'tapping the field opens the sheet seeded with the current value',
+        (tester) async {
+          await pumpRow(tester, eventTimestamp: eventMicros);
 
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: EventTimestampRow(
-              eventTimestamp: null,
-              onEventSelected: (_) {
-                wasCalled = true;
-              },
-              onEventCleared: () {},
-            ),
-          ),
-        ),
+          await openSheet(
+            tester,
+            fieldText: TimestampDisplay.format(eventMicros),
+          );
+
+          expect(find.byType(EventTimestampPickerSheet), findsOneWidget);
+          final picker = tester.widget<FatPicker>(find.byType(FatPicker));
+          expect(picker.initialDateTime, equals(event));
+        },
       );
 
-      final pickerField = tester.widget<DateTimePickerField>(
-        find.byType(DateTimePickerField),
+      testWidgets(
+        'tapping the field with no value opens the sheet seeded with now()',
+        (tester) async {
+          await pumpRow(tester, eventTimestamp: null);
+
+          await openSheet(tester, fieldText: TimestampDisplay.noValue);
+
+          final picker = tester.widget<FatPicker>(find.byType(FatPicker));
+          expect(picker.initialDateTime, equals(fixedNow));
+        },
       );
 
-      pickerField.onDateTimeSelected(null);
-      await tester.pump();
+      testWidgets('confirming the sheet calls onEventSelected', (tester) async {
+        DateTime? selected;
+        await pumpRow(
+          tester,
+          eventTimestamp: eventMicros,
+          onEventSelected: (dateTime) => selected = dateTime,
+        );
 
-      expect(wasCalled, isFalse);
+        await openSheet(
+          tester,
+          fieldText: TimestampDisplay.format(eventMicros),
+        );
+        await tapSheetButton(tester, EventTimestampPickerSheet.doneLabel);
+
+        expect(selected, equals(event));
+        expect(find.byType(EventTimestampPickerSheet), findsNothing);
+      });
+
+      testWidgets('cancelling the sheet does not call onEventSelected', (
+        tester,
+      ) async {
+        var called = false;
+        await pumpRow(
+          tester,
+          eventTimestamp: eventMicros,
+          onEventSelected: (_) => called = true,
+        );
+
+        await openSheet(
+          tester,
+          fieldText: TimestampDisplay.format(eventMicros),
+        );
+        await tapSheetButton(tester, EventTimestampPickerSheet.cancelLabel);
+
+        expect(called, isFalse);
+        expect(find.byType(EventTimestampPickerSheet), findsNothing);
+      });
+
+      testWidgets('dismissing the sheet via the barrier is swallowed', (
+        tester,
+      ) async {
+        var called = false;
+        await pumpRow(
+          tester,
+          eventTimestamp: null,
+          onEventSelected: (_) => called = true,
+        );
+
+        await openSheet(tester, fieldText: TimestampDisplay.noValue);
+        await tester.tapAt(const Offset(20, 20));
+        await tester.pumpAndSettle();
+
+        expect(called, isFalse);
+        expect(find.byType(EventTimestampPickerSheet), findsNothing);
+      });
     });
   });
 }
+
+void _noop() {}
+
+void _noopDateTime(DateTime _) {}

@@ -2,17 +2,12 @@
 
 import 'dart:async';
 
-import 'package:extensions/datetime/src/datetime_ext.dart';
+import 'package:ext_datetime/ext_datetime.dart' show ExtDateTime;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sincewhen_models/sincewhen_models.dart';
-import 'package:sincewhen_screens/src/cubit/cubit.dart';
-import 'package:sincewhen_screens/src/cubit/state.dart';
-import 'package:sincewhen_screens/src/sincewhen_mini/sincewhen_mini.dart';
-import 'package:sincewhen_screens/src/widgets/since_when_mini_action_bar.dart';
-import 'package:sincewhen_screens/src/widgets/since_when_mini_text_column.dart';
-import 'package:sincewhen_screens/src/widgets/sincewhen_mini_timestamp_column.dart';
+import 'package:sincewhen_models/sincewhen_models.dart' show SinceWhenItem;
+import 'package:sincewhen_screens/sincewhen_screens.dart';
 
 class _TestBlocObserver extends BlocObserver {
   BlocBase<dynamic>? lastCreatedBloc;
@@ -29,7 +24,7 @@ void main() {
   late _TestBlocObserver observer;
 
   setUp(() {
-    DateTimeExt.reset();
+    ExtDateTime.reset();
     fixedNow = DateTime.utc(2026, 1, 1, 12, 0, 0);
     observer = _TestBlocObserver();
     Bloc.observer = observer;

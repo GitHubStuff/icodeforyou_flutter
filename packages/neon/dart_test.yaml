@@ -1,0 +1,4 @@
+# packages/neon/dart_test.yaml
+tags:
+  golden:
+    description: Writes PNG goldens. Platform-specific; run locally on macOS.

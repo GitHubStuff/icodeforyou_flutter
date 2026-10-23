@@ -10,14 +10,14 @@ environment:
 
 dependencies:
   custom_widgets: ^1.0.0
+  datetime_popover_pickers: ^1.0.0
   equatable: ^2.1.0
-  extensions: ^1.0.0
+  ext_datetime: ^1.0.0
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
   gap: ^3.0.1
   intl: ^0.20.3
-  scrolling_datetime_pickers: ^1.0.0
   sincewhen_models: ^1.0.0
 
 

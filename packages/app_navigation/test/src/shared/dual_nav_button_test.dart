@@ -210,6 +210,7 @@ void main() {
               onPressed: () {},
               icon: null,
               caption: null,
+              size: Size.zero,
             ),
             throwsAssertionError,
           );
