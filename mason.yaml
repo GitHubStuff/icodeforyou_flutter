@@ -3,3 +3,5 @@ bricks:
     path: bricks/black_velvet
   archetypes:
     path: bricks/archetypes
+  neon:
+    path: bricks/neon

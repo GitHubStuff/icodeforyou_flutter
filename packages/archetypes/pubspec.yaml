@@ -1,6 +1,6 @@
 # packages/archetypes/pubspec.yaml
 name: archetypes
-description: "Mason template for creating packages"
+description: "Mason template for creating non-widget packages"
 publish_to: none
 resolution: workspace
 version: 1.0.0
