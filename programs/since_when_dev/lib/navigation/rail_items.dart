@@ -1,4 +1,4 @@
-// programs/since_when_dev/lib/navigation/dock_items.dart
+// programs/since_when_dev/lib/navigation/rail_items.dart
 
 // NOTE: This is the horizontal direction menu items
 

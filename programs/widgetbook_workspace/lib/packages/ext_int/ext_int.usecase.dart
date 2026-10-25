@@ -1,4 +1,4 @@
-// widgetbook_workspace/lib/ext_int/ext_int.usecase.dart
+// programs/widgetbook_workspace/lib/packages/ext_int/ext_int.usecase.dart
 
 import 'package:ext_int/ext_int.dart' show ExtInt;
 import 'package:flutter/material.dart';

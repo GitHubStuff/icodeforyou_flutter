@@ -1,4 +1,4 @@
-// packages/tools/lib/src/sized_spinner/spin_widget_demo.dart
+// packages/demo/lib/src/sized_spinner/spin_widget_demo.dart
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart' show Gap;
 import 'package:spinners/spinners.dart'

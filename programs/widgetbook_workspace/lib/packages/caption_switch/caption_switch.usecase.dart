@@ -1,4 +1,4 @@
-// widgetbook_workspace/lib/caption_switch/caption_switch.usecase.dart
+// programs/widgetbook_workspace/lib/packages/caption_switch/caption_switch.usecase.dart
 
 import 'package:caption_switch/caption_switch.dart';
 import 'package:flutter/material.dart';

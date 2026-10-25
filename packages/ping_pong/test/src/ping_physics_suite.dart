@@ -1,4 +1,4 @@
-// packages/ping_pong/test/src/ping_physics_test.dart
+// packages/ping_pong/test/src/ping_physics_suite.dart
 
 import 'dart:ui' show Offset, Size;
 

@@ -1,11 +1,11 @@
 # bricks/template/plumbing_brick.yaml
 #
 # Copied by bricks/build_brick into bricks/<name>/brick.yaml for plumbing.
-# plumbing_template   -> the brick / source script name (snake_case)
-# plumbing/plumbing_template -> the source path, e.g. plumbing/plumbing_template
-name: plumbing_template
+# template_plumbing   -> the brick / source script name (snake_case)
+# plumbing/template_plumbing -> the source path, e.g. plumbing/template_plumbing
+name: template_plumbing
 description: >-
-  icodeforyou plumbing script template generated from plumbing/plumbing_template.
+  icodeforyou plumbing script template generated from plumbing/template_plumbing.
 version: 1.0.0
 
 environment:

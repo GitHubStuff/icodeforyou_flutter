@@ -1,4 +1,4 @@
-// packages/widgetbook_workspace/lib/ext_widget/extended_stateful_widget.usecase.dart
+// programs/widgetbook_workspace/lib/packages/ext_widget/extended_stateful_widget.usecase.dart
 
 import 'package:ext_widget/ext_widget.dart';
 import 'package:flutter/material.dart';

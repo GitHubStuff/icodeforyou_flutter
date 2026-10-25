@@ -1,4 +1,4 @@
-// packages/sliders/test/slider_button_test.dart
+// packages/sliders/test/src/slider_button_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show SemanticsNode;
 import 'package:flutter/services.dart';

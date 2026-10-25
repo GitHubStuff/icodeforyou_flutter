@@ -1,4 +1,4 @@
-// programs/black_velvet/lib/go_routes/routes.goroute.dart
+// programs/black_velvet/lib/go_routes/routes_framework.dart
 part of 'routes_framework.dart';
 
 //+ COLLECTION OF STARTER/DEFAULT ROUTES +//

@@ -1,4 +1,4 @@
-// packages/sized_spinner/lib/src/spin_widget.dart
+// packages/spinners/lib/src/spin_widget/spin_widget.dart
 
 import 'dart:math' as math;
 

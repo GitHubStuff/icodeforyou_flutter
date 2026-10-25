@@ -1,4 +1,4 @@
-// programs/widgetbook_workspace/lib/sliders/slider_button.usecase.dart
+// programs/widgetbook_workspace/lib/packages/sliders/slider_button.usecase.dart
 import 'package:flutter/material.dart';
 import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 import 'package:sliders/sliders.dart' show SliderButton;

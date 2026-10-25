@@ -1,4 +1,4 @@
-// widgetbook_workspace/lib/counter_ring/range_progress_ring.usecase.dart
+// programs/widgetbook_workspace/lib/packages/counter_ring/range_progress_ring.usecase.dart
 import 'package:counter_ring/counter_ring.dart';
 import 'package:flutter/material.dart';
 import 'package:widgetbook/widgetbook.dart';

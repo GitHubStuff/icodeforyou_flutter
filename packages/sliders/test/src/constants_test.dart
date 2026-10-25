@@ -1,4 +1,4 @@
-// packages/sliders/test/constants_test.dart
+// packages/sliders/test/src/constants_test.dart
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sliders/src/constants.dart';
 

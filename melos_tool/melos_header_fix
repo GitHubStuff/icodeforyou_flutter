@@ -39,6 +39,7 @@ readonly -a GENERATED_NAME_FILTERS=(
   -not -name '*.drift.dart'
   -not -name '*.freezed.dart'
   -not -name '*.g.dart'
+  -not -name '*.gen.dart'
   -not -name '*.gr.dart'
   -not -name '*.mocks.dart'
 )

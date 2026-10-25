@@ -1,4 +1,4 @@
-// packages/ext_datetime/test/src/helpers/datetime_difference_test.dart
+// packages/ext_datetime/test/src/datetime_difference_test.dart
 
 import 'package:ext_datetime/ext_datetime.dart';
 import 'package:ext_datetime/src/helpers/datetime_difference.dart';

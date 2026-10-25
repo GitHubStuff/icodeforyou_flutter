@@ -2,7 +2,7 @@
 
 Here's the standard flow.
 
-## 1 — Clone (branch) from main
+## 1 — branch {checkout} from main
 
 You don't actually *clone* in git terminology here — you create a **branch** off main. Cloning is what you do to get the repo onto your machine in the first place.
 

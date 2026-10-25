@@ -1,3 +1,5 @@
+// packages/counter_ring/test/src/cubit/counter_ring_state_test.dart
+
 import 'package:counter_ring/counter_ring.dart'
     show CounterRingState, CounterRingStatus;
 import 'package:flutter_test/flutter_test.dart';

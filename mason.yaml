@@ -5,9 +5,11 @@ bricks:
     path: bricks/archetypes
   neon:
     path: bricks/neon
-  plumbing_template:
-    path: bricks/plumbing_template
   template_dart:
     path: bricks/template_dart
   template_flutter:
     path: bricks/template_flutter
+  template_plumbing:
+    path: bricks/template_plumbing
+  color_grid:
+    path: bricks/color_grid

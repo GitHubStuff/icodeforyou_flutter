@@ -1,4 +1,4 @@
-// packages/custom_widgets/lib/src/sized_spinner/sized_spinner.dart
+// packages/spinners/lib/src/platform_spinner/plateform_spinner.dart
 
 // TODO: DartDoc
 import 'package:ext_string/ext_string.dart' show ExtString;

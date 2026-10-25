@@ -1,4 +1,4 @@
-// // programs/since_when_dev/lib/app_dock_navigation/dock_destination_enum.dart
+// programs/since_when_dev/lib/app_dock_navigation/dock_screen.dart
 
 // import 'package:app_navigation/app_navigation.dart'
 //     show NavigableDestinationAbstract;

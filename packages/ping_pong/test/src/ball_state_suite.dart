@@ -1,4 +1,4 @@
-// packages/ping_pong/test/src/ball_state_test.dart
+// packages/ping_pong/test/src/ball_state_suite.dart
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ping_pong/src/ball_spec.dart';

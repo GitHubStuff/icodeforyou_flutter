@@ -1,4 +1,4 @@
-// packages/platform_logs/lib/src/log_emoji.dart
+// packages/platform_logs/lib/src/log_message.dart
 
 import 'package:platform_logs/src/log_color.dart' show LogColor;
 

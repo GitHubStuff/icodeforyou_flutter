@@ -1,4 +1,4 @@
-// widgetbook_workspace/lib/spinners/spin_widget.usecase.dart
+// programs/widgetbook_workspace/lib/packages/spinners/spin_widget.usecase.dart
 
 import 'package:flutter/material.dart';
 import 'package:spinners/spinners.dart' show SpinController, SpinWidget;

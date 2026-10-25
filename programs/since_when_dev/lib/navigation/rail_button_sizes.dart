@@ -1,4 +1,4 @@
-// programs/since_when_dev/lib/navigation/dock_button_sizes.dart
+// programs/since_when_dev/lib/navigation/rail_button_sizes.dart
 import 'package:flutter/widgets.dart' show Size;
 
 /// Size of Dock (horizontal) buttons needs to be tightly controlled

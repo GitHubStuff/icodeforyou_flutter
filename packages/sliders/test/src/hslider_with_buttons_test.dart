@@ -1,4 +1,4 @@
-// packages/sliders/test/hslider_with_buttons_test.dart
+// packages/sliders/test/src/hslider_with_buttons_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;

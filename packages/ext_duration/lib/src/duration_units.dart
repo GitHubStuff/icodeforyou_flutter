@@ -1,4 +1,4 @@
-// packages/ext_duration/lib/src/duration_unit.dart
+// packages/ext_duration/lib/src/duration_units.dart
 /// A single unit of a [Duration].
 enum DurationUnits {
   /// Whole days.

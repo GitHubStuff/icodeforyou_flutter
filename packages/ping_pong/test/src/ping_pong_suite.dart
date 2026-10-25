@@ -1,4 +1,4 @@
-// packages/ping_pong/test/src/ping_pong_test.dart
+// packages/ping_pong/test/src/ping_pong_suite.dart
 
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';

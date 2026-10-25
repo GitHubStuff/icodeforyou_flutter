@@ -1,4 +1,4 @@
-// packages/ping_pong/test/src/arena_config_test.dart
+// packages/ping_pong/test/src/arena_config_suite.dart
 import 'dart:ui' show Size;
 
 import 'package:flutter_test/flutter_test.dart';

@@ -1,4 +1,4 @@
-// packages/dual_selection/widgetbook/lib/dual_selection.usecase.dart
+// programs/widgetbook_workspace/lib/packages/dual_selection/dual_selection.usecase.dart
 // (placeholder path — use your actual usecase location)
 
 import 'package:dual_selection/dual_selection.dart'

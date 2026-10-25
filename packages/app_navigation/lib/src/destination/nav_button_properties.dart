@@ -1,4 +1,4 @@
-// packages/app_navigation/lib/src/destination/navigation_abstract.dart
+// packages/app_navigation/lib/src/destination/nav_button_properties.dart
 import 'package:app_navigation/app_navigation.dart' show NavSlot;
 import 'package:flutter/material.dart';
 import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;

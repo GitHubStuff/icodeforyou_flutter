@@ -1,4 +1,4 @@
-// packages/template_dart/test/template_dart_base_test.dart
+// packages/template_dart/test/src/template_dart_base_test.dart
 
 import 'package:template_dart/template_dart.dart';
 import 'package:test/test.dart';

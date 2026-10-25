@@ -1,9 +1,9 @@
 #!/bin/zsh
-# brick_creator - Create a brick!🧱 in the /bricks folder from a template member
+# brick_creator - Create a brick!🧱 in the /bricks folder from a template folder
 #
 # Mason brick creator for the icodeforyou_flutter monorepo.
 
-readonly VERSION='3.0.0-beta-5'
+readonly VERSION='3.0.1-beta-1'
 
 readonly TAGLINE='Create a brick!🧱 in the /bricks folder'
 
@@ -21,8 +21,9 @@ included), because a generated brick is usually hand-edited afterwards
 be silently lost. If bricks/<name>-old already exists the script stops
 before touching anything; remove or rename it, then rerun.
 
-A packages or programs source is a Dart package directory; a plumbing
-source is a single zsh script file. brick.yaml is generated from
+Every source member is a directory, <source>/<name>, and the whole of it
+becomes __brick__: a Dart package for packages and programs, a script kit
+(script, README, LICENSE) for plumbing. brick.yaml is generated from
 bricks/template/dart_brick.yaml for packages and programs, and from
 bricks/template/plumbing_brick.yaml for plumbing. Every identity form in
 the source is replaced with its mustache case lambda, the description (and
@@ -39,7 +40,7 @@ Run from the monorepo root. Anything omitted is prompted for.
 Examples:
   % brick_creator package_template --source=packages    # Dart package brick
   % brick_creator program_template --source=programs    # Dart program brick
-  % brick_creator plumbing_template --source=plumbing   # zsh script brick
+  % brick_creator template_plumbing --source=plumbing   # zsh script brick
   % brick_creator                                       # prompts for both
   % brick_creator -h                                    # help (also --help)
   % brick_creator --about                               # this text (also -a)
@@ -50,8 +51,6 @@ EOF
 readonly SCRIPT_NAME="${0:t}"
 readonly DEFAULT_BIN_DIR="$HOME/bin"
 readonly LIB_DIR="${DEFAULT_BIN_DIR}/lib"
-
-
 
 # Shared zsh libraries in LIB_DIR; every one must be present.
 #   colors.zsh  - colors, error, info, success, color_print, version_print
@@ -77,8 +76,9 @@ readonly POSITIONAL_NAME='<template_name>'
 # Monorepo subfolders a brick may be built from.
 readonly -a SOURCES=('packages' 'plumbing' 'programs')
 
-# The one source whose members are single zsh script files, not Dart
-# package directories.
+# The one source whose members are zsh script kits, not Dart packages. The
+# shape is the same (a directory); only the brick.yaml template and the
+# description templating differ.
 readonly PLUMBING_SOURCE='plumbing'
 
 # brick.yaml templates; __name__ and __source__ are filled in.
@@ -111,8 +111,6 @@ readonly POSITIONAL_NAME_TAG='{{positional_name}}'
 #      pipe, not just the final command's
 set -euo pipefail
 
-
-
 # Help text with colors, displays when "-h" or "--help" is the only parameter
 # (optionally with -x), and on any usage error.
 #
@@ -128,10 +126,8 @@ ${BOLD}USAGE${RESET}
     -h/--help and -a/--about must be used alone; only -x may accompany them.
 
 ${BOLD}ARGUMENTS${RESET}
-    ${WHITE}${POSITIONAL_NAME}${RESET}      snake_case name of the template member, which must exist at
-                         <source>/${POSITIONAL_NAME}: a directory for packages and
-                         programs, a single script file for plumbing.
-                         Prompted for when omitted.
+    ${WHITE}${POSITIONAL_NAME}${RESET}      snake_case name of the template member, which must exist as
+                         the directory <source>/${POSITIONAL_NAME}. Prompted for when omitted.
 
 ${BOLD}FLAGS${RESET}
     ${YELLOW}${SOURCE_FLAG}=${RESET}${WHITE}<source>${RESET}    monorepo subfolder holding the template: one of
@@ -151,9 +147,8 @@ ${BOLD}WHAT IT DOES${RESET}
          packages, programs -> ${DART_BRICK_YAML}
          plumbing           -> ${PLUMBING_BRICK_YAML}
     3. Registers the brick in the root mason.yaml if absent.
-    4. Copies the source into __brick__: the whole directory for packages
-       and programs (excluding build junk and generated golden PNGs), the
-       single script file for plumbing.
+    4. Copies the whole source directory into __brick__ (excluding build
+       junk and generated golden PNGs).
     5. Substitutes all identity forms with mustache case lambdas:
          snake_case, camelCase, PascalCase, Title Case
     6. Templates the description:
@@ -168,7 +163,7 @@ ${BOLD}WHAT IT DOES${RESET}
 ${BOLD}EXAMPLES${RESET}
     % ${GREEN}${SCRIPT_NAME}${RESET} package_template ${SOURCE_FLAG}=packages   ${CYAN}# Dart package brick${RESET}
     % ${GREEN}${SCRIPT_NAME}${RESET} program_template ${SOURCE_FLAG}=programs   ${CYAN}# Dart program brick${RESET}
-    % ${GREEN}${SCRIPT_NAME}${RESET} plumbing_template ${SOURCE_FLAG}=plumbing  ${CYAN}# zsh script brick${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} template_plumbing ${SOURCE_FLAG}=plumbing  ${CYAN}# zsh script brick${RESET}
     % ${GREEN}${SCRIPT_NAME}${RESET}                                      ${CYAN}# prompts for both${RESET}
     % ${GREEN}${SCRIPT_NAME}${RESET} -h                                   ${CYAN}# this help${RESET}
     % ${GREEN}${SCRIPT_NAME}${RESET} --about -x                           ${CYAN}# what this script is, traced${RESET}
@@ -219,8 +214,12 @@ usage_exit() {
 }
 
 # --- xtrace record / reset -------------------------------------------------
-# -x turns on tracing if NOT already on; at the end of the script it is reset
-# to whatever the parent shell had.
+# -x records the current trace state, turns tracing on for the run of the
+# script, and at exit resets it to what the parent shell had.
+#
+# zsh restores the XTRACE option when the function that set it returns, so
+# `set -x` must run in the body of the function being traced (main(),
+# handle_about()), never in a helper.
 XTRACE_WAS_ON=false
 
 xtrace_is_on() {
@@ -231,14 +230,6 @@ record_xtrace() {
     if xtrace_is_on; then
         XTRACE_WAS_ON=true
     fi
-}
-
-enable_xtrace() {
-    if xtrace_is_on; then
-        return 0
-    fi
-    info 'tracing is on'
-    set -x
 }
 
 reset_xtrace() {
@@ -325,8 +316,9 @@ enforce_solo_flags() {
 # except possibly -x, which is honoured.
 handle_about() {
     if (( ${@[(Ie)--about]} || ${@[(Ie)-a]} )); then
-        if trace_requested_in "$@"; then
-            enable_xtrace
+        if trace_requested_in "$@" && ! xtrace_is_on; then
+            info 'tracing is on'
+            set -x
         fi
         show_about
         exit 0
@@ -401,6 +393,7 @@ verify_monorepo_root() {
     fi
 }
 
+# Every source member, whatever its kind, is a directory at <source>/<name>.
 verify_inputs_exist() {
     if [[ ! -f "$brick_yaml_template" ]]; then
         error_exit "brick.yaml template not found: ${brick_yaml_template}"
@@ -408,24 +401,8 @@ verify_inputs_exist() {
     if [[ ! -d "$source_dir" ]]; then
         error_exit "Source subfolder not found: /${source_dir}"
     fi
-    if is_plumbing; then
-        verify_plumbing_source_exists
-    else
-        verify_package_source_exists
-    fi
-}
-
-# Plumbing: the source is a single script file.
-verify_plumbing_source_exists() {
-    if [[ ! -f "$source_path" ]]; then
-        error_exit "Template script not found: ${source_path}"
-    fi
-}
-
-# Packages / programs: the source is a package directory.
-verify_package_source_exists() {
     if [[ ! -d "$source_path" ]]; then
-        error_exit "Template package not found: ${source_path}"
+        error_exit "Template directory not found: ${source_path}"
     fi
 }
 
@@ -440,7 +417,7 @@ verify_old_brick_slot_free() {
 
 # --- derivation ------------------------------------------------------------
 
-# Returns 0 when the source is plumbing (zsh scripts, no pubspec.yaml).
+# Returns 0 when the source is plumbing (zsh script kits, no pubspec.yaml).
 is_plumbing() {
     [[ "$source_dir" == "$PLUMBING_SOURCE" ]]
 }
@@ -518,25 +495,11 @@ EOF
 
 # --- 4. copy source --------------------------------------------------------
 
+# The whole member directory, modes preserved so scripts stay executable.
+# Build junk and generated golden PNGs are excluded: the PNGs carry the
+# template's rendering, not the new package's, and are regenerated with
+# `melos goldens`. The excludes are simply absent from a plumbing kit.
 copy_source() {
-    if is_plumbing; then
-        copy_plumbing_script
-    else
-        copy_package_directory
-    fi
-    plain_output 'Template copied' "${source_path} -> ${brick_dir}"
-}
-
-# Plumbing: one script file, mode preserved so the brick output stays
-# executable.
-copy_plumbing_script() {
-    cp -p "$source_path" "${brick_dir}/"
-}
-
-# Packages / programs: the whole package directory. Generated golden PNGs
-# are excluded: they carry the template's rendering, not the new package's,
-# and are regenerated with `melos goldens`.
-copy_package_directory() {
     rsync -a \
         --exclude='.dart_tool/' \
         --exclude='.idea/' \
@@ -556,6 +519,7 @@ copy_package_directory() {
         --exclude='test/golden/goldens/*.png' \
         --exclude='test/golden/failures/' \
         "${source_path}/" "${brick_dir}/"
+    plain_output 'Template copied' "${source_path} -> ${brick_dir}"
 }
 
 # --- 5. substitute identity forms ------------------------------------------
@@ -604,9 +568,10 @@ template_pubspec_description() {
     plain_output 'pubspec.yaml' "description -> ${DESCRIPTION_TAG}"
 }
 
-# Plumbing script: the header comment, TAGLINE, and the positional contract.
-# Runs after identity substitution, so the header already carries SNAKE_TAG
-# and the script file is still named after the source (renamed in step 7).
+# Plumbing kit: the script's header comment, TAGLINE, and positional contract.
+# The script is the kit file named after the member. Runs after identity
+# substitution, so the header already carries SNAKE_TAG and the file is still
+# named after the source (renamed in step 7).
 template_plumbing_script() {
     local script="${brick_dir}/${snake}"
     if [[ ! -f "$script" ]]; then
@@ -674,7 +639,7 @@ show_next_steps() {
     fi
     color_print "${WHITE}" "Create a NEW ${source_dir} member from this brick (from the monorepo root):"
     printf '\n'
-    printf "  ./mason_make --using %s --output ${GREEN}my_%s${RESET} --dir ${YELLOW}%s${RESET}\n" "$snake" "$snake" "$source_dir"
+    printf "  mason_make ${GREEN}my_%s${RESET} -using=%s -dir=${YELLOW}%s${RESET}\n" "$snake" "$snake" "$source_dir"
     printf '\n'
     if is_plumbing; then
         return 0
@@ -722,8 +687,9 @@ main() {
         esac
     done
 
-    if [[ "$trace_requested" == true ]]; then
-        enable_xtrace
+    if [[ "$trace_requested" == true ]] && ! xtrace_is_on; then
+        info 'tracing is on'
+        set -x
     fi
 
     prompt_template_name

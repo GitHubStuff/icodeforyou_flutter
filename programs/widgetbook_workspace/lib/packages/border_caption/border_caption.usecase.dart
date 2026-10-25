@@ -1,4 +1,4 @@
-// widgetbook_workspace/lib/border_caption/border_caption.usecase.dart
+// programs/widgetbook_workspace/lib/packages/border_caption/border_caption.usecase.dart
 
 import 'package:border_caption/border_caption.dart';
 import 'package:flutter/material.dart';

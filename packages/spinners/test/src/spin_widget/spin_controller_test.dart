@@ -1,4 +1,4 @@
-// packages/sized_spinner/test/src/spin_controller_test.dart
+// packages/spinners/test/src/spin_widget/spin_controller_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:spinners/spinners.dart' show SpinController;

@@ -1,4 +1,4 @@
-// packages/app_navigation/test/src/destination/button_manager_test.dart
+// packages/app_navigation/test/src/utils/button_manager_test.dart
 
 import 'package:app_navigation/app_navigation.dart'
     show NavButtonProperties, NavSlot;

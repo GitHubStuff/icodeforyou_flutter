@@ -1,4 +1,4 @@
-// packages/ping_pong/test/src/ball_too_large_error_test.dart
+// packages/ping_pong/test/src/ball_too_large_error_suite.dart
 
 import 'dart:ui' show Size;
 

@@ -1,4 +1,4 @@
-// widgetbook_workspace/lib/counter_ring/counter_ring.usecase.dart
+// programs/widgetbook_workspace/lib/packages/counter_ring/counter_ring.usecase.dart
 import 'dart:async';
 
 import 'package:counter_ring/counter_ring.dart'

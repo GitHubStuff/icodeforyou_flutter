@@ -1,4 +1,4 @@
-// packages/sliders/test/horizontal_slider_test.dart
+// packages/sliders/test/src/horizontal_slider_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sliders/sliders.dart' show HorizontalSlider;

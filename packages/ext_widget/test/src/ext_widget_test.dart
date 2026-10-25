@@ -1,4 +1,4 @@
-// packages/extensions/test/widget/widget_ext_test.dart
+// packages/ext_widget/test/src/ext_widget_test.dart
 
 import 'package:ext_widget/ext_widget.dart' show ExtWidget;
 import 'package:flutter/material.dart';

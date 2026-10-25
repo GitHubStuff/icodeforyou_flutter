@@ -1,4 +1,4 @@
-// packages/textfield_widgets/lib/src/textfield_widgets_text.dart
+// packages/textfield_widgets/lib/src/textfield_widgets.dart
 
 // TODO(steven): textfield_widgets dart doc needed
 

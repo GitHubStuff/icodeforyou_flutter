@@ -1,4 +1,4 @@
-// widgetbook_workspace/lib/ext_duration/ext_duration.usecase.dart
+// programs/widgetbook_workspace/lib/packages/ext_duration/ext_duration.usecase.dart
 
 import 'package:ext_duration/ext_duration.dart';
 import 'package:flutter/material.dart';

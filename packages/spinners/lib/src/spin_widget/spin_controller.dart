@@ -1,4 +1,4 @@
-// packages/sized_spinner/lib/src/spinner_controller.dart
+// packages/spinners/lib/src/spin_widget/spin_controller.dart
 
 import 'package:flutter/foundation.dart';
 import 'constants.dart'

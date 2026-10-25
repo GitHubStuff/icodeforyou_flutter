@@ -1,4 +1,4 @@
-// packages/ping_pong/test/src/ping_pong_controller_test.dart
+// packages/ping_pong/test/src/ping_pong_controller_suite.dart
 import 'dart:math' show Random;
 import 'dart:ui' show Offset, Size;
 
