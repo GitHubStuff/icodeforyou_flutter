@@ -4,6 +4,7 @@ include: package:icodeforyou_lints/analysis_options.yaml
 analyzer:
   errors:
     always_use_package_imports: ignore
+    unused_element: ignore
 
   exclude:
     - '/ios/Runner/StatusBarFlutterViewController.swift'

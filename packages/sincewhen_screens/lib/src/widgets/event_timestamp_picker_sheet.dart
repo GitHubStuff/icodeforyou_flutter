@@ -1,6 +1,6 @@
 // packages/sincewhen_screens/lib/src/widgets/event_timestamp_picker_sheet.dart
 
-import 'package:datetime_pickers/datetime_pickers.dart'
+import 'package:datetime_popover_pickers/datetime_popover_pickers.dart'
     show FatPicker, PickerSize;
 import 'package:flutter/material.dart';
 

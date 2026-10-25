@@ -1,6 +1,6 @@
-# {name.titleCase()}.md — rendering the `{{name.snakeCase()}}` widgets to PNG
+# NEON.md — rendering the `{{name.snakeCase()}}` widgets to PNG
 
-How to produce pixel-accurate PNGs of `{{name.titleCase()}}` from the
+How to produce pixel-accurate PNGs of `{{name.titleCase()}}Text` and `{{name.titleCase()}}Border` from the
 `{{name.snakeCase()}}` package, headlessly, with `flutter test`. No device, emulator or
 simulator. The images are what the real engine draws, so they are fit for the
 package README, Widgetbook screenshots, or a design review.
@@ -10,7 +10,46 @@ Paths are relative to the monorepo root unless stated.
 
 ---
 
-## 1. Dependencies
+## 0. What is different about {{name.snakeCase()}}
+
+Three things a generic golden recipe gets wrong for this package:
+
+1. **The font is bundled, not the SDK's.** `{{name.titleCase()}}Text` renders in `Tilt{{name.titleCase()}}`,
+   shipped at `assets/fonts/Tilt{{name.titleCase()}}-Variable.ttf` and declared under
+   `flutter: fonts:` in the package pubspec. The golden loads *that* file —
+   not Roboto — otherwise the sign renders in the block test font.
+2. **The glow is shadows and blur.** `{{name.titleCase()}}Border` is `BoxShadow`s;
+   `{{name.titleCase()}}Text` is `TextStyle.shadows` plus an `ImageFiltered` blur when
+   `distance > 0`. `flutter_test` disables shadows by default, which would
+   turn the halo into a hard outline. The golden switches shadows on for the
+   capture and back off before the test body ends (see step 4 — the timing
+   matters).
+3. **{{name.titleCase()}} needs a dark background.** On the default white `Scaffold` the
+   glow is invisible. Every golden paints on near-black.
+
+## 1. Dependencies — nothing to add
+
+`packages/{{name.snakeCase()}}/pubspec.yaml` already has everything the golden needs:
+
+```yaml
+dependencies:
+  extensions: ^1.0.0
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0
+
+flutter:
+  fonts:
+    - family: Tilt{{name.titleCase()}}
+      fonts:
+        - asset: assets/fonts/Tilt{{name.titleCase()}}-Variable.ttf
+```
+
+`matchesGoldenFile` ships with `flutter_test`. Do not add a golden toolkit.
 
 ## 2. Folder layout
 
@@ -21,14 +60,45 @@ packages/{{name.snakeCase()}}/
     analysis_options.yaml              ← exists
     src/                               ← exists: unit/widget tests
     golden/                            ← new
-      GOLDEN.md
+      load_tilt_{{name.snakeCase()}}.dart              ← new (step 3)
+      {{name.snakeCase()}}_golden_test.dart            ← new (step 4)
       goldens/                         ← new, empty; the test fills it
 ```
 
 Goldens live in their own folder so `test/src/` stays the pure behaviour
 suite that feeds the LCOV target.
 
-## 3. The golden test
+## 3. Font helper
+
+`flutter test` runs with the package root as its working directory, so the
+asset is reachable by relative path. The family name must be exactly
+`Tilt{{name.titleCase()}}` — the string `{{name.titleCase()}}Text` puts in `TextStyle.fontFamily`.
+
+```dart
+// packages/{{name.snakeCase()}}/test/golden/load_tilt_{{name.snakeCase()}}.dart
+import 'dart:io' show File;
+import 'dart:typed_data' show ByteData;
+
+import 'package:flutter/services.dart' show FontLoader;
+
+/// The font family `{{name.titleCase()}}Text` renders with.
+const String tilt{{name.titleCase()}}Family = 'Tilt{{name.titleCase()}}';
+
+/// Loads the bundled Tilt{{name.titleCase()}} variable font into the test engine.
+///
+/// Without this the sign renders in the block glyphs `flutter_test` uses for
+/// unknown families. The path is relative to the package root, which is the
+/// working directory `flutter test` runs in.
+Future<void> loadTilt{{name.titleCase()}}() async {
+  final bytes = File('assets/fonts/Tilt{{name.titleCase()}}-Variable.ttf').readAsBytes();
+  final loader = FontLoader(tilt{{name.titleCase()}}Family)
+    ..addFont(bytes.then(ByteData.sublistView));
+
+  await loader.load();
+}
+```
+
+## 4. The golden test
 
 One file, one PNG per scenario. A single `renderGolden` helper sets the
 surface size, enables shadows, paints on black, pumps, captures, and
@@ -108,7 +178,7 @@ void main() {
     }
   }
 
-  group('{{name.titleCase()}}', () {
+  group('{{name.titleCase()}}Text', () {
     testWidgets('green, close', (tester) async {
       await renderGolden(
         tester,
@@ -174,8 +244,6 @@ new file name. Adjust `logicalSize` if a scenario clips — `{{name.titleCase()}
 tags:
   golden:
     description: Writes PNG goldens. Platform-specific; run locally on macOS.
-
-exclude: golden
 ```
 
 ## 6. Generate the PNGs
@@ -199,7 +267,11 @@ Output:
 
 ```
 packages/{{name.snakeCase()}}/test/golden/goldens/
-  {{name.snakeCase()}}***.png
+  {{name.snakeCase()}}_text_green.png
+  {{name.snakeCase()}}_text_pink_distance_050.png
+  {{name.snakeCase()}}_text_cyan_distance_100.png
+  {{name.snakeCase()}}_border_orange.png
+  {{name.snakeCase()}}_sign_green.png
 ```
 
 Re-run after any change to the widgets; `--update-goldens` overwrites.

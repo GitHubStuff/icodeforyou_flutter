@@ -1,21 +1,18 @@
-// programs/since_when_dev/lib/go_routes/routes_framework.dart
+// programs/black_velvet/lib/go_routes/routes_framework.dart
 
 import 'dart:async' show unawaited;
 
 import 'package:app_navigation/app_navigation.dart'
-    show DockScreen, NavigationChooser, NavigationCubit, RailScreen;
+    show DockScreen, NavigationChooser, NavigationCubit;
 import 'package:custom_widgets/custom_widgets.dart'
     show CrashScreen, CrashScreenArgs;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider;
 import 'package:go_router/go_router.dart';
-import 'package:since_when_dev/app_dock_navigation/dock_destination_enum.dart'
-    show DockDestinationEnum;
-import 'package:since_when_dev/app_rail_navigation/rail_destination_enum.dart'
-    show RailDestinationEnum;
-import 'package:since_when_dev/splash/animated_splash_screen.dart'
-    show AnimatedSplashScreen;
+import 'package:since_when_dev/navigation/dock_items.dart' show DockItems;
+import 'package:since_when_dev/navigation/rail_button_sizes.dart' show RailButtonSize;
+import 'package:since_when_dev/splash/animated_splash_screen.dart' show AnimatedSplashScreen;
 import 'package:splash_framework/splash_framework.dart' show SplashScreen;
 import 'package:status_bar_chameleon/status_bar_chameleon.dart'
     show StatusBarChameleon;

@@ -10,10 +10,7 @@ export 'src/contextual_reveal/contextual_reveal.dart'
         ContextualRevealDark,
         ContextualRevealLight,
         ContextualRevealTheme;
-export 'src/crossfade_widgets/crossfade_axis.dart' show CrossFadeAxis;
-export 'src/crossfade_widgets/crossfade_widgets.dart' show CrossFadeWidgets;
-export 'src/crossfade_widgets/crossfade_widgets_cubit.dart'
-    show CrossFadeWidgetsCubit;
+
 export 'src/fade_in_out_view/fade_in_out_view.dart' show FadeInOutView;
 export 'src/fader_widget/fader_widget.dart';
 export 'src/grow_and_fade_widget/grow_and_fade_widget_view.dart';

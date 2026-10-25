@@ -1,11 +1,12 @@
 // programs/black_velvet/lib/app_dock_navigation/dock_destination_enum.dart
 
-import 'package:app_navigation/app_navigation.dart'
-    show NavigableDestinationAbstract;
+import 'package:app_navigation/app_navigation.dart' show NavButtonProperties;
+import 'package:app_navigation/src/shared/nav_slot.dart';
 import 'package:black_velvet/app_screens/shared_search_body.dart'
     show SharedSearchBody;
 import 'package:custom_widgets/custom_widgets.dart' show DefaultWelcomeScreen;
 import 'package:flutter/material.dart';
+import 'package:haptic_intensity/haptic_intensity.dart';
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
 /// Placeholder view for the library destination.
@@ -46,7 +47,7 @@ Widget _databaseView() => const Center(child: Text('Database'));
 /// Nothing else in the app needs to be touched.
 /// {@endtemplate}
 // TODO(Steven): Add/remove/reorder members and adjust the statics below.
-enum DockDestinationEnum implements NavigableDestinationAbstract {
+enum DockDestinationEnum implements NavButtonProperties {
   /// The home destination.
   home(
     iconData: Icons.home_outlined,
@@ -138,4 +139,12 @@ enum DockDestinationEnum implements NavigableDestinationAbstract {
   /// kept alive in the view stack for the screen's lifetime.
   @override
   final Widget Function() viewBuilder;
+
+  @override
+  // TODO: implement haptic
+  HapticIntensity get haptic => throw UnimplementedError();
+
+  @override
+  // TODO: implement slot
+  NavSlot get slot => throw UnimplementedError();
 }

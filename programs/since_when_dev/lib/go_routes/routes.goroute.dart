@@ -26,22 +26,17 @@ GoRoute _appRoute() => GoRoute(
         create: (_) => NavigationCubit(),
         child: NavigationChooser(
           chooser: (context) {
-            // mode with icons on the bottom
             if (MediaQuery.sizeOf(context).width < 600) {
-              //TODO(steven): fix this
-              return const DockScreen<DockDestinationEnum>(
-                values: DockDestinationEnum.values,
-                visible: DockDestinationEnum.visible,
-                initial: DockDestinationEnum.home,
-                overflowed: DockDestinationEnum.overflowed,
+              return const DockScreen<DockItems>(
+                buttons: DockItems.order,
+                initial: .home,
+                size: RailButtonSize.defaultSize,
               );
             }
-            // mode with icons along the edge
-            return const RailScreen<RailDestinationEnum>(
-              values: RailDestinationEnum.values,
-              visible: RailDestinationEnum.visible,
-              initial: RailDestinationEnum.home,
-              overflowed: RailDestinationEnum.overflowed,
+            return const DockScreen<DockItems>(
+              buttons: DockItems.order,
+              initial: .home,
+              size: RailButtonSize.defaultSize,
             );
           },
         ),

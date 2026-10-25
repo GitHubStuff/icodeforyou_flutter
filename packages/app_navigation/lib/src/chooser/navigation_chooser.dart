@@ -16,6 +16,8 @@ typedef NavigationChooserCallback = Widget Function(BuildContext context);
 /// Handles restoring theme state and delegates the entire navigation widget
 /// selection to the provided callback.
 /// {@endtemplate}
+///
+// TODO(Steven): Should be called 'ThemeChooser' and relocated
 class NavigationChooser extends StatelessWidget {
   /// {@macro navigation_chooser}
   const NavigationChooser({

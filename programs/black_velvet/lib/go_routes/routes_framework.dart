@@ -1,80 +1,88 @@
-// programs/black_velvet/lib/go_routes/routes_framework.dart
+// programs/black_velvet/lib/go_routes/routes.goroute.dart
+part of 'routes_framework.dart';
 
-import 'dart:async' show unawaited;
+//+ COLLECTION OF STARTER/DEFAULT ROUTES +//
 
-import 'package:app_navigation/app_navigation.dart'
-    show DockScreen, NavigationChooser, NavigationCubit, RailScreen;
-import 'package:black_velvet/app_dock_navigation/dock_destination_enum.dart'
-    show DockDestinationEnum;
-import 'package:black_velvet/app_rail_navigation/rail_destination_enum.dart';
-import 'package:black_velvet/splash/animated_splash_screen.dart'
-    show AnimatedSplashScreen;
-import 'package:custom_widgets/custom_widgets.dart'
-    show CrashScreen, CrashScreenArgs;
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider;
-import 'package:go_router/go_router.dart';
-import 'package:splash_framework/splash_framework.dart' show SplashScreen;
-import 'package:status_bar_chameleon/status_bar_chameleon.dart'
-    show StatusBarChameleon;
+/// The route to the app after the splash completes. The
+/// [NavigationCubit] is provided here — above [NavigationChooser] and
+/// therefore above both navigation screens — so selection and rail
+/// visibility survive the dock↔rail swaps that rotation and window
+/// resizing trigger. The cubit is seeded with the dock's initial
+/// destination name; both enums name their shared members
+/// identically, so either enum's `initial` seeds correctly.
+GoRoute _appRoute() => GoRoute(
+  path: RoutesFramework.app,
+  pageBuilder: (context, state) => CustomTransitionPage<void>(
+    key: state.pageKey,
+    transitionDuration: const Duration(milliseconds: 1300),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+        FadeTransition(
+          opacity: animation.drive(CurveTween(curve: Curves.easeInOut)),
+          child: child,
+        ),
+    child: AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light, // white status icons
+      child: BlocProvider<NavigationCubit>(
+        create: (_) => NavigationCubit(),
+        child: NavigationChooser(
+          chooser: (context) {
+            if (MediaQuery.sizeOf(context).width < 600) {
+              return const DockScreen<DockDestinationEnum>(
+                values: DockDestinationEnum.values,
+                visible: DockDestinationEnum.visible,
+                initial: DockDestinationEnum.home,
+                overflowed: DockDestinationEnum.overflowed,
+              );
+            }
+            return const RailScreen<RailDestinationEnum>(
+              values: RailDestinationEnum.values,
+              visible: RailDestinationEnum.visible,
+              initial: RailDestinationEnum.home,
+              overflowed: RailDestinationEnum.overflowed,
+            );
+          },
+        ),
+      ),
+    ),
+  ),
+);
 
-part 'routes.goroute.dart';
+/// GoRoute entry for the terminal crash screen.
+GoRoute _crashRoute() => GoRoute(
+  path: RoutesFramework.crash,
+  builder: (context, state) {
+    final args = state.extra as CrashScreenArgs?;
 
-/// {@template routes_framework}
-/// Central routing framework for the application.
-///
-/// Owns every route path exposed by the app and assembles the fully
-/// configured [GoRouter] instance consumed at startup. Route path
-/// constants are declared here — and only here — so that navigation
-/// call sites reference a single source of truth instead of scattering
-/// string literals throughout the codebase.
-///
-/// The individual [GoRoute] builders live in the `routes.goroute.dart`
-/// part file, keeping this class focused on the public routing surface
-/// while the part carries the per-route construction details.
-///
-/// Typical usage wires the built router into the application shell:
-///
-/// ```dart
-/// ThemeApp(
-///   routerConfig: RoutesFramework.builtRoutes(),
-/// )
-/// ```
-/// {@endtemplate}
-class RoutesFramework {
-  /// Route path for the application shell.
-  ///
-  /// Navigated to once startup work completes and the splash
-  /// sequence has finished.
-  static const app = '/app';
-
-  /// Route path for the crash screen.
-  ///
-  /// Navigated to when an unrecoverable error is caught, with a
-  /// [CrashScreenArgs] instance supplied via `state.extra` so the
-  /// [CrashScreen] can render the failure details.
-  static const crash = '/crash';
-
-  /// Route path for the splash screen.
-  ///
-  /// The application's initial location; hosts the [SplashScreen]
-  /// while startup tasks run.
-  static const splash = '/splash';
-
-  /// Builds the application's fully configured [GoRouter].
-  ///
-  /// The router starts at [splash] and registers the application,
-  /// crash, and splash routes. Call once during startup and hand the
-  /// result to the router-aware application widget.
-  static GoRouter builtRoutes({required List<Future<void> Function()> tasks}) {
-    return GoRouter(
-      initialLocation: splash,
-      routes: <RouteBase>[
-        _appRoute(),
-        _crashRoute(),
-        _splashRoute(tasks: tasks),
-      ],
+    return CrashScreen(
+      error: args?.error ?? 'Unknown error',
+      stackTrace: args?.stackTrace,
+      resumePath: args?.resumePath,
+      onReport: null,
     );
-  }
-}
+  },
+);
+
+/// Splash screens are [no] fun. They display, then transfer to the /app route
+/// on success, or to the terminal /crash route with full failure context on
+/// error.
+GoRoute _splashRoute({required List<Future<void> Function()> tasks}) => GoRoute(
+  path: RoutesFramework.splash,
+  builder: (context, state) {
+    return SplashScreen(
+      duration: const Duration(milliseconds: 2500),
+      tasks: tasks,
+      onComplete: () {
+        context.go(RoutesFramework.app);
+        unawaited(StatusBarChameleon.setStatusBarHidden(hidden: false));
+      },
+      onError: (error, stackTrace) {
+        context.go(
+          RoutesFramework.crash,
+          extra: CrashScreenArgs(error: error, stackTrace: stackTrace),
+        );
+        unawaited(StatusBarChameleon.setStatusBarHidden(hidden: false));
+      },
+      child: const AnimatedSplashScreen(),
+    );
+  },
+);

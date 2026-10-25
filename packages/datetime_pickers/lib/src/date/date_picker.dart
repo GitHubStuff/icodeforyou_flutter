@@ -1,6 +1,8 @@
 // packages/datetime_pickers/lib/src/date/date_picker.dart
 import 'dart:math' show max, min;
 
+import 'package:datetime_popover_pickers/datetime_popover_pickers.dart'
+    show PickerSize;
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart' show DateFormat;
 

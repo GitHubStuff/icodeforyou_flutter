@@ -1,4 +1,5 @@
 # packages/app_preferences/analysis_options.yaml
+include: package:icodeforyou_lints/analysis_options.yaml
 analyzer:
   errors:
     avoid_positional_boolean_parameters: ignore
@@ -10,4 +11,3 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
-include: package:icodeforyou_lints/analysis_options.yaml

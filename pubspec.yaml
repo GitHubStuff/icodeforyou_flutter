@@ -55,6 +55,8 @@ workspace:
   - packages/splash_framework
   - packages/sqlite_viewer
   - packages/stacking_widgets
+  - packages/template_dart
+  - packages/template_flutter
   - packages/theme_framework
   - packages/three_d_sphere
   - packages/time_spans
@@ -62,10 +64,11 @@ workspace:
   - plugins/status_bar_chameleon
   - programs/black_velvet
   - programs/since_when_dev
+  - programs/template_program
   - programs/widgetbook_workspace
 
 environment:
-  sdk: ^3.12.0
+  sdk: ^3.13.7
 
 dev_dependencies:
   mason_cli: ^0.1.4

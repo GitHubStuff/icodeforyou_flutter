@@ -1,5 +1,5 @@
 // packages/datetime_pickers/lib/src/time/time_picker.dart
-import 'package:datetime_pickers/src/picker_size.dart';
+import 'package:datetime_popover_pickers/datetime_popover_pickers.dart';
 import 'package:flutter/cupertino.dart';
 
 /// Refined 12-hour time picker with hour, minute, optional second, and AM/PM

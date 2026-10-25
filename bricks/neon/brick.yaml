@@ -1,4 +1,4 @@
-# bricks/template/brick.yaml
+# bricks/template/dart_brick.yaml
 #
 # Copied by bricks/brick_creator into bricks/<name>/brick.yaml.
 # neon   -> the brick / source package name (snake_case)

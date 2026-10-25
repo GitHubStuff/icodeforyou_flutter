@@ -1,6 +1,7 @@
 404HotFound - 68
 Abby Lovee7 - 54 {22-oct-2026} --- Ugly tats
 Alexa Bunny - X
+Alina Angel - 106
 Alisa Wonderland - 167
 Alissa Martinez7 - 7
 Angelica Heaven - 73
@@ -37,10 +38,13 @@ Forgotten sweetness - X
 FoxAlinaLive
 FunsizedMegan - X
 Ghomestory - X
+Harley King - X
 Hope Heaven - 29
 horny69rabbits - 200+
 HotPrincessUA - X
 HuneybakedHotwife - 92
+Indica Flower - X
+Jade Harper - X
 Jasmine Summer - 6
 Jenny Kitty - 132
 Jenny Lux - 149
@@ -62,13 +66,14 @@ LivAnders69 - X {hide face}
 Lizzy Wild
 Loly Lips
 Lolyamateur - 200+
-Luna Berg - 153 {+ 13-Oct}
+Luna Berg - 154 {+ 24-Oct}
 Luna Roul - 151
 Madiiitay - 25
 Magdalene Delight - X
 Mandy Foxxx - X {ugly tatts}
 MaryCandy - X
 Melanie Queen - 199 (oct 2026) / Sweety Titties
+Melissa Stratton - X
 Merida Sat- 147
 Mila Solana - 77
 Milfetta
@@ -79,7 +84,7 @@ Molly Pills - 133
 MurkovskiStore - X
 MyAnny - X {hides face/nice tits}
 NaughtyBlossom - X
-Nelary Love - 51
+Nelary Love - 53 (24-oct-2026)
 Only Love - 200+
 Owl Crystal
 PinkRose - 16 {tat between tits 🤮}

@@ -1,0 +1,32 @@
+# bricks/template/plumbing_brick.yaml
+#
+# Copied by bricks/build_brick into bricks/<name>/brick.yaml for plumbing.
+# __name__   -> the brick / source script name (snake_case)
+# __source__ -> the source path, e.g. plumbing/__name__
+name: __name__
+description: >-
+  icodeforyou plumbing script template generated from __source__.
+version: 1.0.0
+
+environment:
+  mason: ">=0.1.0 <0.2.0"
+
+vars:
+  name:
+    type: string
+    description: The script name (any case — snake/camel/pascal/title are derived)
+    prompt: What is the name?
+  description:
+    type: string
+    description: One-line description of the script
+    default: An icodeforyou plumbing script.
+    prompt: One-line description?
+  positional:
+    type: string
+    description: none, optional, required
+    prompt: Positional-arguement type (none, optional, required)
+  positional_name:
+    type: string
+    description: How arguements are named
+    default: <arg>
+    prompt: Positional-arguement

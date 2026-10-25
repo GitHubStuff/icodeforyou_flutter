@@ -1,7 +1,5 @@
 // packages/datetime_pickers/lib/src/fat_picker/fat_picker.dart
-import 'package:datetime_pickers/datetime_pickers.dart' show DatePicker;
-import 'package:datetime_pickers/src/picker_size.dart' show PickerSize;
-import 'package:datetime_pickers/src/time/time_picker.dart' show TimePicker;
+import 'package:datetime_popover_pickers/datetime_popover_pickers.dart';
 import 'package:flutter/cupertino.dart';
 
 /// A single picker with date wheels (day / month / year) and time wheels

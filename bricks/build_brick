@@ -1,363 +1,598 @@
-#!/usr/bin/env zsh
-# bricks/build_brick
-readonly _kVersion='1.0.2'
-#
-# General-purpose Mason brick builder for the icodeforyou_flutter monorepo.
-#
-# Builds (or rebuilds) bricks/<name>/__brick__ from <subfolder>/<name>,
-# substituting every identity form with mustache case lambdas, generating
-# bricks/<name>/brick.yaml if missing, and registering the brick in the
-# root mason.yaml if absent.
-#
-# Run from the monorepo folder root
-#   ./bricks/build_brick <template_app_name> -s <subfolder>
-#
-# Examples:
-#   ./bricks/build_brick black_velvet -s programs
-#   ./bricks/build_brick yellow_velvet -s packages
+#!/bin/zsh
+# build_brick -
+#  General-purpose Mason brick builder for the icodeforyou_flutter monorepo.
 
+readonly VERSION='1.2.0'
 
-# ─── SHARED LIBRARIES ─────────────────────────────────────────────────────────
-
-## Home of the shared zsh libraries.
-readonly _kLibDir="${HOME}/bin/lib"
-
-## Required shared libraries; abort if any are missing.
-readonly -a _kLibs=('colors.zsh' 'common.zsh' 'datetime_library.zsh')
-
-for _lib in ${_kLibs[@]}; do
-  if [[ ! -f "${_kLibDir}/${_lib}" ]]; then
-    printf '❌ Missing required library: %s\n' "${_kLibDir}/${_lib}" >&2
-    printf '   Aborting. Fix _kLibDir in this script if your libraries live elsewhere.\n' >&2
-    exit 1
-  fi
-  source "${_kLibDir}/${_lib}"
-done
-
-# ─── ABOUT ────────────────────────────────────────────────────────────────────
-
-## Prints the script's header commentary — its purpose, usage, and examples.
+# Shows what this script is and does, then exits.
 show_about() {
-  printf "${CYAN}"
-  cat << 'EOF'
-# General-purpose Mason brick builder for the icodeforyou_flutter monorepo.
-#
-# Builds (or rebuilds) bricks/<name>/__brick__ from <subfolder>/<name>,
-# substituting every identity form with mustache case lambdas, generating
-# bricks/<name>/brick.yaml if missing, and registering the brick in the
-# root mason.yaml if absent.
-#
-# Run from the monorepo folder root
-#   ./bricks/build_brick <template_app_name> -s <subfolder>
-#
-# Examples:
-#   ./bricks/build_brick black_velvet -s programs
-#   ./bricks/build_brick yellow_velvet -s packages
+    printf '%s' "${CYAN}"
+    cat <<'EOF'
+General-purpose Mason brick builder for the icodeforyou_flutter monorepo.
+
+Builds (or rebuilds) bricks/<name>/__brick__ from <source>/<name>,
+substituting every identity form with mustache case lambdas, generating
+bricks/<name>/brick.yaml from bricks/template if missing, and registering
+the brick in the root mason.yaml if absent.
+
+<source> is one of: packages, plumbing, programs.
+Run from the monorepo root. Anything omitted is prompted for.
+
+Examples:
+  % ./bricks/build_brick black_velvet -s=programs
+  % ./bricks/build_brick hobo -s=packages
+  % ./bricks/build_brick sink -s=plumbing
+  % ./bricks/build_brick stuffing            # prompts for source
+  % ./bricks/build_brick -s=packages         # prompts for name
+  % ./bricks/build_brick                     # prompts for both
+  % ./bricks/build_brick -h                  # help (also --help)
+  % ./bricks/build_brick --about             # this text
 EOF
-  printf "${RESET}\n"
+    printf '%s\n' "${RESET}"
 }
 
-## --about wins over everything else: if present anywhere on the command
-## line, all other parameters are ignored.
-if (( ${@[(Ie)--about]} )); then
-  show_about
-  exit 0
-fi
+readonly TAGLINE='building Mason bricks'
 
-# ─── HELP ─────────────────────────────────────────────────────────────────────
+readonly SCRIPT_NAME="${0:t}"
+readonly DEFAULT_BIN_DIR="$HOME/bin"
+readonly LIB_DIR="${DEFAULT_BIN_DIR}/lib"
 
-## Prints usage instructions.
-show_help() {
-  printf "${BOLD}${GREEN}build_brick${RESET} — ${YELLOW}Mason brick builder, version %s${RESET}\n\n" "${_kVersion}"
-  printf "${UNDERLINE}${PURPLE}Usage${RESET}\n"
-  printf "  ./bricks/build_brick <template_app_name> -s <subfolder>\n\n"
-  printf "${UNDERLINE}${PURPLE}Options${RESET}\n"
-  printf "  -s <subfolder>   REQUIRED. Monorepo subfolder holding the template\n"
-  printf "                   (e.g. packages, plugins, programs).\n"
-  printf "                   Must exist as a directory at the monorepo root.\n\n"
-  printf "${UNDERLINE}${PURPLE}Other${RESET}\n"
-  printf "  --about          Show what this script is and does, then exit.\n"
-  printf "                   Ignores all other parameters.\n\n"
-  printf "${UNDERLINE}${PURPLE}What it does${RESET}\n"
-  printf "  Rebuilds bricks/<name>/__brick__ from <subfolder>/<name>:\n"
-  printf "    1. Generates bricks/<name>/brick.yaml if missing (never overwrites).\n"
-  printf "    2. Registers the brick in the root mason.yaml if absent.\n"
-  printf "    3. Wipes and recopies __brick__, excluding build junk.\n"
-  printf "    4. Substitutes all identity forms with mustache case lambdas:\n"
-  printf "         snake_case, camelCase, PascalCase, Title Case\n"
-  printf "    5. Templates the pubspec description as {{description}}.\n"
-  printf "    6. Renames every file and directory carrying an identity form\n"
-  printf "       (e.g. lib/<name>.dart, the Kotlin package dir) to its mustache form.\n"
-  printf "    7. Verifies zero literal references remain in contents or file\n"
-  printf "       names; fails loudly if any do.\n\n"
-  printf "${UNDERLINE}${PURPLE}Examples${RESET}\n"
-  printf "  ./bricks/build_brick black_velvet -s programs\n"
-  printf "  ./bricks/build_brick yellow_velvet -s packages\n\n"
-  printf "  Run from the monorepo root. The template must exist at\n"
-  printf "  ${BLUE}/<subfolder>/<name>${RESET} and ${BLUE}<name>${RESET} must be snake_case.\n"
-  echo
-}
+# Required shared libraries, in load order.
+readonly -a LIBS=(
+    "${LIB_DIR}/colors.zsh"
+    "${LIB_DIR}/common.zsh"
+    "${LIB_DIR}/datetime_library.zsh"
+)
 
-if (( $# == 0 )); then
-  show_help
-  exit 1
-fi
+# Functions the libraries must provide. A library that aborts part-way
+# (e.g. an unset-parameter error under -u) leaves these undefined.
+readonly -a LIB_FUNCTIONS=(
+    'color_print'
+    'error'
+    'info'
+    'success'
+    'plain_output'
+    'local_time'
+)
 
-# ─── ARGUMENT PARSING ─────────────────────────────────────────────────────────
+# Monorepo folders a brick may be sourced from. Order drives the prompt menu.
+readonly -a SOURCES=('packages' 'plumbing' 'programs')
 
-## Template app name in snake_case, e.g. black_velvet.
-_snake=''
+# Source folder that holds zsh scripts rather than Dart/Flutter packages.
+readonly PLUMBING='plumbing'
 
-## Monorepo subfolder holding the template, e.g. programs, packages, plugins.
-_subdir=''
+# Valid brick name: lowercase letters, "_" allowed but not first or last.
+readonly NAME_PATTERN='^[a-z]([a-z_]*[a-z])?$'
 
-while (( $# > 0 )); do
-  case "$1" in
-    -h|--help)
-      show_help
-      exit 0
-      ;;
-    -s)
-      if (( $# < 2 )) || [[ -z "$2" ]]; then
-        error '-s requires a subfolder argument (e.g. -s packages)'
-        exit 1
-      fi
-      _subdir="$2"
-      shift 2
-      ;;
-    -*)
-      error "Unknown option: $1"
-      show_help
-      exit 1
-      ;;
-    *)
-      if [[ -n "${_snake}" ]]; then
-        error "Unexpected extra argument: $1"
-        exit 1
-      fi
-      _snake="$1"
-      shift
-      ;;
-  esac
-done
+# brick.yaml templates, relative to the monorepo root. Placeholders:
+#   __name__   -> the brick / source name (snake_case)
+#   __source__ -> the source path, e.g. packages/__name__
+readonly TEMPLATE_DIR='bricks/template'
+readonly BRICK_YAML_TEMPLATE="${TEMPLATE_DIR}/brick.yaml"
+readonly PLUMBING_BRICK_YAML_TEMPLATE="${TEMPLATE_DIR}/plumbing_brick.yaml"
 
-readonly _snake
-readonly _subdir
+# Mustache lambda tags used in file and directory renames. Held as values
+# so the braces never pass through shell escaping (a backslash before a
+# brace inside double quotes is RETAINED by zsh, not consumed).
+readonly SNAKE_TAG='{{name.snakeCase()}}'
+readonly CAMEL_TAG='{{name.camelCase()}}'
+readonly PASCAL_TAG='{{name.pascalCase()}}'
 
-if [[ -z "${_snake}" ]]; then
-  error 'Missing <template_app_name>'
-  show_help
-  exit 1
-fi
-
-if [[ -z "${_subdir}" ]]; then
-  error 'Missing required -s <subfolder> (e.g. -s programs)'
-  show_help
-  exit 1
-fi
-
-if [[ ! "${_snake}" =~ '^[a-z][a-z0-9_]*$' ]]; then
-  error "Name must be snake_case (got: ${_snake})"
-  exit 1
-fi
-
-set -e
+# zsh strict mode:
+#  -e (errexit) - exit immediate when any command returns non-zero
+#  -u (nounset) - treat use of unset variables as an error (typo catcher)
+#  -o (pipefail) - pipeline's exit status is the last non-zero status in the pipe,
+#      not just the final command's
+set -euo pipefail
 setopt null_glob
 
-# ─── DERIVED FORMS ────────────────────────────────────────────────────────────
+# Help text with colors, displays when "-h" or "--help" on the command line
+show_help() {
+    cat <<EOF
+${BOLD}USAGE${RESET}
+    ${GREEN}${SCRIPT_NAME}${RESET} [${WHITE}<name>${RESET}] [${YELLOW}-s=${RESET}${WHITE}<source>${RESET}] [${YELLOW}-x${RESET}]
+    ${GREEN}${SCRIPT_NAME}${RESET} ${YELLOW}-h${RESET}, ${YELLOW}--help${RESET}
+    ${GREEN}${SCRIPT_NAME}${RESET} ${YELLOW}--about${RESET}
 
-## Title Case form, e.g. Black Velvet.
-readonly _title="${(C)${_snake//_/ }}"
+    <name> is the only positional argument. Flags go in any order.
+    Anything omitted is prompted for; run with nothing to be prompted for both.
 
-## PascalCase form, e.g. BlackVelvet.
-readonly _pascal="${_title// /}"
+${BOLD}ARGUMENTS${RESET}
+    ${WHITE}<name>${RESET}               template name: lowercase letters, "_" allowed but not
+                         first or last (e.g. black_velvet, kevin)
+                         must exist as ${CYAN}/<source>/<name>${RESET}
 
-## camelCase form, e.g. blackVelvet.
-readonly _camel="${_pascal[1]:l}${_pascal[2,-1]}"
+${BOLD}FLAGS${RESET}
+    ${YELLOW}-s=${RESET}${WHITE}<source>${RESET}          monorepo folder holding the template, one of:
+                         ${CYAN}packages${RESET}, ${CYAN}plumbing${RESET}, ${CYAN}programs${RESET}
+    ${YELLOW}-x${RESET}                   turn on command tracing after the arguments are read
+    ${YELLOW}-h${RESET}, ${YELLOW}--help${RESET}           show this help, then exit
+    ${YELLOW}--about${RESET}              show what this script is and does, then exit
+                         (ignores all other parameters)
 
-# ─── CONSTANTS ────────────────────────────────────────────────────────────────
+${BOLD}WHAT IT DOES${RESET}
+    rebuilds bricks/<name>/__brick__ from <source>/<name>:
+      1. generates bricks/<name>/brick.yaml from ${CYAN}${TEMPLATE_DIR}${RESET} if missing
+         (never overwrites; plumbing uses plumbing_brick.yaml)
+      2. registers the brick in the root mason.yaml if absent
+      3. wipes and recopies __brick__, excluding build junk
+      4. substitutes all identity forms with mustache case lambdas:
+           snake_case, camelCase, PascalCase, Title Case
+      5. templates the pubspec description as {{description}}
+         (skipped when the template has no pubspec.yaml, e.g. plumbing)
+      6. renames every file and directory carrying an identity form
+         (e.g. lib/<name>.dart, the Kotlin package dir) to its mustache form
+      7. verifies zero literal references remain in contents or file names;
+         fails loudly if any do
 
-## Source template, relative to the monorepo root.
-readonly _kSource="${_subdir}/${_snake}"
+${BOLD}EXAMPLES${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} black_velvet -s=programs
+    % ${GREEN}${SCRIPT_NAME}${RESET} hobo -s=packages
+    % ${GREEN}${SCRIPT_NAME}${RESET} sink -s=plumbing
+    % ${GREEN}${SCRIPT_NAME}${RESET} stuffing            ${CYAN}# prompts for source${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} -s=packages         ${CYAN}# prompts for name${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET}                     ${CYAN}# prompts for both${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} -h                  ${CYAN}# this help${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} --help              ${CYAN}# this help${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} --about             ${CYAN}# what this script is${RESET}
 
-## Brick home directory, relative to the monorepo root.
-readonly _kBrickHome="bricks/${_snake}"
-
-## Brick template payload directory.
-readonly _kBrick="${_kBrickHome}/__brick__"
-
-## Mustache lambda tags used in file and directory renames. Held as values
-## so the braces never pass through shell escaping (a backslash before a
-## brace inside double quotes is RETAINED by zsh, not consumed).
-readonly _kSnakeTag='{{name.snakeCase()}}'
-readonly _kCamelTag='{{name.camelCase()}}'
-readonly _kPascalTag='{{name.pascalCase()}}'
-
-# ─── STARTUP BANNER ───────────────────────────────────────────────────────────
-printf "\n"
-color_print "${CYAN}" "$(local_time), build_brick ${_snake} (source: ${_subdir}), build version ${_kVersion}"
-printf "\n"
-
-# ─── PRECONDITIONS ────────────────────────────────────────────────────────────
-
-if [[ ! -f 'pubspec.yaml' || ! -d 'bricks' ]]; then
-  error "Run from the monorepo root (pubspec.yaml + bricks/ required)."
-  exit 1
-fi
-
-if [[ ! -d "${_subdir}" ]]; then
-  error "Source subfolder not found: /${_subdir}"
-  exit 1
-fi
-
-if [[ ! -d "${_kSource}" ]]; then
-  error "Template app not found: ${_kSource}"
-  exit 1
-fi
-
-# ─── 1. GENERATE brick.yaml IF MISSING ────────────────────────────────────────
-
-mkdir -p "${_kBrickHome}"
-
-if [[ -f "${_kBrickHome}/brick.yaml" ]]; then
-  plain_output 'brick.yaml' 'exists (untouched)'
-else
-  cat > "${_kBrickHome}/brick.yaml" << EOF
-name: ${_snake}
-description: >-
-  icodeforyou Flutter template generated from ${_kSource}.
-version: 1.0.0
-
-environment:
-  mason: ">=0.1.0 <0.2.0"
-
-vars:
-  name:
-    type: string
-    description: The app name (any case — snake/camel/pascal/title are derived)
-    prompt: What is the name?
-  description:
-    type: string
-    description: One-line description for pubspec.yaml
-    default: An icodeforyou Flutter application.
-    prompt: One-line app description?
-  is_widget:
-    type: boolean
-    description: Flutter widget package (adds flutter dependency, golden test scaffolding)
-    default: false
-    prompt: Is this a widget package?
 EOF
-  plain_output 'brick.yaml' 'generated'
-fi
+}
 
-# ─── 2. REGISTER IN ROOT mason.yaml IF ABSENT ─────────────────────────────────
 
-if [[ ! -f 'mason.yaml' ]]; then
-  cat > 'mason.yaml' << EOF
+# --- shared libraries ------------------------------------------------------
+# No library functions exist yet, so failures here use raw printf to stderr.
+
+# verify every library is readable before loading any of them
+local _lib
+for _lib in "${LIBS[@]}"; do
+    if [[ ! -r "$_lib" ]]; then
+        printf '%s: %s not found, cannot continue\n' "$SCRIPT_NAME" "$_lib" >&2
+        exit 1
+    fi
+done
+
+# reads each file and executes its contents in the current shell, rather than
+# in a child process. So every function, variable, alias, and setopt defined
+# in the libraries becomes available in this script's own scope.
+#
+# An error inside a sourced file (e.g. an unset parameter under -u) aborts
+# that file only; zsh does not stop the caller, so the status is checked
+# explicitly.
+for _lib in "${LIBS[@]}"; do
+    if ! source "$_lib"; then
+        printf '%s: %s failed to load, cannot continue\n' "$SCRIPT_NAME" "$_lib" >&2
+        exit 1
+    fi
+done
+unset _lib
+
+# verify the libraries delivered every function this script calls; a library
+# that aborted part-way may have returned 0 yet defined nothing.
+local _fn
+for _fn in "${LIB_FUNCTIONS[@]}"; do
+    if (( ! $+functions[$_fn] )); then
+        printf '%s: function %s() not defined by the libraries, cannot continue\n' "$SCRIPT_NAME" "$_fn" >&2
+        exit 1
+    fi
+done
+unset _fn
+
+# --- output ----------------------------------------------------------------
+
+show_banner() {
+    printf '\n'
+    color_print "${BOLD}${CYAN}" "$(local_time), ${SCRIPT_NAME} version ${VERSION}, ${TAGLINE}"
+    printf '\n'
+}
+
+error_exit() {
+    printf '\n'
+    error "$1" >&2
+    printf '\n'
+    exit 1
+}
+
+# Any bad input: report it, show help, exit 1.
+usage_exit() {
+    printf '\n'
+    error "$1" >&2
+    printf '\n'
+    show_help >&2
+    exit 1
+}
+
+# --- xtrace record / reset -------------------------------------------------
+# Having the parameter -x turns on tracing if NOT already on, and at the end
+# of the script it is reset to what its parent script, if any, had.
+XTRACE_WAS_ON=false
+
+xtrace_is_on() {
+    [[ -o xtrace ]]
+}
+
+record_xtrace() {
+    if xtrace_is_on; then
+        XTRACE_WAS_ON=true
+    fi
+}
+
+enable_xtrace() {
+    if xtrace_is_on; then
+        return 0
+    fi
+    info 'tracing is on'
+    set -x
+}
+
+reset_xtrace() {
+    if [[ "$XTRACE_WAS_ON" == false ]] && xtrace_is_on; then
+        set +x
+        info 'tracing is off'
+    fi
+}
+
+trap reset_xtrace EXIT
+
+# --- state -----------------------------------------------------------------
+# Filled by argument parsing / prompts, then locked by lock_inputs().
+
+# Template name in snake_case, e.g. black_velvet.
+snake=''
+
+# Monorepo source folder holding the template, e.g. packages.
+subdir=''
+
+# true when -x was given; tracing is enabled after parsing completes.
+trace_requested=false
+
+# Derived identity forms, set by derive_forms().
+title=''
+pascal=''
+camel=''
+
+# Derived paths, set by derive_paths().
+source_dir=''
+brick_home=''
+brick_dir=''
+brick_yaml_template=''
+
+# true when the template is a plumbing script rather than a Dart package.
+is_plumbing=false
+
+# --- validation ------------------------------------------------------------
+# Identical checks whether the input came from the command line or a prompt.
+
+# Validates a single brick name against NAME_PATTERN. An empty string fails
+# the pattern, so it is covered without a separate check.
+validate_name() {
+    local name="$1"
+    if [[ ! "$name" =~ $NAME_PATTERN ]]; then
+        usage_exit "name must be lowercase with optional inner underscores (got: '${name}')"
+    fi
+}
+
+validate_inputs() {
+    validate_name "$snake"
+    if (( ! ${SOURCES[(Ie)${subdir}]} )); then
+        usage_exit "source must be one of: ${SOURCES[*]} (got: ${subdir})"
+    fi
+    if [[ ! -f 'pubspec.yaml' || ! -d 'bricks' ]]; then
+        usage_exit 'run from the monorepo root (pubspec.yaml + bricks/ required)'
+    fi
+    if [[ ! -d "$subdir" ]]; then
+        usage_exit "source folder not found: /${subdir}"
+    fi
+    if [[ ! -d "${subdir}/${snake}" ]]; then
+        usage_exit "template not found: /${subdir}/${snake}"
+    fi
+}
+
+lock_inputs() {
+    readonly snake
+    readonly subdir
+}
+
+# --- prompts ---------------------------------------------------------------
+
+# Prompts for the brick name and validates it immediately, so a bad name
+# errors out before the source prompt is ever shown. Sets snake.
+prompt_name() {
+    printf '%sBrick Name:%s ' "${BOLD}" "${RESET}"
+    if ! read -r snake; then
+        printf '\n'
+        usage_exit 'no brick name entered'
+    fi
+    validate_name "$snake"
+}
+
+# Prompts for the source folder via a numbered menu. Sets subdir.
+# [e] exits cleanly; any other non-matching answer is a usage error.
+prompt_source() {
+    local choice
+    local i
+    printf '%sPick Brick Source:%s\n' "${BOLD}" "${RESET}"
+    for (( i = 1; i <= ${#SOURCES[@]}; i++ )); do
+        printf '[%d] for %s\n' "$i" "${SOURCES[i]}"
+    done
+    printf '[e] for exit\n'
+    printf '> '
+    if ! read -r choice; then
+        printf '\n'
+        usage_exit 'no source selected'
+    fi
+    case "$choice" in
+        e|E)
+            exit 0
+            ;;
+        <1-9>)
+            if (( choice > ${#SOURCES[@]} )); then
+                usage_exit "invalid source choice: ${choice}"
+            fi
+            subdir="${SOURCES[choice]}"
+            ;;
+        *)
+            usage_exit "invalid source choice: ${choice}"
+            ;;
+    esac
+}
+
+# Prompts for whatever the command line did not supply.
+collect_missing_inputs() {
+    if [[ -z "$snake" ]]; then
+        prompt_name
+    fi
+    if [[ -z "$subdir" ]]; then
+        prompt_source
+    fi
+}
+
+# --- derived values --------------------------------------------------------
+
+derive_forms() {
+    # Title Case form, e.g. Black Velvet.
+    title="${(C)${snake//_/ }}"
+    # PascalCase form, e.g. BlackVelvet — Dart class names.
+    pascal="${title// /}"
+    # camelCase form, e.g. blackVelvet — Dart identifiers.
+    camel="${pascal[1]:l}${pascal[2,-1]}"
+    readonly title pascal camel
+}
+
+derive_paths() {
+    # Source template, relative to the monorepo root.
+    source_dir="${subdir}/${snake}"
+    # Brick home directory, relative to the monorepo root.
+    brick_home="bricks/${snake}"
+    # Brick template payload directory.
+    brick_dir="${brick_home}/__brick__"
+    # Which brick.yaml template applies.
+    if [[ "$subdir" == "$PLUMBING" ]]; then
+        is_plumbing=true
+        brick_yaml_template="$PLUMBING_BRICK_YAML_TEMPLATE"
+    else
+        brick_yaml_template="$BRICK_YAML_TEMPLATE"
+    fi
+    if [[ ! -r "$brick_yaml_template" ]]; then
+        error_exit "brick.yaml template not found: ${brick_yaml_template}"
+    fi
+    readonly source_dir brick_home brick_dir brick_yaml_template is_plumbing
+}
+
+# --- work ------------------------------------------------------------------
+
+# 1. Generate brick.yaml from the template if missing. Never overwrites.
+generate_brick_yaml() {
+    mkdir -p "$brick_home"
+
+    if [[ -f "${brick_home}/brick.yaml" ]]; then
+        plain_output 'brick.yaml' 'exists (untouched)'
+        return 0
+    fi
+
+    sed \
+        -e "s|__name__|${snake}|g" \
+        -e "s|__source__|${source_dir}|g" \
+        "$brick_yaml_template" > "${brick_home}/brick.yaml"
+
+    plain_output 'brick.yaml' "generated from ${brick_yaml_template:t}"
+}
+
+# 2. Register in root mason.yaml if absent.
+register_in_mason_yaml() {
+    if [[ ! -f 'mason.yaml' ]]; then
+        cat > 'mason.yaml' <<EOF
 bricks:
-  ${_snake}:
-    path: bricks/${_snake}
+  ${snake}:
+    path: bricks/${snake}
 EOF
-  plain_output 'mason.yaml' 'created with entry'
-elif grep -q "^  ${_snake}:$" 'mason.yaml'; then
-  plain_output 'mason.yaml' 'entry exists (untouched)'
-else
-  cat >> 'mason.yaml' << EOF
-  ${_snake}:
-    path: bricks/${_snake}
+        plain_output 'mason.yaml' 'created with entry'
+    elif grep -q "^  ${snake}:$" 'mason.yaml'; then
+        plain_output 'mason.yaml' 'entry exists (untouched)'
+    else
+        cat >> 'mason.yaml' <<EOF
+  ${snake}:
+    path: bricks/${snake}
 EOF
-  plain_output 'mason.yaml' 'entry appended'
-fi
+        plain_output 'mason.yaml' 'entry appended'
+    fi
+}
 
-# ─── 3. WIPE AND COPY ─────────────────────────────────────────────────────────
+# 3. Wipe and copy, excluding build junk.
+copy_template() {
+    rm -rf "$brick_dir"
+    mkdir -p "$brick_dir"
 
-rm -rf "${_kBrick}"
-mkdir -p "${_kBrick}"
+    rsync -a \
+        --exclude='.dart_tool/' \
+        --exclude='.idea/' \
+        --exclude='.gradle/' \
+        --exclude='build/' \
+        --exclude='ephemeral/' \
+        --exclude='Pods/' \
+        --exclude='.symlinks/' \
+        --exclude='xcuserdata/' \
+        --exclude='.DS_Store' \
+        --exclude='*.iml' \
+        --exclude='.flutter-plugins-dependencies' \
+        --exclude='local.properties' \
+        --exclude='ios/Flutter/Generated.xcconfig' \
+        --exclude='ios/Flutter/flutter_export_environment.sh' \
+        "${source_dir}/" "${brick_dir}/"
 
-rsync -a \
-  --exclude='.dart_tool/' \
-  --exclude='.idea/' \
-  --exclude='.gradle/' \
-  --exclude='build/' \
-  --exclude='ephemeral/' \
-  --exclude='Pods/' \
-  --exclude='.symlinks/' \
-  --exclude='xcuserdata/' \
-  --exclude='.DS_Store' \
-  --exclude='*.iml' \
-  --exclude='.flutter-plugins-dependencies' \
-  --exclude='local.properties' \
-  --exclude='ios/Flutter/Generated.xcconfig' \
-  --exclude='ios/Flutter/flutter_export_environment.sh' \
-  "${_kSource}/" "${_kBrick}/"
+    plain_output 'Template copied' "${source_dir} -> ${brick_dir}"
+}
 
-plain_output 'Template copied' "${_kSource} -> ${_kBrick}"
+# 4. Substitute identity forms in file contents.
+# grep exits 1 when nothing matches; under pipefail that would abort the
+# script, so it is explicitly allowed.
+substitute_identities() {
+    local file
+    { grep -rlI "${snake}\|${camel}\|${pascal}\|${title}" "$brick_dir" || true; } | \
+    while read -r file; do
+        sed -i '' \
+            -e "s/${title}/{{name.titleCase()}}/g" \
+            -e "s/${snake}/{{name.snakeCase()}}/g" \
+            -e "s/${camel}/{{name.camelCase()}}/g" \
+            -e "s/${pascal}/{{name.pascalCase()}}/g" \
+            "$file"
+    done
 
-# ─── 4. SUBSTITUTE IDENTITY FORMS ─────────────────────────────────────────────
+    plain_output 'Substitutions' "${snake} ${camel} ${pascal} '${title}'"
+}
 
-grep -rlI "${_snake}\|${_camel}\|${_pascal}\|${_title}" "${_kBrick}" | \
-while read -r _file; do
-  sed -i '' \
-    -e "s/${_title}/{{name.titleCase()}}/g" \
-    -e "s/${_snake}/{{name.snakeCase()}}/g" \
-    -e "s/${_camel}/{{name.camelCase()}}/g" \
-    -e "s/${_pascal}/{{name.pascalCase()}}/g" \
-    "${_file}"
-done
+# 5. Template the pubspec description.
+# Only Dart/Flutter templates carry a pubspec.yaml; plumbing has none.
+template_description() {
+    if [[ -f "${brick_dir}/pubspec.yaml" ]]; then
+        sed -i '' 's/^description: .*/description: "{{description}}"/' "${brick_dir}/pubspec.yaml"
+        plain_output 'pubspec.yaml' 'description templated'
+    else
+        plain_output 'pubspec.yaml' 'none (skipped)'
+    fi
+}
 
-plain_output 'Substitutions' "${_snake} ${_camel} ${_pascal} '${_title}'"
+# 6. Rename template-named files and directories.
+# Depth-first so children are renamed before their parent directories.
+# snake_case is replaced before camelCase so single-word template names
+# (where the two forms are identical) resolve to snakeCase(), matching
+# Dart file-naming convention.
+rename_template_paths() {
+    local path dir base newbase
+    find "$brick_dir" -depth \( -name "*${snake}*" -o -name "*${pascal}*" -o -name "*${camel}*" \) | \
+    while read -r path; do
+        dir="${path:h}"
+        base="${path:t}"
+        newbase="${base//${pascal}/${PASCAL_TAG}}"
+        newbase="${newbase//${snake}/${SNAKE_TAG}}"
+        newbase="${newbase//${camel}/${CAMEL_TAG}}"
+        if [[ "$newbase" != "$base" ]]; then
+            mv "$path" "${dir}/${newbase}"
+            plain_output 'Renamed' "${base} -> ${newbase}"
+        fi
+    done
+}
 
-# ─── 5. TEMPLATE THE DESCRIPTION ──────────────────────────────────────────────
+# 7. Verify zero literal references remain.
+verify_clean() {
+    if grep -rI "${snake}\|${camel}\|${pascal}\|${title}" "$brick_dir"; then
+        error_exit 'literal references remain in file contents (listed above). Brick is dirty.'
+    fi
 
-sed -i '' 's/^description: .*/description: "{{description}}"/' "${_kBrick}/pubspec.yaml"
+    if find "$brick_dir" \( -name "*${snake}*" -o -name "*${pascal}*" -o -name "*${camel}*" -o -name '*\\*' \) | grep .; then
+        error_exit 'literal or malformed references remain in file names (listed above). Brick is dirty.'
+    fi
 
-# ─── 6. RENAME TEMPLATE-NAMED FILES AND DIRECTORIES ───────────────────────────
+    success "Brick built clean: ${brick_dir}"
+}
 
-## Depth-first so children are renamed before their parent directories.
-## snake_case is replaced before camelCase so single-word template names
-## (where the two forms are identical) resolve to snakeCase(), matching
-## Dart file-naming convention.
-find "${_kBrick}" -depth \( -name "*${_snake}*" -o -name "*${_pascal}*" -o -name "*${_camel}*" \) | \
-while read -r _path; do
-  _dir="${_path:h}"
-  _base="${_path:t}"
-  _newbase="${_base//${_pascal}/${_kPascalTag}}"
-  _newbase="${_newbase//${_snake}/${_kSnakeTag}}"
-  _newbase="${_newbase//${_camel}/${_kCamelTag}}"
-  if [[ "${_newbase}" != "${_base}" ]]; then
-    mv "${_path}" "${_dir}/${_newbase}"
-    plain_output 'Renamed' "${_base} -> ${_newbase}"
-  fi
-done
+# After a successful build, show how to use the brick.
+show_usage_examples() {
+    printf '\n'
+    color_print "${WHITE}" "Create a NEW ${subdir} member from this brick (from the monorepo root):"
+    printf '\n'
+    printf "  %% ./mason_make --using %s --output ${GREEN}my_%s${RESET} --dir ${YELLOW}%s${RESET}\n" \
+        "$snake" "$snake" "$subdir"
+    printf '\n'
 
-# ─── 7. VERIFY ────────────────────────────────────────────────────────────────
+    if [[ "$is_plumbing" == false ]]; then
+        printf "  Then add ${YELLOW}%s/my_%s${RESET} to the workspace list in the root ${YELLOW}pubspec.yaml${RESET}\n" \
+            "$subdir" "$snake"
+        printf "  and run: ${YELLOW}flutter pub get${RESET}\n\n"
+    fi
 
-if grep -rI "${_snake}\|${_camel}\|${_pascal}\|${_title}" "${_kBrick}"; then
-  error "Literal references remain in file contents (listed above). Brick is dirty."
-  exit 1
-fi
+    color_print "${WHITE}" "Pull template changes into an EXISTING member (clean git tree first):"
+    printf '\n'
+    printf '  %% ./mason_make --using %s --output my_%s --dir %s\n' "$snake" "$snake" "$subdir"
+    printf '  %% git diff\n\n'
+    printf "  Answer mason's conflict prompts (overwrite where the template should\n"
+    printf "  win). Review the diff; git checkout -- the files where the member's own\n"
+    printf '  edits should win, then commit.\n'
+}
 
-if find "${_kBrick}" \( -name "*${_snake}*" -o -name "*${_pascal}*" -o -name "*${_camel}*" -o -name '*\\*' \) | grep .; then
-  error "Literal or malformed references remain in file names (listed above). Brick is dirty."
-  exit 1
-fi
+# -- main ---- where the work is done
+main() {
+    record_xtrace # record current trace
 
-success "Brick built clean: ${_kBrick}"
+    # --about wins over everything else: if present anywhere on the command
+    # line, all other parameters are ignored.
+    if (( ${@[(Ie)--about]} )); then
+        show_about
+        exit 0
+    fi
 
-# ─── USAGE EXAMPLES ───────────────────────────────────────────────────────────
+    # parse/scan the arguments, if any
+    local arg
+    for arg in "$@"; do
+        case "$arg" in
+            -h|--help)
+                show_help
+                exit 0
+                ;;
+            -x)
+                trace_requested=true
+                ;;
+            -s=*)
+                subdir="${arg#-s=}"
+                [[ -z "$subdir" ]] && usage_exit '-s= requires a source (packages, plumbing, programs)'
+                ;;
+            #  -*) — matches any string beginning with -. Placed after the
+            #      known flags, it catches typos and unsupported options so they don't
+            #      silently fall through and get treated as a name.
+            #   *) — matches everything. It's the default/else branch,
+            #      so it must be last.
+            -*)
+                usage_exit "unknown option ${arg}"
+                ;;
+            *)
+                [[ -n "$snake" ]] && usage_exit "one brick name at a time, got ${snake} and ${arg}"
+                snake="$arg"
+                ;;
+        esac
+    done
 
+    if [[ "$trace_requested" == true ]]; then
+        enable_xtrace
+    fi
+
+    collect_missing_inputs
+    validate_inputs
+    lock_inputs
+    derive_forms
+    derive_paths
+
+    show_banner
+
+    generate_brick_yaml
+    register_in_mason_yaml
+    copy_template
+    substitute_identities
+    template_description
+    rename_template_paths
+    verify_clean
+    show_usage_examples
+}
+
+# Run 'main()' with the parameters, and print a blank line
+main "$@"
 printf '\n'
-color_print "${WHITE}" "Create a NEW ${_subdir} member from this brick (from the monorepo root):"
-printf '\n'
-printf "  ./mason_make --using %s --output ${GREEN}my_app${RESET} --dir ${YELLOW}%s${RESET}\n" "${_snake}" "${_subdir}"
-printf '\n'
-printf "  Then add ${YELLOW}%s/my_app${RESET} to the workspace list in the root ${YELLOW}pubspec.yaml${RESET}\n" "${_subdir}"
-printf "  and run: ${YELLOW}flutter pub get${RESET}\n\n"
-color_print "${WHITE}" "Pull template changes into an EXISTING member (clean git tree first):"
-printf "\n"
-printf "  From the terminal:\n"
-printf "   %% ./mason_make --using %s --output my_app --dir %s\n" "${_snake}" "${_subdir}"
-printf "   %% git diff\n\n"
-printf "  Answer mason's conflict prompts (overwrite where the template should\n"
-printf "  win). Review the diff; git checkout -- the files where the app's own\n"
-printf "  edits should win, then commit.\n\n"

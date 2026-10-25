@@ -6,7 +6,7 @@ resolution: workspace
 homepage:
 
 environment:
-  sdk: ^3.12.0
+  sdk: ^3.13.7
 
 dependencies:
   extensions: ^1.0.0

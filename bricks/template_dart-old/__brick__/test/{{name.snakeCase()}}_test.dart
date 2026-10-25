@@ -1,0 +1,17 @@
+// packages/{{name.snakeCase()}}/test/{{name.snakeCase()}}_test.dart
+import 'package:{{name.snakeCase()}}/{{name.snakeCase()}}.dart';
+import 'package:test/test.dart';
+
+void main() {
+  group('A group of tests', () {
+    final awesome = Awesome();
+
+    setUp(() {
+      // Additional setup goes here.
+    });
+
+    test('First Test', () {
+      expect(awesome.isAwesome, isTrue);
+    });
+  });
+}
