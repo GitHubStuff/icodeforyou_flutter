@@ -1,7 +1,7 @@
 #!/bin/zsh
 # mason_make - Mason brick consumer for the icodeforyou_flutter monorepo
 
-readonly VERSION='0.0.6'
+readonly VERSION='0.9.0'
 
 readonly TAGLINE='creating monorepo members from Mason bricks'
 

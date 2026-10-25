@@ -1,7 +1,7 @@
 #!/bin/zsh
 # git_me - Stage, commit, and push the monorepo root from anywhere
 
-readonly VERSION='0.0.4'
+readonly VERSION='1.0.0-beta'
 
 readonly TAGLINE='Stage, commit, and push the monorepo root from anywhere'
 
