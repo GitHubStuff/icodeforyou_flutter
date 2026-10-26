@@ -1,300 +1,309 @@
-// packages/app_navigation/test/src/utils/button_manager_test.dart
+// packages/app_navigation/test/src/utils/button_list_manager_test.dart
 
 import 'package:app_navigation/app_navigation.dart'
     show NavButtonProperties, NavSlot;
 import 'package:app_navigation/src/utils/button_list_manager.dart'
     show ButtonListManager;
-import 'package:flutter/widgets.dart' show IconData, SizedBox, Widget;
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
-Widget _placeholder() => const SizedBox.shrink();
+Widget _view() => const SizedBox.shrink();
 
-/// Fixture mirroring a real dock: `more` listed first (as `values` would
-/// have it), four pinned, three overflow.
-enum _Items implements NavButtonProperties {
+enum _Item implements NavButtonProperties {
   more(NavSlot.more),
-  a(NavSlot.pinned),
-  b(NavSlot.pinned),
-  c(NavSlot.pinned),
-  d(NavSlot.pinned),
-  e(NavSlot.overflow),
-  f(NavSlot.overflow),
-  g(NavSlot.overflow);
+  otherMore(NavSlot.more),
+  home(NavSlot.pinned),
+  tools(NavSlot.pinned),
+  pingPong(NavSlot.pinned),
+  settings(NavSlot.pinned),
+  spinDemo(NavSlot.overflow),
+  database(NavSlot.overflow);
 
-  const _Items(this.slot);
-
-  @override
-  final NavSlot slot;
-
-  @override
-  Widget Function() get viewBuilder => _placeholder;
-
-  @override
-  HapticIntensity get haptic => HapticIntensity.primary;
-
-  @override
-  String? get caption => null;
-
-  @override
-  IconData? get iconData => null;
-}
-
-/// Fixture with no `more` member.
-enum _NoMore implements NavButtonProperties {
-  a(NavSlot.pinned),
-  b(NavSlot.pinned),
-  c(NavSlot.overflow);
-
-  const _NoMore(this.slot);
+  const _Item(this.slot);
 
   @override
   final NavSlot slot;
 
   @override
-  Widget Function() get viewBuilder => _placeholder;
+  IconData? get iconData => null;
+
+  @override
+  String? get caption => name;
 
   @override
   HapticIntensity get haptic => HapticIntensity.primary;
 
   @override
-  String? get caption => null;
-
-  @override
-  IconData? get iconData => null;
+  Widget Function() get viewBuilder => _view;
 }
 
-/// Fixture with two `more` members.
-enum _TwoMore implements NavButtonProperties {
-  more1(NavSlot.more),
-  more2(NavSlot.more),
-  a(NavSlot.pinned),
-  b(NavSlot.overflow);
+const double _buttonWidth = 80;
 
-  const _TwoMore(this.slot);
+double _slots(int count) => _buttonWidth * count;
 
-  @override
-  final NavSlot slot;
-
-  @override
-  Widget Function() get viewBuilder => _placeholder;
-
-  @override
-  HapticIntensity get haptic => HapticIntensity.primary;
-
-  @override
-  String? get caption => null;
-
-  @override
-  IconData? get iconData => null;
-}
-
-const double _button = 80;
-
-/// Width that holds exactly [count] buttons of [_button].
-double _widthFor(int count) => _button * count;
-
-ButtonListManager<_Items> _manager(double width) => ButtonListManager<_Items>(
-  buttons: _Items.values,
-  width: width,
-  buttonWidth: _button,
-);
+ButtonListManager<_Item> _manager({_Item more = _Item.more}) =>
+    ButtonListManager<_Item>(more: more, buttonWidth: _buttonWidth);
 
 void main() {
-  group('ButtonManager', () {
-    group('everything fits', () {
-      const pinnedOnly = [
-        _Items.more,
-        _Items.a,
-        _Items.b,
-        _Items.c,
-        _Items.d,
-      ];
-
-      test('returns all pinned and no overflow, more unused', () {
-        final manager = ButtonListManager<_Items>(
-          buttons: pinnedOnly,
-          width: _widthFor(4),
-          buttonWidth: _button,
-        );
-
-        expect(manager.fitted(), [_Items.a, _Items.b, _Items.c, _Items.d]);
-        expect(manager.overflow(), isEmpty);
-      });
-
-      test('ignores a missing more when it is not needed', () {
-        final manager = ButtonListManager<_NoMore>(
-          buttons: const [_NoMore.a, _NoMore.b],
-          width: _widthFor(2),
-          buttonWidth: _button,
-        );
-
-        expect(manager.fitted(), [_NoMore.a, _NoMore.b]);
-        expect(manager.overflow(), isEmpty);
-      });
-
-      test('spare room does not promote overflow slots', () {
-        final manager = _manager(_widthFor(10));
-
-        expect(
-          manager.fitted(),
-          [_Items.a, _Items.b, _Items.c, _Items.d, _Items.more],
-        );
-        expect(manager.overflow(), [_Items.e, _Items.f, _Items.g]);
-      });
-
-      test('an empty list yields empty partitions', () {
-        final manager = ButtonListManager<_Items>(
-          buttons: const [],
-          width: _widthFor(1),
-          buttonWidth: _button,
-        );
-
-        expect(manager.fitted(), isEmpty);
-        expect(manager.overflow(), isEmpty);
-      });
+  group('ButtonListManager constructor', () {
+    test('rejects a more that does not have NavSlot.more', () {
+      expect(() => _manager(more: _Item.home), throwsArgumentError);
     });
 
-    group('pinned fit with more', () {
-      test('appends more last and overflow keeps list order', () {
-        final manager = _manager(_widthFor(5));
-
-        expect(
-          manager.fitted(),
-          [_Items.a, _Items.b, _Items.c, _Items.d, _Items.more],
-        );
-        expect(manager.overflow(), [_Items.e, _Items.f, _Items.g]);
-      });
-
-      test('counts whole buttons only', () {
-        final manager = _manager(_widthFor(5) + _button - 1);
-
-        expect(manager.fitted().length, 5);
-      });
-    });
-
-    group('pinned do not fit', () {
-      test('demotes trailing pinned ahead of overflow slots', () {
-        final manager = _manager(_widthFor(4));
-
-        expect(manager.fitted(), [_Items.a, _Items.b, _Items.c, _Items.more]);
-        expect(
-          manager.overflow(),
-          [_Items.d, _Items.e, _Items.f, _Items.g],
-        );
-      });
-
-      test('requires more even when no overflow slots exist', () {
-        final manager = ButtonListManager<_Items>(
-          buttons: const [_Items.more, _Items.a, _Items.b, _Items.c],
-          width: _widthFor(2),
-          buttonWidth: _button,
-        );
-
-        expect(manager.fitted(), [_Items.a, _Items.more]);
-        expect(manager.overflow(), [_Items.b, _Items.c]);
-      });
-
-      test('zero room leaves more as the only fitted button', () {
-        final manager = _manager(_widthFor(1));
-
-        expect(manager.fitted(), [_Items.more]);
-        expect(
-          manager.overflow(),
-          [
-            _Items.a,
-            _Items.b,
-            _Items.c,
-            _Items.d,
-            _Items.e,
-            _Items.f,
-            _Items.g,
-          ],
-        );
-      });
-    });
-
-    group('errors', () {
-      test(
-        'throws StateError when width holds no button and overflow exists',
-        () {
-          expect(() => _manager(_button - 1), throwsStateError);
-        },
+    test('rejects a zero buttonWidth', () {
+      expect(
+        () => ButtonListManager<_Item>(more: _Item.more, buttonWidth: 0),
+        throwsArgumentError,
       );
-
-      test('throws StateError when more is needed but absent', () {
-        expect(
-          () => ButtonListManager<_NoMore>(
-            buttons: _NoMore.values,
-            width: _widthFor(3),
-            buttonWidth: _button,
-          ),
-          throwsStateError,
-        );
-      });
-
-      test('throws StateError when more than one more exists', () {
-        expect(
-          () => ButtonListManager<_TwoMore>(
-            buttons: _TwoMore.values,
-            width: _widthFor(3),
-            buttonWidth: _button,
-          ),
-          throwsStateError,
-        );
-      });
-
-      test('throws UnsupportedError for zero buttonWidth', () {
-        expect(
-          () => ButtonListManager<_Items>(
-            buttons: _Items.values,
-            width: _widthFor(4),
-            buttonWidth: 0,
-          ),
-          throwsUnsupportedError,
-        );
-      });
-
-      test('throws UnsupportedError for negative buttonWidth', () {
-        expect(
-          () => ButtonListManager<_Items>(
-            buttons: _Items.values,
-            width: _widthFor(4),
-            buttonWidth: -1,
-          ),
-          throwsUnsupportedError,
-        );
-      });
     });
 
-    group('immutability', () {
-      test('fitted is unmodifiable', () {
-        final manager = _manager(_widthFor(4));
+    test('rejects a negative buttonWidth', () {
+      expect(
+        () => ButtonListManager<_Item>(more: _Item.more, buttonWidth: -1),
+        throwsArgumentError,
+      );
+    });
 
-        expect(() => manager.fitted().add(_Items.a), throwsUnsupportedError);
-      });
+    test('exposes more and buttonWidth', () {
+      final manager = _manager();
+      expect(manager.more, _Item.more);
+      expect(manager.buttonWidth, _buttonWidth);
+    });
+  });
 
-      test('overflow is unmodifiable', () {
-        final manager = _manager(_widthFor(4));
+  group('ButtonListManager.organize validation', () {
+    test('rejects an empty list', () {
+      expect(() => _manager().organize(const [], _slots(3)), throwsStateError);
+    });
 
-        expect(
-          () => manager.overflow().add(_Items.a),
-          throwsUnsupportedError,
-        );
-      });
+    test('rejects a NavSlot.more destination other than more', () {
+      expect(
+        () => _manager().organize(
+          const [_Item.home, _Item.otherMore],
+          _slots(3),
+        ),
+        throwsStateError,
+      );
+    });
 
-      test('mutating the input list after construction has no effect', () {
-        final buttons = [..._Items.values];
-        final manager = ButtonListManager<_Items>(
-          buttons: buttons,
-          width: _widthFor(4),
-          buttonWidth: _button,
-        );
+    test('rejects an edgeSize narrower than one button', () {
+      expect(
+        () => _manager().organize(const [_Item.home], _buttonWidth - 1),
+        throwsStateError,
+      );
+    });
 
-        buttons.clear();
+    test('rejects a zero edgeSize', () {
+      expect(
+        () => _manager().organize(const [_Item.home], 0),
+        throwsStateError,
+      );
+    });
+  });
 
-        expect(manager.fitted(), [_Items.a, _Items.b, _Items.c, _Items.more]);
-      });
+  group('ButtonListManager.organize without overflow', () {
+    test('returns pinned destinations unchanged when they all fit', () {
+      final result = _manager().organize(
+        const [_Item.home, _Item.tools, _Item.pingPong],
+        _slots(3),
+      );
+      expect(result, const [_Item.home, _Item.tools, _Item.pingPong]);
+    });
+
+    test('returns pinned destinations when room is left over', () {
+      final result = _manager().organize(
+        const [_Item.home, _Item.tools],
+        _slots(5),
+      );
+      expect(result, const [_Item.home, _Item.tools]);
+    });
+
+    test('omits an explicit more listed last with nothing to demote', () {
+      final result = _manager().organize(
+        const [_Item.home, _Item.tools, _Item.more],
+        _slots(3),
+      );
+      expect(result, const [_Item.home, _Item.tools]);
+    });
+
+    test('fits exactly capacity pinned destinations without more', () {
+      final result = _manager().organize(
+        const [_Item.home, _Item.tools, _Item.pingPong],
+        _slots(3) + _buttonWidth - 1,
+      );
+      expect(result, const [_Item.home, _Item.tools, _Item.pingPong]);
+    });
+
+    test('returns a single destination on a single-slot surface', () {
+      final result = _manager().organize(const [_Item.home], _slots(1));
+      expect(result, const [_Item.home]);
+    });
+
+    test('returns an unmodifiable list', () {
+      final result = _manager().organize(const [_Item.home], _slots(1));
+      expect(() => result.add(_Item.tools), throwsUnsupportedError);
+    });
+  });
+
+  group('ButtonListManager.organize with implicit more', () {
+    test('pulls more into the last slot when pinned overflow', () {
+      final result = _manager().organize(
+        const [_Item.home, _Item.tools, _Item.pingPong, _Item.settings],
+        _slots(3),
+      );
+      expect(result, const [
+        _Item.home,
+        _Item.tools,
+        _Item.more,
+        _Item.pingPong,
+        _Item.settings,
+      ]);
+    });
+
+    test('demotes the last pinned when an overflow destination exists', () {
+      final result = _manager().organize(
+        const [_Item.home, _Item.tools, _Item.pingPong, _Item.spinDemo],
+        _slots(3),
+      );
+      expect(result, const [
+        _Item.home,
+        _Item.tools,
+        _Item.more,
+        _Item.pingPong,
+        _Item.spinDemo,
+      ]);
+    });
+
+    test('keeps demoted pinned and overflow in list order', () {
+      final result = _manager().organize(
+        const [
+          _Item.home,
+          _Item.tools,
+          _Item.pingPong,
+          _Item.spinDemo,
+          _Item.database,
+          _Item.settings,
+        ],
+        _slots(3),
+      );
+      expect(result, const [
+        _Item.home,
+        _Item.tools,
+        _Item.more,
+        _Item.pingPong,
+        _Item.spinDemo,
+        _Item.database,
+        _Item.settings,
+      ]);
+    });
+
+    test('always demotes an overflow destination even when room exists', () {
+      final result = _manager().organize(
+        const [_Item.home, _Item.spinDemo],
+        _slots(5),
+      );
+      expect(result, const [_Item.home, _Item.more, _Item.spinDemo]);
+    });
+
+    test('demotes an overflow destination listed first', () {
+      final result = _manager().organize(
+        const [_Item.spinDemo, _Item.home, _Item.tools],
+        _slots(5),
+      );
+      expect(result, const [
+        _Item.home,
+        _Item.tools,
+        _Item.more,
+        _Item.spinDemo,
+      ]);
+    });
+
+    test('puts more alone in slot zero on a single-slot surface', () {
+      final result = _manager().organize(
+        const [_Item.home, _Item.tools],
+        _slots(1),
+      );
+      expect(result, const [_Item.more, _Item.home, _Item.tools]);
+    });
+
+    test('puts more alone when the only destination is overflow', () {
+      final result = _manager().organize(const [_Item.spinDemo], _slots(1));
+      expect(result, const [_Item.more, _Item.spinDemo]);
+    });
+  });
+
+  group('ButtonListManager.organize with explicit more', () {
+    test('cuts the list at more and demotes everything after it', () {
+      final result = _manager().organize(
+        const [_Item.home, _Item.more, _Item.tools, _Item.pingPong],
+        _slots(5),
+      );
+      expect(result, const [
+        _Item.home,
+        _Item.more,
+        _Item.tools,
+        _Item.pingPong,
+      ]);
+    });
+
+    test('pulls more forward when pinned before it overflow', () {
+      final result = _manager().organize(
+        const [
+          _Item.home,
+          _Item.tools,
+          _Item.pingPong,
+          _Item.settings,
+          _Item.more,
+          _Item.spinDemo,
+        ],
+        _slots(3),
+      );
+      expect(result, const [
+        _Item.home,
+        _Item.tools,
+        _Item.more,
+        _Item.pingPong,
+        _Item.settings,
+        _Item.spinDemo,
+      ]);
+    });
+
+    test('demotes an overflow destination listed before more', () {
+      final result = _manager().organize(
+        const [_Item.home, _Item.spinDemo, _Item.tools, _Item.more],
+        _slots(5),
+      );
+      expect(result, const [
+        _Item.home,
+        _Item.tools,
+        _Item.more,
+        _Item.spinDemo,
+      ]);
+    });
+
+    test('shows more when it is last and an overflow destination exists', () {
+      final result = _manager().organize(
+        const [_Item.home, _Item.spinDemo, _Item.more],
+        _slots(5),
+      );
+      expect(result, const [_Item.home, _Item.more, _Item.spinDemo]);
+    });
+
+    test('puts more alone in slot zero on a single-slot surface', () {
+      final result = _manager().organize(
+        const [_Item.home, _Item.more, _Item.tools],
+        _slots(1),
+      );
+      expect(result, const [_Item.more, _Item.home, _Item.tools]);
+    });
+
+    test('omits more when it is first and alone', () {
+      final result = _manager().organize(
+        const [_Item.home, _Item.more],
+        _slots(1),
+      );
+      expect(result, const [_Item.home]);
     });
   });
 }

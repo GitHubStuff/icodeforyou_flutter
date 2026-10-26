@@ -8,6 +8,11 @@ import 'package:flutter/material.dart';
 /// the item's [NavButtonProperties.iconData] above its
 /// [NavButtonProperties.caption], inside an [InkWell] sized to [size].
 ///
+/// When [selected], the whole [size] box is filled with the theme's
+/// primary colour, the icon and caption take the matching "on" colour,
+/// and the caption is bold. Otherwise the box is transparent and the
+/// content uses the surface-variant colour.
+///
 /// Pure presentation. The button does not know which destination is
 /// selected (the parent passes [selected]) and never calls
 /// [NavButtonProperties.viewBuilder]; updating the screen body belongs
@@ -50,8 +55,13 @@ class NavButton<T extends NavButtonProperties> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final tint = selected ? scheme.primary : scheme.onSurfaceVariant;
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final foreground = selected ? scheme.onPrimary : scheme.onSurfaceVariant;
+    final background = selected ? scheme.primary : Colors.transparent;
+    final shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(size.shortestSide / 4),
+    );
     final iconData = item.iconData;
     final caption = item.caption;
 
@@ -62,25 +72,31 @@ class NavButton<T extends NavButtonProperties> extends StatelessWidget {
       label: caption,
       child: SizedBox.fromSize(
         size: size,
-        child: InkWell(
-          onTap: _enabled ? _handleTap : null,
-          borderRadius: BorderRadius.circular(size.shortestSide / 4),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (iconData != null) Icon(iconData, color: tint),
-              if (caption != null)
-                Text(
-                  caption,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.labelSmall?.copyWith(color: tint),
-                ),
-            ],
+        child: Material(
+          color: background,
+          shape: shape,
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: _enabled ? _handleTap : null,
+            customBorder: shape,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (iconData != null) Icon(iconData, color: foreground),
+                if (caption != null)
+                  Text(
+                    caption,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: foreground,
+                      fontWeight: selected ? FontWeight.w600 : null,
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),

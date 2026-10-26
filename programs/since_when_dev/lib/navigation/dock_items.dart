@@ -171,6 +171,10 @@ enum DockItems implements NavButtonProperties {
   static const List<DockItems> order = [
     home,
     tools,
+    more,
+    search,
     pingPong,
+    glossary,
+    settings,
   ];
 }

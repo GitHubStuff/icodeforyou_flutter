@@ -3,123 +3,128 @@
 import 'package:app_navigation/app_navigation.dart'
     show NavButtonProperties, NavSlot;
 
-/// {@template button_manager}
-/// Partitions a list of navigation destinations into those that fit on
-/// a surface of a given width and those that overflow behind the
-/// `more` affordance.
+/// {@template button_list_manager}
+/// Reorders a list of navigation destinations so that the ones that fit
+/// on a surface come first, in list order, followed — when anything did
+/// not fit — by the `more` affordance and then every demoted
+/// destination, also in list order.
 ///
-/// Rules, applied in order:
+/// [organize] returns one list. Reading it left to right:
 ///
-/// 1. If every [NavSlot.pinned] destination fits and no
-///    [NavSlot.overflow] destination exists, the dock is exactly the
-///    pinned destinations and `more` is unused.
-/// 2. Otherwise `more` is required. It occupies the last dock position
-///    and one button-width. Pinned destinations fill the remaining
-///    positions in list order; any that do not fit are demoted to the
-///    front of the overflow list, ahead of the [NavSlot.overflow]
-///    destinations.
+/// ```text
+/// [pin][pin][more] | [pin][overflow][overflow][pin]
+///  └── dock ──────┘   └──── behind `more` ────────┘
+/// ```
 ///
-/// Capacity is the number of whole buttons of [buttonWidth] that fit in
-/// [width]. Spacing and centering are presentation concerns and belong
-/// to the widget that lays the buttons out.
+/// Everything up to and including `more` is drawn on the surface, with
+/// `more` as its last button; everything after `more` is reachable only
+/// through it. When `more` is absent, the whole list is drawn.
 ///
-/// The partition is computed once at construction; [fitted] and
-/// [overflow] return unmodifiable views.
+/// Rules, applied to `buttons` in list order against `capacity` whole
+/// slots of [buttonWidth] inside `edgeSize`:
+///
+/// 1. [NavSlot.overflow] destinations are always demoted, wherever they
+///    sit in the list.
+/// 2. [NavSlot.more] may be listed explicitly or omitted. Listed, it
+///    marks the point after which every destination is demoted. Omitted,
+///    it is treated as if listed last.
+/// 3. [NavSlot.pinned] destinations fill the surface until it is full.
+///    When one would not fit, `more` is pulled forward into the last
+///    slot and that destination and every pinned destination after it
+///    are demoted.
+/// 4. If nothing was demoted, `more` is not in the result at all.
+///
+/// Demoted destinations keep their relative list order; pinned and
+/// overflow are not regrouped.
 /// {@endtemplate}
 class ButtonListManager<T extends NavButtonProperties> {
-  /// {@macro button_manager}
+  /// {@macro button_list_manager}
   ///
-  /// Throws [UnsupportedError] when [_buttonWidth] is not positive.
+  /// [more] is the destination drawn as the `more` affordance. It must
+  /// have [NavSlot.more]. [buttonWidth] is the width of one button and
+  /// must be positive.
   ///
-  /// Throws [StateError] when `more` is needed but [buttons] contains
-  /// none, when [buttons] contains more than one `more`, or when
-  /// [_width] cannot hold even one button while overflow exists.
-  ButtonListManager({
-    required List<T> buttons,
-    required this._width,
-    required this._buttonWidth,
-  }) : _buttons = List<T>.unmodifiable(buttons) {
-    _requirePositiveButtonWidth();
-    final partition = _partition();
-    _fitted = List<T>.unmodifiable(partition.fitted);
-    _overflow = List<T>.unmodifiable(partition.overflow);
-  }
-
-  final List<T> _buttons;
-  final double _width;
-  final double _buttonWidth;
-
-  late final List<T> _fitted;
-  late final List<T> _overflow;
-
-  /// Destinations drawn on the surface, in display order. When overflow
-  /// exists the last element is the `more` affordance.
-  List<T> fitted() => _fitted;
-
-  /// Destinations hidden behind `more`, in display order: demoted pinned
-  /// destinations first, then the [NavSlot.overflow] destinations.
-  List<T> overflow() => _overflow;
-
-  /// Number of whole buttons that fit in [_width].
-  int get _capacity => (_width / _buttonWidth).floor();
-
-  void _requirePositiveButtonWidth() {
-    if (_buttonWidth > 0) return;
-    throw UnsupportedError(
-      'ButtonManager: buttonWidth must be greater than zero, '
-      'got $_buttonWidth. Pass the width of a single button, '
-      'e.g. DockItems.size.width.',
-    );
-  }
-
-  _Partition<T> _partition() {
-    final pinned = _bySlot(NavSlot.pinned);
-    final overflowed = _bySlot(NavSlot.overflow);
-    final capacity = _capacity;
-
-    final everythingFits = pinned.length <= capacity && overflowed.isEmpty;
-    if (everythingFits) {
-      return _Partition<T>(fitted: pinned, overflow: const []);
-    }
-
-    final more = _requireSingleMore();
-    final room = capacity - 1;
-    if (room < 0) {
-      throw StateError(
-        'ButtonManager: width $_width cannot hold a single button of '
-        'width $_buttonWidth, but overflow exists.',
+  /// Throws [ArgumentError] when [more] does not have [NavSlot.more] or
+  /// when [buttonWidth] is not positive.
+  ButtonListManager({required this.more, required this.buttonWidth}) {
+    if (more.slot != NavSlot.more) {
+      throw ArgumentError.value(
+        more,
+        'more',
+        'must have NavSlot.more, has ${more.slot}',
       );
     }
+    if (buttonWidth <= 0) {
+      throw ArgumentError.value(
+        buttonWidth,
+        'buttonWidth',
+        'must be greater than zero',
+      );
+    }
+  }
 
-    return _Partition<T>(
-      fitted: [...pinned.take(room), more],
-      overflow: [...pinned.skip(room), ...overflowed],
+  /// The destination drawn as the `more` affordance.
+  final T more;
+
+  /// Width of a single button; every button on the surface shares it.
+  final double buttonWidth;
+
+  /// Returns [buttons] reordered for a surface [edgeSize] wide. See the
+  /// class documentation for the layout of the result.
+  ///
+  /// Throws [StateError] when [buttons] is empty, when [edgeSize] cannot
+  /// hold a single button, or when [buttons] contains a [NavSlot.more]
+  /// destination other than [more].
+  List<T> organize(List<T> buttons, double edgeSize) {
+    _requireButtons(buttons);
+    _requireSingleMore(buttons);
+
+    final capacity = (edgeSize / buttonWidth).floor();
+    _requireCapacity(capacity, edgeSize);
+
+    final pinned = _pinnedBeforeMore(buttons);
+    final overflowNeeded =
+        buttons.length - (buttons.contains(more) ? 1 : 0) > pinned.length ||
+        pinned.length > capacity;
+
+    if (!overflowNeeded) return List<T>.unmodifiable(pinned);
+
+    final surface = pinned.take(capacity - 1).toList(growable: false);
+    final demoted = buttons.where(
+      (button) => button != more && !surface.contains(button),
+    );
+
+    return List<T>.unmodifiable([...surface, more, ...demoted]);
+  }
+
+  /// Pinned destinations that precede `more` in the list, in list order.
+  /// With an implicit `more` that is every pinned destination.
+  List<T> _pinnedBeforeMore(List<T> buttons) => buttons
+      .takeWhile((button) => button != more)
+      .where((button) => button.slot == NavSlot.pinned)
+      .toList(growable: false);
+
+  void _requireButtons(List<T> buttons) {
+    if (buttons.isNotEmpty) return;
+    throw StateError('ButtonListManager: buttons must not be empty.');
+  }
+
+  void _requireSingleMore(List<T> buttons) {
+    final foreign = buttons.where(
+      (button) => button.slot == NavSlot.more && button != more,
+    );
+    if (foreign.isEmpty) return;
+    throw StateError(
+      'ButtonListManager: buttons contains a NavSlot.more destination '
+      'other than more: ${foreign.join(', ')}.',
     );
   }
 
-  List<T> _bySlot(NavSlot slot) =>
-      _buttons.where((button) => button.slot == slot).toList(growable: false);
-
-  T _requireSingleMore() {
-    final mores = _bySlot(NavSlot.more);
-    return switch (mores.length) {
-      1 => mores.single,
-      0 => throw StateError(
-        'ButtonManager: overflow is required but no button has '
-        'NavSlot.more.',
-      ),
-      _ => throw StateError(
-        'ButtonManager: expected exactly one NavSlot.more button, '
-        'found ${mores.length}.',
-      ),
-    };
+  void _requireCapacity(int capacity, double edgeSize) {
+    if (capacity >= 1) return;
+    throw StateError(
+      'ButtonListManager: edgeSize $edgeSize cannot hold a single button '
+      'of width $buttonWidth.',
+    );
   }
-}
-
-/// Result of a single partition pass.
-class _Partition<T> {
-  const _Partition({required this.fitted, required this.overflow});
-
-  final List<T> fitted;
-  final List<T> overflow;
 }

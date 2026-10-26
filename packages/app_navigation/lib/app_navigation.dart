@@ -7,3 +7,4 @@ export 'src/cubit/navigation_state.dart' show NavigationState;
 export 'src/destination/nav_button_properties.dart' show NavButtonProperties;
 export 'src/shared/nav_slot.dart' show NavSlot;
 export 'src/widgets/dock_screen.dart' show DockScreen;
+export 'src/widgets/more_nav_button.dart' show MoreNavButton;
