@@ -1,4 +1,4 @@
-// packages/{{name.snakeCase()}}/test/{{name.snakeCase()}}_test.dart
+// {{folder_source}}/{{name.snakeCase()}}/test/{{name.snakeCase()}}_test.dart
 import 'package:{{name.snakeCase()}}/{{name.snakeCase()}}.dart';
 import 'package:test/test.dart';
 

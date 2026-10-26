@@ -1,4 +1,4 @@
-// packages/{{name.snakeCase()}}/lib/{{name.snakeCase()}}.dart
+// {{folder_source}}/{{name.snakeCase()}}/lib/{{name.snakeCase()}}.dart
 /// Local root export
 library;
 

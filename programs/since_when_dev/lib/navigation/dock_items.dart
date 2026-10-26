@@ -54,7 +54,7 @@ enum DockItems implements NavButtonProperties {
     iconData: Icons.more_horiz,
     caption: 'More',
     haptic: HapticIntensity.primary,
-    viewBuilder: DefaultWelcomeScreen.new, //TODO(steve): Find a method
+    viewBuilder: DefaultWelcomeScreen.new, //TODO(steven): Find a method
   ),
 
   /// The home destination.

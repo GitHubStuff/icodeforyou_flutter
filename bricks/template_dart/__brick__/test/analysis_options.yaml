@@ -1,4 +1,4 @@
-# packages/stacking_widgets/test/analysis_options.yaml
+# {{folder_source}}/{{name}}/test/analysis_options.yaml
 include: ../analysis_options.yaml
 
 analyzer:

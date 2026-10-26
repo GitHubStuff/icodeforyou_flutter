@@ -1,5 +1,4 @@
 // packages/sqlite_viewer/lib/src/widgets/sql_command.dart
-// ignore_for_file: public_member_api_docs
 
 import 'package:custom_widgets/custom_widgets.dart'
     show ButtonPair, ExpandingTextField, UniformCluster;
@@ -32,6 +31,7 @@ class SqlCommand extends StatelessWidget {
     );
   }
 
+  // ignore: unused_element
   Widget _editor(BuildContext context) {
     return UniformCluster(
       axis: .vertical,
