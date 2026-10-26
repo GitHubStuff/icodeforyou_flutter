@@ -2,10 +2,9 @@
 name: icodeforyou_flutter
 publish_to: none
 description: "Collection of flutter packages"
-version: 9.6.7
+version: 9.7.0
 
 workspace:
-  - packages/bare_dart
   - packages/analog_clock_widget
   - packages/animated_widgets
   - packages/app_navigation
@@ -57,13 +56,11 @@ workspace:
   - packages/sqlite_viewer
   - packages/stacking_widgets
   - packages/template_dart
-  - packages/template_flutter
   - packages/theme_framework
   - packages/three_d_sphere
   - packages/time_spans
   - packages/widget_animation_framework
   - plugins/status_bar_chameleon
-  - programs/black_velvet
   - programs/since_when_dev
   - programs/template_program
   - programs/widgetbook_workspace

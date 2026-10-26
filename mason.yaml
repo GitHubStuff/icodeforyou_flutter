@@ -1,15 +1,5 @@
 bricks:
-  black_velvet:
-    path: bricks/black_velvet
-  archetypes:
-    path: bricks/archetypes
-  neon:
-    path: bricks/neon
   template_dart:
     path: bricks/template_dart
-  template_flutter:
-    path: bricks/template_flutter
   template_plumbing:
     path: bricks/template_plumbing
-  color_grid:
-    path: bricks/color_grid
