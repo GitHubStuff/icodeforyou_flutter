@@ -1,7 +1,7 @@
-// packages/{{name.snakeCase()}}/lib/src/{{name.snakeCase()}}_base.dart
+// packages/bare_dart/lib/src/bare_dart.dart
 
 /// Checks if you are awesome. Spoiler: you are.
-class Awesome {
+class BareDart {
   ///
   bool get isAwesome => true;
 }

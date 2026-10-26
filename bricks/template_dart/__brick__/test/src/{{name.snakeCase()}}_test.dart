@@ -4,15 +4,15 @@ import 'package:{{name.snakeCase()}}/{{name.snakeCase()}}.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Awesome', () {
-    late Awesome awesome;
+  group('{{name.pascalCase()}}', () {
+    late {{name.pascalCase()}} awesome;
 
     setUp(() {
-      awesome = Awesome();
+      awesome = {{name.pascalCase()}}();
     });
 
     test('can be instantiated', () {
-      expect(awesome, isA<Awesome>());
+      expect(awesome, isA<{{name.pascalCase()}}>());
     });
 
     test('isAwesome returns true', () {

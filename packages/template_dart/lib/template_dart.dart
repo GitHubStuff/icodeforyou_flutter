@@ -2,4 +2,4 @@
 /// Local root export
 library;
 
-export 'src/template_dart_base.dart';
+export 'src/template_dart.dart';

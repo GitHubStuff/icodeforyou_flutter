@@ -5,6 +5,7 @@ description: "Collection of flutter packages"
 version: 9.6.7
 
 workspace:
+  - packages/bare_dart
   - packages/analog_clock_widget
   - packages/animated_widgets
   - packages/app_navigation

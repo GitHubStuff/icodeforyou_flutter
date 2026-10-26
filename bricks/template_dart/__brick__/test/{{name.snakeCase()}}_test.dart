@@ -3,14 +3,10 @@ import 'package:{{name.snakeCase()}}/{{name.snakeCase()}}.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('A group of tests', () {
-    final awesome = Awesome();
+  group('{{#pascalCase}}{{{name}}}{{/pascalCase}}', () {
+    final awesome = {{#pascalCase}}{{{name}}}{{/pascalCase}}();
 
-    setUp(() {
-      // Additional setup goes here.
-    });
-
-    test('First Test', () {
+    test('isAwesome returns true', () {
       expect(awesome.isAwesome, isTrue);
     });
   });

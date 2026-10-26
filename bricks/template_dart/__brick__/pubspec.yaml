@@ -6,7 +6,22 @@ version: 1.0.0
 
 environment:
   sdk: ^3.13.7
-
+{{#is_widget}}
+dependencies:
+  flutter:
+    sdk: flutter
+  gap: ^3.0.1
+{{/is_widget}}
 dev_dependencies:
+{{#is_widget}}
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true
+{{/is_widget}}
+{{^is_widget}}
   icodeforyou_lints: ^1.0.0
   test: ^1.31.1
+{{/is_widget}}
