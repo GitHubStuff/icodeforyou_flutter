@@ -69,9 +69,17 @@ void main() {
       });
 
       test('builds an AppPreferences seeded with initialValues', () async {
-        const descriptor = AppPreferencesDescriptor.mock(
-          initialValues: {'theme': 'dark', 'launchCount': 3},
-        );
+        // Built at runtime on purpose: a `const` descriptor is canonicalised
+        // at compile time and its constructor never executes, so LCOV would
+        // report the `.mock` constructor as uncovered.
+        final seed = <String, Object?>{'theme': 'dark', 'launchCount': 3};
+        final descriptor = AppPreferencesDescriptor.mock(initialValues: seed);
+
+        expect(descriptor.backend, AppPreferencesBackend.mock);
+        expect(descriptor.mockInitialValues, same(seed));
+        expect(descriptor.hiveBoxName, isNull);
+        expect(descriptor.hiveInitMode, isNull);
+        expect(descriptor.hiveCustomPath, isNull);
 
         final prefs = await descriptor.builder();
 

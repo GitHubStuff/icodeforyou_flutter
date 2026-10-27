@@ -15,8 +15,8 @@ import 'splash_state.dart';
 /// timers itself.
 ///
 /// Once the cubit reaches a terminal state ([LandingShowing], [TimedOut], or
-/// [BackgroundTaskFailed]) it will not emit again; further internal callbacks
-/// are no-ops.
+/// [BackgroundTaskFailed]) it will not emit again: the active timer is
+/// cancelled and late task settlement is ignored.
 final class SplashCubit extends Cubit<SplashState> {
   /// Creates a cubit in the [SplashShowing] state.
   ///
@@ -73,10 +73,9 @@ final class SplashCubit extends Cubit<SplashState> {
     _onTasksCompleted();
   }
 
+  /// Fired only by the splash timer, which [_terminate] and [close] cancel,
+  /// so it never runs after termination.
   void _onSplashFinished() {
-    if (_terminated) {
-      return;
-    }
     _splashElapsed = true;
     if (_tasksCompleted) {
       _terminate(const LandingShowing());
@@ -106,14 +105,10 @@ final class SplashCubit extends Cubit<SplashState> {
     _terminate(BackgroundTaskFailed(error, stackTrace));
   }
 
-  void _onTimeout() {
-    if (_terminated) {
-      return;
-    }
-    if (state is IndeterminateShowing) {
-      _terminate(const TimedOut());
-    }
-  }
+  /// Fired only by the timeout timer, which is armed when
+  /// [IndeterminateShowing] is emitted and cancelled by every exit from that
+  /// state, so the cubit is always still indeterminate when this runs.
+  void _onTimeout() => _terminate(const TimedOut());
 
   void _emitAndSetTimer(
     SplashState next,

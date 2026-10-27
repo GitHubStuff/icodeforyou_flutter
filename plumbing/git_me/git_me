@@ -1,0 +1,495 @@
+#!/bin/zsh
+# git_me - Stage, commit, and push the monorepo root from anywhere
+
+readonly VERSION='1.0.0-beta'
+
+readonly TAGLINE='Stage, commit, and push the monorepo root from anywhere'
+
+# The repository worked on when --dir is not given. It is validated exactly
+# like a --dir value: the default is never special.
+readonly DEFAULT_GIT_ROOT="$HOME/AppDevelopment/icodeforyou_flutter"
+
+# Shows what this script is and does, then exits. Displays when "-a" or
+# "--about" is the only parameter (optionally with -x).
+
+show_about() {
+    printf '%s' "${CYAN}"
+    cat <<'EOF'
+git_me stages, commits, and pushes the git repository at the root of the
+icodeforyou_flutter monorepo, no matter which package or sub-folder the
+terminal is sitting in.
+
+Every git command is run against the repository root with "git -C", so the
+script never changes directory and the shell's working folder is untouched.
+With no flags it only stages ("git add -A") and shows what is staged. Given
+--message it also commits, and then pushes the current branch unless
+--no_push is present. Any git command that fails stops the script with an
+error.
+
+Run from anywhere. Requires git on PATH and a valid git repository at the
+default root or at --dir=<path>.
+
+Examples:
+  % git_me                                  # stage everything, show it, stop
+  % git_me --message="Fighting AI"          # stage, commit, push
+  % git_me --message="AI Slop" --no_push    # stage, commit, no push
+  % git_me --dir=/path/to/repo              # stage a different repository
+  % git_me -h                               # help (also --help)
+  % git_me --about                          # this text (also -a)
+EOF
+    printf '%s\n' "${RESET}"
+}
+
+readonly SCRIPT_NAME="${0:t}"
+readonly DEFAULT_BIN_DIR="$HOME/bin"
+readonly COLORS_LIB="${DEFAULT_BIN_DIR}/lib/colors.zsh"
+
+
+# Flags that must be the only parameter on the command line (apart from -x).
+readonly -a SOLO_FLAGS=('-a' '--about' '-h' '--help')
+
+# The one flag allowed alongside anything, including a solo flag.
+readonly TRACE_FLAG='-x'
+
+# Value-taking and switch flags handled by main()'s case.
+readonly DIR_FLAG='--dir'
+readonly MESSAGE_FLAG='--message'
+readonly NO_PUSH_FLAG='--no_push'
+
+# Positional-argument contract. Exactly one of:
+#   none     - the script takes no positional argument; giving one is an error
+#   optional - the script may take one positional argument
+#   required - the script must be given one positional argument
+readonly POSITIONAL='none'
+
+# Display name of the positional argument in help and error text
+# (ignored when POSITIONAL=none).
+readonly POSITIONAL_NAME='<none>'
+
+# zsh strick mode:
+#  -e (errexit) - exit immediate when any command returns non-zero
+#  -u (nounset) - treat use of unset variables as an error (type catcher)
+#  -o (pipefail) - pipeline’s exit status is the last non-zero status in the pipe,
+#      not just the final command’s
+set -euo pipefail
+
+
+
+# Help text with colors, displays when "-h" or "--help" is the only parameter
+# (optionally with -x), and on any usage error.
+# The heredoc is unquoted so ${SCRIPT_NAME}, colors, and any readonly
+# constants are interpolated.
+#
+# Every flag listed here must have a matching branch in main()'s case.
+show_help() {
+    cat <<EOF
+${BOLD}USAGE${RESET}
+    ${GREEN}${SCRIPT_NAME}${RESET} [${YELLOW}${DIR_FLAG}=${RESET}${WHITE}<path>${RESET}] [${YELLOW}${MESSAGE_FLAG}=${RESET}${WHITE}"<text>"${RESET} [${YELLOW}${NO_PUSH_FLAG}${RESET}]] [${YELLOW}-x${RESET}]
+    ${GREEN}${SCRIPT_NAME}${RESET} ${YELLOW}-h${RESET}, ${YELLOW}--help${RESET} [${YELLOW}-x${RESET}]
+    ${GREEN}${SCRIPT_NAME}${RESET} ${YELLOW}-a${RESET}, ${YELLOW}--about${RESET} [${YELLOW}-x${RESET}]
+
+    There is no positional argument. Flags go in any order; each may appear once.
+    -h/--help and -a/--about must be used alone; only -x may accompany them.
+
+${BOLD}FLAGS${RESET}
+    ${YELLOW}${DIR_FLAG}=${RESET}${WHITE}<path>${RESET}         repository to work on; must be the top level of a git work tree
+                         default: ${WHITE}${DEFAULT_GIT_ROOT}${RESET}
+    ${YELLOW}${MESSAGE_FLAG}=${RESET}${WHITE}"<text>"${RESET}   commit after staging, using <text> as the commit message
+                         (must contain at least one non-space character)
+    ${YELLOW}${NO_PUSH_FLAG}${RESET}            commit but do not push; only valid together with ${MESSAGE_FLAG}
+    ${YELLOW}-x${RESET}                   turn on command tracing after the arguments are read
+                         (may be combined with anything)
+    ${YELLOW}-h${RESET}, ${YELLOW}--help${RESET}           show this help, then exit (no other parameters)
+    ${YELLOW}-a${RESET}, ${YELLOW}--about${RESET}          show what this script is and does, then exit
+                         (no other parameters)
+
+${BOLD}WHAT IT DOES${RESET}
+    1. Verifies the repository root (default or ${DIR_FLAG}) is a git top level.
+    2. Reports the current branch.
+    3. Runs "git add -A" there and shows the staged files.
+    4. With ${MESSAGE_FLAG}: runs "git commit -m <text>"; a clean tree is an error.
+    5. With ${MESSAGE_FLAG} and without ${NO_PUSH_FLAG}: runs "git push".
+    Every git command runs with "git -C <root>"; the working folder never changes.
+    Any git command that fails stops the script with an error.
+
+${BOLD}EXAMPLES${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET}                                   ${CYAN}# stage everything, show it, stop${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} ${MESSAGE_FLAG}="Fighting AI"           ${CYAN}# stage, commit, push${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} ${MESSAGE_FLAG}="AI Slop" ${NO_PUSH_FLAG}     ${CYAN}# stage, commit, no push${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} ${DIR_FLAG}=/path/to/repo               ${CYAN}# stage a different repository${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} -h                                ${CYAN}# this help${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} --about -x                        ${CYAN}# what this script is, traced${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} ${NO_PUSH_FLAG}                         ${CYAN}# INVALID: needs ${MESSAGE_FLAG}${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} -a -h                             ${CYAN}# INVALID: solo flags cannot mix${RESET}
+
+EOF
+}
+
+# verify color library
+if [[ ! -r "$COLORS_LIB" ]]; then
+    printf '%s: %s not found, cannot continue\n' "$SCRIPT_NAME" "$COLORS_LIB" >&2
+    exit 1
+fi
+# reads the file and executes its contents in the current shell, rather than
+# in a child process. So every function, variable, alias, and setopt defined
+# in colors.zsh becomes available in your script’s own scope — which is the
+# whole point of a library file.
+source "$COLORS_LIB"
+
+# --- output ----------------------------------------------------------------
+
+show_banner() {
+    printf '\n'
+    version_print "$SCRIPT_NAME" "$VERSION" "$TAGLINE"
+    printf '\n'
+}
+
+error_exit() {
+    printf '\n'
+    error "$1" >&2
+    printf '\n'
+    exit 1
+}
+
+# Any bad input: report it, show help, exit 1.
+usage_exit() {
+    printf '\n'
+    error "$1" >&2
+    printf '\n'
+    show_help >&2
+    exit 1
+}
+
+# --- xtrace record / reset -------------------------------------------------
+# -x turns tracing on if it is NOT already on, and at the end of the script
+# tracing is reset to what the parent script, if any, had.
+#
+# zsh restores the XTRACE option when the function that set it returns (see
+# LOCAL_OPTIONS in zshoptions(1)), so NO helper can turn tracing on for its
+# caller: `set -x` inside a helper dies the moment it returns. The function
+# whose work is to be traced must run `set -x` in its own body, and the option
+# then stays on for everything it calls. announce_xtrace() only reports; its
+# return value tells the caller whether `set -x` is still needed.
+XTRACE_WAS_ON=false
+
+xtrace_is_on() {
+    [[ -o xtrace ]]
+}
+
+record_xtrace() {
+    if xtrace_is_on; then
+        XTRACE_WAS_ON=true
+    fi
+}
+
+# Returns 0 when tracing is off and the caller should `set -x`; returns 1
+# when it is already on (nothing to do, nothing announced).
+announce_xtrace() {
+    if xtrace_is_on; then
+        return 1
+    fi
+    info 'tracing is on'
+}
+
+reset_xtrace() {
+    if [[ "$XTRACE_WAS_ON" == false ]] && xtrace_is_on; then
+        set +x
+        info 'tracing is off'
+    fi
+}
+
+trap reset_xtrace EXIT
+
+# --- state -----------------------------------------------------------------
+# Filled by argument parsing.
+
+# true when -x was given; tracing is enabled once the arguments are read.
+trace_requested=false
+
+# The positional argument, empty when none was given (POSITIONAL=none here).
+positional=''
+
+# Repository root every git command runs against.
+git_root="$DEFAULT_GIT_ROOT"
+
+# Commit message; empty means "stage only, do not commit".
+commit_message=''
+
+# true when --no_push was given.
+no_push_requested=false
+
+# Each flag may appear once; these remember which have been seen.
+dir_given=false
+message_given=false
+
+# --- argument rules --------------------------------------------------------
+
+# Returns 0 when $1 is one of SOLO_FLAGS.
+is_solo_flag() {
+    (( ${SOLO_FLAGS[(Ie)$1]} ))
+}
+
+# Returns 0 when $1 is the trace flag.
+is_trace_flag() {
+    [[ "$1" == "$TRACE_FLAG" ]]
+}
+
+# Returns 0 when any of the given arguments is the trace flag.
+trace_requested_in() {
+    (( ${@[(Ie)$TRACE_FLAG]} ))
+}
+
+# Enforces the solo-flag rule over the full command line:
+#   - at most one of SOLO_FLAGS may appear
+#   - when one appears, nothing else may, except TRACE_FLAG
+# Any violation is a usage error.
+enforce_solo_flags() {
+    local arg
+    local solo=''
+    local -a others=()
+
+    for arg in "$@"; do
+        if is_trace_flag "$arg"; then
+            continue
+        fi
+        if is_solo_flag "$arg"; then
+            if [[ -n "$solo" ]]; then
+                usage_exit "${solo} and ${arg} cannot be combined"
+            fi
+            solo="$arg"
+        else
+            others+=("$arg")
+        fi
+    done
+
+    if [[ -n "$solo" ]] && (( ${#others[@]} > 0 )); then
+        usage_exit "${solo} must be the only parameter (apart from ${TRACE_FLAG}), got: ${others[*]}"
+    fi
+}
+
+# -a / --about is handled before the banner so the output is just the about
+# text. enforce_solo_flags() has already guaranteed nothing else is present
+# except possibly -x, which is honoured. `set -x` runs here, not in a helper,
+# so it is still in force when show_about() is called.
+handle_about() {
+    if (( ${@[(Ie)--about]} || ${@[(Ie)-a]} )); then
+        if trace_requested_in "$@" && announce_xtrace; then
+            set -x
+        fi
+        show_about
+        exit 0
+    fi
+}
+
+# Accepts one positional argument per the POSITIONAL contract. Sets positional.
+accept_positional() {
+    local arg="$1"
+    if [[ "$POSITIONAL" == 'none' ]]; then
+        usage_exit "${SCRIPT_NAME} takes no positional argument, got: ${arg}"
+    fi
+    if [[ -n "$positional" ]]; then
+        usage_exit "one ${POSITIONAL_NAME} at a time, got ${positional} and ${arg}"
+    fi
+    positional="$arg"
+}
+
+# After parsing: fails when the contract is 'required' and none was given.
+require_positional() {
+    if [[ "$POSITIONAL" == 'required' && -z "$positional" ]]; then
+        usage_exit "${POSITIONAL_NAME} is required"
+    fi
+}
+
+# Accepts --dir=<path>. Sets git_root. Repeats are a usage error.
+accept_dir() {
+    local value="$1"
+    if [[ "$dir_given" == true ]]; then
+        usage_exit "${DIR_FLAG} may only be given once"
+    fi
+    if [[ -z "$value" ]]; then
+        usage_exit "${DIR_FLAG}= needs a path"
+    fi
+    dir_given=true
+    git_root="$value"
+}
+
+# Accepts --message=<text>. Sets commit_message. Repeats are a usage error.
+# The text must contain at least one non-space character.
+accept_message() {
+    local value="$1"
+    if [[ "$message_given" == true ]]; then
+        usage_exit "${MESSAGE_FLAG} may only be given once"
+    fi
+    if [[ ! "$value" =~ [^[:space:]] ]]; then
+        usage_exit "${MESSAGE_FLAG}= needs at least one non-space character"
+    fi
+    message_given=true
+    commit_message="$value"
+}
+
+# Accepts --no_push. Repeats are a usage error.
+accept_no_push() {
+    if [[ "$no_push_requested" == true ]]; then
+        usage_exit "${NO_PUSH_FLAG} may only be given once"
+    fi
+    no_push_requested=true
+}
+
+# After parsing: --no_push has no effect without --message, so it is an error.
+require_message_for_no_push() {
+    if [[ "$no_push_requested" == true && "$message_given" == false ]]; then
+        usage_exit "${NO_PUSH_FLAG} needs ${MESSAGE_FLAG}; there is no commit to hold back"
+    fi
+}
+
+# After parsing: git_root (default or --dir) must exist and be the top level
+# of a git work tree. The default obeys the same rules as an override.
+require_git_root() {
+    local toplevel
+
+    if [[ ! -d "$git_root" ]]; then
+        usage_exit "repository root is not a directory: ${git_root}"
+    fi
+    if ! toplevel="$(git -C "$git_root" rev-parse --show-toplevel 2>/dev/null)"; then
+        usage_exit "not inside a git work tree: ${git_root}"
+    fi
+    if [[ "${toplevel:A}" != "${git_root:A}" ]]; then
+        usage_exit "not the top level of its git work tree: ${git_root} (top level is ${toplevel})"
+    fi
+}
+
+# --- git -------------------------------------------------------------------
+
+# Runs one git command against git_root. Any failure stops the script.
+run_git() {
+    if ! git -C "$git_root" "$@"; then
+        error_exit "git ${*} failed in ${git_root}"
+    fi
+}
+
+# Prints the checked-out branch. A detached HEAD has no branch to push.
+report_branch() {
+    local branch
+    if ! branch="$(git -C "$git_root" branch --show-current)"; then
+        error_exit "git branch --show-current failed in ${git_root}"
+    fi
+    if [[ -z "$branch" ]]; then
+        error_exit "detached HEAD in ${git_root}; check out a branch first"
+    fi
+    info "repository: ${git_root}"
+    info "branch:     ${branch}"
+}
+
+stage_all() {
+    run_git add -A
+    success 'staged all changes (git add -A)'
+}
+
+show_staged() {
+    run_git status --short
+}
+
+# Returns 0 when the index has nothing to commit.
+nothing_staged() {
+    git -C "$git_root" diff --cached --quiet
+}
+
+commit_staged() {
+    if nothing_staged; then
+        error_exit "nothing to commit, working tree clean in ${git_root}"
+    fi
+    run_git commit -m "$commit_message"
+    success "committed: ${commit_message}"
+}
+
+push_branch() {
+    run_git push
+    success 'pushed'
+}
+
+# -- main ---- where the work is done
+main() {
+    record_xtrace # record current trace
+
+    enforce_solo_flags "$@"
+    handle_about "$@"
+
+    show_banner # banner when the script is started
+
+    # parse/scan the arguments, if any
+    local arg
+    for arg in "$@"; do
+        case "$arg" in
+            -h|--help)
+                show_help
+                exit 0
+                ;;
+            -a|--about)
+                show_about
+                exit 0
+                ;;
+            -x)
+                trace_requested=true
+                ;;
+            ${DIR_FLAG}=*)
+                accept_dir "${arg#${DIR_FLAG}=}"
+                ;;
+            ${DIR_FLAG})
+                usage_exit "${DIR_FLAG} needs =<path>"
+                ;;
+            ${MESSAGE_FLAG}=*)
+                accept_message "${arg#${MESSAGE_FLAG}=}"
+                ;;
+            ${MESSAGE_FLAG})
+                usage_exit "${MESSAGE_FLAG} needs =\"<text>\""
+                ;;
+            ${NO_PUSH_FLAG})
+                accept_no_push
+                ;;
+            #  -*) — matches any string beginning with -. Placed after the
+            #      known flags, it catches typos and unsupported options so they don’t
+            #      silently fall through and get treated as a file name.
+            #   *) — matches everything. It’s the default/else branch,
+            #      so it must be last.
+
+            # Order matters: if *) came first, nothing below it would ever run.
+            -*)
+                usage_exit "unknown option ${arg}"
+                ;;
+            *)
+                accept_positional "$arg"
+                ;;
+        esac
+    done
+
+    require_positional
+    require_message_for_no_push
+    require_git_root
+
+    # `set -x` must be here, in main()'s own body: tracing set inside a
+    # helper would be gone the moment the helper returned (see xtrace notes).
+    if [[ "$trace_requested" == true ]] && announce_xtrace; then
+        set -x
+    fi
+
+    report_branch
+    stage_all
+    show_staged
+
+    if [[ "$message_given" == false ]]; then
+        return 0
+    fi
+
+    commit_staged
+
+    if [[ "$no_push_requested" == true ]]; then
+        info "${NO_PUSH_FLAG} given; not pushing"
+        return 0
+    fi
+
+    push_branch
+}
+
+# Run 'main()' with the parameters, and print a blank line
+main "$@"
+printf '\n'

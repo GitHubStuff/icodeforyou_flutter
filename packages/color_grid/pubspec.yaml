@@ -5,12 +5,12 @@ resolution: workspace
 publish_to: "none"
 
 environment:
-  sdk: ^3.12.0
+  sdk: ^3.13.7
   
 dependencies:
-  extensions: ^1.0.4
   flutter:
     sdk: flutter
+  haptic_intensity: ^1.0.0
 
 dev_dependencies:
   flutter_test:

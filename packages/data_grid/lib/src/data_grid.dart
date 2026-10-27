@@ -3,8 +3,8 @@
 import 'dart:async' show unawaited;
 import 'dart:math' as math;
 
-import 'package:extensions/extensions.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
 /// Default width, in logical pixels, for a column with no override.
 const double _kDefaultColumnWidth = 120;

@@ -1,6 +1,6 @@
 // packages/animated_widgets/lib/src/length_colored_border_field/length_colored_border_field.dart
 
-import 'package:animated_widgets/src/length_colored_border_field/color_point_ramp.dart';
+import 'package:animated_widgets/animated_widgets.dart' show ColorPointRamp;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

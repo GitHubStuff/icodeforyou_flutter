@@ -1,5 +1,7 @@
 bricks:
-  black_velvet:
-    path: bricks/black_velvet
-  archetypes:
-    path: bricks/archetypes
+  template_dart:
+    path: bricks/template_dart
+  template_plumbing:
+    path: bricks/template_plumbing
+  template_program:
+    path: bricks/template_program

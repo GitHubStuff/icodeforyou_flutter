@@ -1,3 +1,5 @@
+// programs/since_when_dev/lib/gen/assets.gen.dart
+
 // dart format width=80
 
 /// GENERATED CODE - DO NOT MODIFY BY HAND

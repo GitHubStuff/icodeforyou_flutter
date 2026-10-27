@@ -12,7 +12,7 @@ import 'package:flutter/widgets.dart'
 /// on this holder class instead of the enum itself — the same shape as
 /// the rest of the package's resolvers otherwise.
 ///
-/// Orientation is derived purely from window geometry (landscape iff the
+/// Orientation is derived purely from window geometry (landscape if the
 /// window is wider than it is tall), matching the framework's own
 /// definition. It reflects the window, not the device sensor — a tall
 /// desktop window resolves as [Orientation.portrait].
@@ -55,9 +55,8 @@ abstract final class OrientationFactor {
   ///     Orientation.landscape);
   /// ```
   static Orientation from(Size size) {
-    if (_orientationOverride != null) {
-      return _orientationOverride!;
-    }
+    if (_orientationOverride != null) return _orientationOverride!;
+
     return size.width > size.height
         ? Orientation.landscape
         : Orientation.portrait;
@@ -74,12 +73,15 @@ abstract final class OrientationFactor {
   ///     OrientationFactor.setOrientation(to: Orientation.landscape));
   /// tearDown(() => OrientationFactor.setOrientation());
   /// ```
-  static void setOrientation({Orientation? to}) {
+  static void setOrientation(Orientation? to) {
+    // setOrientation is a debug-only override and has no effect
+    //  in release builds
     assert(
       () {
         _orientationOverride = to;
         return true;
       }(),
+      // Message is never seen, just adds an explaination.
       'setOrientation is a debug-only override and has no effect '
       'in release builds',
     );

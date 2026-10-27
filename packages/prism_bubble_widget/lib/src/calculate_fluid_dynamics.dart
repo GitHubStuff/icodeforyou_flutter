@@ -29,8 +29,11 @@ part of 'dynamic_prism_bubble.dart';
       // - pow(..., 1.4): Skews the curve downward, compressing the trough
       //   and prolonging the peak plateau to simulate surface-tension drag.
       // - * 0.85: Caps peak expansion at 85% maximum bloom.
-      final double rawWave = (math.sin(t * 0.6) + 1.0) * 0.5;
-      final double diffusion = math.pow(rawWave, 1.4).toDouble() * 0.85;
+      final double rawWave = ((math.sin(t * 0.6) + 1.0) * 0.5).clamp(0.0, 1.0);
+      final double diffusion = (math.pow(rawWave, 1.4).toDouble() * 0.85).clamp(
+        0.0,
+        1.0,
+      );
 
       return (diffusion: diffusion, phaseAngle: phaseAngle);
 
@@ -67,8 +70,10 @@ part of 'dynamic_prism_bubble.dart';
       // - Curves.easeInOutCubic: Zero derivative at t=0 and t=1, producing
       //   smooth transitions with resting holds at minimum and maximum states.
       final double cycle = (t * 0.3) % (2.0 * math.pi);
-      final double baseCurve = (math.sin(cycle) + 1.0) * 0.5;
-      final double diffusion = Curves.easeInOutCubic.transform(baseCurve);
+      final double baseCurve = ((math.sin(cycle) + 1.0) * 0.5).clamp(0.0, 1.0);
+      final double diffusion = Curves.easeInOutCubic
+          .transform(baseCurve)
+          .clamp(0.0, 1.0);
 
       return (diffusion: diffusion, phaseAngle: phaseAngle);
 
@@ -100,9 +105,12 @@ part of 'dynamic_prism_bubble.dart';
       // - sin(t * 0.2): Slow 31.41s period.
       // - Curves.fastOutSlowIn: Rapid expansion phase followed by long,
       //   gradual relaxation mimicking high liquid viscosity.
-      final double viscousWave = (math.sin(t * 0.2) + 1.0) * 0.5;
+      final double viscousWave = ((math.sin(t * 0.2) + 1.0) * 0.5).clamp(
+        0.0,
+        1.0,
+      );
       final double diffusion =
-          Curves.fastOutSlowIn.transform(viscousWave) * 0.95;
+          (Curves.fastOutSlowIn.transform(viscousWave) * 0.95).clamp(0.0, 1.0);
 
       return (diffusion: diffusion, phaseAngle: phaseAngle);
 
@@ -114,9 +122,16 @@ part of 'dynamic_prism_bubble.dart';
       // - Surge * 1.2 adds a rapid 1.2 rad (~68.75 degree) forward acceleration
       //   during crest arrival.
       final double tidalNorm = (t * 0.5) % (2.0 * math.pi);
-      final double surge = math.exp(math.sin(tidalNorm)) / math.e;
+      // Clamp surge strictly to [0.0, 0.9999] so easeInCirc does not evaluate
+      // sqrt(1 - 1) == 0 resulting in diffusion == 1.0, which breaks painters.
+      final double surge = (math.exp(math.sin(tidalNorm)) / math.e).clamp(
+        0.0,
+        0.9999,
+      );
       final double phaseAngle = t * 0.35 + surge * 1.2;
-      final double diffusion = Curves.easeInCirc.transform(surge);
+      // Cap at 0.95 so the bloom does not collapse the rim boundary.
+      final double diffusion = (Curves.easeInCirc.transform(surge) * 0.95)
+          .clamp(0.0, 1.0);
 
       return (diffusion: diffusion, phaseAngle: phaseAngle);
 
@@ -133,7 +148,10 @@ part of 'dynamic_prism_bubble.dart';
       final double phaseAngle = t * 0.8 + whip * math.pi * 2.0;
 
       // Diffusion: Steady turbulent core bloom oscillating between 0.1 and 0.7.
-      final double diffusion = 0.4 + (math.sin(t * 1.2) * 0.3);
+      final double diffusion = (0.4 + (math.sin(t * 1.2) * 0.3)).clamp(
+        0.0,
+        1.0,
+      );
 
       return (diffusion: diffusion, phaseAngle: phaseAngle);
 

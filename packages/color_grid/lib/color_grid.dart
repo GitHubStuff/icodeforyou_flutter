@@ -1,6 +1,6 @@
 // packages/color_grid/lib/color_grid.dart
-import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart';
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
 /// Signature for taps on a color cell, delivering the tapped [index]
 /// (0–14) and its ARGB [colorValue].

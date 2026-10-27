@@ -1,0 +1,6 @@
+# packages/services_provider/dart_test.yaml
+tags:
+  golden:
+    description: Writes PNG goldens. Platform-specific; run locally on macOS.
+
+exclude_tags: golden

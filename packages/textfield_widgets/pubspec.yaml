@@ -1,0 +1,19 @@
+# packages/textfield_widgets/pubspec.yaml
+name: textfield_widgets
+description: "burger"
+publish_to: none
+resolution: workspace
+version: 1.0.2
+
+environment:
+  sdk: ^3.13.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+  gap: ^3.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0

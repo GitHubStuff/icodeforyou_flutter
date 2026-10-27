@@ -1,5 +1,6 @@
 // packages/extensions/lib/color/color_ext.dart
-import 'package:flutter/painting.dart';
+import 'package:flutter/material.dart'
+    show Brightness, Color, Colors, HSLColor, ThemeData;
 
 /// Extensions on [Color] providing equality, contrast, and integer conversion.
 extension ColorExt on Color {
@@ -10,7 +11,7 @@ extension ColorExt on Color {
   /// Returns white or black depending on which has better contrast
   /// against this color.
   Color contrastingColor({Color? forDark, Color? forLight}) =>
-      computeLuminance() > 0.5
+      ThemeData.estimateBrightnessForColor(this) == Brightness.light
       ? forLight ?? const Color(0xFF000000)
       : forDark ?? const Color(0xFFFFFFFF);
 
@@ -29,5 +30,34 @@ extension ColorExt on Color {
       'alpha must be between 0.0 and 1.0',
     );
     return withValues(alpha: alpha);
+  }
+
+  /// Constants for Neon effect
+  static const double _accentSaturation = 1;
+  static const double _accentLightness = 0.62;
+  static const double _coreTint = 0.45;
+
+  /// Returns an accent-style version of this colour: the same hue at full
+  /// saturation and raised lightness, the way Material accent swatches relate
+  /// to their primary swatches (e.g. `Colors.green` → something close to
+  /// `Colors.greenAccent`).
+  ///
+  /// Greys (zero saturation) have no hue to accent and are returned unchanged.
+  Color toNeonAccent() {
+    final hsl = HSLColor.fromColor(this);
+
+    return (hsl.saturation == 0)
+        ? this
+        : hsl
+              .withSaturation(_accentSaturation)
+              .withLightness(_accentLightness)
+              .toColor();
+  }
+
+  /// Returns the tube-core colour for this glow: white with a faint tint of
+  /// the hue, so the glyph reads as lit rather than as flat coloured text.
+  Color toNeonCore({double tint = _coreTint}) {
+    assert(tint >= 0.0 && tint <= 1.0, 'Tint is 0.0 to 1.0');
+    return Color.lerp(Colors.white, toNeonAccent(), tint)!;
   }
 }

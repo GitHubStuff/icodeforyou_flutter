@@ -1,0 +1,331 @@
+#!/bin/zsh
+# {{name.snakeCase()}} - {{description}}
+
+readonly VERSION='0.0.1'
+
+readonly TAGLINE='{{description}}'
+
+# Shows what this script is and does, then exits. Displays when "-a" or
+# "--about" is the only parameter (optionally with -x).
+#
+# Keep this in step with the header comment at the top of the file: it is
+# the elevator pitch (what the script IS), not the reference card (how to
+# drive it) — that is show_help(). The heredoc is quoted so nothing is
+# interpolated; write the script name literally.
+show_about() {
+    printf '%s' "${CYAN}"
+    cat <<'EOF'
+#### TODO(steven)
+# Replace this skeleton with the real text.
+####
+
+<One-sentence purpose: what this script is for and who/what it serves.>
+
+<What it does, in plain prose — one short paragraph, no step numbers.>
+
+<Where to run it from and any preconditions, e.g. "Run from the monorepo
+root" or "Requires <tool> on PATH".>
+
+Examples:
+  % <script_name> <arg>                    # <what this does>
+  % <script_name> <arg> -<flag>=<value>    # <what this does>
+  % <script_name> -h                       # help (also --help)
+  % <script_name> --about                  # this text (also -a)
+EOF
+    printf '%s\n' "${RESET}"
+}
+
+readonly SCRIPT_NAME="${0:t}"
+readonly DEFAULT_BIN_DIR="$HOME/bin"
+readonly COLORS_LIB="${DEFAULT_BIN_DIR}/lib/colors.zsh"
+
+# Flags that must be the only parameter on the command line (apart from -x).
+readonly -a SOLO_FLAGS=('-a' '--about' '-h' '--help')
+
+# The one flag allowed alongside anything, including a solo flag.
+readonly TRACE_FLAG='-x'
+
+# Positional-argument contract. Exactly one of:
+#   none     - the script takes no positional argument; giving one is an error
+#   optional - the script may take one positional argument
+#   required - the script must be given one positional argument
+#### TODO(steven)
+# Set this for the script being built.
+####
+readonly POSITIONAL='{{positional}}'
+
+# Display name of the positional argument in help and error text.
+#### TODO(steven)
+# Rename to what the positional actually is (ignored when POSITIONAL=none).
+####
+readonly POSITIONAL_NAME='{{positional_name}}'
+
+# zsh strick mode:
+#  -e (errexit) - exit immediate when any command returns non-zero
+#  -u (nounset) - treat use of unset variables as an error (type catcher)
+#  -o (pipefail) - pipeline’s exit status is the last non-zero status in the pipe,
+#      not just the final command’s
+set -euo pipefail
+
+# Help text with colors, displays when "-h" or "--help" is the only parameter
+# (optionally with -x), and on any usage error.
+# The heredoc is unquoted so ${SCRIPT_NAME}, colors, and any readonly
+# constants are interpolated. Replace every <placeholder>; delete sections
+# that do not apply (e.g. ARGUMENTS when POSITIONAL=none).
+#
+# Every flag listed here must have a matching branch in main()'s case.
+show_help() {
+    cat <<EOF
+${BOLD}${RED}${BLINK} --- SAMPLE ----${RESET}
+${BOLD}USAGE${RESET}
+    ${GREEN}${SCRIPT_NAME}${RESET} ${WHITE}${POSITIONAL_NAME}${RESET} [${YELLOW}-<flag>${RESET}[=${WHITE}<value>${RESET}]] [${YELLOW}-x${RESET}]
+    ${GREEN}${SCRIPT_NAME}${RESET} ${YELLOW}-h${RESET}, ${YELLOW}--help${RESET} [${YELLOW}-x${RESET}]
+    ${GREEN}${SCRIPT_NAME}${RESET} ${YELLOW}-a${RESET}, ${YELLOW}--about${RESET} [${YELLOW}-x${RESET}]
+
+    ${POSITIONAL_NAME} is the only positional argument (${POSITIONAL}). Flags go in any order.
+    -h/--help and -a/--about must be used alone; only -x may accompany them.
+
+${BOLD}ARGUMENTS${RESET}
+    ${WHITE}${POSITIONAL_NAME}${RESET}                <what it is, its valid form, where it must exist>
+
+${BOLD}FLAGS${RESET}
+    ${YELLOW}-<flag>${RESET}              <what it does; note the default if omitted>
+    ${YELLOW}-<flag>=${RESET}${WHITE}<value>${RESET}      <what the value is for>
+    ${YELLOW}-x${RESET}                   turn on command tracing after the arguments are read
+                         (may be combined with anything)
+    ${YELLOW}-h${RESET}, ${YELLOW}--help${RESET}           show this help, then exit (no other parameters)
+    ${YELLOW}-a${RESET}, ${YELLOW}--about${RESET}          show what this script is and does, then exit
+                         (no other parameters)
+
+${BOLD}WHAT IT DOES${RESET}
+    <step 1>
+    <step 2>
+    <step N>
+
+${BOLD}EXAMPLES${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} ${POSITIONAL_NAME}                  ${CYAN}# <what this does>${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} ${POSITIONAL_NAME} -<flag>=<value>  ${CYAN}# <what this does>${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} -h                     ${CYAN}# this help${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} --about -x             ${CYAN}# what this script is, traced${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} -a -h                  ${CYAN}# INVALID: solo flags cannot mix${RESET}
+
+EOF
+}
+
+# verify color library
+if [[ ! -r "$COLORS_LIB" ]]; then
+    printf '%s: %s not found, cannot continue\n' "$SCRIPT_NAME" "$COLORS_LIB" >&2
+    exit 1
+fi
+# reads the file and executes its contents in the current shell, rather than 
+# in a child process. So every function, variable, alias, and setopt defined
+# in colors.zsh becomes available in your script’s own scope — which is the
+# whole point of a library file.
+source "$COLORS_LIB"
+
+# --- output ----------------------------------------------------------------
+
+show_banner() {
+    printf '\n'
+    version_print "$SCRIPT_NAME" "$VERSION" "$TAGLINE"
+    printf '\n'
+}
+
+error_exit() {
+    printf '\n'
+    error "$1" >&2
+    printf '\n'
+    exit 1
+}
+
+# Any bad input: report it, show help, exit 1.
+usage_exit() {
+    printf '\n'
+    error "$1" >&2
+    printf '\n'
+    show_help >&2
+    exit 1
+}
+
+# --- xtrace record / reset -------------------------------------------------
+# Having the parameters -x, turns on tracing if NOT already one
+# and the end of the script it reset to what it's parent script, if any. was
+XTRACE_WAS_ON=false
+
+xtrace_is_on() {
+    [[ -o xtrace ]]
+}
+
+record_xtrace() {
+    if xtrace_is_on; then
+        XTRACE_WAS_ON=true
+    fi
+}
+
+enable_xtrace() {
+    if xtrace_is_on; then
+        return 0
+    fi
+    info 'tracing is on'
+    set -x
+}
+
+reset_xtrace() {
+    if [[ "$XTRACE_WAS_ON" == false ]] && xtrace_is_on; then
+        set +x
+        info 'tracing is off'
+    fi
+}
+
+trap reset_xtrace EXIT
+
+# --- state -----------------------------------------------------------------
+# Filled by argument parsing.
+
+# true when -x was given; tracing is enabled once the arguments are read.
+trace_requested=false
+
+# The positional argument, empty when none was given.
+#### TODO(steven)
+# Rename to what the positional actually is.
+####
+positional=''
+
+# --- argument rules --------------------------------------------------------
+
+# Returns 0 when $1 is one of SOLO_FLAGS.
+is_solo_flag() {
+    (( ${SOLO_FLAGS[(Ie)$1]} ))
+}
+
+# Returns 0 when $1 is the trace flag.
+is_trace_flag() {
+    [[ "$1" == "$TRACE_FLAG" ]]
+}
+
+# Returns 0 when any of the given arguments is the trace flag.
+trace_requested_in() {
+    (( ${@[(Ie)$TRACE_FLAG]} ))
+}
+
+# Enforces the solo-flag rule over the full command line:
+#   - at most one of SOLO_FLAGS may appear
+#   - when one appears, nothing else may, except TRACE_FLAG
+# Any violation is a usage error.
+enforce_solo_flags() {
+    local arg
+    local solo=''
+    local -a others=()
+
+    for arg in "$@"; do
+        if is_trace_flag "$arg"; then
+            continue
+        fi
+        if is_solo_flag "$arg"; then
+            if [[ -n "$solo" ]]; then
+                usage_exit "${solo} and ${arg} cannot be combined"
+            fi
+            solo="$arg"
+        else
+            others+=("$arg")
+        fi
+    done
+
+    if [[ -n "$solo" ]] && (( ${#others[@]} > 0 )); then
+        usage_exit "${solo} must be the only parameter (apart from ${TRACE_FLAG}), got: ${others[*]}"
+    fi
+}
+
+# -a / --about is handled before the banner so the output is just the about
+# text. enforce_solo_flags() has already guaranteed nothing else is present
+# except possibly -x, which is honoured.
+handle_about() {
+    if (( ${@[(Ie)--about]} || ${@[(Ie)-a]} )); then
+        if trace_requested_in "$@"; then
+            enable_xtrace
+        fi
+        show_about
+        exit 0
+    fi
+}
+
+# Accepts one positional argument per the POSITIONAL contract. Sets positional.
+accept_positional() {
+    local arg="$1"
+    if [[ "$POSITIONAL" == 'none' ]]; then
+        usage_exit "${SCRIPT_NAME} takes no positional argument, got: ${arg}"
+    fi
+    if [[ -n "$positional" ]]; then
+        usage_exit "one ${POSITIONAL_NAME} at a time, got ${positional} and ${arg}"
+    fi
+    positional="$arg"
+}
+
+# After parsing: fails when the contract is 'required' and none was given.
+require_positional() {
+    if [[ "$POSITIONAL" == 'required' && -z "$positional" ]]; then
+        usage_exit "${POSITIONAL_NAME} is required"
+    fi
+}
+
+# -- main ---- where the work is done
+main() {
+ 	record_xtrace # record current trace
+
+    enforce_solo_flags "$@"
+    handle_about "$@"
+ 	
+    show_banner # banner when the script is started
+
+	# parse/scan the arguments, if any
+    local arg
+    for arg in "$@"; do
+        case "$arg" in
+            -h|--help)
+                show_help
+                exit 0
+                ;;
+            -a|--about)
+                show_about
+                exit 0
+                ;;
+            -x)
+                trace_requested=true
+                ;;
+            #### TODO(steven)
+            # Put any addition arguments here
+            ####
+            
+            #  -*) — matches any string beginning with -. Placed after the 
+            #      known flags, it catches typos and unsupported options so they don’t
+            #      silently fall through and get treated as a file name.
+            #   *) — matches everything. It’s the default/else branch,
+            #      so it must be last.
+
+            # Order matters: if *) came first, nothing below it would ever run.
+            -*)
+                usage_exit "unknown option ${arg}"
+                ;;
+            *)
+                accept_positional "$arg"
+                ;;
+        esac
+    done
+
+    require_positional
+
+    if [[ "$trace_requested" == true ]]; then
+        enable_xtrace
+    fi
+
+    cat <<EOF
+    This is where the main body of work is done.
+    For Best-Practices, create a collection of routines (eg "figureTotal()"),
+    that main() will excute with the goal of keep main() as
+    clean/self-documenting as possibe by CLEAN-CODE and BEST-PRACTICE
+EOF
+}
+
+# Run 'main()' with the parameters, and print a blank line
+main "$@"
+printf '\n'

@@ -2,13 +2,9 @@
 
 export 'src/chooser/navigation_chooser.dart'
     show NavigationChooser, NavigationChooserCallback;
-export 'src/cubit/cubit.dart'
-    show NavigationCubit, NavigationState;
-export 'src/destination/destination_item.dart' show DestinationItem;
-export 'src/destination/destination_manager.dart' show DestinationManager;
-export 'src/destination/navigation_abstract.dart'
-    show NavigableDestinationAbstract;
-export 'src/dock/dock_destination_buttons.dart' show DockDestinationButtons;
-export 'src/dock/dock_screen.dart' show DockScreen;
-export 'src/rail/rail_destination_buttons.dart' show RailDestinationButtons;
-export 'src/rail/rail_screen.dart' show RailScreen;
+export 'src/cubit/navigation_cubit.dart' show NavigationCubit;
+export 'src/cubit/navigation_state.dart' show NavigationState;
+export 'src/destination/nav_button_properties.dart' show NavButtonProperties;
+export 'src/shared/nav_slot.dart' show NavSlot;
+export 'src/widgets/dock_screen.dart' show DockScreen;
+export 'src/widgets/more_nav_button.dart' show MoreNavButton;

@@ -1,0 +1,19 @@
+# packages/platform_logs/pubspec.yaml
+name: platform_logs
+description: "Class to debugPrint and remote logging"
+publish_to: none
+resolution: workspace
+version: 1.0.0
+
+environment:
+  sdk: ^3.13.7
+
+dependencies:
+  ext_datetime: ^1.0.0
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0

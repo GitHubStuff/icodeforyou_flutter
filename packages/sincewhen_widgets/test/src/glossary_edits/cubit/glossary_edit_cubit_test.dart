@@ -1,4 +1,4 @@
-// test/glossary_edits/cubit/glossary_edit_cubit_test.dart
+// packages/sincewhen_widgets/test/src/glossary_edits/cubit/glossary_edit_cubit_test.dart
 import 'dart:async';
 
 import 'package:bloc_test/bloc_test.dart';
@@ -36,7 +36,7 @@ void main() {
     test('initial state is GlossaryEditInitial', () {
       final cubit = GlossaryEditCubit(
         glossaryRepo: mockGlossaryRepo,
-        uniqueTime: () async => testDateTime,
+        uniqueTime: () => testDateTime,
       );
       expect(cubit.state, equals(const GlossaryEditInitial()));
       unawaited(cubit.close());
@@ -45,7 +45,7 @@ void main() {
     test('uses default RandomColorGenerator when colorGenerator is null', () {
       final cubit = GlossaryEditCubit(
         glossaryRepo: mockGlossaryRepo,
-        uniqueTime: () async => testDateTime,
+        uniqueTime: () => testDateTime,
       );
       expect(cubit.state, const GlossaryEditInitial());
       unawaited(cubit.close());
@@ -78,7 +78,7 @@ void main() {
 
           return GlossaryEditCubit(
             glossaryRepo: mockGlossaryRepo,
-            uniqueTime: () async => testDateTime,
+            uniqueTime: () => testDateTime,
             colorGenerator: () => generatedSequence[index++],
           );
         },
@@ -98,7 +98,7 @@ void main() {
         'emits GlossaryEditPopover with given color and microseconds timestamp',
         build: () => GlossaryEditCubit(
           glossaryRepo: mockGlossaryRepo,
-          uniqueTime: () async => testDateTime,
+          uniqueTime: () => testDateTime,
         ),
         act: (cubit) => cubit.requestNewId(usingColor: 0xFFAABBCC),
         expect: () => [
@@ -109,16 +109,15 @@ void main() {
 
     group('editComplete', () {
       blocTest<GlossaryEditCubit, GlossaryEditState>(
-        'inserts item, queries itemCount, and emits GlossaryEditInitial when item is not null',
+        'inserts item and emits GlossaryEditInitial when item is not null',
         setUp: () {
           when(
             () => mockGlossaryRepo.insertItem(any()),
           ).thenAnswer((_) async => testGlossaryItem);
-          when(() => mockGlossaryRepo.itemCount()).thenAnswer((_) async => 42);
         },
         build: () => GlossaryEditCubit(
           glossaryRepo: mockGlossaryRepo,
-          uniqueTime: () async => testDateTime,
+          uniqueTime: () => testDateTime,
         ),
         act: (cubit) => cubit.editComplete(glossaryItem: testGlossaryItem),
         expect: () => [
@@ -126,7 +125,6 @@ void main() {
         ],
         verify: (_) {
           verify(() => mockGlossaryRepo.insertItem(testGlossaryItem)).called(1);
-          verify(() => mockGlossaryRepo.itemCount()).called(1);
         },
       );
 
@@ -134,7 +132,7 @@ void main() {
         'emits GlossaryEditInitial without calling repo when item is null',
         build: () => GlossaryEditCubit(
           glossaryRepo: mockGlossaryRepo,
-          uniqueTime: () async => testDateTime,
+          uniqueTime: () => testDateTime,
         ),
         act: (cubit) => cubit.editComplete(glossaryItem: null),
         expect: () => [
@@ -142,7 +140,6 @@ void main() {
         ],
         verify: (_) {
           verifyNever(() => mockGlossaryRepo.insertItem(any()));
-          verifyNever(() => mockGlossaryRepo.itemCount());
         },
       );
     });

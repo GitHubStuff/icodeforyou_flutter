@@ -1,4 +1,4 @@
-// packages/sincewhen_widgets/lib/src/glossary_edits/glossary_edit_view.dart
+// packages/sincewhen_widgets/lib/src/glossary_edits/widgets/glossary_edit_view.dart
 
 import 'dart:async';
 
@@ -75,9 +75,9 @@ class GlossaryEditView extends StatelessWidget {
                 onRefreshRequested: () => context
                     .read<GlossaryEditCubit>()
                     .requestRandomColors(count: _kDefaultColorCount),
-                onColorTapped: (index, colorValue) {
-                  _onColorTapped(context, colorValue: colorValue);
-                },
+                onColorTapped: (index, colorValue) => context
+                    .read<GlossaryEditCubit>()
+                    .requestNewId(usingColor: colorValue),
               ),
               // Fallback if initial state was directly popover
               GlossaryEditPopover() => const SizedBox.shrink(),
@@ -102,14 +102,5 @@ class GlossaryEditView extends StatelessWidget {
     );
 
     await cubit.editComplete(glossaryItem: item);
-  }
-
-  void _onColorTapped(
-    BuildContext context, {
-    required int colorValue,
-  }) {
-    unawaited(
-      context.read<GlossaryEditCubit>().requestNewId(usingColor: colorValue),
-    );
   }
 }

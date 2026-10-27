@@ -1,0 +1,14 @@
+# packages/haptic_intensity/pubspec.yaml
+name: haptic_intensity
+description: "Creates haptics for widgets"
+publish_to: none
+resolution: workspace
+version: 1.0.0
+
+environment:
+  sdk: ^3.13.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0

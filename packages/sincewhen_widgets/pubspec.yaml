@@ -6,18 +6,19 @@ resolution: workspace
 version: 1.0.0
 
 environment:
-  sdk: ^3.12.0
+  sdk: ^3.13.7
 
 dependencies:
   color_grid: ^1.0.0
   custom_widgets: ^1.0.0
   dependency_resolver: ^1.0.0
   equatable: ^2.1.0
-  extensions: ^1.0.4
+  ext_datetime: ^1.0.0
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
   gap: ^3.0.1
+  haptic_intensity: ^1.0.0
   random_color_generator: ^1.0.1
   sincewhen_drift_framework: ^1.0.0
   sincewhen_models: ^1.0.0

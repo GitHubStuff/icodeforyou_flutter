@@ -1,0 +1,25 @@
+# packages/neon/pubspec.yaml
+name: neon
+description: "Neon Colored Tools&#x2F;Widgets"
+publish_to: none
+resolution: workspace
+version: 1.0.2
+
+environment:
+  sdk: ^3.13.7
+
+dependencies:
+  extensions: ^1.0.0
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0
+
+flutter:
+  fonts:
+    - family: TiltNeon
+      fonts:
+        - asset: assets/fonts/TiltNeon-Variable.ttf

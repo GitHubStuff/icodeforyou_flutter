@@ -16,6 +16,7 @@ const TextStyle _defaultTextStyle = TextStyle(
 InputDecoration _inputDecoration({
   required BuildContext context,
   required Color border,
+  required TextStyle textStyle,
   String? hintText,
 }) => InputDecoration(
   fillColor: Theme.of(context).colorScheme.surface,
@@ -27,7 +28,14 @@ InputDecoration _inputDecoration({
     borderSide: BorderSide(color: border, width: 2),
   ),
   contentPadding: _insets,
+  labelText: 'LabelText',
+  floatingLabelBehavior: FloatingLabelBehavior.always,
   hintText: hintText,
+  hintStyle: textStyle.copyWith(
+    fontWeight: FontWeight.normal,
+    fontStyle: FontStyle.italic,
+    color: Theme.of(context).colorScheme.onSurfaceVariant,
+  ),
 );
 
 /// A multiline text field configured for code or plain-text editing that
@@ -108,6 +116,7 @@ class ExpandingTextField extends StatelessWidget {
       decoration: _inputDecoration(
         context: context,
         border: border,
+        textStyle: _textStyle,
         hintText: hintText,
       ),
     );

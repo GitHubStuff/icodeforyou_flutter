@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'wheel_settings.dart';
@@ -9,6 +9,7 @@ part of 'wheel_settings.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -46,16 +47,21 @@ $WheelSettingsCopyWith<WheelSettings> get copyWith => _$WheelSettingsCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WheelSettings&&(identical(other.itemExtent, itemExtent) || other.itemExtent == itemExtent)&&(identical(other.dividerThickness, dividerThickness) || other.dividerThickness == dividerThickness)&&(identical(other.dividerInset, dividerInset) || other.dividerInset == dividerInset)&&(identical(other.wheelWidth, wheelWidth) || other.wheelWidth == wheelWidth)&&(identical(other.wheelHeight, wheelHeight) || other.wheelHeight == wheelHeight)&&(identical(other.perspectiveDiameter, perspectiveDiameter) || other.perspectiveDiameter == perspectiveDiameter)&&(identical(other.magnification, magnification) || other.magnification == magnification)&&(identical(other.wheelBorderRadius, wheelBorderRadius) || other.wheelBorderRadius == wheelBorderRadius)&&(identical(other.showBorder, showBorder) || other.showBorder == showBorder)&&(identical(other.selectionDebounce, selectionDebounce) || other.selectionDebounce == selectionDebounce));
+  final _this = this as WheelSettings;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WheelSettings&&(identical(other.itemExtent, _this.itemExtent) || other.itemExtent == _this.itemExtent)&&(identical(other.dividerThickness, _this.dividerThickness) || other.dividerThickness == _this.dividerThickness)&&(identical(other.dividerInset, _this.dividerInset) || other.dividerInset == _this.dividerInset)&&(identical(other.wheelWidth, _this.wheelWidth) || other.wheelWidth == _this.wheelWidth)&&(identical(other.wheelHeight, _this.wheelHeight) || other.wheelHeight == _this.wheelHeight)&&(identical(other.perspectiveDiameter, _this.perspectiveDiameter) || other.perspectiveDiameter == _this.perspectiveDiameter)&&(identical(other.magnification, _this.magnification) || other.magnification == _this.magnification)&&(identical(other.wheelBorderRadius, _this.wheelBorderRadius) || other.wheelBorderRadius == _this.wheelBorderRadius)&&(identical(other.showBorder, _this.showBorder) || other.showBorder == _this.showBorder)&&(identical(other.selectionDebounce, _this.selectionDebounce) || other.selectionDebounce == _this.selectionDebounce));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,itemExtent,dividerThickness,dividerInset,wheelWidth,wheelHeight,perspectiveDiameter,magnification,wheelBorderRadius,showBorder,selectionDebounce);
+int get hashCode {
+  final _this = this as WheelSettings;
+  return Object.hash(runtimeType,_this.itemExtent,_this.dividerThickness,_this.dividerInset,_this.wheelWidth,_this.wheelHeight,_this.perspectiveDiameter,_this.magnification,_this.wheelBorderRadius,_this.showBorder,_this.selectionDebounce);
+}
 
 @override
 String toString() {
-  return 'WheelSettings(itemExtent: $itemExtent, dividerThickness: $dividerThickness, dividerInset: $dividerInset, wheelWidth: $wheelWidth, wheelHeight: $wheelHeight, perspectiveDiameter: $perspectiveDiameter, magnification: $magnification, wheelBorderRadius: $wheelBorderRadius, showBorder: $showBorder, selectionDebounce: $selectionDebounce)';
+  final _this = this as WheelSettings;
+  return 'WheelSettings(itemExtent: ${_this.itemExtent}, dividerThickness: ${_this.dividerThickness}, dividerInset: ${_this.dividerInset}, wheelWidth: ${_this.wheelWidth}, wheelHeight: ${_this.wheelHeight}, perspectiveDiameter: ${_this.perspectiveDiameter}, magnification: ${_this.magnification}, wheelBorderRadius: ${_this.wheelBorderRadius}, showBorder: ${_this.showBorder}, selectionDebounce: ${_this.selectionDebounce})';
 }
 
 
@@ -84,7 +90,7 @@ class _$WheelSettingsCopyWithImpl<$Res>
 /// Create a copy of WheelSettings
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? itemExtent = null,Object? dividerThickness = null,Object? dividerInset = null,Object? wheelWidth = null,Object? wheelHeight = null,Object? perspectiveDiameter = null,Object? magnification = null,Object? wheelBorderRadius = null,Object? showBorder = null,Object? selectionDebounce = null,}) {
-  return _then(_self.copyWith(
+  return _then(WheelSettings(
 itemExtent: null == itemExtent ? _self.itemExtent : itemExtent // ignore: cast_nullable_to_non_nullable
 as double,dividerThickness: null == dividerThickness ? _self.dividerThickness : dividerThickness // ignore: cast_nullable_to_non_nullable
 as double,dividerInset: null == dividerInset ? _self.dividerInset : dividerInset // ignore: cast_nullable_to_non_nullable
@@ -281,16 +287,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WheelSettings&&(identical(other.itemExtent, itemExtent) || other.itemExtent == itemExtent)&&(identical(other.dividerThickness, dividerThickness) || other.dividerThickness == dividerThickness)&&(identical(other.dividerInset, dividerInset) || other.dividerInset == dividerInset)&&(identical(other.wheelWidth, wheelWidth) || other.wheelWidth == wheelWidth)&&(identical(other.wheelHeight, wheelHeight) || other.wheelHeight == wheelHeight)&&(identical(other.perspectiveDiameter, perspectiveDiameter) || other.perspectiveDiameter == perspectiveDiameter)&&(identical(other.magnification, magnification) || other.magnification == magnification)&&(identical(other.wheelBorderRadius, wheelBorderRadius) || other.wheelBorderRadius == wheelBorderRadius)&&(identical(other.showBorder, showBorder) || other.showBorder == showBorder)&&(identical(other.selectionDebounce, selectionDebounce) || other.selectionDebounce == selectionDebounce));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _WheelSettings&&(identical(other.itemExtent, itemExtent) || other.itemExtent == itemExtent)&&(identical(other.dividerThickness, dividerThickness) || other.dividerThickness == dividerThickness)&&(identical(other.dividerInset, dividerInset) || other.dividerInset == dividerInset)&&(identical(other.wheelWidth, wheelWidth) || other.wheelWidth == wheelWidth)&&(identical(other.wheelHeight, wheelHeight) || other.wheelHeight == wheelHeight)&&(identical(other.perspectiveDiameter, perspectiveDiameter) || other.perspectiveDiameter == perspectiveDiameter)&&(identical(other.magnification, magnification) || other.magnification == magnification)&&(identical(other.wheelBorderRadius, wheelBorderRadius) || other.wheelBorderRadius == wheelBorderRadius)&&(identical(other.showBorder, showBorder) || other.showBorder == showBorder)&&(identical(other.selectionDebounce, selectionDebounce) || other.selectionDebounce == selectionDebounce));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,itemExtent,dividerThickness,dividerInset,wheelWidth,wheelHeight,perspectiveDiameter,magnification,wheelBorderRadius,showBorder,selectionDebounce);
+int get hashCode {
+    return Object.hash(runtimeType,itemExtent,dividerThickness,dividerInset,wheelWidth,wheelHeight,perspectiveDiameter,magnification,wheelBorderRadius,showBorder,selectionDebounce);
+}
 
 @override
 String toString() {
-  return 'WheelSettings(itemExtent: $itemExtent, dividerThickness: $dividerThickness, dividerInset: $dividerInset, wheelWidth: $wheelWidth, wheelHeight: $wheelHeight, perspectiveDiameter: $perspectiveDiameter, magnification: $magnification, wheelBorderRadius: $wheelBorderRadius, showBorder: $showBorder, selectionDebounce: $selectionDebounce)';
+    return 'WheelSettings(itemExtent: $itemExtent, dividerThickness: $dividerThickness, dividerInset: $dividerInset, wheelWidth: $wheelWidth, wheelHeight: $wheelHeight, perspectiveDiameter: $perspectiveDiameter, magnification: $magnification, wheelBorderRadius: $wheelBorderRadius, showBorder: $showBorder, selectionDebounce: $selectionDebounce)';
 }
 
 

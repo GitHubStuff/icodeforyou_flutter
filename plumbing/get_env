@@ -1,0 +1,143 @@
+#!/bin/zsh
+# get_env - Detect where the calling script was launched from.
+#
+# Works two ways:
+#
+#   Run it:     launched_from="$(get_env)"      prints one word and exits
+#   Source it:  source get_env; get_env          defines the function only
+#
+# It prints exactly one word:
+#
+#   vscode         - VS Code: integrated terminal, or a VS Code task
+#   xcode          - Xcode: a Run Script build phase or scheme action
+#   androidstudio  - Android Studio: integrated terminal, or a Gradle task
+#   terminal       - a human at any other interactive terminal
+#   plumbing       - another script, cron, CI, or anything else that is
+#                    not an IDE and not an interactive terminal
+#
+# Decision order (first match wins):
+#   1. xcode          - Xcode build-phase variables are present
+#   2. plumbing       - stdin is a TTY but the parent process is a script
+#                       runner, a -c string, or a non-shell program
+#   3. vscode         - launched by VS Code (terminal or task)
+#   4. androidstudio  - launched by Android Studio (terminal or Gradle)
+#   5. plumbing       - stdin is not a TTY and no IDE claimed it
+#   6. terminal       - interactive shell, anything else
+#
+# Rule of thumb: a script run by an IDE's own build system (Xcode build
+# phase, Gradle task, VS Code task) reports that IDE. A script run by
+# *another script* reports plumbing, even inside an IDE terminal.
+#
+# Usage from a script:
+#   local launched_from
+#   launched_from="$(get_env)"
+#   case "$launched_from" in
+#       vscode)         run_vscode ;;
+#       xcode)          run_xcode ;;
+#       androidstudio)  run_android_studio ;;
+#       terminal)       run_terminal ;;
+#       plumbing)       run_plumbing ;;
+#   esac
+#
+# Safe to source from a script running under `set -u`.
+
+# Prevent multiple sourcing
+if [[ -n "${GET_ENV_LIB_LOADED:-}" ]]; then
+    return 0
+fi
+readonly GET_ENV_LIB_LOADED=true
+
+readonly GET_ENV_SOURCE_VSCODE='vscode'
+readonly GET_ENV_SOURCE_XCODE='xcode'
+readonly GET_ENV_SOURCE_ANDROID_STUDIO='androidstudio'
+readonly GET_ENV_SOURCE_TERMINAL='terminal'
+readonly GET_ENV_SOURCE_PLUMBING='plumbing'
+
+readonly GET_ENV_BUNDLE_VSCODE='com.microsoft.VSCode'
+readonly GET_ENV_BUNDLE_ANDROID_STUDIO='com.google.android.studio'
+
+# True if the given command name is a shell binary.
+_get_env_is_shell() {
+    local command_name="$1"
+    case "${command_name:t}" in
+        zsh|-zsh|bash|-bash|sh|-sh|ksh|-ksh|fish|-fish) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+# True if the parent process is an interactive shell rather than a shell
+# executing a script, a -c string, or a non-shell program.
+_get_env_parent_is_interactive_shell() {
+    local parent_args
+    parent_args="$(ps -o args= -p "$PPID" 2>/dev/null)"
+    [[ -z "$parent_args" ]] && return 1
+
+    local -a parent_words
+    parent_words=(${(z)parent_args})
+
+    _get_env_is_shell "${parent_words[1]}" || return 1
+
+    # An interactive shell has no non-flag arguments.
+    # A script runner has one: `zsh ./deploy.zsh`. A -c runner has `-c`.
+    local word
+    for word in "${parent_words[@]:1}"; do
+        [[ "$word" == '-c' ]] && return 1
+        [[ "$word" != -* ]] && return 1
+    done
+    return 0
+}
+
+# True inside an Xcode Run Script build phase or scheme action.
+_get_env_is_xcode() {
+    [[ -n "${XCODE_VERSION_ACTUAL:-}" || -n "${XCODE_PRODUCT_BUILD_VERSION:-}" ]]
+}
+
+# True when VS Code launched this process (integrated terminal or task).
+_get_env_is_vscode() {
+    [[ "${TERM_PROGRAM:-}" == 'vscode' ]] && return 0
+    [[ -n "${VSCODE_PID:-}" || -n "${VSCODE_INJECTION:-}" ]] && return 0
+    [[ "${__CFBundleIdentifier:-}" == "$GET_ENV_BUNDLE_VSCODE" ]] && return 0
+    return 1
+}
+
+# True when Android Studio launched this process (terminal or Gradle).
+_get_env_is_android_studio() {
+    [[ "${__CFBundleIdentifier:-}" == "$GET_ENV_BUNDLE_ANDROID_STUDIO" ]] && return 0
+    [[ "${TERMINAL_EMULATOR:-}" == 'JetBrains-JediTerm' && -n "${ANDROID_HOME:-}" ]] && return 0
+    return 1
+}
+
+get_env() {
+    if _get_env_is_xcode; then
+        print -- "$GET_ENV_SOURCE_XCODE"
+        return 0
+    fi
+
+    if [[ -t 0 ]] && ! _get_env_parent_is_interactive_shell; then
+        print -- "$GET_ENV_SOURCE_PLUMBING"
+        return 0
+    fi
+
+    if _get_env_is_vscode; then
+        print -- "$GET_ENV_SOURCE_VSCODE"
+        return 0
+    fi
+
+    if _get_env_is_android_studio; then
+        print -- "$GET_ENV_SOURCE_ANDROID_STUDIO"
+        return 0
+    fi
+
+    if [[ ! -t 0 ]]; then
+        print -- "$GET_ENV_SOURCE_PLUMBING"
+        return 0
+    fi
+
+    print -- "$GET_ENV_SOURCE_TERMINAL"
+    return 0
+}
+
+# When executed as a command (not sourced), run it and print the result.
+if [[ "$ZSH_EVAL_CONTEXT" == 'toplevel' ]]; then
+    get_env
+fi

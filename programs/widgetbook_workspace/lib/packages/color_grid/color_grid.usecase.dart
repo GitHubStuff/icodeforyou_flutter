@@ -1,8 +1,8 @@
 // programs/widgetbook_workspace/lib/packages/color_grid/color_grid.usecase.dart
 import 'package:color_grid/color_grid.dart' show ColorGrid;
-import 'package:extensions/enum/src/haptic_intensity.dart' show HapticIntensity;
 import 'package:flutter/material.dart'
     show BuildContext, Center, Widget;
+import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 import 'package:oktoast/oktoast.dart' show showToast;
 import 'package:widgetbook/widgetbook.dart' show KnobsExtension;
 import 'package:widgetbook_annotation/widgetbook_annotation.dart'

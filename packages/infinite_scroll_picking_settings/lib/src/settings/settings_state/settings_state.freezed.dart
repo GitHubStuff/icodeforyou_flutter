@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'settings_state.dart';
@@ -9,6 +9,7 @@ part of 'settings_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -20,7 +21,7 @@ mixin _$SettingsState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsState);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsState);
 }
 
 
@@ -29,7 +30,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'SettingsState()';
+    return 'SettingsState()';
 }
 
 
@@ -197,7 +198,7 @@ class SettingsInitial implements SettingsState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsInitial);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsInitial);
 }
 
 
@@ -206,7 +207,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'SettingsState.initial()';
+    return 'SettingsState.initial()';
 }
 
 
@@ -229,7 +230,7 @@ class SettingsLoading implements SettingsState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsLoading);
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsLoading);
 }
 
 
@@ -238,7 +239,7 @@ int get hashCode => runtimeType.hashCode;
 
 @override
 String toString() {
-  return 'SettingsState.loading()';
+    return 'SettingsState.loading()';
 }
 
 
@@ -267,16 +268,18 @@ $SettingsLoadedCopyWith<SettingsLoaded> get copyWith => _$SettingsLoadedCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsLoaded&&(identical(other.settings, settings) || other.settings == settings)&&(identical(other.isDirty, isDirty) || other.isDirty == isDirty));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsLoaded&&(identical(other.settings, settings) || other.settings == settings)&&(identical(other.isDirty, isDirty) || other.isDirty == isDirty));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,settings,isDirty);
+int get hashCode {
+    return Object.hash(runtimeType,settings,isDirty);
+}
 
 @override
 String toString() {
-  return 'SettingsState.loaded(settings: $settings, isDirty: $isDirty)';
+    return 'SettingsState.loaded(settings: $settings, isDirty: $isDirty)';
 }
 
 
@@ -343,16 +346,18 @@ $SettingsErrorCopyWith<SettingsError> get copyWith => _$SettingsErrorCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsError&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsError&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode {
+    return Object.hash(runtimeType,message);
+}
 
 @override
 String toString() {
-  return 'SettingsState.error(message: $message)';
+    return 'SettingsState.error(message: $message)';
 }
 
 

@@ -1,6 +1,5 @@
 // packages/custom_widgets/lib/src/anchored/anchored.dart
 
-import 'package:extensions/enum/src/placement.dart' show Placement;
 import 'package:flutter/widgets.dart';
 
 /// Positions a child relative to an anchor widget, using a [Placement] plus
@@ -24,7 +23,7 @@ class Anchored extends StatelessWidget {
   /// widget.
   const Anchored({
     required this.child,
-    required this.atPlacement,
+    required this.alignment,
     required this.toAnchor,
     this.offset = Offset.zero,
     super.key,
@@ -34,7 +33,7 @@ class Anchored extends StatelessWidget {
   final Widget child;
 
   /// Where the [child] sits relative to the [toAnchor].
-  final Placement atPlacement;
+  final Alignment alignment;
 
   /// The anchor that the [child] is positioned relative to.
   final Widget toAnchor;
@@ -52,7 +51,7 @@ class Anchored extends StatelessWidget {
         toAnchor,
         Positioned.fill(
           child: Align(
-            alignment: atPlacement.toAlignment,
+            alignment: alignment,
             child: Transform.translate(offset: offset, child: child),
           ),
         ),

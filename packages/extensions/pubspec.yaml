@@ -5,11 +5,12 @@ version: 1.0.4
 resolution: workspace
 
 environment:
-  sdk: ^3.12.0
+  sdk: ^3.13.7
 
 dependencies:
   flutter:
     sdk: flutter
+  intl: ^0.20.3
   json_annotation: ^4.12.0
 
 dev_dependencies:

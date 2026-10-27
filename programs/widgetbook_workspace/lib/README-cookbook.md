@@ -15,11 +15,9 @@ dart run build_runner build
 
 Upload or paste `lib/main.directories.g.dart` to Claude with this exact prompt:
 
----
+### Prompt
 
 Apply the widgetbook directory ordering to this new `main.directories.g.dart` and produce a new `main.directories.dart`. Use the existing package order and structure from our previous session. Give me the file for download.
-
----
 
 ## Step 3 — replace the file
 

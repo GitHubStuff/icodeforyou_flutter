@@ -3,8 +3,8 @@ part of 'routes_framework.dart';
 
 //+ COLLECTION OF STARTER/DEFAULT ROUTES +//
 
-/// The route to the app after the splash completes. The
-/// [NavigationCubit] is provided here — above [NavigationChooser] and
+/// The route toshow DockScreen, MoreNavButton, NavigationChooser,
+/// NavigationCubitationCubit] is provided here — above [NavigationChooser] and
 /// therefore above both navigation screens — so selection and rail
 /// visibility survive the dock↔rail swaps that rotation and window
 /// resizing trigger. The cubit is seeded with the dock's initial
@@ -27,18 +27,18 @@ GoRoute _appRoute() => GoRoute(
         child: NavigationChooser(
           chooser: (context) {
             if (MediaQuery.sizeOf(context).width < 600) {
-              return const DockScreen<DockDestinationEnum>(
-                values: DockDestinationEnum.values,
-                visible: DockDestinationEnum.visible,
-                initial: DockDestinationEnum.home,
-                overflowed: DockDestinationEnum.overflowed,
+              return const DockScreen<DockItems>(
+                buttons: DockItems.order,
+                initial: .home,
+                more: .more,
+                size: RailButtonSize.defaultSize,
               );
             }
-            return const RailScreen<RailDestinationEnum>(
-              values: RailDestinationEnum.values,
-              visible: RailDestinationEnum.visible,
-              initial: RailDestinationEnum.home,
-              overflowed: RailDestinationEnum.overflowed,
+            return const DockScreen<DockItems>(
+              buttons: DockItems.order,
+              initial: .home,
+              more: .more,
+              size: RailButtonSize.defaultSize,
             );
           },
         ),

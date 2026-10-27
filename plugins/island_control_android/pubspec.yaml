@@ -1,0 +1,26 @@
+# plugins/island_control_android/pubspec.yaml
+name: island_control_android
+description: "Controls the dynamic island visibility on Android devices"
+version: 1.0.0
+resolution: workspace
+
+environment:
+  sdk: ^3.13.7
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.1.8 #^2.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.icodeforyou.island_control_android
+        pluginClass: IslandControlAndroidPlugin

@@ -1,0 +1,13 @@
+# packages/ext_buildcontext/analysis_options.yaml
+include: package:icodeforyou_lints/analysis_options.yaml
+analyzer:
+  errors:
+    prefer_asserts_with_message: ignore
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
