@@ -1,3 +1,4 @@
+# {{folder_source}}/{{name.snakeCase()}}/pubspec.yaml
 name: {{name.snakeCase()}}
 description: "{{description}}"
 publish_to: none

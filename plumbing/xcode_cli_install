@@ -1,0 +1,25 @@
+#!/usr/bin/env zsh
+set -euo pipefail
+
+if xcode-select -p >/dev/null 2>&1; then
+  echo "Command Line Tools already installed at $(xcode-select -p)"
+  exit 0
+fi
+
+sentinel=/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+sudo touch "$sentinel"
+trap 'sudo rm -f "$sentinel"' EXIT
+
+label=$(softwareupdate --list 2>&1 \
+  | grep -o 'Label: Command Line Tools for Xcode-[0-9.]*' \
+  | sed 's/^Label: //' \
+  | sort -V \
+  | tail -n 1)
+
+if [[ -z "$label" ]]; then
+  echo "No Command Line Tools package found in softwareupdate catalog" >&2
+  exit 1
+fi
+
+sudo softwareupdate --install "$label" --verbose
+xcode-select -p

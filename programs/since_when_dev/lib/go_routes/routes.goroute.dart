@@ -3,7 +3,8 @@ part of 'routes_framework.dart';
 
 //+ COLLECTION OF STARTER/DEFAULT ROUTES +//
 
-/// The route toshow DockScreen, MoreNavButton, NavigationChooser, NavigationCubitationCubit] is provided here — above [NavigationChooser] and
+/// The route toshow DockScreen, MoreNavButton, NavigationChooser,
+/// NavigationCubitationCubit] is provided here — above [NavigationChooser] and
 /// therefore above both navigation screens — so selection and rail
 /// visibility survive the dock↔rail swaps that rotation and window
 /// resizing trigger. The cubit is seeded with the dock's initial

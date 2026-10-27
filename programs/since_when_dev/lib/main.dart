@@ -12,7 +12,7 @@ import 'package:status_bar_chameleon/status_bar_chameleon.dart'
 import 'package:theme_framework/theme_framework.dart'
     show SharedPreferencesThemeStorage;
 
-import 'app/since_when_configurations.dart' show SinceWhenDevConfigurations;
+import 'drift_database/drift_database_configurations.dart' show DriftDatabaseConfigurations;
 
 import 'application_startup.dart' show ApplicationStartup;
 
@@ -33,7 +33,7 @@ Future<void> main() async {
   final resolver = InMemoryDependencyResolver();
   // The Since-When Drift database
   //
-  const configuration = SinceWhenDevConfigurations.inMemory;
+  const configuration = DriftDatabaseConfigurations.inMemory;
 
   ApplicationStartup(
     themeStorage: SharedPreferencesThemeStorage(preferences),

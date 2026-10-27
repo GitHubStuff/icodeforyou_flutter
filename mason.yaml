@@ -3,3 +3,5 @@ bricks:
     path: bricks/template_dart
   template_plumbing:
     path: bricks/template_plumbing
+  template_program:
+    path: bricks/template_program

@@ -1,7 +1,7 @@
 // packages/app_navigation/lib/src/widgets/more_nav_button.dart
 
 import 'package:app_navigation/app_navigation.dart' show NavButtonProperties;
-import 'package:app_navigation/src/widgets/button_widget.dart' show NavButton;
+import 'package:app_navigation/src/widgets/nav_button.dart' show NavButton;
 import 'package:flutter/material.dart';
 
 /// {@template more_nav_button}

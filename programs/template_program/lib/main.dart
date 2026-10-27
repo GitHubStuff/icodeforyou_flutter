@@ -6,7 +6,9 @@ void main() {
   runApp(const MainApp());
 }
 
+/// Run point of the app
 class MainApp extends StatelessWidget {
+  /// Simple stateless widget
   const MainApp({super.key});
 
   @override

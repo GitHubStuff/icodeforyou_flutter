@@ -1,4 +1,4 @@
-// programs/since_when_dev/lib/navigation/rail_items.dart
+// programs/since_when_dev/lib/navigation/dock_items.dart
 
 // NOTE: This is the horizontal direction menu items
 
@@ -8,10 +8,10 @@ import 'package:custom_widgets/custom_widgets.dart' show DefaultWelcomeScreen;
 import 'package:demo/demo.dart' show DurationStopwatchDemo, SpinWidgetDemo;
 import 'package:flutter/material.dart';
 import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
-import 'package:since_when_dev/app_shared_navigation/shared_search_body.dart'
-    show SharedSearchBody;
 import 'package:since_when_dev/example/ping_pong_example.dart'
     show PingPongExample;
+import 'package:since_when_dev/example/shared_search_body.dart'
+    show SharedSearchBody;
 import 'package:since_when_dev/navigation/dock_button_sizes.dart'
     show DockButtonSize;
 import 'package:sincewhen_widgets/sincewhen_widgets.dart' show GlossaryEditPage;
@@ -47,14 +47,14 @@ import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 /// {@endtemplate}
 // TODO(steven): Add/remove/reorder members and adjust the statics below.
 
-enum DockItems implements NavButtonProperties {
+enum RailItems implements NavButtonProperties {
   /// The more button
   more(
     slot: .more,
     iconData: Icons.more_horiz,
     caption: 'More',
     haptic: HapticIntensity.primary,
-    viewBuilder: DefaultWelcomeScreen.new, //TODO(steve): Find a method
+    viewBuilder: DefaultWelcomeScreen.new, //TODO(steven): Find a method
   ),
 
   /// The home destination.
@@ -131,7 +131,7 @@ enum DockItems implements NavButtonProperties {
 
   // CODE:
   /// Creates a dock destination with its per-destination data.
-  const DockItems({
+  const RailItems({
     required this.slot,
     required this.iconData,
     required this.caption,
@@ -165,16 +165,16 @@ enum DockItems implements NavButtonProperties {
 
   /// The destination shown when the app screen first appears.
   // TODO(steven): Change the first DOCK-Button to appear.
-  static const DockItems initial = home;
+  static const RailItems initial = home;
 
   /// Subset of menu (aka DockItems) in the order of displlay
-  static const List<DockItems> order = [
+  static const List<RailItems> order = [
     home,
     tools,
+    more,
     search,
     pingPong,
     glossary,
-    database,
-    spinDemo,
+    settings,
   ];
 }

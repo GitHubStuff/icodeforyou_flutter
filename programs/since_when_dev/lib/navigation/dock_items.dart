@@ -8,7 +8,7 @@ import 'package:custom_widgets/custom_widgets.dart' show DefaultWelcomeScreen;
 import 'package:demo/demo.dart' show DurationStopwatchDemo, SpinWidgetDemo;
 import 'package:flutter/material.dart';
 import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
-import 'package:since_when_dev/app_shared_navigation/shared_search_body.dart'
+import 'package:since_when_dev/example/shared_search_body.dart'
     show SharedSearchBody;
 import 'package:since_when_dev/example/ping_pong_example.dart'
     show PingPongExample;

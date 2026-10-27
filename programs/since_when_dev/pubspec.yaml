@@ -19,6 +19,7 @@ dependencies:
   haptic_intensity: ^1.0.0
   ping_pong: ^1.0.0
   prism_bubble_widget: ^1.0.0
+  services_provider: ^1.0.0
   shared_preferences: ^2.5.5
   sincewhen_widgets: ^1.0.0
   sliders: ^1.0.0

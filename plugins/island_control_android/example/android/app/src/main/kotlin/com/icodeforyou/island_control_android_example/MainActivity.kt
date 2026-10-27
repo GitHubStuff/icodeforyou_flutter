@@ -1,0 +1,5 @@
+package com.icodeforyou.island_control_android_example
+
+import com.icodeforyou.island_control_android.IslandFlutterActivity
+
+class MainActivity : IslandFlutterActivity()

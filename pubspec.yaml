@@ -45,6 +45,7 @@ workspace:
   - packages/random_color_generator
   - packages/remind_me
   - packages/service_locator
+  - packages/services_provider
   - packages/settings_widget
   - packages/sincewhen_drift_framework
   - packages/sincewhen_models
@@ -60,6 +61,7 @@ workspace:
   - packages/three_d_sphere
   - packages/time_spans
   - packages/widget_animation_framework
+  - plugins/island_control_android
   - plugins/status_bar_chameleon
   - programs/since_when_dev
   - programs/template_program

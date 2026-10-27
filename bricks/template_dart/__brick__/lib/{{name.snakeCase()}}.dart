@@ -2,4 +2,4 @@
 /// Local root export
 library;
 
-export 'src/{{name.snakeCase()}}.dart';
+export 'src/{{name.snakeCase()}}.dart' show {{name.pascalCase()}};

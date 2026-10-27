@@ -1,7 +1,7 @@
 #!/bin/zsh
 # mason_make - Mason brick consumer for the icodeforyou_flutter monorepo
 
-readonly VERSION='0.9.0'
+readonly VERSION='0.2.0-beta'
 
 readonly TAGLINE='creating monorepo members from Mason bricks'
 
@@ -10,22 +10,31 @@ readonly TAGLINE='creating monorepo members from Mason bricks'
 show_about() {
     printf '%s' "${CYAN}"
     cat <<'EOF'
-mason_make creates a new member(folder + code) of the icodeforyou_flutter
+mason_make creates a new member (folder + code) of the icodeforyou_flutter
 monorepo (a package, plugin, program, or plumbing script) from a Mason brick
 in /bricks off the root of the repo.
 
-It wraps `mason make` with monorepo-aware validation: it verifies the brick
-is both registered in mason.yaml and present under /bricks, verifies the
-output subfolder is one of the allowed monorepo content directories, runs
-`mason get`, then generates the new member at <subfolder>/<name>. When done
-it prints the path to the new member and puts a ready-to-paste `cd` command
-in the clipboard.
+The command line says what to make, which brick to use, and where it goes:
+
+  mason_make <name> --using=<brick> --dir=<subfolder>
+
+It wraps `mason make` with monorepo-aware validation: it verifies every
+brick registered in mason.yaml still exists under /bricks (a stale entry
+breaks mason make for all bricks), verifies the requested brick is both
+registered and present, verifies the output subfolder is one of the allowed
+monorepo content directories, and verifies the output folder does not
+already exist. It reads the brick's variables from brick.yaml and passes
+the ones it knows: `name` gets <name>, `folder_source` gets <subfolder>.
+Mason prompts for any other variables the brick declares, per brick.yaml.
+It runs `mason get`, then generates the new member at <subfolder>/<name>.
+When done it prints the path to the new member and puts a ready-to-paste
+`cd` command in the clipboard.
 
 Run from the monorepo root. Requires mason on PATH.
 
 Examples:
-  % mason_make sincewhen_models -using=archetypes -dir=packages
-  % mason_make git_me -using=template_plumbing -dir=plumbing
+  % mason_make sincewhen_models --using=template_dart --dir=packages
+  % mason_make git_me --using=template_plumbing --dir=plumbing
   % mason_make -h                          # help (also --help)
   % mason_make --about                     # this text (also -a)
 EOF
@@ -41,6 +50,15 @@ readonly -a SOLO_FLAGS=('-a' '--about' '-h' '--help')
 
 # The one flag allowed alongside anything, including a solo flag.
 readonly TRACE_FLAG='-x'
+
+# Long options that take a value, written as --<option>=<value>.
+readonly USING_OPTION='--using'
+readonly DIR_OPTION='--dir'
+
+# Brick variables the script fills from its own arguments, when the brick
+# declares them. Mason prompts for every other variable the brick declares.
+readonly NAME_VAR='name'            # <- <name>
+readonly FOLDER_VAR='folder_source' # <- --dir
 
 # Positional-argument contract. Exactly one of:
 #   none     - the script takes no positional argument; giving one is an error
@@ -60,6 +78,9 @@ readonly ROOT_PUBSPEC='pubspec.yaml'
 readonly ROOT_MASON='mason.yaml'
 readonly BRICKS_DIR='bricks'
 
+# Every brick's metadata file.
+readonly BRICK_YAML='brick.yaml'
+
 # zsh strict mode:
 #  -e (errexit) - exit immediately when any command returns non-zero
 #  -u (nounset) - treat use of unset variables as an error (typo catcher)
@@ -70,51 +91,59 @@ set -euo pipefail
 # Help text with colors, displays when "-h" or "--help" is the only parameter
 # (optionally with -x), and on any usage error.
 #
-# Every flag listed here must have a matching branch in main()'s case.
+# Every option listed here must have a matching branch in main()'s case.
 show_help() {
     cat <<EOF
 ${BOLD}USAGE${RESET}
-    ${GREEN}${SCRIPT_NAME}${RESET} ${WHITE}${POSITIONAL_NAME}${RESET} ${YELLOW}-using=${RESET}${WHITE}<brick>${RESET} ${YELLOW}-dir=${RESET}${WHITE}<subfolder>${RESET} [${YELLOW}-x${RESET}]
+    ${GREEN}${SCRIPT_NAME}${RESET} ${WHITE}${POSITIONAL_NAME}${RESET} ${YELLOW}${USING_OPTION}=${RESET}${WHITE}<brick>${RESET} ${YELLOW}${DIR_OPTION}=${RESET}${WHITE}<subfolder>${RESET} [${YELLOW}-x${RESET}]
     ${GREEN}${SCRIPT_NAME}${RESET} ${YELLOW}-h${RESET}, ${YELLOW}--help${RESET} [${YELLOW}-x${RESET}]
     ${GREEN}${SCRIPT_NAME}${RESET} ${YELLOW}-a${RESET}, ${YELLOW}--about${RESET} [${YELLOW}-x${RESET}]
 
-    ${POSITIONAL_NAME} is the only positional argument (${POSITIONAL}). Flags go in any order.
+    ${POSITIONAL_NAME} is the only positional argument (${POSITIONAL}). Options go in any order.
     -h/--help and -a/--about must be used alone; only -x may accompany them.
 
 ${BOLD}ARGUMENTS${RESET}
-    ${WHITE}${POSITIONAL_NAME}${RESET}               new member name in snake_case; becomes both the
-                         --name passed to mason and the output folder name
+    ${WHITE}${POSITIONAL_NAME}${RESET}                 new member name in snake_case; becomes the output
+                           folder name under <subfolder> AND the brick's
+                           '${NAME_VAR}' variable
 
-${BOLD}FLAGS${RESET}
-    ${YELLOW}-using=${RESET}${WHITE}<brick>${RESET}       brick to consume (required); must be registered in the
-                         root ${ROOT_MASON} AND exist as a folder under /${BRICKS_DIR}
-    ${YELLOW}-dir=${RESET}${WHITE}<subfolder>${RESET}     monorepo subfolder receiving the new member (required)
-                         allowed: ${GREEN}${(j:, :)ALLOWED_DIRS}${RESET}
-    ${YELLOW}-x${RESET}                   turn on command tracing after the arguments are read
-                         (may be combined with anything)
-    ${YELLOW}-h${RESET}, ${YELLOW}--help${RESET}           show this help, then exit (no other parameters)
-    ${YELLOW}-a${RESET}, ${YELLOW}--about${RESET}          show what this script is and does, then exit
-                         (no other parameters)
+${BOLD}OPTIONS${RESET}
+    ${YELLOW}${USING_OPTION}=${RESET}${WHITE}<brick>${RESET}        brick to consume (required); must be registered in the
+                           root ${ROOT_MASON} AND exist as a folder under /${BRICKS_DIR}
+    ${YELLOW}${DIR_OPTION}=${RESET}${WHITE}<subfolder>${RESET}      monorepo subfolder receiving the new member (required);
+                           also the brick's '${FOLDER_VAR}' variable when declared
+                           allowed: ${GREEN}${(j:, :)ALLOWED_DIRS}${RESET}
+    ${YELLOW}-x${RESET}                     turn on command tracing after the arguments are read
+                           (may be combined with anything)
+    ${YELLOW}-h${RESET}, ${YELLOW}--help${RESET}             show this help, then exit (no other parameters)
+    ${YELLOW}-a${RESET}, ${YELLOW}--about${RESET}            show what this script is and does, then exit
+                           (no other parameters)
 
 ${BOLD}WHAT IT DOES${RESET}
     1. Verifies it is running from the monorepo root
        (${ROOT_PUBSPEC}, ${ROOT_MASON} and /${BRICKS_DIR} required).
     2. Verifies <subfolder> is allowed and exists.
-    3. Verifies the brick is registered in ${ROOT_MASON} AND present
+    3. Verifies every path brick registered in ${ROOT_MASON} exists under
+       /${BRICKS_DIR} (one stale entry breaks mason make for all bricks).
+    4. Verifies the requested brick is registered in ${ROOT_MASON} AND present
        under /${BRICKS_DIR} (guards deletions and typos).
-    4. Runs mason get.
-    5. Runs: mason make <brick> --name ${POSITIONAL_NAME} -o <subfolder>/${POSITIONAL_NAME}
-       (mason handles its own prompts and overwrite conflicts).
-    6. Prints the full path to the new member and puts a ready-to-paste
+    5. Verifies <subfolder>/${POSITIONAL_NAME} does not already exist.
+    6. Reads the brick's ${BRICK_YAML} and passes the variables it knows:
+       '${NAME_VAR}' <- ${POSITIONAL_NAME}, '${FOLDER_VAR}' <- <subfolder>. Mason prompts
+       for the rest, per ${BRICK_YAML}.
+    7. Runs mason get.
+    8. Runs: mason make <brick> --${NAME_VAR} ${POSITIONAL_NAME} [--${FOLDER_VAR} <subfolder>]
+             -o <subfolder>/${POSITIONAL_NAME}
+    9. Prints the full path to the new member and puts a ready-to-paste
        'cd <path>' command in the clipboard (pbcopy).
 
 ${BOLD}EXAMPLES${RESET}
-    % ${GREEN}${SCRIPT_NAME}${RESET} sincewhen_models -using=archetypes -dir=packages   ${CYAN}# new package${RESET}
-    % ${GREEN}${SCRIPT_NAME}${RESET} cooool_stuff -using=black_velvet -dir=programs     ${CYAN}# new program${RESET}
-    % ${GREEN}${SCRIPT_NAME}${RESET} git_me -using=template_plumbing -dir=plumbing -x   ${CYAN}# new plumbing script, traced${RESET}
-    % ${GREEN}${SCRIPT_NAME}${RESET} -h                                                ${CYAN}# this help${RESET}
-    % ${GREEN}${SCRIPT_NAME}${RESET} --about -x                                        ${CYAN}# what this script is, traced${RESET}
-    % ${GREEN}${SCRIPT_NAME}${RESET} -a -h                                             ${CYAN}# INVALID: solo flags cannot mix${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} sincewhen_models --using=template_dart --dir=packages   ${CYAN}# new package${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} cooool_stuff --using=template_dart --dir=programs       ${CYAN}# new program${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} git_me --using=template_plumbing --dir=plumbing -x       ${CYAN}# new plumbing script, traced${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} -h                                                      ${CYAN}# this help${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} --about -x                                              ${CYAN}# what this script is, traced${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} -a -h                                                   ${CYAN}# INVALID: solo flags cannot mix${RESET}
 
 EOF
 }
@@ -182,7 +211,7 @@ reset_xtrace() {
 trap reset_xtrace EXIT
 
 # --- state -----------------------------------------------------------------
-# Filled by argument parsing.
+# Filled by argument parsing and validation.
 
 # true when -x was given; tracing is enabled once the arguments are read.
 trace_requested=false
@@ -190,11 +219,14 @@ trace_requested=false
 # The positional argument: the new member name in snake_case.
 member_name=''
 
-# Brick to consume, from -using=<brick>.
+# Brick to consume, from --using=<brick>.
 brick=''
 
-# Monorepo subfolder receiving the new member, from -dir=<subfolder>.
+# Monorepo subfolder receiving the new member, from --dir=<subfolder>.
 target_dir=''
+
+# The brick's declared variables, in declaration order, from its brick.yaml.
+typeset -a brick_vars=()
 
 # --- argument rules --------------------------------------------------------
 
@@ -274,44 +306,61 @@ require_positional() {
     fi
 }
 
-# Accepts -using=<brick>. Sets brick.
+# Accepts --using=<brick>. Sets brick.
 accept_brick() {
     local value="$1"
     if [[ -z "$value" ]]; then
-        usage_exit '-using requires a brick name (e.g. -using=archetypes)'
+        usage_exit "${USING_OPTION} requires a brick name (e.g. ${USING_OPTION}=template_dart)"
     fi
     if [[ -n "$brick" ]]; then
-        usage_exit "one -using at a time, got ${brick} and ${value}"
+        usage_exit "one ${USING_OPTION} at a time, got ${brick} and ${value}"
     fi
     brick="$value"
 }
 
-# Accepts -dir=<subfolder>. Sets target_dir.
+# Accepts --dir=<subfolder>. Sets target_dir.
 accept_dir() {
     local value="$1"
     if [[ -z "$value" ]]; then
-        usage_exit "-dir requires a subfolder (allowed: ${(j:, :)ALLOWED_DIRS})"
+        usage_exit "${DIR_OPTION} requires a subfolder (allowed: ${(j:, :)ALLOWED_DIRS})"
     fi
     if [[ -n "$target_dir" ]]; then
-        usage_exit "one -dir at a time, got ${target_dir} and ${value}"
+        usage_exit "one ${DIR_OPTION} at a time, got ${target_dir} and ${value}"
     fi
     target_dir="$value"
 }
 
-# After parsing: fails when any required flag is missing.
-require_flags() {
+# After parsing: fails when any required option is missing.
+require_options() {
     if [[ -z "$brick" ]]; then
-        usage_exit 'missing required -using=<brick>'
+        usage_exit "missing required ${USING_OPTION}=<brick>"
     fi
     if [[ -z "$target_dir" ]]; then
-        usage_exit "missing required -dir=<subfolder> (allowed: ${(j:, :)ALLOWED_DIRS})"
+        usage_exit "missing required ${DIR_OPTION}=<subfolder> (allowed: ${(j:, :)ALLOWED_DIRS})"
     fi
+}
+
+# --- paths -----------------------------------------------------------------
+
+# Relative path of the new member from the monorepo root.
+target_path() {
+    printf '%s/%s' "$target_dir" "$member_name"
+}
+
+# Relative path of the requested brick's folder.
+brick_dir() {
+    printf '%s/%s' "$BRICKS_DIR" "$brick"
+}
+
+# Relative path of the requested brick's brick.yaml.
+brick_yaml() {
+    printf '%s/%s' "$(brick_dir)" "$BRICK_YAML"
 }
 
 # --- validation ------------------------------------------------------------
 
-# The new member name must be snake_case: mason uses it for --name and it
-# becomes the output folder.
+# The new member name must be snake_case: it becomes the output folder and
+# the brick's name variable, which the bricks use as a Dart identifier.
 validate_member_name() {
     if [[ ! "$member_name" =~ '^[a-z][a-z0-9_]*$' ]]; then
         usage_exit "${POSITIONAL_NAME} must be snake_case (got: ${member_name})"
@@ -338,31 +387,108 @@ validate_target_dir() {
     fi
 }
 
-# The brick must be registered in mason.yaml AND present under /bricks.
-# Checking both guards against deleted bricks and typos in either place.
+# Every path brick registered in mason.yaml must exist on disk. Mason resolves
+# the whole registry when it runs `mason make`, so ONE stale entry (brick
+# folder deleted, registration left behind) fails every brick with
+# "Could not find brick at ...". Catch it here with a message naming the
+# offenders. Only `path:` bricks are checked; git/hosted bricks are mason's
+# business.
+validate_registered_bricks() {
+    local line
+    local name=''
+    local brick_path
+    local -a missing=()
+
+    while IFS= read -r line; do
+        if [[ "$line" =~ '^  ([a-z][a-z0-9_]*):[[:space:]]*$' ]]; then
+            name="${match[1]}"
+        elif [[ -n "$name" && "$line" =~ '^    path:[[:space:]]*(.+[^[:space:]])[[:space:]]*$' ]]; then
+            brick_path="${match[1]}"
+            if [[ ! -d "$brick_path" ]]; then
+                missing+=("${name} -> ${brick_path}")
+            fi
+            name=''
+        fi
+    done < "$ROOT_MASON"
+
+    if (( ${#missing[@]} > 0 )); then
+        error_exit "${ROOT_MASON} registers bricks that do not exist on disk; remove the entries or restore the folders, then run 'rm -rf .mason && mason get': ${(j:, :)missing}"
+    fi
+}
+
+# The requested brick must be registered in mason.yaml AND present under
+# /bricks with a brick.yaml. Checking both guards against deleted bricks and
+# typos in either place.
 validate_brick() {
-    if ! grep -q "^  ${brick}:$" "$ROOT_MASON"; then
+    if ! grep -q "^  ${brick}:" "$ROOT_MASON"; then
         error_exit "brick '${brick}' is not registered in ${ROOT_MASON}; create it first (see brick_creator)"
     fi
-    if [[ ! -d "${BRICKS_DIR}/${brick}" ]]; then
-        error_exit "brick '${brick}' is registered in ${ROOT_MASON} but /${BRICKS_DIR}/${brick} does not exist (deleted brick or typo in ${ROOT_MASON})"
+    if [[ ! -d "$(brick_dir)" ]]; then
+        error_exit "brick '${brick}' is registered in ${ROOT_MASON} but /$(brick_dir) does not exist (deleted brick or typo in ${ROOT_MASON})"
     fi
+    if [[ ! -f "$(brick_yaml)" ]]; then
+        error_exit "brick '${brick}' has no ${BRICK_YAML} at /$(brick_yaml)"
+    fi
+}
+
+# The output folder must not already exist. Generating into an existing
+# member is a mistake.
+validate_target_path() {
+    if [[ -e "$(target_path)" ]]; then
+        error_exit "/$(target_path) already exists; pick another ${POSITIONAL_NAME} or remove it first"
+    fi
+}
+
+# --- brick variables -------------------------------------------------------
+
+# Reads the brick's variable names from brick.yaml into brick_vars.
+# Variables are the 2-space-indented keys under the top-level `vars:` block.
+read_brick_vars() {
+    local line
+    local in_vars=false
+
+    while IFS= read -r line; do
+        if [[ "$line" =~ '^vars:[[:space:]]*$' ]]; then
+            in_vars=true
+            continue
+        fi
+        if [[ "$in_vars" == false ]]; then
+            continue
+        fi
+        # a new top-level key ends the vars block
+        if [[ "$line" =~ '^[^[:space:]#]' ]]; then
+            break
+        fi
+        if [[ "$line" =~ '^  ([A-Za-z_][A-Za-z0-9_]*):[[:space:]]*$' ]]; then
+            brick_vars+=("${match[1]}")
+        fi
+    done < "$(brick_yaml)"
+
+    if (( ! ${brick_vars[(Ie)$NAME_VAR]} )); then
+        error_exit "brick '${brick}' does not declare the '${NAME_VAR}' variable in ${BRICK_YAML}; ${SCRIPT_NAME} passes ${POSITIONAL_NAME} to it"
+    fi
+}
+
+# Returns 0 when the brick declares variable $1.
+brick_declares() {
+    (( ${brick_vars[(Ie)$1]} ))
 }
 
 # --- work ------------------------------------------------------------------
-
-# Relative path of the new member from the monorepo root.
-target_path() {
-    printf '%s/%s' "$target_dir" "$member_name"
-}
 
 run_mason_get() {
     mason get
     info 'mason get complete'
 }
 
+# Passes the variables the script knows; mason prompts for the rest.
 run_mason_make() {
-    mason make "$brick" --name "$member_name" -o "$(target_path)"
+    local -a mason_vars=("--${NAME_VAR}" "$member_name")
+    if brick_declares "$FOLDER_VAR"; then
+        mason_vars+=("--${FOLDER_VAR}" "$target_dir")
+    fi
+
+    mason make "$brick" "${mason_vars[@]}" -o "$(target_path)"
     success "generated: $(target_path)"
 }
 
@@ -410,13 +536,13 @@ main() {
             -x)
                 trace_requested=true
                 ;;
-            -using=*)
-                accept_brick "${arg#-using=}"
+            --using=*)
+                accept_brick "${arg#--using=}"
                 ;;
-            -dir=*)
-                accept_dir "${arg#-dir=}"
+            --dir=*)
+                accept_dir "${arg#--dir=}"
                 ;;
-            -using|-dir)
+            --using|--dir)
                 usage_exit "${arg} needs a value: ${arg}=<value>"
                 ;;
             -*)
@@ -429,7 +555,7 @@ main() {
     done
 
     require_positional
-    require_flags
+    require_options
 
     if [[ "$trace_requested" == true ]] && ! xtrace_is_on; then
         info 'tracing is on'
@@ -439,7 +565,10 @@ main() {
     validate_member_name
     validate_monorepo_root
     validate_target_dir
+    validate_registered_bricks
     validate_brick
+    validate_target_path
+    read_brick_vars
 
     run_mason_get
     run_mason_make
