@@ -1,5 +1,5 @@
 package com.icodeforyou.{{name.snakeCase()}}
 
-import io.flutter.embedding.android.FlutterActivity
+import com.icodeforyou.island_control_android.IslandFlutterActivity
 
-class MainActivity : FlutterActivity()
+class MainActivity : IslandFlutterActivity()

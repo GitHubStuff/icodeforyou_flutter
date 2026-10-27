@@ -62,9 +62,11 @@ workspace:
   - packages/time_spans
   - packages/widget_animation_framework
   - plugins/island_control_android
+  - plugins/island_control_ios
   - plugins/status_bar_chameleon
   - programs/since_when_dev
   - programs/template_program
+  - programs/tyb
   - programs/widgetbook_workspace
 
 environment:

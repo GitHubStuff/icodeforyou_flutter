@@ -1,7 +1,7 @@
 # plugins/island_control_android/pubspec.yaml
 name: island_control_android
-description: "A new Flutter plugin project."
-version: 0.0.1
+description: "Controls the dynamic island visibility on Android devices"
+version: 1.0.0
 resolution: workspace
 
 environment:
