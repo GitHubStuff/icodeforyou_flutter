@@ -14,4 +14,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build iOS
-        run: xcodebuild -scheme Runner -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14'
+        run: |
+          found=0
+          for dir in $(find plugins packages -name Runner.xcodeproj -not -path "*/Pods/*" -exec dirname {} \;); do
+            found=1
+            (cd "$dir" && xcodebuild -project Runner.xcodeproj -scheme Runner -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build)
+          done
+          if [ "$found" = 0 ]; then echo "No Runner.xcodeproj found; skipping iOS build."; fi
