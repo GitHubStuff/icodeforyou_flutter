@@ -12,7 +12,7 @@
      with customModule="Runner" so the storyboard resolves the Swift class
      in the app target. Keeps the status bar hidden until Flutter's first
      frame renders. -->
-<viewController id="BYZ-38-t0r" customClass="StatusBarFlutterViewController" customModule="Runner" customModuleProvider="target" sceneMemberID="viewController">
+<viewController id="BYZ-38-t0r" customClass="IslandFlutterViewController" customModule="island_control_ios" sceneMemberID="viewController">
 <layoutGuides>
 <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
 <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>

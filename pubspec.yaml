@@ -2,7 +2,7 @@
 name: icodeforyou_flutter
 publish_to: none
 description: "Collection of flutter packages"
-version: 9.7.0
+version: 9.7.2
 
 workspace:
   - packages/analog_clock_widget
@@ -34,6 +34,7 @@ workspace:
   - packages/icodeforyou_lints
   - packages/infinite_scroll_picking
   - packages/infinite_scroll_picking_settings
+  - packages/island_control
   - packages/my_logger
   - packages/neon
   - packages/ping_pong
@@ -64,6 +65,7 @@ workspace:
   - plugins/island_control_android
   - plugins/island_control_ios
   - plugins/status_bar_chameleon
+  - programs/pookie
   - programs/since_when_dev
   - programs/template_program
   - programs/tyb

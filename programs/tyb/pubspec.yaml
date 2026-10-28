@@ -16,7 +16,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   icodeforyou_lints: ^1.0.0
-  island_control_ios: ^1.0.0
+  island_control: ^1.0.0
 
 flutter:
   uses-material-design: true

@@ -2,19 +2,18 @@
 import 'package:dependency_resolver/dependency_resolver.dart'
     show InMemoryDependencyResolver;
 import 'package:flutter/material.dart';
+import 'package:island_control/island_control.dart';
 import 'package:shared_preferences/shared_preferences.dart'
     show SharedPreferences;
 //+ CHANGED (facade imported directly; the app-side forward is gone)
 import 'package:sincewhen_drift_framework/sincewhen_drift_framework.dart'
     show SinceWhenStartup;
-import 'package:status_bar_chameleon/status_bar_chameleon.dart'
-    show StatusBarChameleon;
 import 'package:theme_framework/theme_framework.dart'
     show SharedPreferencesThemeStorage;
 
-import 'drift_database/drift_database_configurations.dart' show DriftDatabaseConfigurations;
-
 import 'application_startup.dart' show ApplicationStartup;
+import 'drift_database/drift_database_configurations.dart'
+    show DriftDatabaseConfigurations;
 
 // NOTE: Android has a choke-hold on the splash screen on cold-start
 // So there is a small 'flash' of the screen status bar.
@@ -24,7 +23,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Hide the bar with time/battery so the splash screen is on a black page
-  await StatusBarChameleon.setStatusBarHidden(hidden: true);
+  IslandControl.setIsland(isHidden: true);
 
   // Preferenes are created here because it is an async task.
   final preferences = await SharedPreferences.getInstance();

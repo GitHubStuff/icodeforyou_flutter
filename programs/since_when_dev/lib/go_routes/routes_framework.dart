@@ -10,14 +10,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider;
 import 'package:go_router/go_router.dart';
+import 'package:island_control/island_control.dart';
 import 'package:since_when_dev/navigation/dock_items.dart' show DockItems;
 import 'package:since_when_dev/navigation/rail_button_sizes.dart'
     show RailButtonSize;
 import 'package:since_when_dev/splash/animated_splash_screen.dart'
     show AnimatedSplashScreen;
 import 'package:splash_framework/splash_framework.dart' show SplashScreen;
-import 'package:status_bar_chameleon/status_bar_chameleon.dart'
-    show StatusBarChameleon;
 
 part 'routes.goroute.dart';
 

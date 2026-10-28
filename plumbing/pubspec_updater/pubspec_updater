@@ -1,0 +1,583 @@
+#!/bin/zsh
+# pubspec_updater - Adds a workspace member to the monorepo pubspec.yaml
+
+readonly VERSION='1.0.0'
+
+readonly TAGLINE='Adds a workspace member to the monorepo pubspec.yaml'
+
+# The monorepo this script maintains.
+readonly REPO_ROOT='/Users/denm4/AppDevelopment/icodeforyou_flutter'
+readonly PUBSPEC="${REPO_ROOT}/pubspec.yaml"
+
+# Shows what this script is and does, then exits. Displays when "-a" or
+# "--about" is the only parameter (optionally with -x).
+#
+# Keep this in step with the header comment at the top of the file: it is
+# the elevator pitch (what the script IS), not the reference card (how to
+# drive it) — that is show_help(). The heredoc is quoted so nothing is
+# interpolated; write the script name literally.
+show_about() {
+    printf '%s' "${CYAN}"
+    cat <<'EOF'
+pubspec_updater registers a newly created package, plugin, or program as a
+member of the icodeforyou_flutter monorepo.
+
+It makes a timestamped backup of the root pubspec.yaml, inserts the new
+member under the "workspace:" key (keeping that list sorted), bumps the
+patch number of the root "version:", and then runs "melos clean" and
+"melos bootstrap" from the repo root so the workspace picks the member up.
+Nothing outside the workspace list and the version line is touched, and
+the backup is never deleted. The shell you ran it from ends up exactly
+where it started.
+
+Run it from anywhere. Requires fvm on PATH, the member directory to exist
+under the repo root, and that directory to contain its own pubspec.yaml.
+
+Examples:
+  % pubspec_updater packages/tonker              # add member, run melos
+  % pubspec_updater plugins/tonka --no-melos     # add member, skip melos
+  % pubspec_updater programs/fitty -x            # add member, traced
+  % pubspec_updater -h                           # help (also --help)
+  % pubspec_updater --about                      # this text (also -a)
+EOF
+    printf '%s\n' "${RESET}"
+}
+
+readonly SCRIPT_NAME="${0:t}"
+readonly DEFAULT_BIN_DIR="$HOME/bin"
+readonly COLORS_LIB="${DEFAULT_BIN_DIR}/lib/colors.zsh"
+
+
+# The YAML key whose list we maintain, and the indent its entries use.
+readonly WORKSPACE_KEY='workspace:'
+readonly ENTRY_PREFIX='  - '
+
+# Melos is run through fvm so the repo's pinned Dart SDK is used. The
+# interactive "melos" alias is not available inside a script.
+readonly -a MELOS=('fvm' 'dart' 'run' 'melos')
+
+# Flags that must be the only parameter on the command line (apart from -x).
+readonly -a SOLO_FLAGS=('-a' '--about' '-h' '--help')
+
+# The one flag allowed alongside anything, including a solo flag.
+readonly TRACE_FLAG='-x'
+
+# Skips the melos commands after the pubspec.yaml edit.
+readonly NO_MELOS_FLAG='--no-melos'
+
+# Positional-argument contract. Exactly one of:
+#   none     - the script takes no positional argument; giving one is an error
+#   optional - the script may take one positional argument
+#   required - the script must be given one positional argument
+readonly POSITIONAL='required'
+
+# Display name of the positional argument in help and error text.
+readonly POSITIONAL_NAME='<member>'
+
+# A member is "<parent>/<name>", both lowercase snake_case, no stray slashes.
+readonly MEMBER_PATTERN='^[a-z][a-z0-9_]*/[a-z][a-z0-9_]*$'
+
+# zsh strict mode:
+#  -e (errexit) - exit immediately when any command returns non-zero
+#  -u (nounset) - treat use of unset variables as an error (typo catcher)
+#  -o (pipefail) - pipeline's exit status is the last non-zero status in the pipe,
+#      not just the final command's
+set -euo pipefail
+
+# Help text with colors, displays when "-h" or "--help" is the only parameter
+# (optionally with -x), and on any usage error.
+# The heredoc is unquoted so ${SCRIPT_NAME}, colors, and any readonly
+# constants are interpolated.
+#
+# Every flag listed here must have a matching branch in main()'s case.
+show_help() {
+    cat <<EOF
+${BOLD}USAGE${RESET}
+    ${GREEN}${SCRIPT_NAME}${RESET} ${WHITE}${POSITIONAL_NAME}${RESET} [${YELLOW}${NO_MELOS_FLAG}${RESET}] [${YELLOW}-x${RESET}]
+    ${GREEN}${SCRIPT_NAME}${RESET} ${YELLOW}-h${RESET}, ${YELLOW}--help${RESET} [${YELLOW}-x${RESET}]
+    ${GREEN}${SCRIPT_NAME}${RESET} ${YELLOW}-a${RESET}, ${YELLOW}--about${RESET} [${YELLOW}-x${RESET}]
+
+    ${POSITIONAL_NAME} is the only positional argument (${POSITIONAL}). Flags go in any order.
+    -h/--help and -a/--about must be used alone; only -x may accompany them.
+
+${BOLD}ARGUMENTS${RESET}
+    ${WHITE}${POSITIONAL_NAME}${RESET}             the workspace member to add, as "<parent>/<name>"
+                         (e.g. packages/tonker, plugins/tonka, programs/fitty).
+                         Both parts lowercase snake_case. The directory
+                         ${REPO_ROOT}/<member>
+                         must exist and contain a pubspec.yaml.
+
+${BOLD}FLAGS${RESET}
+    ${YELLOW}${NO_MELOS_FLAG}${RESET}           edit pubspec.yaml, then stop; skip "melos clean" and
+                         "melos bootstrap"
+    ${YELLOW}-x${RESET}                   turn on command tracing after the arguments are read
+                         (may be combined with anything)
+    ${YELLOW}-h${RESET}, ${YELLOW}--help${RESET}           show this help, then exit (no other parameters)
+    ${YELLOW}-a${RESET}, ${YELLOW}--about${RESET}          show what this script is and does, then exit
+                         (no other parameters)
+
+${BOLD}WHAT IT DOES${RESET}
+    1. Checks fvm is on PATH, the root pubspec.yaml is readable, and the
+       member directory exists with its own pubspec.yaml.
+    2. Checks the member is not already listed under "${WORKSPACE_KEY}".
+    3. Copies pubspec.yaml to pubspec.yaml.YYYY-MM-DD_HHMMSS (never deleted).
+    4. Inserts the member under "${WORKSPACE_KEY}" and re-sorts that list.
+    5. Bumps the patch number of the root "version:" (9.7.0 -> 9.7.1).
+    6. Runs "fvm dart run melos clean" then "fvm dart run melos bootstrap"
+       from the repo root (unless ${NO_MELOS_FLAG}).
+    Any failure aborts immediately; nothing is restored or cleaned up beyond
+    the script's own temp file. Your shell stays in the directory it started in.
+
+${BOLD}EXAMPLES${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} packages/tonker             ${CYAN}# add member, run melos${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} plugins/tonka ${NO_MELOS_FLAG}    ${CYAN}# add member, skip melos${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} programs/fitty -x           ${CYAN}# add member, traced${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} -h                          ${CYAN}# this help${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} --about -x                  ${CYAN}# what this script is, traced${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} -a -h                       ${CYAN}# INVALID: solo flags cannot mix${RESET}
+
+EOF
+}
+
+# verify color library
+if [[ ! -r "$COLORS_LIB" ]]; then
+    printf '%s: %s not found, cannot continue\n' "$SCRIPT_NAME" "$COLORS_LIB" >&2
+    exit 1
+fi
+# reads the file and executes its contents in the current shell, rather than
+# in a child process. So every function, variable, alias, and setopt defined
+# in colors.zsh becomes available in your script's own scope — which is the
+# whole point of a library file.
+source "$COLORS_LIB"
+
+# --- output ----------------------------------------------------------------
+
+show_banner() {
+    printf '\n'
+    version_print "$SCRIPT_NAME" "$VERSION" "$TAGLINE"
+    printf '\n'
+}
+
+error_exit() {
+    printf '\n'
+    error "$1" >&2
+    printf '\n'
+    exit 1
+}
+
+# Any bad input: report it, show help, exit 1.
+usage_exit() {
+    printf '\n'
+    error "$1" >&2
+    printf '\n'
+    show_help >&2
+    exit 1
+}
+
+# --- xtrace record / reset -------------------------------------------------
+# Having the parameter -x turns on tracing if NOT already on, and at the end
+# of the script it is reset to what the parent shell had.
+XTRACE_WAS_ON=false
+
+xtrace_is_on() {
+    [[ -o xtrace ]]
+}
+
+record_xtrace() {
+    if xtrace_is_on; then
+        XTRACE_WAS_ON=true
+    fi
+}
+
+enable_xtrace() {
+    if xtrace_is_on; then
+        return 0
+    fi
+    info 'tracing is on'
+    set -x
+}
+
+reset_xtrace() {
+    if [[ "$XTRACE_WAS_ON" == false ]] && xtrace_is_on; then
+        set +x
+        info 'tracing is off'
+    fi
+}
+
+# --- exit cleanup ----------------------------------------------------------
+# The only thing this script ever removes is the temp file it wrote itself.
+# The backup and the (possibly half-done) pubspec.yaml are left alone.
+
+temp_pubspec=''
+
+remove_temp_pubspec() {
+    if [[ -n "$temp_pubspec" && -e "$temp_pubspec" ]]; then
+        rm -f -- "$temp_pubspec"
+    fi
+}
+
+on_exit() {
+    remove_temp_pubspec
+    reset_xtrace
+}
+
+trap on_exit EXIT
+
+# --- state -----------------------------------------------------------------
+# Filled by argument parsing.
+
+# true when -x was given; tracing is enabled once the arguments are read.
+trace_requested=false
+
+# true when --no-melos was given; the melos commands are skipped.
+no_melos_requested=false
+
+# The positional argument, empty when none was given.
+member=''
+
+# Filled by load_pubspec(): the whole file, one element per line, and the
+# 1-based indexes of the lines this script cares about.
+typeset -a pubspec_lines=()
+version_index=0
+workspace_index=0       # the "workspace:" line
+workspace_last_index=0  # the last "  - member" line of the block
+typeset -a workspace_entries=()
+
+# --- argument rules --------------------------------------------------------
+
+# Returns 0 when $1 is one of SOLO_FLAGS.
+is_solo_flag() {
+    (( ${SOLO_FLAGS[(Ie)$1]} ))
+}
+
+# Returns 0 when $1 is the trace flag.
+is_trace_flag() {
+    [[ "$1" == "$TRACE_FLAG" ]]
+}
+
+# Returns 0 when any of the given arguments is the trace flag.
+trace_requested_in() {
+    (( ${@[(Ie)$TRACE_FLAG]} ))
+}
+
+# Enforces the solo-flag rule over the full command line:
+#   - at most one of SOLO_FLAGS may appear
+#   - when one appears, nothing else may, except TRACE_FLAG
+# Any violation is a usage error.
+enforce_solo_flags() {
+    local arg
+    local solo=''
+    local -a others=()
+
+    for arg in "$@"; do
+        if is_trace_flag "$arg"; then
+            continue
+        fi
+        if is_solo_flag "$arg"; then
+            if [[ -n "$solo" ]]; then
+                usage_exit "${solo} and ${arg} cannot be combined"
+            fi
+            solo="$arg"
+        else
+            others+=("$arg")
+        fi
+    done
+
+    if [[ -n "$solo" ]] && (( ${#others[@]} > 0 )); then
+        usage_exit "${solo} must be the only parameter (apart from ${TRACE_FLAG}), got: ${others[*]}"
+    fi
+}
+
+# -a / --about is handled before the banner so the output is just the about
+# text. enforce_solo_flags() has already guaranteed nothing else is present
+# except possibly -x, which is honoured.
+handle_about() {
+    if (( ${@[(Ie)--about]} || ${@[(Ie)-a]} )); then
+        if trace_requested_in "$@"; then
+            enable_xtrace
+        fi
+        show_about
+        exit 0
+    fi
+}
+
+# Accepts one positional argument per the POSITIONAL contract. Sets member.
+accept_positional() {
+    local arg="$1"
+    if [[ "$POSITIONAL" == 'none' ]]; then
+        usage_exit "${SCRIPT_NAME} takes no positional argument, got: ${arg}"
+    fi
+    if [[ -n "$member" ]]; then
+        usage_exit "one ${POSITIONAL_NAME} at a time, got ${member} and ${arg}"
+    fi
+    member="$arg"
+}
+
+# After parsing: fails when the contract is 'required' and none was given.
+require_positional() {
+    if [[ "$POSITIONAL" == 'required' && -z "$member" ]]; then
+        usage_exit "${POSITIONAL_NAME} is required"
+    fi
+}
+
+# --- preconditions ---------------------------------------------------------
+# Every check that can fail runs before anything is written.
+
+require_fvm() {
+    if ! command -v fvm >/dev/null 2>&1; then
+        error_exit 'fvm is not on PATH; melos is run as "fvm dart run melos"'
+    fi
+}
+
+require_pubspec() {
+    if [[ ! -r "$PUBSPEC" ]]; then
+        error_exit "cannot read ${PUBSPEC}"
+    fi
+    if [[ ! -w "$PUBSPEC" || ! -w "$REPO_ROOT" ]]; then
+        error_exit "cannot write ${PUBSPEC} (file and ${REPO_ROOT} must be writable)"
+    fi
+}
+
+require_member_shape() {
+    if [[ ! "$member" =~ $MEMBER_PATTERN ]]; then
+        usage_exit "${POSITIONAL_NAME} must be \"<parent>/<name>\" in lowercase snake_case, got: ${member}"
+    fi
+}
+
+require_member_exists() {
+    local member_dir="${REPO_ROOT}/${member}"
+    if [[ ! -d "$member_dir" ]]; then
+        error_exit "${member_dir} does not exist; create the member before registering it"
+    fi
+    if [[ ! -f "${member_dir}/pubspec.yaml" ]]; then
+        error_exit "${member_dir} has no pubspec.yaml; it is not a workspace member"
+    fi
+}
+
+require_member_absent() {
+    if (( ${workspace_entries[(Ie)$member]} )); then
+        error_exit "${member} is already listed under ${WORKSPACE_KEY} in ${PUBSPEC}"
+    fi
+}
+
+# --- pubspec reading -------------------------------------------------------
+
+# Reads PUBSPEC into pubspec_lines and locates the version line and the
+# workspace block. The block runs from the line after "workspace:" to the
+# line before the first blank line; every line in it must be an entry.
+load_pubspec() {
+    pubspec_lines=("${(@f)$(<"$PUBSPEC")}")
+
+    locate_version_line
+    locate_workspace_block
+}
+
+locate_version_line() {
+    local -i i
+    for (( i = 1; i <= ${#pubspec_lines[@]}; i++ )); do
+        if [[ "${pubspec_lines[i]}" == version:* ]]; then
+            version_index=$i
+            return 0
+        fi
+    done
+    error_exit "no top-level \"version:\" line found in ${PUBSPEC}"
+}
+
+locate_workspace_block() {
+    local -i i
+    for (( i = 1; i <= ${#pubspec_lines[@]}; i++ )); do
+        if [[ "${pubspec_lines[i]}" == "$WORKSPACE_KEY" ]]; then
+            workspace_index=$i
+            break
+        fi
+    done
+    if (( workspace_index == 0 )); then
+        error_exit "no \"${WORKSPACE_KEY}\" line found in ${PUBSPEC}"
+    fi
+
+    collect_workspace_entries
+}
+
+# Walks from the line after "workspace:" to the first blank line, requiring
+# every line to be "  - <parent>/<name>".
+collect_workspace_entries() {
+    local -i i
+    local line entry
+    workspace_entries=()
+    for (( i = workspace_index + 1; i <= ${#pubspec_lines[@]}; i++ )); do
+        line="${pubspec_lines[i]}"
+        if [[ -z "$line" ]]; then
+            break
+        fi
+        if [[ "$line" != "${ENTRY_PREFIX}"* ]]; then
+            error_exit "unexpected line in ${WORKSPACE_KEY} block (line $i): \"${line}\""
+        fi
+        entry="${line#${ENTRY_PREFIX}}"
+        if [[ ! "$entry" =~ $MEMBER_PATTERN ]]; then
+            error_exit "malformed ${WORKSPACE_KEY} entry (line $i): \"${line}\""
+        fi
+        workspace_entries+=("$entry")
+        workspace_last_index=$i
+    done
+    if (( ${#workspace_entries[@]} == 0 )); then
+        error_exit "${WORKSPACE_KEY} block in ${PUBSPEC} is empty"
+    fi
+}
+
+# --- pubspec writing -------------------------------------------------------
+
+# Copies pubspec.yaml beside itself with a timestamp. Refuses to overwrite.
+make_backup() {
+    local backup="${PUBSPEC}.$(date '+%Y-%m-%d_%H%M%S')"
+    if [[ -e "$backup" ]]; then
+        error_exit "backup ${backup} already exists; wait a second and run again"
+    fi
+    cp -p -- "$PUBSPEC" "$backup"
+    success "backup: ${backup}"
+}
+
+# Prints the version line with its patch number incremented.
+# "version: 9.7.0" -> "version: 9.7.1". Anything else is an error.
+bumped_version_line() {
+    local line="${pubspec_lines[version_index]}"
+    if [[ ! "$line" =~ '^version: ([0-9]+)\.([0-9]+)\.([0-9]+)$' ]]; then
+        error_exit "version line is not plain MAJOR.MINOR.PATCH: \"${line}\""
+    fi
+    printf 'version: %s.%s.%s' "${match[1]}" "${match[2]}" $(( match[3] + 1 ))
+}
+
+# Prints the workspace entries plus the new member, one per line, sorted in
+# byte order so packages/* < plugins/* < programs/*.
+sorted_entries_with_member() {
+    printf '%s\n' "${workspace_entries[@]}" "$member" | LC_ALL=C sort
+}
+
+# Writes the updated file to a temp file beside the original, then moves it
+# into place so pubspec.yaml is never left half-written.
+write_updated_pubspec() {
+    local new_version_line
+    local -a sorted_entries
+    local -i i
+
+    new_version_line="$(bumped_version_line)"
+    sorted_entries=("${(@f)$(sorted_entries_with_member)}")
+
+    temp_pubspec="$(mktemp "${REPO_ROOT}/.pubspec_updater.XXXXXX")"
+    {
+        for (( i = 1; i < workspace_index; i++ )); do
+            if (( i == version_index )); then
+                printf '%s\n' "$new_version_line"
+            else
+                printf '%s\n' "${pubspec_lines[i]}"
+            fi
+        done
+        printf '%s\n' "$WORKSPACE_KEY"
+        printf "${ENTRY_PREFIX}%s\n" "${sorted_entries[@]}"
+        for (( i = workspace_last_index + 1; i <= ${#pubspec_lines[@]}; i++ )); do
+            printf '%s\n' "${pubspec_lines[i]}"
+        done
+    } > "$temp_pubspec"
+
+    mv -f -- "$temp_pubspec" "$PUBSPEC"
+    temp_pubspec=''
+
+    success "added ${ENTRY_PREFIX}${member} under ${WORKSPACE_KEY}"
+    success "${pubspec_lines[version_index]} -> ${new_version_line}"
+}
+
+# --- melos -----------------------------------------------------------------
+
+# Runs one melos subcommand from the repo root. The cd happens in a subshell,
+# so the script's own working directory (and the caller's) never changes.
+run_melos() {
+    local subcommand="$1"
+    info "running: ${MELOS[*]} ${subcommand}  (in ${REPO_ROOT})"
+    if ! ( cd "$REPO_ROOT" && "${MELOS[@]}" "$subcommand" ); then
+        error_exit "${MELOS[*]} ${subcommand} failed"
+    fi
+    success "${MELOS[*]} ${subcommand}"
+}
+
+run_melos_commands() {
+    if [[ "$no_melos_requested" == true ]]; then
+        warning "${NO_MELOS_FLAG}: skipped \"melos clean\" and \"melos bootstrap\""
+        return 0
+    fi
+    run_melos clean
+    run_melos bootstrap
+}
+
+# --- finale ----------------------------------------------------------------
+
+celebrate() {
+    printf '\n'
+    color_print "${BOLD}${PURPLE}" "🌈🦄 The world is full of rainbows and unicorns. 🦄🌈"
+}
+
+# -- main ---- where the work is done
+main() {
+    record_xtrace # record current trace
+
+    enforce_solo_flags "$@"
+    handle_about "$@"
+
+    show_banner # banner when the script is started
+
+    # parse/scan the arguments, if any
+    local arg
+    for arg in "$@"; do
+        case "$arg" in
+            -h|--help)
+                show_help
+                exit 0
+                ;;
+            -a|--about)
+                show_about
+                exit 0
+                ;;
+            -x)
+                trace_requested=true
+                ;;
+            --no-melos)
+                no_melos_requested=true
+                ;;
+            #  -*) — matches any string beginning with -. Placed after the
+            #      known flags, it catches typos and unsupported options so they don't
+            #      silently fall through and get treated as a member name.
+            #   *) — matches everything. It's the default/else branch,
+            #      so it must be last.
+            -*)
+                usage_exit "unknown option ${arg}"
+                ;;
+            *)
+                accept_positional "$arg"
+                ;;
+        esac
+    done
+
+    require_positional
+
+    if [[ "$trace_requested" == true ]]; then
+        enable_xtrace
+    fi
+
+    # Everything that can fail, before anything is written.
+    require_fvm
+    require_pubspec
+    require_member_shape
+    require_member_exists
+    load_pubspec
+    require_member_absent
+
+    # The edit.
+    make_backup
+    write_updated_pubspec
+
+    # The follow-through.
+    run_melos_commands
+    celebrate
+}
+
+# Run 'main()' with the parameters, and print a blank line
+main "$@"
+printf '\n'

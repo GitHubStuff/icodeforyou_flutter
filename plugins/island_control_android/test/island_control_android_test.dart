@@ -69,19 +69,10 @@ void main() {
       IslandControlAndroidPlatform.instance = initialPlatform;
     });
 
-    test('delegates to the injected platform', () async {
-      final control = IslandControlAndroid(platform: fake);
-
-      await control.setIsland(isHidden: true);
-      await control.setIsland(isHidden: false);
-
-      expect(fake.hiddenCalls, <bool>[true, false]);
-    });
-
     test('defaults to IslandControlAndroidPlatform.instance', () async {
       IslandControlAndroidPlatform.instance = fake;
 
-      await IslandControlAndroid().setIsland(isHidden: true);
+      await IslandControlAndroid.setIsland(isHidden: true);
 
       expect(fake.hiddenCalls, <bool>[true]);
     });

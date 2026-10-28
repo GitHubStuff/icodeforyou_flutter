@@ -1,13 +1,11 @@
 // programs/{{name.snakeCase()}}/lib/main.dart
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:island_control_android/island_control_android.dart';
+import 'package:island_control/island_control.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  unawaited(IslandControlAndroid().setIsland(isHidden: true));
+  IslandControl.setIsland(isHidden: true);
   runApp(const MainApp());
 }
 

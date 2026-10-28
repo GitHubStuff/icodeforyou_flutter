@@ -1,10 +1,6 @@
 // programs/since_when_dev/lib/splash/animated_splash_screen.dart
-
-import 'dart:async' show unawaited;
-
 import 'package:flutter/widgets.dart';
-import 'package:status_bar_chameleon/status_bar_chameleon.dart'
-    show StatusBarChameleon;
+import 'package:island_control/island_control.dart';
 import 'package:widget_animation_framework/widget_animation_framework.dart'
     show AnimationControllerWidget;
 
@@ -29,8 +25,7 @@ class AnimatedSplashScreen extends StatelessWidget {
   Widget build(BuildContext context) => AnimationControllerWidget(
     duration: _splashDuration,
     curve: Curves.easeInOut,
-    onCompleted: () =>
-        unawaited(StatusBarChameleon.setStatusBarHidden(hidden: false)),
+    onCompleted: () => IslandControl.setIsland(isHidden: false),
     builder: (context, animation) => DefaultSplashArt(animation: animation),
   );
 }

@@ -51,6 +51,7 @@ Jasmine Summer - 6
 Jenny Kitty - 132
 Jenny Lux - 149
 Julie Jesse
+Kandy Lux + 200
 Kate Kravets - X
 Katty Soarez - X
 Kenia Music - 200+ [ugly tatts]
@@ -92,6 +93,7 @@ Nelary Love - 53 (24-oct-2026)
 Only Love - 200+
 Owl Crystal
 PinkRose - 16 {tat between tits 🤮}
+RawZ = 63
 Samy Sun7 - X
 Sara Jay - X
 Sarah Arabic - X

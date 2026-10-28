@@ -1,0 +1,25 @@
+# packages/island_control/pubspec.yaml
+name: island_control
+description: "Controls Dynamic Island"
+publish_to: none
+resolution: workspace
+version: 1.0.0
+
+environment:
+  sdk: ^3.13.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+  gap: ^3.0.1
+  island_control_android: ^1.0.0
+  island_control_ios: ^1.0.0
+  platform_tools: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true

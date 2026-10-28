@@ -1,14 +1,11 @@
 // programs/tyb/lib/main.dart
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:island_control_ios/island_control_ios.dart'
-    show IslandControlIos;
+import 'package:island_control/island_control.dart' show IslandControl;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  unawaited(IslandControlIos.setIsland(isHidden: true));
+  IslandControl.setIsland(isHidden: true);
   runApp(const MainApp());
 }
 
@@ -20,6 +17,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.black,
         body: Center(child: IslandToggle()),
@@ -43,7 +41,7 @@ class _IslandToggleState extends State<IslandToggle> {
   void _toggle() {
     final isHidden = !_isHidden;
     setState(() => _isHidden = isHidden);
-    unawaited(IslandControlIos.setIsland(isHidden: isHidden));
+    IslandControl.setIsland(isHidden: isHidden);
   }
 
   @override
@@ -52,7 +50,7 @@ class _IslandToggleState extends State<IslandToggle> {
       onPressed: _toggle,
       child: Text(
         _isHidden ? 'Show island' : 'Hide island',
-        style: const TextStyle(fontSize: 24),
+        style: const TextStyle(fontSize: 28),
       ),
     );
   }

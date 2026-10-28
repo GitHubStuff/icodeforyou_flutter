@@ -13,7 +13,7 @@ class IslandControlAndroid {
   final IslandControlAndroidPlatform _platform;
 
   /// Hides the island when [isHidden] is `true`, shows it otherwise.
-  Future<void> setIsland({required bool isHidden}) async {
+  static Future<void> setIsland({required bool isHidden}) async {
     if (kIsWeb) return; // coverage:ignore-line
     if (defaultTargetPlatform != TargetPlatform.android) return;
     await IslandControlAndroidPlatform.instance.setIsland(isHidden: isHidden);
