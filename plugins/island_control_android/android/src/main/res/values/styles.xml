@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- plugins/island_control_android/android/src/main/res/values/styles.xml -->
+<!-- version 0.1.2-beta -->
 <resources>
 
     <!--
-        Theme for the launch window (the system splash on Android 12+ and the
-        activity window before Flutter draws its first frame). Solid black,
-        white status-bar icons, content allowed into the display cutout.
+        Theme for the launch window: the system splash on Android 12+, drawn by
+        the OS from this theme before any app code runs. Solid black, status
+        bar hidden via the fullscreen window flag — the only thing the splash
+        window honours — content allowed into the display cutout.
     -->
-    <style name="IslandLaunchTheme" parent="@android:style/Theme.Black.NoTitleBar">
+    <style name="IslandLaunchTheme" parent="@android:style/Theme.Black.NoTitleBar.Fullscreen">
         <item name="android:windowBackground">@drawable/island_launch_background</item>
         <item name="android:windowSplashScreenBackground">@android:color/black</item>
         <item name="android:windowSplashScreenAnimatedIcon">@android:color/transparent</item>
@@ -17,8 +19,11 @@
     </style>
 
     <!--
-        Theme swapped in once Flutter is running. Same look, so the handover
-        from the launch window to the first Flutter frame is seamless.
+        Theme for the activity window once Flutter is running. No fullscreen
+        flag: on API 36+ targets the flag is not honoured for the app window
+        and only leaves stale status-bar pixels behind. The island is managed
+        exclusively by Island via inset animation control, starting from
+        IslandFlutterActivity.onAttachedToWindow.
     -->
     <style name="IslandNormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
         <item name="android:windowBackground">@android:color/black</item>

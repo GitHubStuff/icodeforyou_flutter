@@ -5,7 +5,7 @@ import 'package:island_control/island_control.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  IslandControl.setIsland(isHidden: true);
+  //IslandControl.setIsland(isHidden: true);
   runApp(const MainApp());
 }
 
