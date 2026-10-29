@@ -5,3 +5,5 @@ bricks:
     path: bricks/template_plumbing
   template_program:
     path: bricks/template_program
+  template_ios:
+    path: bricks/template_ios

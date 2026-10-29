@@ -1,0 +1,23 @@
+# plugins/{{name.snakeCase()}}/example/pubspec.yaml
+name: {{name.snakeCase()}}_example
+description: "Demonstrates how to use the {{name.snakeCase()}} plugin."
+publish_to: 'none'
+resolution: workspace
+
+environment:
+  sdk: ^3.13.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+  {{name.snakeCase()}}: ^1.0.0
+
+dev_dependencies:
+  integration_test:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true

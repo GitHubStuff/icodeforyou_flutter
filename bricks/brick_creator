@@ -22,12 +22,12 @@ be silently lost. If bricks/<name>-old already exists the script stops
 before touching anything; remove or rename it, then rerun.
 
 Every source member is a directory, <source>/<name>, and the whole of it
-becomes __brick__: a Dart package for packages and programs, a script kit
-(script, README, LICENSE) for plumbing. brick.yaml is generated from
-bricks/template/dart_brick.yaml for packages and programs, and from
-bricks/template/plumbing_brick.yaml for plumbing. Every identity form in
-the source is replaced with its mustache case lambda, the description (and
-for plumbing, the positional contract) is templated, and the brick is
+becomes __brick__: a Dart package for packages, plugins, and programs, a
+script kit (script, README, LICENSE) for plumbing. brick.yaml is generated
+from bricks/template/dart_brick.yaml for packages, plugins, and programs,
+and from bricks/template/plumbing_brick.yaml for plumbing. Every identity form
+in the source is replaced with its mustache case lambda, the description
+(and for plumbing, the positional contract) is templated, and the brick is
 registered in the root mason.yaml if absent.
 
 Whether the resulting brick is a widget or non-widget template is decided
@@ -39,6 +39,7 @@ Run from the monorepo root. Anything omitted is prompted for.
 
 Examples:
   % brick_creator package_template --source=packages    # Dart package brick
+  % brick_creator plugin_template --source=plugins      # Flutter plugin brick
   % brick_creator program_template --source=programs    # Dart program brick
   % brick_creator template_plumbing --source=plumbing   # zsh script brick
   % brick_creator                                       # prompts for both
@@ -74,7 +75,7 @@ readonly POSITIONAL='optional'
 readonly POSITIONAL_NAME='<template_name>'
 
 # Monorepo subfolders a brick may be built from.
-readonly -a SOURCES=('packages' 'plumbing' 'programs')
+readonly -a SOURCES=('packages' 'plumbing' 'plugins' 'programs')
 
 # The one source whose members are zsh script kits, not Dart packages. The
 # shape is the same (a directory); only the brick.yaml template and the
@@ -144,17 +145,17 @@ ${BOLD}WHAT IT DOES${RESET}
        (brick.yaml included). Nothing is ever deleted. Stops before
        touching anything if bricks/<name>${OLD_SUFFIX} already exists.
     2. Generates bricks/<name>/brick.yaml from the template for <source>:
-         packages, programs -> ${DART_BRICK_YAML}
-         plumbing           -> ${PLUMBING_BRICK_YAML}
+         packages, plugins, programs -> ${DART_BRICK_YAML}
+         plumbing                    -> ${PLUMBING_BRICK_YAML}
     3. Registers the brick in the root mason.yaml if absent.
     4. Copies the whole source directory into __brick__ (excluding build
        junk and generated golden PNGs).
     5. Substitutes all identity forms with mustache case lambdas:
          snake_case, camelCase, PascalCase, Title Case
     6. Templates the description:
-         packages, programs -> pubspec.yaml description
-         plumbing           -> script header comment, TAGLINE, and the
-                               POSITIONAL / POSITIONAL_NAME contract
+         packages, plugins, programs -> pubspec.yaml description
+         plumbing                    -> script header comment, TAGLINE, and the
+                                        POSITIONAL / POSITIONAL_NAME contract
     7. Renames every file and directory carrying an identity form to its
        mustache form.
     8. Verifies zero literal references remain in contents or file names;
@@ -162,6 +163,7 @@ ${BOLD}WHAT IT DOES${RESET}
 
 ${BOLD}EXAMPLES${RESET}
     % ${GREEN}${SCRIPT_NAME}${RESET} package_template ${SOURCE_FLAG}=packages   ${CYAN}# Dart package brick${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} plugin_template ${SOURCE_FLAG}=plugins     ${CYAN}# Flutter plugin brick${RESET}
     % ${GREEN}${SCRIPT_NAME}${RESET} program_template ${SOURCE_FLAG}=programs   ${CYAN}# Dart program brick${RESET}
     % ${GREEN}${SCRIPT_NAME}${RESET} template_plumbing ${SOURCE_FLAG}=plumbing  ${CYAN}# zsh script brick${RESET}
     % ${GREEN}${SCRIPT_NAME}${RESET}                                      ${CYAN}# prompts for both${RESET}
@@ -558,7 +560,7 @@ template_description() {
     fi
 }
 
-# Dart package / program: the pubspec.yaml description.
+# Dart package / plugin / program: the pubspec.yaml description.
 template_pubspec_description() {
     local pubspec="${brick_dir}/pubspec.yaml"
     if [[ ! -f "$pubspec" ]]; then
