@@ -1,0 +1,10 @@
+# plugins/template_ios/example/analysis_options.yaml
+include: package:icodeforyou_lints/analysis_options.yaml
+
+analyzer:
+  exclude:
+    - build/**
+    - ios/**
+
+linter:
+  rules:

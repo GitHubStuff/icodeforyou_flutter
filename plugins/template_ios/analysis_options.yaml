@@ -1,0 +1,14 @@
+# plugins/template_ios/analysis_options.yaml
+include: package:icodeforyou_lints/analysis_options.yaml
+
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+  errors:
+    avoid_positional_boolean_parameters: ignore
