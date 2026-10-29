@@ -1,3 +1,5 @@
+# packages/biometric_gate_service/analysis_options.yaml
+include: package:icodeforyou_lints/analysis_options.yaml
 analyzer:
   errors:
     no_runtimetype_tostring: ignore
@@ -9,4 +11,3 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
-include: package:icodeforyou_lints/analysis_options.yaml

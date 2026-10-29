@@ -1,0 +1,25 @@
+name: status_bar_android
+description: "Sets the visibilty of the status bar on Android devices"
+version: 1.0.0
+homepage:
+resolution: workspace
+
+environment:
+  sdk: ^3.13.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.icodeforyou.status_bar_android
+        pluginClass: StatusBarAndroidPlugin

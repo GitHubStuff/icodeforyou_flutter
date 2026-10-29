@@ -1,0 +1,13 @@
+# plugins/status_bar_android/analysis_options.yaml
+include: package:icodeforyou_lints/analysis_options.yaml
+analyzer:
+  errors:
+    avoid_positional_boolean_parameters: ignore
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**

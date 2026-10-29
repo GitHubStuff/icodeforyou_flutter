@@ -1,5 +1,5 @@
 name: my_logger
-description: "A new Flutter package project."
+description: "A console logger with backend hooks"
 version: 1.0.0
 resolution: workspace
 

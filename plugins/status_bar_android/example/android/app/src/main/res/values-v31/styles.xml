@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- plugins/status_bar_android/example/android/app/src/main/res/
+         values-v31/styles.xml
+     Version: 0.0.1-a StatusBarAndroid -->
+<resources>
+    <!-- Android 12+ system splash: solid colour, no icon, no branding.
+         Colour lives in values/colors.xml. windowSplashScreenAnimatedIcon
+         has no "none" value; a transparent colour is the sanctioned way
+         to get an icon-less splash. Duration 0 so the system does not
+         hold the splash for an icon animation that does not exist. -->
+    <style name="LaunchTheme" parent="@android:style/Theme.Black.NoTitleBar">
+        <item name="android:windowBackground">@color/launch_background</item>
+        <item name="android:windowSplashScreenBackground">
+            @color/launch_background
+        </item>
+        <item name="android:windowSplashScreenAnimatedIcon">
+            @android:color/transparent
+        </item>
+        <item name="android:windowSplashScreenAnimationDuration">0</item>
+    </style>
+
+    <!-- Window theme once the process has started. -->
+    <style name="NormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
+        <item name="android:windowBackground">@color/launch_background</item>
+    </style>
+</resources>

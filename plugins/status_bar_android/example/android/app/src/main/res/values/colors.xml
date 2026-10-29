@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- plugins/status_bar_android/example/android/app/src/main/res/values/
+         colors.xml
+     Version: 0.0.1-a StatusBarAndroid -->
+<resources>
+    <!-- The colour the launch/splash screen uses. Point it at any of
+         the palette entries below, or at a literal. -->
+    <color name="launch_background">@color/deep_purple</color>
+
+    <!-- Palette. RRGGBB; Android treats six digits as fully opaque. -->
+
+    <!-- Neutrals -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="warm_black">#141210</color>
+    <color name="charcoal">#1C1C1E</color>
+    <color name="slate">#2F4F4F</color>
+
+    <!-- Blues -->
+    <color name="blue">#1565C0</color>
+    <color name="navy">#0B1F3A</color>
+    <color name="midnight">#191970</color>
+    <color name="indigo">#283593</color>
+
+    <!-- Greens -->
+    <color name="green">#008000</color>
+    <color name="forest_green">#228B22</color>
+    <color name="dark_olive">#3B4A1F</color>
+    <color name="teal">#00695C</color>
+
+    <!-- Reds / purples -->
+    <color name="red">#D32F2F</color>
+    <color name="burgundy">#6D1A36</color>
+    <color name="purple">#800080</color>
+    <color name="deep_purple">#512DA8</color>
+
+    <!-- Lights. White status-bar icons vanish on these when the bar is
+         visible; add android:windowLightStatusBar=true to both themes
+         if you show the bar over one of them. -->
+    <color name="yellow">#FFFF00</color>
+    <color name="rose_light">#FCE4EC</color>
+    <color name="peach_light">#FFDAB9</color>
+</resources>

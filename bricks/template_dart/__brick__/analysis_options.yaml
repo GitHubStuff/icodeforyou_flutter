@@ -1,6 +1,8 @@
 # {{folder_source}}/{{name}}}}/analysis_options.yaml
 include: package:icodeforyou_lints/analysis_options.yaml
 analyzer:
+  errors:
+    avoid_positional_boolean_parameters: ignore
   exclude:
     - build/**
     - android/**

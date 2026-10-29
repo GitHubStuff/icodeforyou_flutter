@@ -10,6 +10,7 @@ analyzer:
     comment_references: ignore
     depend_on_referenced_packages: ignore
     omit_local_variable_types: ignore
+    avoid_positional_boolean_parameters: ignore
 
   exclude:
     - 'bricks/**'

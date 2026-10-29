@@ -2,7 +2,7 @@
 name: icodeforyou_flutter
 publish_to: none
 description: "Collection of flutter packages"
-version: 9.7.2
+version: 9.7.4
 
 workspace:
   - packages/analog_clock_widget
@@ -64,7 +64,10 @@ workspace:
   - packages/widget_animation_framework
   - plugins/island_control_android
   - plugins/island_control_ios
+  - plugins/status_bar_android
+  - plugins/status_bar_android/example
   - plugins/status_bar_chameleon
+  - programs/black_velvet
   - programs/pookie
   - programs/since_when_dev
   - programs/template_program
