@@ -7,14 +7,6 @@ Here's the standard flow.
 You don't actually *clone* in git terminology here — you create a **branch** off main. Cloning is what you do to get the repo onto your machine in the first place.
 
 ```bash
-# Make sure main is current
-git checkout main
-git pull origin main
-
-# Create and switch to a new branch off main
-git checkout -b feature/my-new-thing
-```
-
 Or the modern equivalent:
 
 ```bash
