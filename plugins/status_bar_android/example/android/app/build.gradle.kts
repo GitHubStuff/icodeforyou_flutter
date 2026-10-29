@@ -1,5 +1,6 @@
 // plugins/status_bar_android/example/android/app/build.gradle.kts
-// Version 0.0.1-a StatusBarAndroid
+// Version: 0.0.1-a StatusBarAndroid
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and

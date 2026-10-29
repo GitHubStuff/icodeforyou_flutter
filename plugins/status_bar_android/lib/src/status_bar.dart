@@ -14,7 +14,7 @@ import 'package:status_bar_android/src/status_bar_android_platform_interface.dar
 /// reveals it transiently.
 ///
 /// Android only. Calling this on any other platform throws a
-/// [MissingPluginException] from the method channel.
+/// `MissingPluginException` from the method channel.
 ///
 /// `abstract final`: a static-only namespace that cannot be
 /// instantiated, extended or implemented.
@@ -23,9 +23,18 @@ abstract final class StatusBar {
   ///
   /// Defaults to hiding.
   ///
-  /// Completes with a [PlatformException] (`NO_ACTIVITY`) if no activity
-  /// is attached, e.g. when called from a background isolate.
+  /// Completes with a `PlatformException` whose `code` is one of:
+  ///
+  /// - `NO_ACTIVITY` — no activity is attached to the engine, e.g. the
+  ///   call came from a background isolate or a headless engine.
+  /// - `NO_INSETS_CONTROLLER` — the activity's window has no insets
+  ///   controller yet (its decor view is not attached); nothing was
+  ///   done. Retry after the first frame.
+  /// - `INVALID_ARGUMENT` — unreachable from this API; exists to make
+  ///   the channel contract total.
   static Future<void> setVisibility({bool isHidden = true}) {
-    return StatusBarAndroidPlatform.instance.setVisibility(isHidden: isHidden);
+    return StatusBarAndroidPlatform.instance.setVisibility(
+      isHidden: isHidden,
+    );
   }
 }

@@ -1,4 +1,6 @@
 // plugins/status_bar_android/example/lib/main.dart
+// Version: 0.0.1-a StatusBarAndroid
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:status_bar_android/status_bar_android.dart' show StatusBar;
@@ -17,6 +19,8 @@ Future<void> main() async {
     the Kotlin test.
   */
 
+  // Edge-to-edge so hiding the bar changes only the inset, not the
+  // size of the Flutter view.
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   await StatusBar.setVisibility(isHidden: true);
   runApp(const StatusBarExampleApp());
@@ -29,7 +33,10 @@ class StatusBarExampleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: StatusBarTogglePage());
+    return MaterialApp(
+      theme: ThemeData(scaffoldBackgroundColor: Colors.black),
+      home: const StatusBarTogglePage(),
+    );
   }
 }
 

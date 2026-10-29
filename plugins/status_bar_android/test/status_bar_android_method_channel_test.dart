@@ -1,5 +1,4 @@
-// plugins/status_bar_android/test/
-//     status_bar_android_method_channel_test.dart
+// plugins/status_bar_android/test/status_bar_android_method_channel_test.dart
 // Version: 0.0.1-a StatusBarAndroid
 
 import 'package:flutter/services.dart';
@@ -23,7 +22,7 @@ void main() {
     nativeReply = null;
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(platform.channel, (MethodCall call) async {
+        .setMockMethodCallHandler(platform.channel, (call) async {
           log.add(call);
           final Object? reply = nativeReply;
           if (reply is PlatformException) {

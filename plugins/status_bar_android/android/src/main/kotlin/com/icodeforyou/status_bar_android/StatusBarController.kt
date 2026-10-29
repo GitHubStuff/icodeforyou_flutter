@@ -32,9 +32,14 @@ class StatusBarController(private val window: Window) {
      *
      * While hidden, a swipe from the top edge reveals the bar
      * transiently; it hides again on its own.
+     *
+     * @return `true` if the request was issued to the window; `false` if
+     * the window has no [WindowInsetsController] yet (its decor view is
+     * not attached), in which case nothing was done and the caller must
+     * report the failure rather than assume success.
      */
-    fun setVisibility(isHidden: Boolean) {
-        val insetsController = window.insetsController ?: return
+    fun setVisibility(isHidden: Boolean): Boolean {
+        val insetsController = window.insetsController ?: return false
         val statusBarType = WindowInsets.Type.statusBars()
 
         insetsController.systemBarsBehavior =
@@ -51,6 +56,7 @@ class StatusBarController(private val window: Window) {
                 fallback = insetsController,
             ),
         )
+        return true
     }
 
     /**

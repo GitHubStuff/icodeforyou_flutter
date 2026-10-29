@@ -1,7 +1,10 @@
+# plugins/status_bar_android/pubspec.yaml
+# Version: 0.0.1-a StatusBarAndroid
 name: status_bar_android
-description: "Sets the visibilty of the status bar on Android devices"
+description: >-
+  Instant show/hide of the Android status bar, with no system animation.
+  Standalone, Android-only (API 30+); not a federated implementation.
 version: 1.0.0
-homepage:
 resolution: workspace
 
 environment:

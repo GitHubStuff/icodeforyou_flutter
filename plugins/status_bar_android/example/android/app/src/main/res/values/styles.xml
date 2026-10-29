@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- plugins/status_bar_android/example/android/app/src/main/res/values/
-         styles.xml
+<!-- plugins/status_bar_android/example/android/app/src/main/res/values/styles.xml
      Version: 0.0.1-a StatusBarAndroid -->
 <resources>
     <!-- Window theme while the process starts, before the first

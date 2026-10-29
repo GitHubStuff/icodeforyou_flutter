@@ -2,6 +2,7 @@
 import 'package:dependency_resolver/dependency_resolver.dart'
     show InMemoryDependencyResolver;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show SystemChrome, SystemUiMode;
 import 'package:island_control/island_control.dart';
 import 'package:shared_preferences/shared_preferences.dart'
     show SharedPreferences;
@@ -23,6 +24,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Hide the bar with time/battery so the splash screen is on a black page
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   IslandControl.setIsland(isHidden: true);
 
   // Preferenes are created here because it is an async task.

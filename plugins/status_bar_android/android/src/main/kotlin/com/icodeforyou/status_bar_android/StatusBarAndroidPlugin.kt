@@ -1,7 +1,7 @@
-package com.icodeforyou.status_bar_android
-
 // plugins/status_bar_android/android/src/main/kotlin/com/icodeforyou/status_bar_android/StatusBarAndroidPlugin.kt
-// Version 0.0.1-a StatusBarAndroid
+// Version: 0.0.1-a StatusBarAndroid
+
+package com.icodeforyou.status_bar_android
 
 import android.view.Window
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -90,7 +90,16 @@ class StatusBarAndroidPlugin internal constructor(
             return
         }
 
-        activeController.setVisibility(isHidden = isHidden)
+        val issued = activeController.setVisibility(isHidden = isHidden)
+        if (!issued) {
+            result.error(
+                ERROR_NO_INSETS_CONTROLLER,
+                "The window has no insets controller yet.",
+                null,
+            )
+            return
+        }
+
         result.success(null)
     }
 
@@ -109,5 +118,12 @@ class StatusBarAndroidPlugin internal constructor(
 
         /** Error code when the method arguments are malformed. */
         const val ERROR_INVALID_ARGUMENT = "INVALID_ARGUMENT"
+
+        /**
+         * Error code when the activity's window has no
+         * [android.view.WindowInsetsController] yet (decor view not
+         * attached), so the request could not be issued.
+         */
+        const val ERROR_NO_INSETS_CONTROLLER = "NO_INSETS_CONTROLLER"
     }
 }

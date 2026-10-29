@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- plugins/status_bar_android/example/android/app/src/main/res/values/
-         colors.xml
+<!-- plugins/status_bar_android/example/android/app/src/main/res/values/colors.xml
      Version: 0.0.1-a StatusBarAndroid -->
 <resources>
     <!-- The colour the launch/splash screen uses. Point it at any of
          the palette entries below, or at a literal. -->
-    <color name="launch_background">@color/deep_purple</color>
+    <color name="launch_background">@color/green</color>
 
     <!-- Palette. RRGGBB; Android treats six digits as fully opaque. -->
 

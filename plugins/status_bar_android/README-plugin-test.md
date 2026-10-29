@@ -87,12 +87,13 @@ StatusBarAndroidPluginTest > setVisibility_visible_delegatesAndSucceeds() PASSED
 StatusBarAndroidPluginTest > setVisibility_hidden_delegatesAndSucceeds() PASSED
 StatusBarAndroidPluginTest > setVisibility_missingArgument_reportsInvalidArgument() PASSED
 StatusBarAndroidPluginTest > setVisibility_afterDetach_reportsNoActivity() PASSED
+StatusBarAndroidPluginTest > setVisibility_controllerCannotAct_reportsNoInsetsController() PASSED
 StatusBarAndroidPluginTest > unknownMethod_reportsNotImplemented() PASSED
 
 BUILD SUCCESSFUL
 ```
 
-Seven tests, all `PASSED`. The tests are forced to re-run every time
+Eight tests, all `PASSED`. The tests are forced to re-run every time
 (`outputs.upToDateWhen { false }` in the plugin's `build.gradle.kts`),
 so a second invocation never reports `UP-TO-DATE` for the test task.
 
@@ -115,7 +116,14 @@ of `StatusBarAndroidPlugin`:
   `INVALID_ARGUMENT` error
 - `setVisibility(isHidden: true/false)` → delegates to
   `StatusBarController` and reports `success(null)`
+- `StatusBarController.setVisibility` returns `false` (window has no
+  insets controller yet) → `NO_INSETS_CONTROLLER` error, never
+  `success`
 - survives a configuration-change detach/reattach cycle
+
+The mock controller is stubbed to return `true` in `setUp`; Mockito's
+default for a `Boolean` is `false`, which would otherwise turn every
+success case into an error.
 
 `StatusBarController` itself is **not** unit-tested. It is a thin
 adapter over `WindowInsetsController`, which is an `android.jar` stub

@@ -7,6 +7,7 @@ import 'package:island_control_android/island_control_android.dart'
 import 'package:island_control_ios/island_control_ios.dart'
     show IslandControlIos;
 import 'package:platform_tools/platform_tools.dart' show OSPlatform;
+import 'package:status_bar_android/status_bar_android.dart';
 
 /// Platform-agnostic facade for showing or hiding the device's "island".
 ///
@@ -56,7 +57,7 @@ class IslandControl {
     _isHidden = isHidden;
     switch (OSPlatform.current) {
       case .android:
-        return unawaited(IslandControlAndroid.setIsland(isHidden: isHidden));
+        return unawaited(StatusBar.setVisibility(isHidden: isHidden));
       case .fuchsia:
         return;
       case .iOS:

@@ -1,5 +1,5 @@
-// plugins/status_bar_android/android/src/main/kotlin/com/icodeforyou/status_bar_android/StatusBarAndroidPluginTest.kt
-// Version 0.0.1-a StatusBarAndroid
+// plugins/status_bar_android/android/src/test/kotlin/com/icodeforyou/status_bar_android/StatusBarAndroidPluginTest.kt
+// Version: 0.0.1-a StatusBarAndroid
 
 package com.icodeforyou.status_bar_android
 
@@ -8,6 +8,7 @@ import android.view.Window
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel.Result
+import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
@@ -34,6 +35,8 @@ internal class StatusBarAndroidPluginTest {
     @BeforeTest
     fun setUp() {
         controller = mock(StatusBarController::class.java)
+        `when`(controller.setVisibility(anyBoolean())).thenReturn(true)
+
         window = mock(Window::class.java)
         result = mock(Result::class.java)
 
@@ -65,7 +68,7 @@ internal class StatusBarAndroidPluginTest {
             "No activity is attached.",
             null,
         )
-        verify(controller, never()).setVisibility(isHidden = true)
+        verify(controller, never()).setVisibility(anyBoolean())
     }
 
     @Test
@@ -80,6 +83,7 @@ internal class StatusBarAndroidPluginTest {
             "No activity is attached.",
             null,
         )
+        verify(controller, never()).setVisibility(anyBoolean())
     }
 
     @Test
@@ -96,8 +100,7 @@ internal class StatusBarAndroidPluginTest {
             "'isHidden' must be a non-null Boolean.",
             null,
         )
-        verify(controller, never()).setVisibility(isHidden = true)
-        verify(controller, never()).setVisibility(isHidden = false)
+        verify(controller, never()).setVisibility(anyBoolean())
     }
 
     @Test
@@ -108,6 +111,7 @@ internal class StatusBarAndroidPluginTest {
 
         verify(controller).setVisibility(isHidden = true)
         verify(result).success(null)
+        verifyNoMoreInteractions(result)
     }
 
     @Test
@@ -118,6 +122,23 @@ internal class StatusBarAndroidPluginTest {
 
         verify(controller).setVisibility(isHidden = false)
         verify(result).success(null)
+        verifyNoMoreInteractions(result)
+    }
+
+    @Test
+    fun setVisibility_controllerCannotAct_reportsNoInsetsController() {
+        `when`(controller.setVisibility(anyBoolean())).thenReturn(false)
+        plugin.onAttachedToActivity(binding)
+
+        plugin.onMethodCall(setVisibilityCall(isHidden = true), result)
+
+        verify(controller).setVisibility(isHidden = true)
+        verify(result).error(
+            StatusBarAndroidPlugin.ERROR_NO_INSETS_CONTROLLER,
+            "The window has no insets controller yet.",
+            null,
+        )
+        verifyNoMoreInteractions(result)
     }
 
     @Test

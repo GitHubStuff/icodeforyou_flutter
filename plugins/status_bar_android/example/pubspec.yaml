@@ -1,6 +1,8 @@
+# plugins/status_bar_android/example/pubspec.yaml
+# Version: 0.0.1-a StatusBarAndroid
 name: status_bar_android_example
-description: "Demonstrates how to use the status_bar_android plugin."
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+description: Demonstrates how to use the status_bar_android plugin.
+publish_to: none
 resolution: workspace
 
 environment:
@@ -9,18 +11,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
   status_bar_android:
     path: ../
-  cupertino_icons: ^1.0.8
 
 dev_dependencies:
- 
   flutter_test:
     sdk: flutter
   icodeforyou_lints: ^1.0.0
-  integration_test:
-    sdk: flutter
 
 flutter:
   uses-material-design: true

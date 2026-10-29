@@ -9,7 +9,7 @@ import 'package:status_bar_android/src/status_bar_android_method_channel.dart'
 /// The contract every platform implementation of `status_bar_android`
 /// fulfils.
 ///
-/// The public [StatusBar] facade talks only to [instance]; tests replace
+/// The public `StatusBar` facade talks only to [instance]; tests replace
 /// [instance] with a mock to exercise the facade without a method
 /// channel.
 abstract class StatusBarAndroidPlatform extends PlatformInterface {

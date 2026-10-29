@@ -79,8 +79,8 @@ kotlin {
 
 dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")
-    // Mockito 5.0.0 bundles Byte Buddy 1.12.x, which cannot instrument
-    // JDK 21 class files. 5.12.0 is the oldest release I'm certain
-    // exists and supports JDK 21; raise it to current if you prefer.
+    // Tests run on JDK 21, which needs a Byte Buddy with JDK 21 class-file
+    // support; Mockito bundles that from 5.5 onwards. Earlier releases
+    // fail at mock creation with IllegalArgumentException.
     testImplementation("org.mockito:mockito-core:5.12.0")
 }
