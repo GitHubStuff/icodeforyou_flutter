@@ -8,7 +8,8 @@
 /// three placements:
 ///
 /// * [pinned] — destinations that always occupy a permanent position on the
-///   surface, regardless of available space.
+///   surface, unless there is not enough room on the device. At that point
+///   anyting [pinned] is demoted to [overflow].
 /// * [more] — the single affordance that reveals the hidden destinations.
 ///   There is exactly one of these per surface, and it is rendered only when
 ///   at least one [overflow] destination exists.
@@ -23,7 +24,7 @@
 ///
 enum NavSlot {
   /// A destination that always occupies a permanent position on the
-  /// navigation surface.
+  /// navigation surface (room permitting).
   ///
   /// Pinned destinations are never collapsed into the [more] affordance and
   /// are rendered in list order before it. Use this for the small set of

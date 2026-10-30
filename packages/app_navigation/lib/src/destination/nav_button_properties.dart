@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 
 /// Contract for navigation destinations carrying UI and view metadata.
+/// A List<> of these compose/hold the meta-data for buttons that appear
+/// in the Dock and Rail Buttons at the bottom/side of the screen
 abstract interface class NavButtonProperties implements Enum {
   /// Which slot it resides
   NavSlot get slot;
