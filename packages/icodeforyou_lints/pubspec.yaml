@@ -1,7 +1,7 @@
 # packages/icodeforyou_lints/pubspec.yaml
 name: icodeforyou_lints
 description: Shared lints for icodeforyou_flutter mono-repo
-version: 1.0.0
+version: 1.0.1
 publish_to: none
 resolution: workspace
 

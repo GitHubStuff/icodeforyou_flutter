@@ -6,7 +6,7 @@ import 'package:template_ios/template_ios_method_channel.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  MethodChannelTemplateIos platform = MethodChannelTemplateIos();
+  final MethodChannelTemplateIos platform = MethodChannelTemplateIos();
   const MethodChannel channel = MethodChannel('template_ios');
 
   setUp(() {

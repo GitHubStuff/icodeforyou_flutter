@@ -7,7 +7,6 @@ import 'package:platform_tools/platform_tools.dart' show OSPlatform;
 ///
 /// Carries the offending [platform] so callers can branch on it, log it, or
 /// surface it to the user without parsing a message string.
-// TODO(steven): Create test
 @immutable
 class UnsupportedPlatformException implements Exception {
   /// Creates an [UnsupportedPlatformException] for [platform].

@@ -7,4 +7,7 @@
 /// Requires Android 11 (API 30) or later.
 library;
 
-export 'package:status_bar_android/src/status_bar.dart' show StatusBar;
+export 'src/status_bar.dart' show StatusBar;
+
+export 'src/status_bar_android_platform_interface.dart'
+    show StatusBarAndroidPlatform;

@@ -2,10 +2,10 @@
 
 import 'package:app_navigation/app_navigation.dart'
     show NavButtonProperties, NavSlot;
-import 'package:app_navigation/src/widgets/nav_button.dart' show NavButton;
 import 'package:app_navigation/src/widgets/dock_row.dart' show DockRow;
 import 'package:app_navigation/src/widgets/more_nav_button.dart'
     show MoreNavButton;
+import 'package:app_navigation/src/widgets/nav_button.dart' show NavButton;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;

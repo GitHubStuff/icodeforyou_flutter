@@ -2,9 +2,9 @@
 
 import 'package:app_navigation/app_navigation.dart'
     show NavButtonProperties, NavSlot;
-import 'package:app_navigation/src/widgets/nav_button.dart' show NavButton;
 import 'package:app_navigation/src/widgets/more_nav_button.dart'
     show MoreNavButton;
+import 'package:app_navigation/src/widgets/nav_button.dart' show NavButton;
 import 'package:flutter/material.dart';
 
 /// {@template dock_row}

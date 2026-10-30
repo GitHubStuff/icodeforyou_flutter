@@ -4,17 +4,47 @@ import 'package:gap/gap.dart' show Gap;
 import 'package:spinners/spinners.dart'
     show PlatformSpinner, SpinController, SpinWidget;
 
-//TODO(steven): DartDoc needed
+/// An interactive demonstration showcasing [SpinWidget] and
+/// [PlatformSpinner].
+///
+/// This demo illustrates two primary usage patterns for [SpinWidget]:
+///
+/// 1. **Controlled mode**: Uses an external [SpinController] to
+///    programmatically start, pause, resume, reset, reverse, and
+///    dynamically adjust speed (RPM) via buttons and interactive sliders.
+/// 2. **Uncontrolled mode**: Relies on [SpinWidget]'s internal controller
+///    seeded with configuration parameters like `rpm` and `autoStart`.
+///
+/// Additionally, it displays platform-specific static spinners
+/// ([PlatformSpinner]) across various simulated operating systems.
+///
+/// See also:
+///  * [SpinWidget], the underlying animated rotation container.
+///  * [SpinController], for managing rotation state, speed, and position.
+///  * [PlatformSpinner], for rendering native-styled activity indicators.
 class SpinWidgetDemo extends StatefulWidget {
-  /// Creates the example page.
+  /// Creates an instance of [SpinWidgetDemo].
   const SpinWidgetDemo({super.key});
 
   @override
   State<SpinWidgetDemo> createState() => _SpinWidgetDemo();
 }
 
+/// State implementation for [SpinWidgetDemo].
+///
+/// Manages the lifecycle of a dedicated [SpinController] and subscribes to
+/// its state transitions to update live readouts of the angle and RPM.
 class _SpinWidgetDemo extends State<SpinWidgetDemo> {
+  /// The controller used to govern the state, speed, and trajectory of the
+  /// controlled [SpinWidget].
+  ///
+  /// Initialized to rotate clockwise at 10 revolutions per minute (RPM).
   final SpinController _controller = SpinController(rpm: 10);
+
+  /// Stores the degree measurement returned by the most recent invocation of
+  /// [_controller.stop].
+  ///
+  /// Defaults to `0.0` until the spinner has been stopped for the first time.
   double _lastStopAngle = 0;
 
   @override
@@ -32,6 +62,8 @@ class _SpinWidgetDemo extends State<SpinWidgetDemo> {
     super.dispose();
   }
 
+  /// Callback executed when [_controller] fires a notification, triggering a
+  /// UI rebuild to refresh live telemetry (current angle, spinning, RPM).
   void _onControllerChanged() => setState(() {});
 
   @override
@@ -130,7 +162,8 @@ class _SpinWidgetDemo extends State<SpinWidgetDemo> {
         Text('Uncontrolled', style: textTheme.titleLarge),
         const Gap(8),
         Text(
-          'No controller: the widget owns one, seeded by rpm and autoStart.',
+          'No controller: the widget owns one, seeded by rpm and '
+          'autoStart.',
           style: textTheme.bodyMedium,
         ),
         const Gap(16),

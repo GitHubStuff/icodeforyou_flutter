@@ -3,7 +3,7 @@
 #                   open it in an editor, and optionally copy it into a
 #                   bin directory.
 
-readonly VERSION='0.1.2'
+readonly VERSION='1.0.0-b'
 
 set -euo pipefail
 

@@ -4,22 +4,29 @@ import 'package:theme_framework/theme_framework.dart'
 
 import 'go_routes/routes_framework.dart' show RoutesFramework;
 
+/// Configures dependencies and kicks off the root Flutter application.
+///
+/// Handles initialization of core services, such as theme management via
+/// [themeStorage], constructs the top-level router, and invokes [runApp].
 final class ApplicationStartup {
-  const ApplicationStartup({
-    required this.themeStorage,
-  });
+  /// Creates an [ApplicationStartup] instance with the required [themeStorage].
+  const ApplicationStartup({required this.themeStorage});
 
   /// The device store the theme is read from and written to.
   final ThemeStorageAbstract themeStorage;
 
   /// Builds the app and hands it to [runApp].
+  ///
+  /// Instantiates a [ThemeCubit] anchored at the root level using
+  /// [themeStorage], retrieves configured routes from
+  /// [RoutesFramework.builtRoutes], and mounts [DefaultMaterialAppRouter].
   void runner() {
     /// The cubit to manage the store of dark/light themes is created here
     /// so it can be at the root of the widget tree so changes ripple from
-    /// the root
+    /// the root.
     final themeCubit = ThemeCubit(themeStorage);
 
-    /// The routes for navigation
+    /// The routes for navigation.
     final goRouter = RoutesFramework.builtRoutes();
 
     runApp(

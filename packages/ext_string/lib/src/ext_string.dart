@@ -186,8 +186,30 @@ extension ExtString on String {
   int? toMicrosecondsOrNull() =>
       DateTime.tryParse(this)?.microsecondsSinceEpoch;
 
+  /// Renders this string scaled to fit uniformly within its parent bounds.
   ///
-  //TODO(steven): Dartdoc and add test
+  /// Wraps a centered [Text] widget in a [FittedBox] using [BoxFit.contain].
+  /// The [TextStyle.height] is explicitly fixed to `1` to eliminate
+  /// standard font line-gap leading, allowing the glyph itself to scale
+  /// up to the maximum dimensions permitted by the parent constraint.
+  ///
+  /// This is particularly suitable for displaying standalone icons,
+  /// currency indicators, single characters, or emoji that need to fill
+  /// an icon container or avatar box responsively.
+  ///
+  /// ## Example
+  ///
+  /// ```dart
+  /// SizedBox.square(
+  ///   dimension: 48,
+  ///   child: '★'.asGlyph(),
+  /// )
+  /// ```
+  ///
+  /// See also:
+  ///
+  /// * [FittedBox], which controls how the text is scaled.
+  /// * [BoxFit.contain], the fit strategy used.
   Widget asGlyph() => FittedBox(
     fit: BoxFit.contain,
     child: Text(

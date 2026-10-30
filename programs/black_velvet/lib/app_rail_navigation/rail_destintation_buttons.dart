@@ -4,15 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'rail_destination_enum.dart' show RailDestinationEnum;
 
-/// The fixed footprint used for every destination button, including
-/// the overflow button.
-///
-/// 64x64 rather than the [RailButton] default of 48x48 because every
-/// destination renders both an icon and a caption. The overflow button
-/// uses the same size so the rail's geometry stays uniform whether or
-/// not it appears.
-const Size _kButtonSize = Size(64, 64);
-
 /// The rail's destination buttons: one [RailButton] per member of
 /// [visible], in order, followed — when [overflowed] is non-empty —
 /// by a [RailOverflowButton] whose popover lists the [overflowed]
@@ -119,11 +110,6 @@ class RailDestinationButtons extends StatelessWidget {
     child: Text('X'),
   );
 
-  /// The popover tile for an overflowed [destination].
-  Widget _popoverTile(RailDestinationEnum destination) => const ColoredBox(
-    color: Colors.lightGreenAccent,
-    child: Text('X'),
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +122,7 @@ class RailDestinationButtons extends StatelessWidget {
       'A destination cannot be both visible and overflowed',
     );
 
-    final selectedOverflowIndex = overflowed.indexOf(selected);
+    overflowed.indexOf(selected);
 
     return Flex(
       direction: direction,

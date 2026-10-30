@@ -1,40 +1,37 @@
 // plugins/status_bar_android/lib/src/status_bar.dart
 // Version: 0.0.1-a StatusBarAndroid
 
-import 'package:status_bar_android/src/status_bar_android_platform_interface.dart';
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform, kIsWeb;
+import 'package:status_bar_android/src/status_bar_android_platform_interface.dart'
+    show StatusBarAndroidPlatform;
 
-/// Controls the visibility of the Android status bar.
+/// Manages system status bar visibility on Android devices.
 ///
-/// The public API of `status_bar_android`. Every call is forwarded to
-/// [StatusBarAndroidPlatform.instance], which in production is the
-/// method-channel implementation backed by `StatusBarAndroidPlugin.kt`.
-///
-/// The native side toggles the bar with no transition (see
-/// `StatusBarController.kt`); while hidden, a swipe from the top edge
-/// reveals it transiently.
-///
-/// Android only. Calling this on any other platform throws a
-/// `MissingPluginException` from the method channel.
-///
-/// `abstract final`: a static-only namespace that cannot be
-/// instantiated, extended or implemented.
+/// This utility delegates status bar manipulations to the underlying
+/// platform implementation while guarding against execution on unsupported
+/// environments.
 abstract final class StatusBar {
-  /// Hides the status bar when [isHidden] is `true`, shows it otherwise.
+  /// Sets the visibility of the Android system status bar.
   ///
-  /// Defaults to hiding.
+  /// When [isHidden] is `true`, the status bar is hidden; when `false`,
+  /// it is made visible.
   ///
-  /// Completes with a `PlatformException` whose `code` is one of:
+  /// This operation is a no-op on the web or on platforms other than
+  /// [TargetPlatform.android].
   ///
-  /// - `NO_ACTIVITY` — no activity is attached to the engine, e.g. the
-  ///   call came from a background isolate or a headless engine.
-  /// - `NO_INSETS_CONTROLLER` — the activity's window has no insets
-  ///   controller yet (its decor view is not attached); nothing was
-  ///   done. Retry after the first frame.
-  /// - `INVALID_ARGUMENT` — unreachable from this API; exists to make
-  ///   the channel contract total.
-  static Future<void> setVisibility({bool isHidden = true}) {
-    return StatusBarAndroidPlatform.instance.setVisibility(
-      isHidden: isHidden,
-    );
+  /// Example:
+  /// ```dart
+  /// // Hide the status bar
+  /// await StatusBar.setVisibility(isHidden: true);
+  ///
+  /// // Show the status bar
+  /// await StatusBar.setVisibility(isHidden: false);
+  /// ```
+  static Future<void> setVisibility({bool isHidden = true}) async {
+    if (kIsWeb) return; // coverage:ignore-line
+    if (defaultTargetPlatform != TargetPlatform.android) return;
+
+    return StatusBarAndroidPlatform.instance.setVisibility(isHidden: isHidden);
   }
 }

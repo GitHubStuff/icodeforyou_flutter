@@ -1,8 +1,8 @@
 // plugins/template_ios/lib/template_ios_method_channel.dart
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-
-import 'template_ios_platform_interface.dart';
+import 'package:template_ios/template_ios_platform_interface.dart'
+    show TemplateIosPlatform;
 
 /// An implementation of [TemplateIosPlatform] that uses method channels.
 class MethodChannelTemplateIos extends TemplateIosPlatform {

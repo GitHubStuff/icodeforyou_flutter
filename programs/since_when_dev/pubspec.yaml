@@ -17,7 +17,6 @@ dependencies:
   flutter:
     sdk: flutter
   haptic_intensity: ^1.0.0
-  island_control: ^1.0.0
   ping_pong: ^1.0.0
   prism_bubble_widget: ^1.0.0
   services_provider: ^1.0.0
@@ -27,6 +26,7 @@ dependencies:
   spinners: ^1.0.0
   splash_framework: ^1.0.0
   #status_bar_chameleon: ^1.0.1
+  status_bar_visibility: ^1.0.0
   theme_framework: ^1.0.0
   
 

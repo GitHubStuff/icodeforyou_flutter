@@ -1,22 +1,26 @@
 // plugins/template_ios/example/lib/main.dart
-import 'package:flutter/material.dart';
 
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:template_ios/template_ios.dart';
 
+/// The entry point for the plugin example application.
 void main() {
   runApp(const MyApp());
 }
 
+/// The root widget of the [TemplateIos] plugin example application.
 class MyApp extends StatefulWidget {
+  /// Creates an instance of [MyApp].
   const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
+/// State for [MyApp] that manages platform version fetching and display.
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
   final _templateIosPlugin = TemplateIos();
@@ -24,14 +28,17 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    unawaited(initPlatformState());
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
+  /// Initializes and retrieves the host platform version asynchronously.
+  ///
+  /// Updates [_platformVersion] upon completion. If retrieval encounters a
+  /// [PlatformException] or if the returned version string is `null`, an
+  /// informative fallback message is assigned instead.
   Future<void> initPlatformState() async {
     String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
+
     try {
       platformVersion =
           await _templateIosPlugin.getPlatformVersion() ??
@@ -40,10 +47,11 @@ class _MyAppState extends State<MyApp> {
       platformVersion = 'Failed to get platform version.';
     }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
+    // Discard update if the widget unmounted while the asynchronous call 
+    // was in flight.
+    if (!mounted) {
+      return;
+    }
 
     setState(() {
       _platformVersion = platformVersion;

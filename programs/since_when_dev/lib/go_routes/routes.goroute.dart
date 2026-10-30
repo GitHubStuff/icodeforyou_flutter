@@ -73,14 +73,14 @@ GoRoute _splashRoute({required List<Future<void> Function()> tasks}) => GoRoute(
       tasks: tasks,
       onComplete: () {
         context.go(RoutesFramework.app);
-        IslandControl.setIsland(isHidden: false);
+        StatusBarVisibility.setVisibility(isHidden: false);
       },
       onError: (error, stackTrace) {
         context.go(
           RoutesFramework.crash,
           extra: CrashScreenArgs(error: error, stackTrace: stackTrace),
         );
-        IslandControl.setIsland(isHidden: false);
+        StatusBarVisibility.setVisibility(isHidden: false);
       },
       child: const AnimatedSplashScreen(),
     );

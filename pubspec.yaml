@@ -2,7 +2,7 @@
 name: icodeforyou_flutter
 publish_to: none
 description: "Collection of flutter packages"
-version: 9.7.4
+version: 9.7.7
 
 workspace:
   - packages/analog_clock_widget
@@ -16,6 +16,7 @@ workspace:
   - packages/caption_switch
   - packages/color_grid
   - packages/counter_ring
+  - packages/custom_errors
   - packages/custom_widgets
   - packages/data_grid
   - packages/datetime_pickers
@@ -34,7 +35,6 @@ workspace:
   - packages/icodeforyou_lints
   - packages/infinite_scroll_picking
   - packages/infinite_scroll_picking_settings
-  - packages/island_control
   - packages/my_logger
   - packages/neon
   - packages/ping_pong
@@ -57,21 +57,22 @@ workspace:
   - packages/splash_framework
   - packages/sqlite_viewer
   - packages/stacking_widgets
+  - packages/status_bar_visibility
   - packages/template_dart
   - packages/theme_framework
   - packages/three_d_sphere
   - packages/time_spans
   - packages/widget_animation_framework
-  - plugins/island_control_android
   - plugins/island_control_ios
   - plugins/status_bar_android
   - plugins/status_bar_android/example
   - plugins/status_bar_chameleon
+  - plugins/status_bar_ios
+  - plugins/template_ios
+  - plugins/template_ios/example
   - programs/black_velvet
-  - programs/pookie
   - programs/since_when_dev
   - programs/template_program
-  - programs/tyb
   - programs/widgetbook_workspace
 
 environment:

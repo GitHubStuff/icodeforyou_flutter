@@ -1,0 +1,28 @@
+# packages/status_bar_visibility/pubspec.yaml
+name: status_bar_visibility
+description: "Status Bar Visibility"
+publish_to: none
+resolution: workspace
+version: 1.0.0
+
+environment:
+  sdk: ^3.13.7
+
+dependencies:
+  custom_errors: ^1.0.0
+  flutter:
+    sdk: flutter
+  gap: ^3.0.1
+  platform_tools: ^1.0.0
+  status_bar_android: ^1.0.0
+  status_bar_ios: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0
+
+
+flutter:
+  uses-material-design: true
+

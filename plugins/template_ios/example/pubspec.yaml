@@ -13,11 +13,11 @@ dependencies:
   template_ios: ^1.0.0
 
 dev_dependencies:
-  integration_test:
-    sdk: flutter
   flutter_test:
     sdk: flutter
   icodeforyou_lints: ^1.0.0
+  integration_test:
+    sdk: flutter
 
 flutter:
   uses-material-design: true

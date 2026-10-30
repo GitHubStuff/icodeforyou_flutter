@@ -10,5 +10,4 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
-  errors:
-    avoid_positional_boolean_parameters: ignore
+ 

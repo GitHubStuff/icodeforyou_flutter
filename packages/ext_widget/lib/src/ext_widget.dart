@@ -75,7 +75,6 @@ extension ExtWidget on Widget {
   );
 
   ///
-  // TODO(steven): Dart Doc and update tests
   Widget squareFit({
     required double side,
     AlignmentGeometry alignment = Alignment.center,

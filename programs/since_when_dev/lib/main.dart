@@ -2,13 +2,13 @@
 import 'package:dependency_resolver/dependency_resolver.dart'
     show InMemoryDependencyResolver;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show SystemChrome, SystemUiMode;
-import 'package:island_control/island_control.dart';
 import 'package:shared_preferences/shared_preferences.dart'
     show SharedPreferences;
 //+ CHANGED (facade imported directly; the app-side forward is gone)
 import 'package:sincewhen_drift_framework/sincewhen_drift_framework.dart'
     show SinceWhenStartup;
+import 'package:status_bar_visibility/status_bar_visibility.dart'
+    show StatusBarVisibility;
 import 'package:theme_framework/theme_framework.dart'
     show SharedPreferencesThemeStorage;
 
@@ -24,8 +24,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Hide the bar with time/battery so the splash screen is on a black page
-  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  IslandControl.setIsland(isHidden: true);
+  await StatusBarVisibility.init();
 
   // Preferenes are created here because it is an async task.
   final preferences = await SharedPreferences.getInstance();

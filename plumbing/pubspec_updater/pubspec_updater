@@ -1,7 +1,7 @@
 #!/bin/zsh
 # pubspec_updater - Adds a workspace member to the monorepo pubspec.yaml
 
-readonly VERSION='1.0.0'
+readonly VERSION='1.0.1'
 
 readonly TAGLINE='Adds a workspace member to the monorepo pubspec.yaml'
 
@@ -74,8 +74,8 @@ readonly POSITIONAL='required'
 # Display name of the positional argument in help and error text.
 readonly POSITIONAL_NAME='<member>'
 
-# A member is "<parent>/<name>", both lowercase snake_case, no stray slashes.
-readonly MEMBER_PATTERN='^[a-z][a-z0-9_]*/[a-z][a-z0-9_]*$'
+# A member is 2 or more lowercase snake_case segments joined by slashes (no stray slashes).
+readonly MEMBER_PATTERN='^[a-z][a-z0-9_]*(/[a-z][a-z0-9_]*)+$'
 
 # zsh strict mode:
 #  -e (errexit) - exit immediately when any command returns non-zero
@@ -101,9 +101,9 @@ ${BOLD}USAGE${RESET}
     -h/--help and -a/--about must be used alone; only -x may accompany them.
 
 ${BOLD}ARGUMENTS${RESET}
-    ${WHITE}${POSITIONAL_NAME}${RESET}             the workspace member to add, as "<parent>/<name>"
-                         (e.g. packages/tonker, plugins/tonka, programs/fitty).
-                         Both parts lowercase snake_case. The directory
+    ${WHITE}${POSITIONAL_NAME}${RESET}             the workspace member to add, as "<parent>/<name>[/<subpath>...]"
+                         (e.g. packages/tonker, plugins/status_bar_android/example).
+                         All parts lowercase snake_case. The directory
                          ${REPO_ROOT}/<member>
                          must exist and contain a pubspec.yaml.
 
@@ -117,7 +117,7 @@ ${BOLD}FLAGS${RESET}
                          (no other parameters)
 
 ${BOLD}WHAT IT DOES${RESET}
-    1. Checks fvm is on PATH, the root pubspec.yaml is readable, and the
+1. Checks fvm is on PATH, the root pubspec.yaml is readable, and the
        member directory exists with its own pubspec.yaml.
     2. Checks the member is not already listed under "${WORKSPACE_KEY}".
     3. Copies pubspec.yaml to pubspec.yaml.YYYY-MM-DD_HHMMSS (never deleted).
@@ -340,7 +340,7 @@ require_pubspec() {
 
 require_member_shape() {
     if [[ ! "$member" =~ $MEMBER_PATTERN ]]; then
-        usage_exit "${POSITIONAL_NAME} must be \"<parent>/<name>\" in lowercase snake_case, got: ${member}"
+        usage_exit "${POSITIONAL_NAME} must consist of lowercase snake_case segments joined by slashes, got: ${member}"
     fi
 }
 

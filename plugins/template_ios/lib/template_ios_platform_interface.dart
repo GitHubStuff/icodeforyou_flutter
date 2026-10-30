@@ -1,10 +1,15 @@
 // plugins/template_ios/lib/template_ios_platform_interface.dart
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:template_ios/template_ios_method_channel.dart'
+    show MethodChannelTemplateIos;
 
-import 'template_ios_method_channel.dart';
-
+/// The common platform interface contract for the `template_ios` plugin.
+///
+/// Platform implementations must extend this class rather than implement it
+/// directly to allow new non-breaking members to be added in future versions.
 abstract class TemplateIosPlatform extends PlatformInterface {
-  /// Constructs a TemplateIosPlatform.
+  /// Constructs a [TemplateIosPlatform].
   TemplateIosPlatform() : super(token: _token);
 
   static final Object _token = Object();
@@ -24,6 +29,13 @@ abstract class TemplateIosPlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  /// Retrieves the host operating system platform version string.
+  ///
+  /// Subclasses must override this method to communicate with their
+  /// respective platform-side implementations.
+  ///
+  /// Throws an [UnimplementedError] if the platform-specific subclass does not
+  /// override this method.
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }

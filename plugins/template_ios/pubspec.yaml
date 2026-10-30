@@ -1,7 +1,7 @@
 # plugins/template_ios/pubspec.yaml
 name: template_ios
 description: "A new Flutter plugin project."
-version: 0.0.1
+version: 1.0.0
 homepage:
 resolution: workspace
 
@@ -17,6 +17,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   icodeforyou_lints: ^1.0.0
+
 
 flutter:
   plugin:
