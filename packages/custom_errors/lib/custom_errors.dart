@@ -4,3 +4,4 @@ library;
 
 export 'src/already_initialized_error.dart' show AlreadyInitializedError;
 export 'src/not_initialized_error.dart' show NotInitializedError;
+export 'src/plugin_error.dart' show PluginError;

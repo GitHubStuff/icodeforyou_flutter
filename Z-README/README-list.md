@@ -12,7 +12,7 @@ Anny Walker - X
 ArdatB - X
 Ariana Lopes - X
 Arisha Mills
-AvaDyson
+~ AvaDyson - 177
 BarbieAngeL - 79
 Billie Star - 16
 Blondessa - 200+
@@ -85,7 +85,7 @@ Melanie Queen - 199 (oct 2026) / Sweety Titties
 Melissa Stratton - X
 Merida Sat- 147
 Mila Solana - 77
-Milfetta
+~ Milfetta - 43
 ~ Miss Driada - 200+ / Urakadaki - 152 {19-oct}
 Misslexa - X
 MissRedStar - 163
@@ -119,7 +119,7 @@ Space Lady
 Spirite Moon - 33 [ugly tats]
 ~ Stacy Cruz - 26
 Sumiko Smile - X
-Thelymia - 90
+~ Thelymia - 90
 ~ TwixenXX - 31 {30-oct}
 Vallery Ray - 200+
 ~ Verlonis - 157 {1-nov-2026}

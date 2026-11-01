@@ -1,11 +1,7 @@
-// packages/status_bar_visibility_framework/lib/
-// status_bar_visibility_framework.dart
+// packages/status_bar_visibility_framework/lib/status_bar_visibility_framework.dart
+import 'dart:async';
 
-import 'dart:async' show FutureOr, unawaited;
-
-import 'package:custom_errors/custom_errors.dart' show NotInitializedError;
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+import 'package:custom_errors/custom_errors.dart' show PluginError;
 import 'package:platform_tools/platform_tools.dart' show OSPlatform;
 import 'package:status_bar_android/status_bar_android.dart'
     as android
@@ -14,90 +10,65 @@ import 'package:status_bar_ios/status_bar_ios.dart' as ios show StatusBar;
 import 'package:status_bar_visibility_abstract/status_bar_visibility_abstract.dart'
     show StatusBarVisibilityAbstract;
 
+/// Default implementation of [StatusBarVisibilityAbstract] that delegates
+/// visibility changes to the host platform.
 class StatusBarVisibilityFramework implements StatusBarVisibilityAbstract {
-  /// Returns the singleton instance of [StatusBarVisibilityFramework].
-  factory StatusBarVisibilityFramework() => _instance;
+  /// Creates a new [StatusBarVisibilityFramework] instance.
+  StatusBarVisibilityFramework();
 
-  StatusBarVisibilityFramework._internal();
+  bool _isInitialized = false;
+  bool? _isHidden;
 
-  static bool _initializedFlag = false;
-  static bool? _isHidden;
-
-  /// Internal singleton reference.
-  static final StatusBarVisibilityFramework _instance =
-      StatusBarVisibilityFramework._internal();
-
-  /// The active singleton instance of [StatusBarVisibilityFramework].
-  static StatusBarVisibilityFramework get instance => _instance;
-
-  // --- Static Hooks ---
-
-  static FutureOr<bool> setStatusBar({required bool isHidden}) async {
-    _initializedFlag = true;
-    final isBarVisibilitySet = await _instance._setStatusBar(
-      isHidden: isHidden,
-    );
-    if (isBarVisibilitySet) _isHidden = isHidden;
-    return isBarVisibilitySet;
-  }
-
-  static bool isHidden() {
-    if (_isHidden == null) throw NotInitializedError('StatusBar');
-    return _isHidden!;
-  }
-
-  static bool isReady() => _initializedFlag;
-
-  // --- Abstract Contract Implementations ---
-
-  /// Changes status bar visibility via the instance contract.
-  ///
-  /// Delegates directly to [setStatusBar].
-  ///
-  /// Throws a [NotInitializedError] if the framework has not yet been
-  /// initialized.
+  /// Whether the status bar visibility state has been successfully set at least once.
   @override
-  FutureOr<bool> setStatusBarVisibility({required bool isHidden}) =>
-      _setStatusBar(isHidden: isHidden);
+  bool isInitialized() => _isInitialized;
 
-  // --- Private Implementations ---
+  /// Whether the status bar is currently hidden.
+  ///
+  /// Returns `false` if the visibility has not yet been initialized.
+  @override
+  bool isBarHidden() => _isHidden ?? false;
 
-  /// Internal implementation of status bar toggling using [SystemChrome].
-  Future<bool> _setStatusBar({required bool isHidden}) async {
-    switch (OSPlatform.current) {
-      case .android:
-        unawaited(android.StatusBar.setVisibility(isHidden: isHidden));
-        return true;
-      case .iOS:
-        unawaited(ios.StatusBar.setVisibility(isHidden: isHidden));
-        return true;
-      case .fuchsia:
-      case .linux:
-      case .macOS:
-      case .web:
-      case .windows:
-        return false;
+  /// Sets the visibility of the status bar.
+  ///
+  /// Updates internal tracking and returns `true` if the platform successfully
+  /// applied the change; otherwise, returns `false`.
+  ///
+  /// Throws a [PluginError] if the underlying platform call fails.
+  @override
+  Future<bool> setStatusBarVisibility({required bool isHidden}) async {
+    final success = await _dispatchPlatformSetVisibility(isHidden: isHidden);
+    if (success) {
+      _isHidden = isHidden;
+      _isInitialized = true;
     }
+    return success;
   }
 
-  /// Returns false if it hasn't been initialized or false from a platform fail
-  @override
-  bool isBarHidden() => _instance.isBarHidden();
-
-  /// Get the status if the init has been called and the platform is supported.
+  /// Dispatches the visibility update to the active platform's status bar implementation.
   ///
-  /// Returns false if initialize() hasn't been called or the platform doesn't
-  /// support mobile;
-  @override
-  bool isInitialized() => _instance.isInitialized();
-
-  /// Resets the internal initialization state.
+  /// Returns `true` if the platform is supported and executed the call, or `false`
+  /// if the platform does not support status bar manipulation.
   ///
-  /// Intended strictly for test environments to simulate fresh startup states
-  /// without retaining process-wide static flags.
-  @visibleForTesting
-  void resetInit(bool? isHidden) {
-    _isHidden = isHidden;
-    _initializedFlag = _isHidden != null;
+  /// Throws a [PluginError] if the platform invocation throws an [Exception].
+  Future<bool> _dispatchPlatformSetVisibility({required bool isHidden}) async {
+    try {
+      switch (OSPlatform.current) {
+        case .android:
+          await android.StatusBar.setVisibility(isHidden: isHidden);
+          return true;
+        case .iOS:
+          await ios.StatusBar.setVisibility(isHidden: isHidden);
+          return true;
+        case .fuchsia:
+        case .linux:
+        case .macOS:
+        case .web:
+        case .windows:
+          return false;
+      }
+    } on Exception catch (_) {
+      throw PluginError('StatusBar Visiblity');
+    }
   }
 }
