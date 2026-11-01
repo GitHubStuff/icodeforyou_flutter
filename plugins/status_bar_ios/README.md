@@ -66,11 +66,11 @@ Color). This is the frame shown until `StatusBarFlutterViewController` draws.
 `setStatusBar` completes with a `PlatformException` when the root view
 controller is not a `StatusBarFlutterViewController`:
 
-| code            | meaning                                           |
-|-----------------|---------------------------------------------------|
-| `argument`      | `isHidden` was not a `bool`                       |
-| `no_window`     | no key window (app not yet in the foreground)     |
-| `no_controller` | root is not `StatusBarFlutterViewController`      |
+| code            | meaning                                       |
+| --------------- | --------------------------------------------- |
+| `argument`      | `isHidden` was not a `bool`                   |
+| `no_window`     | no key window (app not yet in the foreground) |
+| `no_controller` | root is not `StatusBarFlutterViewController`  |
 
 ## Requirements
 

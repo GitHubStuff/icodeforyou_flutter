@@ -5,15 +5,14 @@
 import 'package:app_navigation/app_navigation.dart'
     show NavButtonProperties, NavSlot;
 import 'package:custom_widgets/custom_widgets.dart' show DefaultWelcomeScreen;
-import 'package:demo/demo.dart' show DurationStopwatchDemo, SpinWidgetDemo;
+import 'package:demo/demo.dart'
+    show DurationStopwatchDemo, MakeStatusBarReady, SpinWidgetDemo;
 import 'package:flutter/material.dart';
 import 'package:haptic_intensity/haptic_intensity.dart' show HapticIntensity;
 import 'package:since_when_dev/example_menu_screen/ping_pong_example.dart'
     show PingPongExample;
 import 'package:since_when_dev/example_menu_screen/shared_search_body.dart'
     show SharedSearchBody;
-import 'package:since_when_dev/example_menu_screen/status_bar_visibility_app.dart'
-    show StatusBarVisibilityPage;
 import 'package:since_when_dev/navigation/dock_button_sizes.dart'
     show DockButtonSize;
 import 'package:sincewhen_widgets/sincewhen_widgets.dart' show GlossaryEditPage;
@@ -74,7 +73,7 @@ enum DockItems implements NavButtonProperties {
     iconData: Icons.visibility_outlined,
     haptic: HapticIntensity.primary,
     caption: 'Visibility',
-    viewBuilder: StatusBarVisibilityPage.new,
+    viewBuilder: MakeStatusBarReady.new,
   ),
 
   /// The search destination.
@@ -183,6 +182,7 @@ enum DockItems implements NavButtonProperties {
     home,
     tools,
     more,
+    statBar,
     search,
     pingPong,
     glossary,

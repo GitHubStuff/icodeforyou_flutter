@@ -62,7 +62,6 @@ import 'package:flutter/foundation.dart'
 /// * [TargetPlatform], the framework enum this wraps.
 /// * [defaultTargetPlatform], the framework getter this wraps.
 /// * [kIsWeb], the framework constant this wraps.
-///
 enum OSPlatform {
   /// Android phones, tablets, and other Android-based devices.
   ///
@@ -188,4 +187,16 @@ enum OSPlatform {
       return true;
     }());
   }
+
+  /// Whether [current] resolves to a mobile operating system ([android]
+  /// or [iOS]).
+  ///
+  /// Returns `true` if the application is running natively on Android or
+  /// iOS. Returns `false` for desktop platforms, [fuchsia], and [web]
+  /// (even when accessed from a mobile browser).
+  ///
+  /// This checks the operating system target, not physical device
+  /// factors or screen dimensions.
+  static bool isMobile() =>
+      (current == OSPlatform.android) || (current == OSPlatform.iOS);
 }

@@ -3,7 +3,7 @@ name: demo
 description: "Demos for complex widgets"
 publish_to: none
 resolution: workspace
-version: 1.0.0
+version: 1.0.1
 
 environment:
   sdk: ^3.13.7
@@ -12,6 +12,8 @@ dependencies:
   ext_widget: ^1.0.0
   flutter:
     sdk: flutter
+  status_bar_visibility: ^1.0.0
+  status_bar_visibility_framework: ^1.0.0
 
 dev_dependencies:
   flutter_test:

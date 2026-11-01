@@ -45,6 +45,17 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
+
+            // android.jar on the JVM is stubs whose every method throws
+            // RuntimeException("Stub!"). With this on, stubs return
+            // defaults (0, null, no-op constructors) instead, so code
+            // that touches platform statics such as
+            // WindowInsets.Type.statusBars() or constructs platform
+            // objects such as CancellationSignal can run under test
+            // with the surrounding Window / WindowInsetsController
+            // mocked by Mockito.
+            isReturnDefaultValues = true
+
             all {
                 it.useJUnitPlatform()
 

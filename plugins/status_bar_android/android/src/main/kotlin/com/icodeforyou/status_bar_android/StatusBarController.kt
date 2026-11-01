@@ -11,12 +11,18 @@ import android.view.WindowInsetsAnimationController
 import android.view.WindowInsetsController
 
 /**
- * Shows or hides the status bar of a [Window] with no transition.
+ * Shows or hides the status bar of a [StatusBar] with no transition.
  *
  * [WindowInsetsController.hide] and [WindowInsetsController.show] always
  * run the system's fade animation. Taking control of the animation via
  * [WindowInsetsController.controlWindowInsetsAnimation] and finishing it
  * in `onReady` snaps the bar to its end state in a single frame.
+ *
+ * Before touching the bar, the window is put edge-to-edge
+ * ([Window.setDecorFitsSystemWindows] `false`). Otherwise the decor view
+ * resizes when the bar goes and the whole Flutter view re-lays out;
+ * edge-to-edge means only the top inset changes. On Android 15+ the
+ * platform already enforces edge-to-edge and the call is a no-op.
  *
  * If the system refuses control (window not yet attached, no focus),
  * the listener falls back to the animated API so the call still takes
@@ -42,6 +48,8 @@ class StatusBarController(private val window: Window) {
         val insetsController = window.insetsController ?: return false
         val statusBarType = WindowInsets.Type.statusBars()
 
+        ensureEdgeToEdge()
+
         insetsController.systemBarsBehavior =
             WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
@@ -57,6 +65,21 @@ class StatusBarController(private val window: Window) {
             ),
         )
         return true
+    }
+
+    /**
+     * Lets the window content extend under the system bars so a change
+     * in status bar visibility changes the inset, not the view size.
+     * Idempotent; safe to call on every toggle.
+     *
+     * [Window.setDecorFitsSystemWindows] is deprecated from API 35, where
+     * Android 15 enforces edge-to-edge and the call does nothing. On this
+     * plugin's floor, API 30 through 34, it is the only platform API (no
+     * `androidx`) that turns edge-to-edge on, so it stays.
+     */
+    @Suppress("DEPRECATION")
+    private fun ensureEdgeToEdge() {
+        window.setDecorFitsSystemWindows(false)
     }
 
     /**

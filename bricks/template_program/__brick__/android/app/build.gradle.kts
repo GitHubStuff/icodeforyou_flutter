@@ -1,3 +1,5 @@
+// programs/{{name.snakeCase()}}/lib/main.dart
+// 
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
@@ -16,7 +18,7 @@ android {
 
     defaultConfig {
         applicationId = "com.icodeforyou.{{name.snakeCase()}}"
-        // island_control_android requires Android 11 (API 30) or newer.
+        // Status Bar Visibility required sdk=30
         minSdk = 30
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

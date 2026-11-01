@@ -2,26 +2,13 @@
 // Version: 0.0.1-a StatusBarAndroid
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:status_bar_android/status_bar_android.dart' show StatusBar;
 
 Future<void> main() async {
+  // Required before any plugin call that happens before runApp.
   WidgetsFlutterBinding.ensureInitialized();
 
-  /*
-  Two things to know:
-  - The example app’s SystemUiMode.edgeToEdge call in main() stays. Without 
-    it the window still “fits system windows”, so hiding the bar would resize 
-    the Flutter view instead of just changing the inset.
-
-  - Once this is wired, lib/src/status_bar.dart stops calling SystemChrome
-    and goes through the channel instead — that’s in the Dart batch after
-    the Kotlin test.
-  */
-
-  // Edge-to-edge so hiding the bar changes only the inset, not the
-  // size of the Flutter view.
-  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  // Hide before the first frame so the bar is never seen at launch.
   await StatusBar.setVisibility(isHidden: true);
   runApp(const StatusBarExampleApp());
 }

@@ -2,7 +2,7 @@
 name: icodeforyou_flutter
 publish_to: none
 description: "Collection of flutter packages"
-version: 9.7.8
+version: 9.7.11
 
 workspace:
   - packages/analog_clock_widget
@@ -58,6 +58,8 @@ workspace:
   - packages/sqlite_viewer
   - packages/stacking_widgets
   - packages/status_bar_visibility
+  - packages/status_bar_visibility_abstract
+  - packages/status_bar_visibility_framework
   - packages/template_dart
   - packages/theme_framework
   - packages/three_d_sphere
@@ -68,6 +70,7 @@ workspace:
   - plugins/status_bar_android/example
   - plugins/status_bar_chameleon
   - plugins/status_bar_ios
+  - plugins/status_bar_ios/example
   - plugins/template_ios
   - plugins/template_ios/example
   - programs/black_velvet

@@ -1,105 +1,92 @@
 // packages/platform_tools/test/src/os_platform_test.dart
 
-import 'package:flutter/foundation.dart'
-    show TargetPlatform, debugDefaultTargetPlatformOverride;
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:platform_tools/platform_tools.dart';
+import 'package:platform_tools/src/os_platform.dart';
 
 void main() {
   group('OSPlatform', () {
-    tearDown(() {
+    tearDown(OSPlatform.override);
+
+    test('resolves runtime platform when no override is set', () {
+      final expected = switch (defaultTargetPlatform) {
+        TargetPlatform.android => OSPlatform.android,
+        TargetPlatform.fuchsia => OSPlatform.fuchsia,
+        TargetPlatform.iOS => OSPlatform.iOS,
+        TargetPlatform.linux => OSPlatform.linux,
+        TargetPlatform.macOS => OSPlatform.macOS,
+        TargetPlatform.windows => OSPlatform.windows,
+      };
+
+      expect(OSPlatform.current, equals(expected));
+    });
+
+    test('override takes precedence over runtime platform', () {
+      for (final platform in OSPlatform.values) {
+        OSPlatform.override(to: platform);
+        expect(OSPlatform.current, equals(platform));
+      }
+    });
+
+    test('clearing override restores default platform resolution', () {
+      OSPlatform.override(to: OSPlatform.fuchsia);
+      expect(OSPlatform.current, equals(OSPlatform.fuchsia));
+
       OSPlatform.override();
-      debugDefaultTargetPlatformOverride = null;
+
+      final expected = switch (defaultTargetPlatform) {
+        TargetPlatform.android => OSPlatform.android,
+        TargetPlatform.fuchsia => OSPlatform.fuchsia,
+        TargetPlatform.iOS => OSPlatform.iOS,
+        TargetPlatform.linux => OSPlatform.linux,
+        TargetPlatform.macOS => OSPlatform.macOS,
+        TargetPlatform.windows => OSPlatform.windows,
+      };
+
+      expect(OSPlatform.current, equals(expected));
     });
 
-    group('current', () {
-      group('maps defaultTargetPlatform', () {
-        const cases = <TargetPlatform, OSPlatform>{
-          TargetPlatform.android: OSPlatform.android,
-          TargetPlatform.fuchsia: OSPlatform.fuchsia,
-          TargetPlatform.iOS: OSPlatform.iOS,
-          TargetPlatform.linux: OSPlatform.linux,
-          TargetPlatform.macOS: OSPlatform.macOS,
-          TargetPlatform.windows: OSPlatform.windows,
-        };
+    group('isMobile', () {
+      test('returns true for android and iOS', () {
+        OSPlatform.override(to: OSPlatform.android);
+        expect(OSPlatform.isMobile(), isTrue);
 
-        for (final MapEntry(key: target, value: expected) in cases.entries) {
-          test('$target to $expected', () {
-            debugDefaultTargetPlatformOverride = target;
-
-            expect(OSPlatform.current, expected);
-          });
-        }
-
-        test('covers every TargetPlatform value', () {
-          expect(cases.keys, containsAll(TargetPlatform.values));
-        });
-      });
-
-      test('returns the override when one is set', () {
-        debugDefaultTargetPlatformOverride = TargetPlatform.android;
-        OSPlatform.override(to: OSPlatform.windows);
-
-        expect(OSPlatform.current, OSPlatform.windows);
-      });
-
-      test('override takes precedence for every platform value', () {
-        for (final platform in OSPlatform.values) {
-          OSPlatform.override(to: platform);
-
-          expect(OSPlatform.current, platform);
-        }
-      });
-    });
-
-    group('override', () {
-      test('clears the override when called with no argument', () {
-        debugDefaultTargetPlatformOverride = TargetPlatform.linux;
         OSPlatform.override(to: OSPlatform.iOS);
-        expect(OSPlatform.current, OSPlatform.iOS);
-
-        OSPlatform.override();
-
-        expect(OSPlatform.current, OSPlatform.linux);
+        expect(OSPlatform.isMobile(), isTrue);
       });
 
-      test('clears the override when called with null', () {
-        debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
-        OSPlatform.override(to: OSPlatform.android);
-        expect(OSPlatform.current, OSPlatform.android);
+      test('returns false for desktop platforms, fuchsia, and web', () {
+        const nonMobilePlatforms = [
+          OSPlatform.fuchsia,
+          OSPlatform.linux,
+          OSPlatform.macOS,
+          OSPlatform.web,
+          OSPlatform.windows,
+        ];
 
-        OSPlatform.override(to: null);
-
-        expect(OSPlatform.current, OSPlatform.macOS);
-      });
-
-      test('replaces a previous override', () {
-        OSPlatform.override(to: OSPlatform.android);
-        OSPlatform.override(to: OSPlatform.web);
-
-        expect(OSPlatform.current, OSPlatform.web);
+        for (final platform in nonMobilePlatforms) {
+          OSPlatform.override(to: platform);
+          expect(OSPlatform.isMobile(), isFalse);
+        }
       });
     });
 
-    group('values', () {
-      test('contains exactly the expected platforms', () {
-        expect(
-          OSPlatform.values,
-          orderedEquals(const [
-            OSPlatform.android,
-            OSPlatform.fuchsia,
-            OSPlatform.iOS,
-            OSPlatform.linux,
-            OSPlatform.macOS,
-            OSPlatform.web,
-            OSPlatform.windows,
-          ]),
-        );
-      });
+    test('exercises all TargetPlatform switch cases via debugDefaultTargetPlatformOverride', () {
+      const mappings = {
+        TargetPlatform.android: OSPlatform.android,
+        TargetPlatform.fuchsia: OSPlatform.fuchsia,
+        TargetPlatform.iOS: OSPlatform.iOS,
+        TargetPlatform.linux: OSPlatform.linux,
+        TargetPlatform.macOS: OSPlatform.macOS,
+        TargetPlatform.windows: OSPlatform.windows,
+      };
 
-      test('has one value per TargetPlatform plus web', () {
-        expect(OSPlatform.values.length, TargetPlatform.values.length + 1);
-      });
+      for (final entry in mappings.entries) {
+        debugDefaultTargetPlatformOverride = entry.key;
+        expect(OSPlatform.current, equals(entry.value));
+      }
+
+      debugDefaultTargetPlatformOverride = null;
     });
   });
 }

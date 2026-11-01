@@ -1,0 +1,24 @@
+# plugins/status_bar_ios/example/pubspec.yaml
+name: status_bar_ios_example
+description: "A new Flutter project."
+publish_to: 'none'
+resolution: workspace
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+  gap: ^3.0.1
+  status_bar_ios: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true

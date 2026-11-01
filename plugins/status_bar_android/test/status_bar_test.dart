@@ -1,6 +1,8 @@
 // plugins/status_bar_android/test/status_bar_test.dart
 // Version: 0.0.1-a StatusBarAndroid
 
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, debugDefaultTargetPlatformOverride;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:status_bar_android/src/status_bar_android_method_channel.dart'
@@ -82,12 +84,6 @@ void main() {
       StatusBarAndroidPlatform.instance = platform;
     });
 
-    test('defaults to hiding', () async {
-      await StatusBar.setVisibility();
-
-      expect(platform.receivedIsHidden, <bool>[true]);
-    });
-
     test('forwards isHidden: true', () async {
       await StatusBar.setVisibility(isHidden: true);
 
@@ -105,6 +101,18 @@ void main() {
       StatusBarAndroidPlatform.instance = _RecordingPlatform(error: exception);
 
       expect(StatusBar.setVisibility, throwsA(same(exception)));
+    });
+
+    test('forwards on a non-Android platform instead of guarding', () async {
+      // The facade does not check the platform; that is the caller's
+      // responsibility. On a device without the Android plugin the
+      // channel itself throws MissingPluginException.
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      addTearDown(() => debugDefaultTargetPlatformOverride = null);
+
+      await StatusBar.setVisibility(isHidden: true);
+
+      expect(platform.receivedIsHidden, <bool>[true]);
     });
   });
 }

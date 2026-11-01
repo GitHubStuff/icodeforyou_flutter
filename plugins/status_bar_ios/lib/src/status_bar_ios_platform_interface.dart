@@ -26,7 +26,5 @@ abstract class StatusBarIosPlatform extends PlatformInterface {
   }
 
   /// Hides the status bar when [isHidden] is `true`, shows it otherwise.
-  Future<void> setVisibility({required bool isHidden}) {
-    throw UnimplementedError('setStatusBar() has not been implemented.');
-  }
+  Future<void> setVisibility({required bool isHidden});
 }

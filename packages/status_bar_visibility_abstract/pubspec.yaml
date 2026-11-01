@@ -1,0 +1,24 @@
+# packages/status_bar_visibility_abstract/pubspec.yaml
+name: status_bar_visibility_abstract
+description: "Abstract used by other packages"
+publish_to: none
+resolution: workspace
+version: 1.0.0
+
+environment:
+  sdk: ^3.13.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+  gap: ^3.0.1
+
+dev_dependencies:
+
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true
+
