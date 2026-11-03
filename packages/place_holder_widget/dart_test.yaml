@@ -1,0 +1,11 @@
+# packages/place_holder_widget/dart_test.yaml
+tags:
+  golden:
+    description: Writes PNG goldens. Platform-specific; run locally on macOS.
+
+# CI/CD do not create .png images that are the same as the imanages in
+# 'golden' tests. tests in the test/golden folder have a 'golden' tag in
+# test in the *_test.dat files with "tags: golden", these will not be run.
+# NOTE: To run the golden test locally or from melos comment out this line.
+exclude_tags: golden
+# make sure to comment it out when done.

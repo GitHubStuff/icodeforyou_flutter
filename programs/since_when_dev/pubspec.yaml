@@ -13,21 +13,24 @@ dependencies:
   caption_switch: ^1.0.0
   custom_widgets: ^1.0.0
   demo: ^1.0.0
-  dependency_resolver: ^1.0.0
   flutter:
     sdk: flutter
+  flutter_bloc: ^9.1.1
+  get_it: ^9.3.0
+  go_router: ^18.1.2
   haptic_intensity: ^1.0.0
+  launch_splash_screen: ^1.0.0
   ping_pong: ^1.0.0
   prism_bubble_widget: ^1.0.0
-  services_provider: ^1.0.0
   shared_preferences: ^2.5.5
   sincewhen_widgets: ^1.0.0
   sliders: ^1.0.0
   spinners: ^1.0.0
   splash_framework: ^1.0.0
-  #status_bar_chameleon: ^1.0.1
   status_bar_visibility: ^1.0.0
+  status_bar_visibility_abstract: ^1.0.0
   theme_framework: ^1.0.0
+  theme_mode_cubit: ^1.0.0
   
 
 dev_dependencies:

@@ -1,159 +1,85 @@
 // packages/status_bar_visibility_abstract/test/status_bar_visibility_abstract_test.dart
-import 'dart:async';
 
-import 'package:status_bar_visibility_abstract/status_bar_visibility_abstract.dart'
-    show StatusBarVisibilityAbstract;
-import 'package:test/test.dart';
+import 'dart:async' show FutureOr;
 
-/// Synchronous mock implementation of [StatusBarVisibilityAbstract].
-class SyncStatusBarVisibility implements StatusBarVisibilityAbstract {
-  bool _initialized = false;
-  bool _barHidden = false;
+import 'package:flutter_test/flutter_test.dart';
+import 'package:status_bar_visibility_abstract/status_bar_visibility_abstract.dart';
+
+/// Concrete implementation used to verify the abstract interface contract.
+class TestStatusBarVisibility implements StatusBarVisibilityAbstract {
+  bool _isInitialized = false;
+  bool _isHidden = false;
 
   @override
-  bool initialize({required bool withBarHidden}) {
-    _initialized = true;
-    _barHidden = withBarHidden;
+  bool isInitialized() => _isInitialized;
+
+  @override
+  bool isBarHidden() => _isHidden;
+
+  @override
+  FutureOr<bool> setStatusBarVisibility({required bool isHidden}) {
+    _isHidden = isHidden;
+    _isInitialized = true;
     return true;
   }
-
-  @override
-  bool setStatusBarVisibility({required bool isHidden}) {
-    if (!_initialized) return false;
-    _barHidden = isHidden;
-    return true;
-  }
-
-  @override
-  bool isBarHidden() => _barHidden;
-
-  @override
-  bool isInitialized() => _initialized;
 }
 
-/// Asynchronous mock implementation of [StatusBarVisibilityAbstract].
-class AsyncStatusBarVisibility implements StatusBarVisibilityAbstract {
-  bool _initialized = false;
-  bool _barHidden = false;
+/// Concrete implementation returning a [Future] to test asynchronous fulfillment.
+class AsyncTestStatusBarVisibility implements StatusBarVisibilityAbstract {
+  bool _isInitialized = false;
+  bool _isHidden = false;
 
   @override
-  Future<bool> initialize({required bool withBarHidden}) async {
-    await Future<void>.delayed(const Duration(milliseconds: 10));
-    _initialized = true;
-    _barHidden = withBarHidden;
-    return true;
-  }
+  bool isInitialized() => _isInitialized;
+
+  @override
+  bool isBarHidden() => _isHidden;
 
   @override
   Future<bool> setStatusBarVisibility({required bool isHidden}) async {
-    await Future<void>.delayed(const Duration(milliseconds: 10));
-    if (!_initialized) return false;
-    _barHidden = isHidden;
+    _isHidden = isHidden;
+    _isInitialized = true;
     return true;
   }
-
-  @override
-  bool isBarHidden() => _barHidden;
-
-  @override
-  bool isInitialized() => _initialized;
 }
 
 void main() {
-  group('StatusBarVisibilityAbstract - Synchronous Implementation', () {
-    late StatusBarVisibilityAbstract controller;
+  group('StatusBarVisibilityAbstract contract', () {
+    test('can be implemented synchronously', () {
+      final StatusBarVisibilityAbstract instance = TestStatusBarVisibility();
 
-    setUp(() {
-      controller = SyncStatusBarVisibility();
-    });
+      expect(instance.isInitialized(), isFalse);
+      expect(instance.isBarHidden(), isFalse);
 
-    test('initial state reports not initialized and visible', () {
-      expect(controller.isInitialized(), isFalse);
-      expect(controller.isBarHidden(), isFalse);
-    });
-
-    test('initialize sets state and returns true synchronously', () {
-      final result = controller.initialize(withBarHidden: true);
+      final result = instance.setStatusBarVisibility(isHidden: true);
 
       expect(result, isTrue);
-      expect(controller.isInitialized(), isTrue);
-      expect(controller.isBarHidden(), isTrue);
+      expect(instance.isInitialized(), isTrue);
+      expect(instance.isBarHidden(), isTrue);
     });
 
-    test('initialize can start with bar visible', () {
-      final result = controller.initialize(withBarHidden: false);
+    test('can be implemented asynchronously', () async {
+      final StatusBarVisibilityAbstract instance =
+          AsyncTestStatusBarVisibility();
+
+      expect(instance.isInitialized(), isFalse);
+      expect(instance.isBarHidden(), isFalse);
+
+      final result = await instance.setStatusBarVisibility(isHidden: true);
 
       expect(result, isTrue);
-      expect(controller.isInitialized(), isTrue);
-      expect(controller.isBarHidden(), isFalse);
+      expect(instance.isInitialized(), isTrue);
+      expect(instance.isBarHidden(), isTrue);
     });
 
-    test('setStatusBarVisibility toggles visibility when initialized', () {
-      controller.initialize(withBarHidden: false);
-      expect(controller.isBarHidden(), isFalse);
+    test('updates visibility state across toggles', () {
+      final StatusBarVisibilityAbstract instance = TestStatusBarVisibility();
 
-      final hideResult = controller.setStatusBarVisibility(isHidden: true);
-      expect(hideResult, isTrue);
-      expect(controller.isBarHidden(), isTrue);
+      instance.setStatusBarVisibility(isHidden: true);
+      expect(instance.isBarHidden(), isTrue);
 
-      final showResult = controller.setStatusBarVisibility(isHidden: false);
-      expect(showResult, isTrue);
-      expect(controller.isBarHidden(), isFalse);
+      instance.setStatusBarVisibility(isHidden: false);
+      expect(instance.isBarHidden(), isFalse);
     });
-
-    test('setStatusBarVisibility fails if not initialized', () {
-      final result = controller.setStatusBarVisibility(isHidden: true);
-
-      expect(result, isFalse);
-      expect(controller.isBarHidden(), isFalse);
-    });
-  });
-
-  group('StatusBarVisibilityAbstract - Asynchronous Implementation', () {
-    late StatusBarVisibilityAbstract controller;
-
-    setUp(() {
-      controller = AsyncStatusBarVisibility();
-    });
-
-    test('initialize resolves Future<bool> and updates state', () async {
-      expect(controller.isInitialized(), isFalse);
-
-      final result = await controller.initialize(withBarHidden: true);
-
-      expect(result, isTrue);
-      expect(controller.isInitialized(), isTrue);
-      expect(controller.isBarHidden(), isTrue);
-    });
-
-    test(
-      'setStatusBarVisibility resolves Future<bool> and toggles state',
-      () async {
-        await controller.initialize(withBarHidden: false);
-
-        final hideResult = await controller.setStatusBarVisibility(
-          isHidden: true,
-        );
-        expect(hideResult, isTrue);
-        expect(controller.isBarHidden(), isTrue);
-
-        final showResult = await controller.setStatusBarVisibility(
-          isHidden: false,
-        );
-        expect(showResult, isTrue);
-        expect(controller.isBarHidden(), isFalse);
-      },
-    );
-
-    test(
-      'setStatusBarVisibility handles uninitialized async failure',
-      () async {
-        final result = await controller.setStatusBarVisibility(isHidden: true);
-
-        expect(result, isFalse);
-        expect(controller.isBarHidden(), isFalse);
-        expect(controller.isInitialized(), isFalse);
-      },
-    );
   });
 }

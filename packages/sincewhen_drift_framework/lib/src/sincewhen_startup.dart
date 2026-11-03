@@ -1,7 +1,6 @@
 // packages/sincewhen_drift_framework/lib/src/sincewhen_startup.dart
 
-import 'package:dependency_resolver/dependency_resolver.dart'
-    show DependencyContainer, DependencyResolver;
+import 'package:get_it/get_it.dart' show GetIt;
 import 'package:sincewhen_drift_framework/src/startup_methods.dart'
     show
         registerAppDatabaseLazy,
@@ -51,53 +50,49 @@ final class SinceWhenInMemoryConfiguration extends SinceWhenConfiguration {
 /// contracts happens here, so app code never touches the individual
 /// registration functions.
 abstract final class SinceWhenStartup {
-  /// Registers and warm-starts the subsystem: [setup] then [warm], in
-  /// that order, guaranteed.
+  /// Registers and warm-starts the subsystem on [getIt]: registration
+  /// then [warm], in that order, guaranteed.
   ///
   /// The one-call entry point for startup task lists. The
-  /// setup-before-warm ordering is owned here so no call site can
-  /// invert it.
+  /// register-before-warm ordering is owned here so no call site can
+  /// invert it. Apps pass `GetIt.I`; tests pass `GetIt.asNewInstance()`.
   static Future<void> start(
-    DependencyContainer container,
+    GetIt getIt,
     SinceWhenConfiguration configuration,
   ) async {
-    await _setup(container, configuration);
-    await warm(container);
-  }
-
-  /// Registers the database (per [configuration]), all DAOs, and the
-  /// persistence-free repository contracts with [container].
-  ///
-  /// Instant and side-effect-free: only factories are stored. Nothing
-  /// opens until first resolution — typically forced by [warm].
-  static Future<void> _setup(
-    DependencyContainer container,
-    SinceWhenConfiguration configuration,
-  ) async {
-    switch (configuration) {
-      case SinceWhenDocumentsConfiguration(:final fileName):
-        await registerDocumentDatabaseLazy(container, fileName: fileName);
-      case SinceWhenAppFolderConfiguration(:final fileName):
-        await registerAppDatabaseLazy(container, fileName: fileName);
-      case SinceWhenInMemoryConfiguration():
-        await registerInMemoryDatabaseLazy(container);
-    }
-
-    // Daos
-    await registerGlossaryItemsDao(container);
-    await registerSinceWhenItemsDao(container);
-    await registerTagItemsDao(container);
-    // Repos
-    await registerGlossaryRepository(container);
-    await registerSinceWhenRepository(container);
-    await registerTagRepository(container);
+    _register(getIt, configuration);
+    await warm(getIt);
   }
 
   /// Forces the database stack open so it is ready before the user acts.
   ///
-  /// Run after [setup] — or use [start], which guarantees it. Open
-  /// failures throw here and surface through the startup runner as
-  /// normal exceptions.
-  static Future<void> warm(DependencyResolver resolver) =>
-      warmStartDatabase(resolver);
+  /// Requires the subsystem to be registered on [getIt] — use [start],
+  /// which guarantees it. Open failures throw here and surface through
+  /// the startup runner as normal exceptions.
+  static Future<void> warm(GetIt getIt) => warmStartDatabase(getIt);
+
+  /// Registers the database (per [configuration]), all DAOs, and the
+  /// persistence-free repository contracts with [getIt].
+  ///
+  /// Instant and side-effect-free: only factories are stored. Nothing
+  /// opens until first resolution — typically forced by [warm].
+  static void _register(GetIt getIt, SinceWhenConfiguration configuration) {
+    switch (configuration) {
+      case SinceWhenDocumentsConfiguration(:final fileName):
+        registerDocumentDatabaseLazy(getIt, fileName: fileName);
+      case SinceWhenAppFolderConfiguration(:final fileName):
+        registerAppDatabaseLazy(getIt, fileName: fileName);
+      case SinceWhenInMemoryConfiguration():
+        registerInMemoryDatabaseLazy(getIt);
+    }
+
+    // DAOs
+    registerGlossaryItemsDao(getIt);
+    registerSinceWhenItemsDao(getIt);
+    registerTagItemsDao(getIt);
+    // Repositories
+    registerGlossaryRepository(getIt);
+    registerSinceWhenRepository(getIt);
+    registerTagRepository(getIt);
+  }
 }

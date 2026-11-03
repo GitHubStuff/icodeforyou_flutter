@@ -1201,10 +1201,11 @@ class $$GlossaryItemsTableTableManager
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (tagItemsRefs)
-                    await $_getPrefetchedData<
+                    await $_getPrefetchedDataByColumns<
                       GlossaryItem,
                       $GlossaryItemsTable,
-                      TagItem
+                      TagItem,
+                      $TagItemsTable
                     >(
                       currentTable: table,
                       referencedTable: $$GlossaryItemsTableReferences
@@ -1215,10 +1216,8 @@ class $$GlossaryItemsTableTableManager
                             table,
                             p0,
                           ).tagItemsRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where(
-                            (e) => e.glossaryTimestamp == item.createdTimestamp,
-                          ),
+                      currentColumn: 'createdTimestamp',
+                      referencedColumn: 'glossary_timestamp',
                       typedResults: items,
                     ),
                 ];
@@ -1618,10 +1617,11 @@ class $$SinceWhenItemsTableTableManager
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (tagItemsRefs)
-                    await $_getPrefetchedData<
+                    await $_getPrefetchedDataByColumns<
                       SinceWhenItem,
                       $SinceWhenItemsTable,
-                      TagItem
+                      TagItem,
+                      $TagItemsTable
                     >(
                       currentTable: table,
                       referencedTable: $$SinceWhenItemsTableReferences
@@ -1632,10 +1632,8 @@ class $$SinceWhenItemsTableTableManager
                             table,
                             p0,
                           ).tagItemsRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where(
-                            (e) => e.recordTimestamp == item.createdTimestamp,
-                          ),
+                      currentColumn: 'createdTimestamp',
+                      referencedColumn: 'record_timestamp',
                       typedResults: items,
                     ),
                 ];
@@ -1660,18 +1658,16 @@ typedef $$SinceWhenItemsTableProcessedTableManager =
       SinceWhenItem,
       PrefetchHooks Function({bool tagItemsRefs})
     >;
-typedef $$TagItemsTableCreateCompanionBuilder =
-    TagItemsCompanion Function({
-      Value<int> id,
-      required int recordTimestamp,
-      required int glossaryTimestamp,
-    });
-typedef $$TagItemsTableUpdateCompanionBuilder =
-    TagItemsCompanion Function({
-      Value<int> id,
-      Value<int> recordTimestamp,
-      Value<int> glossaryTimestamp,
-    });
+typedef $$TagItemsTableCreateCompanionBuilder = TagItemsCompanion Function({
+  Value<int> id,
+  required int recordTimestamp,
+  required int glossaryTimestamp,
+});
+typedef $$TagItemsTableUpdateCompanionBuilder = TagItemsCompanion Function({
+  Value<int> id,
+  Value<int> recordTimestamp,
+  Value<int> glossaryTimestamp,
+});
 
 final class $$TagItemsTableReferences
     extends BaseReferences<_$SinceWhenDatabase, $TagItemsTable, TagItem> {
@@ -1973,30 +1969,26 @@ class $$TagItemsTableTableManager
                         >
                       >(state) {
                         if (recordTimestamp) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.recordTimestamp,
-                                    referencedTable: $$TagItemsTableReferences
-                                        ._recordTimestampTable(db),
-                                    referencedColumn: $$TagItemsTableReferences
-                                        ._recordTimestampTable(db)
-                                        .createdTimestamp,
-                                  )
-                                  as T;
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.recordTimestamp,
+                            referencedTable: $$TagItemsTableReferences
+                                ._recordTimestampTable(db),
+                            referencedColumn: $$TagItemsTableReferences
+                                ._recordTimestampTable(db)
+                                .createdTimestamp,
+                          ) as T;
                         }
                         if (glossaryTimestamp) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.glossaryTimestamp,
-                                    referencedTable: $$TagItemsTableReferences
-                                        ._glossaryTimestampTable(db),
-                                    referencedColumn: $$TagItemsTableReferences
-                                        ._glossaryTimestampTable(db)
-                                        .createdTimestamp,
-                                  )
-                                  as T;
+                          state = state.withJoin(
+                            currentTable: table,
+                            currentColumn: table.glossaryTimestamp,
+                            referencedTable: $$TagItemsTableReferences
+                                ._glossaryTimestampTable(db),
+                            referencedColumn: $$TagItemsTableReferences
+                                ._glossaryTimestampTable(db)
+                                .createdTimestamp,
+                          ) as T;
                         }
 
                         return state;

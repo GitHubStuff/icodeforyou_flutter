@@ -1,7 +1,7 @@
 #!/bin/zsh
 # mason_make - Mason brick consumer for the icodeforyou_flutter monorepo
 
-readonly VERSION='0.2.0-beta'
+readonly VERSION='1.1.0-beta'
 
 readonly TAGLINE='creating monorepo members from Mason bricks'
 
@@ -489,6 +489,7 @@ run_mason_make() {
     fi
 
     mason make "$brick" "${mason_vars[@]}" -o "$(target_path)"
+    info '% run pubspec_updater to make it part of the melos repo'
     success "generated: $(target_path)"
 }
 
@@ -506,7 +507,7 @@ report_path() {
 
     if command -v pbcopy > /dev/null 2>&1; then
         printf 'cd %s' "$full_path" | pbcopy
-        info 'the cd command is in your clipboard; paste and hit return to jump there'
+        info 'the cd command is in your clipboard; paste and hit return to jump to that folder'
     else
         warning 'pbcopy not available; copy the cd line above manually'
     fi

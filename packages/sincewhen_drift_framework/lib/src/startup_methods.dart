@@ -1,7 +1,6 @@
 // packages/sincewhen_drift_framework/lib/src/startup_methods.dart
 
-import 'package:dependency_resolver/dependency_resolver.dart'
-    show DependencyContainer, DependencyRegistrar, DependencyResolver;
+import 'package:get_it/get_it.dart' show GetIt;
 import 'package:sincewhen_drift_framework/src/database/database.dart'
     show SinceWhenDatabase;
 import 'package:sincewhen_drift_framework/src/database/database_opening.dart'
@@ -10,7 +9,6 @@ import 'package:sincewhen_drift_framework/src/repositories/drift_glossary_reposi
     show DriftGlossaryRepository;
 import 'package:sincewhen_drift_framework/src/repositories/drift_since_when_repository.dart'
     show DriftSinceWhenRepository;
-//+ CHANGED
 import 'package:sincewhen_drift_framework/src/repositories/drift_tag_repository.dart'
     show DriftTagRepository;
 import 'package:sincewhen_drift_framework/src/tables/glossary_items/glossary_items_dao.dart'
@@ -19,7 +17,6 @@ import 'package:sincewhen_drift_framework/src/tables/sincewhen_items/sincewhen_i
     show SinceWhenItemsDao;
 import 'package:sincewhen_drift_framework/src/tables/tag_items/tag_items_dao.dart'
     show TagItemsDao;
-//+ CHANGED (adds TagRepository)
 import 'package:sincewhen_models/sincewhen_models.dart'
     show GlossaryRepository, SinceWhenRepository, TagRepository;
 
@@ -28,12 +25,12 @@ import 'package:sincewhen_models/sincewhen_models.dart'
 ///
 /// Registration is instant and side-effect-free; construction runs on
 /// first resolution.
-Future<void> registerDocumentDatabaseLazy(
-  DependencyRegistrar registrar, {
+void registerDocumentDatabaseLazy(
+  GetIt getIt, {
   required String fileName,
-}) async {
+}) {
   _registerDatabaseLazy(
-    registrar,
+    getIt,
     () => SinceWhenDatabaseOpening.inDocumentFolder(fileName: fileName),
   );
 }
@@ -43,12 +40,12 @@ Future<void> registerDocumentDatabaseLazy(
 ///
 /// Registration is instant and side-effect-free; construction runs on
 /// first resolution.
-Future<void> registerAppDatabaseLazy(
-  DependencyRegistrar registrar, {
+void registerAppDatabaseLazy(
+  GetIt getIt, {
   required String fileName,
-}) async {
+}) {
   _registerDatabaseLazy(
-    registrar,
+    getIt,
     () => SinceWhenDatabaseOpening.inAppFolder(fileName: fileName),
   );
 }
@@ -59,17 +56,17 @@ Future<void> registerAppDatabaseLazy(
 /// database closes. Lazy like the persisted registrations so all three
 /// modes share the same lifecycle — construction runs on first
 /// resolution, typically forced by [warmStartDatabase].
-Future<void> registerInMemoryDatabaseLazy(DependencyRegistrar registrar) async {
-  _registerDatabaseLazy(registrar, SinceWhenDatabaseOpening.inMemory);
+void registerInMemoryDatabaseLazy(GetIt getIt) {
+  _registerDatabaseLazy(getIt, SinceWhenDatabaseOpening.inMemory);
 }
 
 /// Registers the glossary items DAO lazily, derived from the database.
 ///
-/// Takes the full [DependencyContainer] because the factory both
-/// registers (now) and resolves (later, when it runs).
-Future<void> registerGlossaryItemsDao(DependencyContainer container) async {
-  container.registerLazySingleton<GlossaryItemsDao>(
-    () => container.get<SinceWhenDatabase>().glossaryItemsDao,
+/// The factory resolves [SinceWhenDatabase] from the same [getIt] when
+/// it runs, so the database must be registered first.
+void registerGlossaryItemsDao(GetIt getIt) {
+  getIt.registerLazySingleton<GlossaryItemsDao>(
+    () => getIt<SinceWhenDatabase>().glossaryItemsDao,
   );
 }
 
@@ -79,23 +76,20 @@ Future<void> registerGlossaryItemsDao(DependencyContainer container) async {
 /// Registered against the interface from `sincewhen_models` — not the
 /// concrete [DriftGlossaryRepository] — so consumers resolve and depend
 /// on the contract only. Requires [registerGlossaryItemsDao] to have
-/// been called on the same container.
-///
-/// Takes the full [DependencyContainer] because the factory both
-/// registers (now) and resolves (later, when it runs).
-Future<void> registerGlossaryRepository(DependencyContainer container) async {
-  container.registerLazySingleton<GlossaryRepository>(
-    () => DriftGlossaryRepository(container.get<GlossaryItemsDao>()),
+/// been called on the same [getIt].
+void registerGlossaryRepository(GetIt getIt) {
+  getIt.registerLazySingleton<GlossaryRepository>(
+    () => DriftGlossaryRepository(getIt<GlossaryItemsDao>()),
   );
 }
 
 /// Registers the since-when items DAO lazily, derived from the database.
 ///
-/// Takes the full [DependencyContainer] because the factory both
-/// registers (now) and resolves (later, when it runs).
-Future<void> registerSinceWhenItemsDao(DependencyContainer container) async {
-  container.registerLazySingleton<SinceWhenItemsDao>(
-    () => container.get<SinceWhenDatabase>().sinceWhenItemsDao,
+/// The factory resolves [SinceWhenDatabase] from the same [getIt] when
+/// it runs, so the database must be registered first.
+void registerSinceWhenItemsDao(GetIt getIt) {
+  getIt.registerLazySingleton<SinceWhenItemsDao>(
+    () => getIt<SinceWhenDatabase>().sinceWhenItemsDao,
   );
 }
 
@@ -105,40 +99,33 @@ Future<void> registerSinceWhenItemsDao(DependencyContainer container) async {
 /// Registered against the interface from `sincewhen_models` — not the
 /// concrete [DriftSinceWhenRepository] — so consumers resolve and depend
 /// on the contract only. Requires [registerSinceWhenItemsDao] to have
-/// been called on the same container.
-///
-/// Takes the full [DependencyContainer] because the factory both
-/// registers (now) and resolves (later, when it runs).
-Future<void> registerSinceWhenRepository(DependencyContainer container) async {
-  container.registerLazySingleton<SinceWhenRepository>(
-    () => DriftSinceWhenRepository(container.get<SinceWhenItemsDao>()),
+/// been called on the same [getIt].
+void registerSinceWhenRepository(GetIt getIt) {
+  getIt.registerLazySingleton<SinceWhenRepository>(
+    () => DriftSinceWhenRepository(getIt<SinceWhenItemsDao>()),
   );
 }
 
 /// Registers the tag items DAO lazily, derived from the database.
 ///
-/// Takes the full [DependencyContainer] because the factory both
-/// registers (now) and resolves (later, when it runs).
-Future<void> registerTagItemsDao(DependencyContainer container) async {
-  container.registerLazySingleton<TagItemsDao>(
-    () => container.get<SinceWhenDatabase>().tagItemsDao,
+/// The factory resolves [SinceWhenDatabase] from the same [getIt] when
+/// it runs, so the database must be registered first.
+void registerTagItemsDao(GetIt getIt) {
+  getIt.registerLazySingleton<TagItemsDao>(
+    () => getIt<SinceWhenDatabase>().tagItemsDao,
   );
 }
 
-//+ CHANGED (new function)
 /// Registers the persistence-free [TagRepository] contract lazily,
 /// bound to the drift implementation.
 ///
 /// Registered against the interface from `sincewhen_models` — not the
-/// concrete [DriftTagRepository] — so consumers resolve and depend
-/// on the contract only. Requires [registerTagItemsDao] to have
-/// been called on the same container.
-///
-/// Takes the full [DependencyContainer] because the factory both
-/// registers (now) and resolves (later, when it runs).
-Future<void> registerTagRepository(DependencyContainer container) async {
-  container.registerLazySingleton<TagRepository>(
-    () => DriftTagRepository(container.get<TagItemsDao>()),
+/// concrete [DriftTagRepository] — so consumers resolve and depend on
+/// the contract only. Requires [registerTagItemsDao] to have been
+/// called on the same [getIt].
+void registerTagRepository(GetIt getIt) {
+  getIt.registerLazySingleton<TagRepository>(
+    () => DriftTagRepository(getIt<TagItemsDao>()),
   );
 }
 
@@ -149,8 +136,8 @@ Future<void> registerTagRepository(DependencyContainer container) async {
 /// modes that is folder resolution, file creation, schema setup, the
 /// background isolate, and a real table read; for the in-memory mode
 /// it is schema creation and the read.
-Future<void> warmStartDatabase(DependencyResolver resolver) async {
-  final dao = resolver.get<GlossaryItemsDao>();
+Future<void> warmStartDatabase(GetIt getIt) async {
+  final dao = getIt<GlossaryItemsDao>();
   await dao.itemCount();
 }
 
@@ -160,9 +147,6 @@ Future<void> warmStartDatabase(DependencyResolver resolver) async {
 /// The concrete type is registered — not a drift base type — because
 /// the generated DAO accessors exist only on the concrete class, and
 /// the DAO registration factories resolve it by exactly this type.
-void _registerDatabaseLazy(
-  DependencyRegistrar registrar,
-  SinceWhenDatabase Function() open,
-) {
-  registrar.registerLazySingleton<SinceWhenDatabase>(open);
+void _registerDatabaseLazy(GetIt getIt, SinceWhenDatabase Function() open) {
+  getIt.registerLazySingleton<SinceWhenDatabase>(open);
 }

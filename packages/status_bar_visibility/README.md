@@ -1,103 +1,41 @@
-<!-- packages/status_bar_visibility/README.md -->
-<!-- Version: 1.0.0 StatusBarVisibility -->
+<!--
+This README describes the package. If you publish this package to pub.dev,
+this README's contents appear on the landing page for your package.
 
-# status_bar_visibility
+For information about how to write a good package README, see the guide for
+[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
 
-A single entry point for showing and hiding the system status bar on
-Android and iOS. It wraps the standalone `status_bar_android` and
-`status_bar_ios` plugins behind one static facade and is a safe no-op on
-every other platform.
+For general information about developing packages, see the Dart guide for
+[creating packages](https://dart.dev/tools/pub/create-packages)
+and the Flutter guide for
+[developing packages and plugins](https://flutter.dev/to/develop-packages).
+-->
+
+# StatusBarVisibility
+
+TODO: Put a short description of the package here that helps potential users
+know whether this package might be useful for them.
 
 ## Features
 
-- One call to hide or show the status bar on both mobile platforms.
-- Edge-to-edge system UI mode applied on initialization.
-- Platform dispatch via `platform_tools` (`OSPlatform.current`).
-- Explicit `NotInitializedError` instead of silent misuse.
-- Fully unit-testable: `reset()` and `OSPlatform.override` let tests
-  exercise every branch without a device.
-
-## Platform support
-
-| Platform | Supported | `setVisibility` returns |
-| -------- | --------- | ----------------------- |
-| Android  | Yes       | `true`                  |
-| iOS      | Yes       | `true`                  |
-| Fuchsia  | No        | `false`                 |
-| Linux    | No        | `false`                 |
-| macOS    | No        | `false`                 |
-| Web      | No        | `false`                 |
-| Windows  | No        | `false`                 |
+TODO: List what your package can do. Maybe include images, gifs, or videos.
 
 ## Getting started
 
-This package is a workspace member of the `icodeforyou_flutter`
-monorepo (`publish_to: none`). Add it as a dependency:
-
-```yaml
-dependencies:
-  status_bar_visibility: ^1.0.0
-```
-
-It depends on the following workspace packages:
-
-- `custom_errors`
-- `platform_tools`
-- `status_bar_android`
-- `status_bar_ios`
+TODO: List prerequisites and provide or point to information on how to
+start using the package.
 
 ## Usage
 
-Initialize once, before the first frame. `init` sets
-`SystemUiMode.edgeToEdge` and applies the initial visibility
-(`setHidden` defaults to `true`).
+TODO: Include short and useful examples for package users. Add longer examples
+to `/example` folder.
 
 ```dart
-import 'package:flutter/widgets.dart';
-import 'package:status_bar_visibility/status_bar_visibility.dart';
-
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await StatusBarVisibility.init();
-  runApp(const App());
-}
+const like = 'sample';
 ```
 
-Toggle visibility at any later point:
+## Additional information
 
-```dart
-// Hide
-StatusBarVisibility.setVisibility();
-
-// Show
-StatusBarVisibility.setVisibility(isHidden: false);
-
-// Inspect the last requested state (null before init)
-final bool? hidden = StatusBarVisibility.isHidden;
-```
-
-`setVisibility` throws a `NotInitializedError` if `init` has not been
-called.
-
-## API
-
-| Member                                  | Description                     |
-| --------------------------------------- | ------------------------------- |
-| `Future<bool> init({bool setHidden})`   | Configure system UI and apply   |
-|                                         | the initial visibility.         |
-| `bool setVisibility({bool isHidden})`   | Hide or show the status bar.    |
-| `bool? isHidden`                        | Last requested state.           |
-| `void reset()`                          | Testing only: clear state.      |
-
-## Testing
-
-Tests mock `SystemChannels.platform` and the two plugin method channels,
-then drive each `OSPlatform` branch with `OSPlatform.override`.
-
-```sh
-fvm flutter test
-```
-
-## License
-
-MIT — see `LICENSE`.
+TODO: Tell users more about the package: where to find more information, how to
+contribute to the package, how to file issues, what response they can expect
+from the package authors, and more.

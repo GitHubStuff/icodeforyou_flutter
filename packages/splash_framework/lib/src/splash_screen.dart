@@ -38,6 +38,9 @@ final class SplashScreen extends StatelessWidget {
     super.key,
   });
 
+  /// Route name used by navigation
+  static const route = '/SplashScreen';
+
   /// The minimum duration the splash screen should remain visible.
   final Duration duration;
 

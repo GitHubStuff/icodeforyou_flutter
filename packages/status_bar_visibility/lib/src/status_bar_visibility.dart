@@ -1,78 +1,78 @@
 // packages/status_bar_visibility/lib/src/status_bar_visibility.dart
 
-import 'dart:async' show unawaited;
+import 'dart:async';
 
-import 'package:custom_errors/custom_errors.dart'
-    show AlreadyInitializedError, NotInitializedError;
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
+import 'package:custom_errors/custom_errors.dart' show PluginError;
+import 'package:flutter/cupertino.dart';
 import 'package:platform_tools/platform_tools.dart' show OSPlatform;
 import 'package:status_bar_android/status_bar_android.dart'
     as android
     show StatusBar;
 import 'package:status_bar_ios/status_bar_ios.dart' as ios show StatusBar;
+import 'package:status_bar_visibility_abstract/status_bar_visibility_abstract.dart'
+    show StatusBarVisibilityAbstract;
 
-/// A utility class for managing the visibility of the system status bar across
-/// supported mobile platforms (Android and iOS).
-///
-/// Must be initialized via [init] before updating or checking visibility state.
-class StatusBarVisibility {
-  static bool? _isHidden;
+/// Default implementation of [StatusBarVisibilityAbstract] that delegates
+/// visibility changes to the host platform.
+class StatusBarVisibility implements StatusBarVisibilityAbstract {
+  /// Creates a new [StatusBarVisibility] instance.
+  StatusBarVisibility();
+
+  bool _isInitialized = false;
+  bool? _isHidden;
+
+  /// Whether the status bar visibility state has been successfully set at
+  /// least once.
+  @override
+  bool isInitialized() => _isInitialized;
 
   /// Whether the status bar is currently hidden.
   ///
-  /// Returns `null` if [init] has not yet been called.
-  static bool? get isHidden => _isHidden;
+  /// Returns `false` if the visibility has not yet been initialized.
+  @override
+  bool isBarHidden() => _isHidden ?? false;
 
-  // Whether the current platform supports status bar visibility toggling.
+  /// Sets the visibility of the status bar.
   ///
-  /// `true` on Android and iOS; `false` on Fuchsia, Linux, macOS, Web and
-  /// Windows. A pure query: safe to call before [init].
-  static bool get isSupported => switch (OSPlatform.current) {
-    .android || .iOS => true,
-    .fuchsia || .linux || .macOS || .web || .windows => false,
-  };
-
-  /// Initializes the status bar configuration and sets the initial visibility.
+  /// Updates internal tracking and returns `true` if the platform successfully
+  /// applied the change; otherwise, returns `false`.
   ///
-  /// Configures the system UI overlay to [SystemUiMode.edgeToEdge] and applies
-  /// the desired visibility using [setHidden] (defaults to `true`).
-  ///
-  /// Returns a [Future] that resolves to `true` if the platform supports status
-  /// bar visibility toggling (Android/iOS), or `false` otherwise.
-  static Future<bool> init({bool setHidden = true}) async {
-    if (_isHidden != null) throw AlreadyInitializedError('StatusBarVisibility');
-    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    _isHidden = setHidden;
-    return setVisibility(isHidden: setHidden);
+  /// Throws a [PluginError] if the underlying platform call fails.
+  @override
+  Future<bool> setStatusBarVisibility({required bool isHidden}) async {
+    final success = await _dispatchPlatformSetVisibility(isHidden: isHidden);
+    if (success) {
+      _isHidden = isHidden;
+      _isInitialized = true;
+    }
+    return success;
   }
 
-  /// Sets whether the status bar should be hidden or visible.
+  /// Dispatches the visibility update to the active platform's status bar
+  /// implementation.
   ///
-  /// If [isHidden] is `true`, the status bar will be hidden; if `false`, it
-  /// will be displayed.
+  /// Returns `true` if the platform is supported and executed the call,
+  /// or `false` if the platform does not support status bar manipulation.
   ///
-  /// Returns `true` if the current platform supports status bar visibility
-  /// modifications (Android and iOS), or `false` for unsupported platforms
-  /// (Fuchsia, Linux, macOS, Web, Windows).
-  ///
-  /// Throws a [NotInitializedError] if called before [init].
-  static bool setVisibility({bool isHidden = true}) {
-    if (_isHidden == null) throw NotInitializedError('StatusBarVisibility');
-    _isHidden = isHidden;
-    switch (OSPlatform.current) {
-      case .android:
-        unawaited(android.StatusBar.setVisibility(isHidden: isHidden));
-        return true;
-      case .iOS:
-        unawaited(ios.StatusBar.setVisibility(isHidden: isHidden));
-        return true;
-      case .fuchsia:
-      case .linux:
-      case .macOS:
-      case .web:
-      case .windows:
-        return false;
+  /// Throws a [PluginError] if the platform invocation throws an [Exception].
+  Future<bool> _dispatchPlatformSetVisibility({required bool isHidden}) async {
+    try {
+      switch (OSPlatform.current) {
+        case .android:
+          await android.StatusBar.setVisibility(isHidden: isHidden);
+          return true;
+        case .iOS:
+          await ios.StatusBar.setVisibility(isHidden: isHidden);
+          return true;
+        case .fuchsia:
+        case .linux:
+        case .macOS:
+        case .web:
+        case .windows:
+          return false;
+      }
+    } on Exception catch (_) {
+      throw PluginError('StatusBar Visiblity');
     }
   }
 
@@ -80,5 +80,8 @@ class StatusBarVisibility {
   ///
   /// Intended strictly for unit and integration testing.
   @visibleForTesting
-  static void reset() => _isHidden = null;
+  void reset() {
+    _isInitialized = false;
+    _isHidden = null;
+  }
 }

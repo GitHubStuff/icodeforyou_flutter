@@ -1,22 +1,19 @@
 // {{folder_source}}/{{name.snakeCase()}}/test/{{name.snakeCase()}}_test.dart
 
-import 'package:{{name.snakeCase()}}/{{name.snakeCase()}}.dart';
 import 'package:test/test.dart';
+
+import '../../lib/{{name.snakeCase()}}.dart' show {{name.pascalCase()}};
 
 void main() {
   group('{{name.pascalCase()}}', () {
-    late {{name.pascalCase()}} awesome;
+    late {{name.pascalCase()}} {{name.camelCase()}};
 
     setUp(() {
-      awesome = {{name.pascalCase()}}();
+      {{name.camelCase()}} = {{name.pascalCase()}}();
     });
 
     test('can be instantiated', () {
-      expect(awesome, isA<{{name.pascalCase()}}>());
-    });
-
-    test('isAwesome returns true', () {
-      expect(awesome.isAwesome, isTrue);
+      expect({{name.camelCase()}}, isA<{{name.pascalCase()}}>());
     });
   });
 }

@@ -73,14 +73,16 @@ GoRoute _splashRoute({required List<Future<void> Function()> tasks}) => GoRoute(
       tasks: tasks,
       onComplete: () {
         context.go(RoutesFramework.app);
-        StatusBarVisibility.setVisibility(isHidden: false);
+        final vis = getIt<StatusBarVisibilityAbstract>();
+        unawaited(vis.setStatusBarVisibility(isHidden: false) as Future<void>?);
       },
       onError: (error, stackTrace) {
         context.go(
           RoutesFramework.crash,
           extra: CrashScreenArgs(error: error, stackTrace: stackTrace),
         );
-        StatusBarVisibility.setVisibility(isHidden: false);
+        final vis = getIt<StatusBarVisibilityAbstract>();
+        unawaited(vis.setStatusBarVisibility(isHidden: false) as Future<void>?);
       },
       child: const AnimatedSplashScreen(),
     );

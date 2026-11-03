@@ -1,0 +1,27 @@
+# packages/launch_splash_screen/pubspec.yaml
+name: launch_splash_screen
+description: "Launch Animated Splash Screen"
+publish_to: none
+resolution: workspace
+version: 1.0.0
+
+environment:
+  sdk: ^3.13.7
+
+dependencies:
+  equatable: ^2.1.0
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.1.1
+  gap: ^3.0.1
+
+dev_dependencies:
+  bloc_test: ^10.0.0
+  fake_async: ^1.3.3
+  flutter_test:
+    sdk: flutter
+  icodeforyou_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true
+

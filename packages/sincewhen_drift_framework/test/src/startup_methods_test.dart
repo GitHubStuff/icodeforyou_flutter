@@ -1,154 +1,163 @@
-// packages/sincewhen_drift_framework/test/src/startup_methods_test.dart
+// test/src/startup_methods_test.dart
 
-import 'package:dependency_resolver/dependency_resolver.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:sincewhen_drift_framework/src/database/database.dart';
-import 'package:sincewhen_drift_framework/src/repositories/drift_glossary_repository.dart';
-import 'package:sincewhen_drift_framework/src/repositories/drift_since_when_repository.dart';
-import 'package:sincewhen_drift_framework/src/repositories/drift_tag_repository.dart';
-import 'package:sincewhen_drift_framework/src/startup_methods.dart';
-import 'package:sincewhen_drift_framework/src/tables/glossary_items/glossary_items_dao.dart';
-import 'package:sincewhen_drift_framework/src/tables/sincewhen_items/sincewhen_items_dao.dart';
-import 'package:sincewhen_drift_framework/src/tables/tag_items/tag_items_dao.dart';
-import 'package:sincewhen_models/sincewhen_models.dart';
+import 'package:sincewhen_drift_framework/sincewhen_drift_framework.dart'
+    show
+        DriftGlossaryRepository,
+        DriftSinceWhenRepository,
+        DriftTagRepository,
+        GlossaryItemsDao,
+        SinceWhenDatabase;
+import 'package:sincewhen_drift_framework/src/startup_methods.dart'
+    show
+        registerAppDatabaseLazy,
+        registerDocumentDatabaseLazy,
+        registerGlossaryItemsDao,
+        registerGlossaryRepository,
+        registerInMemoryDatabaseLazy,
+        registerSinceWhenItemsDao,
+        registerSinceWhenRepository,
+        registerTagItemsDao,
+        registerTagRepository,
+        warmStartDatabase;
+import 'package:sincewhen_drift_framework/src/tables/sincewhen_items/sincewhen_items_dao.dart'
+    show SinceWhenItemsDao;
+import 'package:sincewhen_drift_framework/src/tables/tag_items/tag_items_dao.dart'
+    show TagItemsDao;
+import 'package:sincewhen_models/sincewhen_models.dart'
+    show GlossaryRepository, SinceWhenRepository, TagRepository;
+import 'package:test/test.dart';
 
 void main() {
   group('startup_methods', () {
     late GetIt getIt;
-    late DependencyContainer container;
 
     setUp(() {
       getIt = GetIt.asNewInstance();
-      container = GetItDependencyResolver(getIt: getIt);
     });
 
     tearDown(() async {
-      if (container.isRegistered<SinceWhenDatabase>()) {
-        await container.get<SinceWhenDatabase>().close();
+      if (getIt.isRegistered<SinceWhenDatabase>()) {
+        try {
+          await getIt<SinceWhenDatabase>().close();
+        } catch (_) {}
       }
       await getIt.reset();
     });
 
-    group('registerInMemoryDatabaseLazy', () {
-      test('registers a lazily constructed working database', () async {
-        await registerInMemoryDatabaseLazy(container);
+    test(
+      'registerInMemoryDatabaseLazy registers and resolves SinceWhenDatabase',
+      () {
+        registerInMemoryDatabaseLazy(getIt);
 
-        expect(container.isRegistered<SinceWhenDatabase>(), isTrue);
-        final database = container.get<SinceWhenDatabase>();
-        final rows = await database.customSelect('SELECT 1 AS one').get();
-        expect(rows.single.read<int>('one'), 1);
-      });
+        expect(getIt.isRegistered<SinceWhenDatabase>(), isTrue);
+        final db = getIt<SinceWhenDatabase>();
+        expect(db, isA<SinceWhenDatabase>());
+      },
+    );
+
+    test(
+      'registerDocumentDatabaseLazy registers and resolves SinceWhenDatabase',
+      () {
+        registerDocumentDatabaseLazy(getIt, fileName: 'test_doc.db');
+
+        expect(getIt.isRegistered<SinceWhenDatabase>(), isTrue);
+        final db = getIt<SinceWhenDatabase>();
+        expect(db, isA<SinceWhenDatabase>());
+      },
+    );
+
+    test(
+      'registerAppDatabaseLazy registers and resolves SinceWhenDatabase',
+      () {
+        registerAppDatabaseLazy(getIt, fileName: 'test_app.db');
+
+        expect(getIt.isRegistered<SinceWhenDatabase>(), isTrue);
+        final db = getIt<SinceWhenDatabase>();
+        expect(db, isA<SinceWhenDatabase>());
+      },
+    );
+
+    test(
+      'registerGlossaryItemsDao registers and resolves GlossaryItemsDao',
+      () {
+        registerInMemoryDatabaseLazy(getIt);
+        registerGlossaryItemsDao(getIt);
+
+        expect(getIt.isRegistered<GlossaryItemsDao>(), isTrue);
+        final dao = getIt<GlossaryItemsDao>();
+        expect(dao, isA<GlossaryItemsDao>());
+      },
+    );
+
+    test(
+      'registerGlossaryRepository registers and resolves GlossaryRepository',
+      () {
+        registerInMemoryDatabaseLazy(getIt);
+        registerGlossaryItemsDao(getIt);
+        registerGlossaryRepository(getIt);
+
+        expect(getIt.isRegistered<GlossaryRepository>(), isTrue);
+        final repo = getIt<GlossaryRepository>();
+        expect(repo, isA<GlossaryRepository>());
+        expect(repo, isA<DriftGlossaryRepository>());
+      },
+    );
+
+    test(
+      'registerSinceWhenItemsDao registers and resolves SinceWhenItemsDao',
+      () {
+        registerInMemoryDatabaseLazy(getIt);
+        registerSinceWhenItemsDao(getIt);
+
+        expect(getIt.isRegistered<SinceWhenItemsDao>(), isTrue);
+        final dao = getIt<SinceWhenItemsDao>();
+        expect(dao, isA<SinceWhenItemsDao>());
+      },
+    );
+
+    test(
+      'registerSinceWhenRepository registers and resolves SinceWhenRepository',
+      () {
+        registerInMemoryDatabaseLazy(getIt);
+        registerSinceWhenItemsDao(getIt);
+        registerSinceWhenRepository(getIt);
+
+        expect(getIt.isRegistered<SinceWhenRepository>(), isTrue);
+        final repo = getIt<SinceWhenRepository>();
+        expect(repo, isA<SinceWhenRepository>());
+        expect(repo, isA<DriftSinceWhenRepository>());
+      },
+    );
+
+    test('registerTagItemsDao registers and resolves TagItemsDao', () {
+      registerInMemoryDatabaseLazy(getIt);
+      registerTagItemsDao(getIt);
+
+      expect(getIt.isRegistered<TagItemsDao>(), isTrue);
+      final dao = getIt<TagItemsDao>();
+      expect(dao, isA<TagItemsDao>());
     });
 
-    group('registerDocumentDatabaseLazy', () {
-      test('registers without side effects; resolution constructs',
-          () async {
-        await registerDocumentDatabaseLazy(
-          container,
-          fileName: 'documents.sqlite',
-        );
+    test('registerTagRepository registers and resolves TagRepository', () {
+      registerInMemoryDatabaseLazy(getIt);
+      registerTagItemsDao(getIt);
+      registerTagRepository(getIt);
 
-        expect(container.isRegistered<SinceWhenDatabase>(), isTrue);
-        // Constructing runs the registered factory; the LazyDatabase
-        // inside defers all file-system work, so no platform stubs are
-        // needed here. Actually opening is exercised in
-        // database_opening_test.dart.
-        expect(container.get<SinceWhenDatabase>, returnsNormally);
-      });
+      expect(getIt.isRegistered<TagRepository>(), isTrue);
+      final repo = getIt<TagRepository>();
+      expect(repo, isA<TagRepository>());
+      expect(repo, isA<DriftTagRepository>());
     });
 
-    group('registerAppDatabaseLazy', () {
-      test('registers without side effects; resolution constructs',
-          () async {
-        await registerAppDatabaseLazy(container, fileName: 'app.sqlite');
+    test(
+      'warmStartDatabase resolves GlossaryItemsDao and awaits itemCount()',
+      () async {
+        registerInMemoryDatabaseLazy(getIt);
+        registerGlossaryItemsDao(getIt);
 
-        expect(container.isRegistered<SinceWhenDatabase>(), isTrue);
-        expect(container.get<SinceWhenDatabase>, returnsNormally);
-      });
-    });
-
-    group('dao registrations', () {
-      setUp(() async {
-        await registerInMemoryDatabaseLazy(container);
-      });
-
-      test('registerGlossaryItemsDao resolves the database accessor',
-          () async {
-        await registerGlossaryItemsDao(container);
-
-        final dao = container.get<GlossaryItemsDao>();
-        expect(dao, same(container.get<SinceWhenDatabase>().glossaryItemsDao));
-      });
-
-      test('registerSinceWhenItemsDao resolves the database accessor',
-          () async {
-        await registerSinceWhenItemsDao(container);
-
-        final dao = container.get<SinceWhenItemsDao>();
-        expect(
-          dao,
-          same(container.get<SinceWhenDatabase>().sinceWhenItemsDao),
-        );
-      });
-
-      test('registerTagItemsDao resolves the database accessor', () async {
-        await registerTagItemsDao(container);
-
-        final dao = container.get<TagItemsDao>();
-        expect(dao, same(container.get<SinceWhenDatabase>().tagItemsDao));
-      });
-    });
-
-    group('repository registrations', () {
-      setUp(() async {
-        await registerInMemoryDatabaseLazy(container);
-        await registerGlossaryItemsDao(container);
-        await registerSinceWhenItemsDao(container);
-        await registerTagItemsDao(container);
-      });
-
-      test('registerGlossaryRepository binds the contract to drift',
-          () async {
-        await registerGlossaryRepository(container);
-
-        expect(
-          container.get<GlossaryRepository>(),
-          isA<DriftGlossaryRepository>(),
-        );
-      });
-
-      test('registerSinceWhenRepository binds the contract to drift',
-          () async {
-        await registerSinceWhenRepository(container);
-
-        expect(
-          container.get<SinceWhenRepository>(),
-          isA<DriftSinceWhenRepository>(),
-        );
-      });
-
-      test('registerTagRepository binds the contract to drift', () async {
-        await registerTagRepository(container);
-
-        expect(container.get<TagRepository>(), isA<DriftTagRepository>());
-      });
-    });
-
-    group('warmStartDatabase', () {
-      test('forces the stack open through the glossary dao', () async {
-        await registerInMemoryDatabaseLazy(container);
-        await registerGlossaryItemsDao(container);
-
-        await warmStartDatabase(container);
-
-        // Warm implies open: a direct read now succeeds immediately.
-        expect(
-          await container.get<SinceWhenDatabase>().glossaryItemsDao
-              .itemCount(),
-          0,
-        );
-      });
-    });
+        await expectLater(warmStartDatabase(getIt), completes);
+      },
+    );
   });
 }

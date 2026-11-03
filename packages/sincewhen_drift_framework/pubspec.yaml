@@ -3,17 +3,17 @@ name: sincewhen_drift_framework
 description: "SinceWhen using Drift database"
 publish_to: none
 resolution: workspace
-version: 1.0.0
+version: 1.0.1
 
 environment:
   sdk: ^3.13.7
 
 dependencies:
-  dependency_resolver: ^1.0.0
   drift: ^2.34.0
   extensions: ^1.0.0   # color.toInt()
   flutter:
     sdk: flutter
+  get_it: ^9.3.0
   path: ^1.9.0
   path_provider: ^2.1.6
   random_color_generator: ^1.0.0
@@ -24,7 +24,6 @@ dev_dependencies:
   drift_dev: ^2.35.1 # analyzer ^13 in 2.34.5 conflicts with freezed 3.2.5 (workspace)
   flutter_test:
     sdk: flutter
-  get_it: ^9.2.1
   icodeforyou_lints: ^1.0.0
   path_provider_platform_interface: ^2.1.2 # fake path_provider folders in tests
   plugin_platform_interface: ^2.1.8 # allows the fake past instance= guard

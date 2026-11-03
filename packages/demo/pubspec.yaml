@@ -13,7 +13,6 @@ dependencies:
   flutter:
     sdk: flutter
   status_bar_visibility: ^1.0.0
-  status_bar_visibility_framework: ^1.0.0
 
 dev_dependencies:
   flutter_test:

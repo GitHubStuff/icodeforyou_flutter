@@ -18,7 +18,7 @@
 
 - Secretary at Vitro
 - to my 30
-  
+
 ## Christie Gosslan - #5
 
 - Meet at Unisys in Camarillo
@@ -31,14 +31,16 @@
 
 ## Daniela - #7
 
-## Sue Colton - #8
+## Sue Cobert - #8
 
-- Meet through Elvie
+- Meet through City Island Fiction Writers
 
 ## Kim Crane - #9
 
 ## Jill Maulenhour - #10
 
-## St Pete Chick - #11
+## Robyn Halvey - #11
+
+- The St. Pete retiree
 
 ## Amber Tand - #12

@@ -13,18 +13,16 @@ import 'package:sincewhen_drift_framework/src/tables/tag_items/tag_items.dart'
     show TagItems;
 import 'package:sincewhen_drift_framework/src/tables/tag_items/tag_items_dao.dart'
     show TagItemsDao;
-import 'package:sincewhen_models/sincewhen_models.dart'
-    show GlossaryItem, SinceWhenItem, TagItem;
 
 // NOTE  To generate '% dart run build_runner build'
 part 'database.g.dart';
 
 /// The SinceWhen application database.
 ///
-/// Construct via `SinceWhenDatabaseOpening` and register the instance at
-/// the composition root; consumers resolve it through
-/// `DependencyResolver`. There is deliberately no global instance in
-/// this library.
+/// Construct via `SinceWhenDatabaseOpening` and register the instance
+/// with `GetIt` at the composition root (see `SinceWhenStartup`);
+/// consumers resolve it from there. There is deliberately no global
+/// instance in this library.
 @DriftDatabase(
   tables: [GlossaryItems, SinceWhenItems, TagItems],
   daos: [GlossaryItemsDao, SinceWhenItemsDao, TagItemsDao],
@@ -33,27 +31,8 @@ class SinceWhenDatabase extends _$SinceWhenDatabase {
   /// Creates the database over [executor].
   SinceWhenDatabase(QueryExecutor executor) : super(executor);
 
-  //+ Current at "1", but if there ever is a database scheme change
-  //+ and migration is needed, this serves as a template.
-  //+ This example is as if tldr was added in the future
+  /// Schema version 1. Bump this and add a `MigrationStrategy` with an
+  /// `onUpgrade` step when the schema changes after first release.
   @override
   int get schemaVersion => 1;
-
-  //+ CHANGED (new override)
-  /// Migrations between schema versions.
-  ///
-  /// Fresh installs run `onCreate`, which builds every table at the
-  /// current schema — no steps needed. Existing installs walk `onUpgrade`
-  /// from their stored version to [schemaVersion], one step per bump.
-  ///
-  /// v1 → v2: adds the nullable `tldr` column to the `sinceWhen` table.
-  /// Nullable with no default, so existing rows are valid unchanged.
-  @override
-  MigrationStrategy get migration => MigrationStrategy(
-    onUpgrade: (m, from, to) async {
-      if (from < 2) {
-        await m.addColumn(sinceWhenItems, sinceWhenItems.tldr);
-      }
-    },
-  );
 }

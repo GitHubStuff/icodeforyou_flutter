@@ -2,14 +2,13 @@
 name: icodeforyou_flutter
 publish_to: none
 description: "Collection of flutter packages"
-version: 9.7.11
+version: 9.8.0
 
 workspace:
   - packages/analog_clock_widget
   - packages/animated_widgets
   - packages/app_navigation
   - packages/app_preferences
-  - packages/app_preferences_service
   - packages/archetypes
   - packages/biometric_gate_service
   - packages/border_caption
@@ -21,7 +20,6 @@ workspace:
   - packages/data_grid
   - packages/datetime_pickers
   - packages/demo
-  - packages/dependency_resolver
   - packages/dual_selection
   - packages/duration_widget
   - packages/ext_buildcontext
@@ -35,9 +33,11 @@ workspace:
   - packages/icodeforyou_lints
   - packages/infinite_scroll_picking
   - packages/infinite_scroll_picking_settings
+  - packages/launch_splash_screen
   - packages/my_logger
   - packages/neon
   - packages/ping_pong
+  - packages/place_holder_widget
   - packages/platform_logs
   - packages/platform_tools
   - packages/platform_utils
@@ -45,8 +45,6 @@ workspace:
   - packages/prism_bubble_widget
   - packages/random_color_generator
   - packages/remind_me
-  - packages/service_locator
-  - packages/services_provider
   - packages/settings_widget
   - packages/sincewhen_drift_framework
   - packages/sincewhen_models
@@ -59,9 +57,9 @@ workspace:
   - packages/stacking_widgets
   - packages/status_bar_visibility
   - packages/status_bar_visibility_abstract
-  - packages/status_bar_visibility_framework
   - packages/template_dart
   - packages/theme_framework
+  - packages/theme_mode_cubit
   - packages/three_d_sphere
   - packages/time_spans
   - packages/widget_animation_framework

@@ -58,8 +58,8 @@ class _StatusBarVisibilityDemoState extends State<StatusBarVisibilityDemo> {
   }
 
   Future<void> _onInitialize() async {
-    final isSupported = await _controller.initialize(
-      withBarHidden: _withBarHidden,
+    final isSupported = await _controller.setStatusBarVisibility(
+      isHidden: _withBarHidden,
     );
     if (!mounted) return;
     setState(() => _isSupported = isSupported);

@@ -14,7 +14,6 @@ import 'package:since_when_dev/example_menu_screen/shared_search_body.dart'
     show SharedSearchBody;
 import 'package:since_when_dev/navigation/dock_button_sizes.dart'
     show DockButtonSize;
-import 'package:sincewhen_widgets/sincewhen_widgets.dart' show GlossaryEditPage;
 import 'package:theme_framework/theme_framework.dart' show SettingsScreen;
 
 /// {@template dock_destination_enum}
@@ -117,7 +116,7 @@ enum RailItems implements NavButtonProperties {
     iconData: Icons.storage,
     caption: 'Database',
     haptic: HapticIntensity.primary,
-    viewBuilder: GlossaryEditPage.new,
+    viewBuilder: SharedSearchBody.new,
   ),
 
   /// Glossary
@@ -126,7 +125,7 @@ enum RailItems implements NavButtonProperties {
     iconData: Icons.menu_book,
     caption: 'Glossary',
     haptic: HapticIntensity.primary,
-    viewBuilder: GlossaryEditPage.new,
+    viewBuilder: SharedSearchBody.new,
   );
 
   // CODE:

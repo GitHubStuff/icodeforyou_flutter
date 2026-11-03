@@ -4,12 +4,10 @@ import 'dart:async' show unawaited;
 import 'package:demo/status_bar_visibility/status_bar_visibility_demo.dart'
     show StatusBarVisibilityDemo;
 import 'package:flutter/material.dart';
-import 'package:status_bar_visibility_framework/status_bar_visibility_framework.dart'
-    show StatusBarVisibilityFramework;
+import 'package:status_bar_visibility/status_bar_visibility.dart'
+    show StatusBarVisibility;
 
-const _isBarHidden = false;
-
-/// Initialises [StatusBarVisibilityFramework] once, showing a spinner until
+/// Initialises [StatusBarVisibility] once, showing a spinner until
 /// it is ready, then hands the live instance to [StatusBarVisibilityDemo].
 class MakeStatusBarReady extends StatefulWidget {
   /// Creates the gate widget
@@ -21,6 +19,8 @@ class MakeStatusBarReady extends StatefulWidget {
 
 class _MakeStatusBarReadyState extends State<MakeStatusBarReady> {
   bool _isReady = false;
+
+  late final StatusBarVisibility visibility;
 
   @override
   void initState() {
@@ -35,13 +35,13 @@ class _MakeStatusBarReadyState extends State<MakeStatusBarReady> {
     }
     return Center(
       child: StatusBarVisibilityDemo(
-        controller: StatusBarVisibilityFramework.instance,
+        controller: visibility,
       ),
     );
   }
 
   Future<void> _makeFramework() async {
-    await StatusBarVisibilityFramework.init(withBarHidden: _isBarHidden);
+    visibility = StatusBarVisibility();
     if (!mounted) return;
     setState(() => _isReady = true);
   }
