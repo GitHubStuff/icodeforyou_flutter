@@ -15,7 +15,7 @@ ArdatB - X
 Ariana Lopes - X
 ~ Arisha Mills - 180
 ~ AvaDyson - 177
-BarbieAngeL - 79
+~ BarbieAngeL - 81 {4-nov-2026}
 Billie Star - 16
 ~ Blondessa - 200+
 ~ BootyFrutti - 200+
@@ -27,21 +27,21 @@ BukowskiDirtyWife - 150
 ~ Bunny Rabbits - 101
 ~ BunnyBlondyX - 113 {2-nov-2026}
 ~ Californiababe - 171
-Carla Cute - 114
+~ Carla Cute - 114
 CentauriHadar - X
 Charli O - X
 Cherry Kiss - X
 ~ Cory Chase - 200+
 CrepuXCulo - X
 CyberlyCrush - 121
-Danielle Renae - 200+
+~ Danielle Renae - 200+
 ~ Denise Anders - 9
-Dollorgasm - 15
+~ ~ Dollorgasm - 15
 ~ Dolly Rud - 103
 Elena Ross - 200+
 ~ Elly Clutch Two - 35
 ~ Emanuelly Raquel - X
-Emma Hix - 42
+~ Emma Hix - 42
 ~ Endorphin Baby - 138
 Eva Soda - 93
 ~ FantasyPOV - 45
@@ -62,6 +62,7 @@ Jasmine Summer - 6
 ~ Jenny Kitty - 133 {1-nov-2026}
 Jenny Lux - 149
 ~ JennxXxChars - X
+~ Jewelz Blu - 65
 Julie Jesse
 ~ Kali Roses - 40
 ~ Kandy Lux + 200
@@ -143,7 +144,7 @@ Sumiko Smile - X
 ~ TwixenXX - 31 {30-oct}
 ~ Vallery Ray - 200+
 ~ Verlonis - 157 {1-nov-2026}
-VeronikaVengeance - 14
+~ VeronikaVengeance - 20 {3-nov-2026}
 Vesperessa - X
 ~ Viktoria Vares - 12 {1-Nov-2026}
 ~ Yuiwoo - 73 (1-nov-2026)

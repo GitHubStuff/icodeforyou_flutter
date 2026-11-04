@@ -72,10 +72,10 @@ void main() {
       expect(instance.isBarHidden(), isTrue);
     });
 
-    test('updates visibility state across toggles', () {
+    test('updates visibility state across toggles', () async {
       final StatusBarVisibilityAbstract instance = TestStatusBarVisibility();
 
-      instance.setStatusBarVisibility(isHidden: true);
+      await instance.setStatusBarVisibility(isHidden: true);
       expect(instance.isBarHidden(), isTrue);
 
       instance.setStatusBarVisibility(isHidden: false);

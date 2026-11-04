@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   /// Route of this screen.
-  static const String routeName = '/home';
+  static const String route = '/home';
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +32,15 @@ class _HomeBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Since When (dev)')),
-      body: BlocBuilder<StatusBarToggleCubit, bool>(
-        builder: (context, isHidden) => SwitchListTile(
-          title: const Text('Hide status bar'),
-          subtitle: Text(isHidden ? 'Hidden' : 'Visible'),
-          value: isHidden,
-          onChanged: (value) =>
-              context.read<StatusBarToggleCubit>().setHidden(isHidden: value),
+      body: Center(
+        child: BlocBuilder<StatusBarToggleCubit, bool>(
+          builder: (context, isHidden) => SwitchListTile(
+            title: const Text('Hide status bar'),
+            subtitle: Text(isHidden ? 'Hidden' : 'Visible'),
+            value: isHidden,
+            onChanged: (value) =>
+                context.read<StatusBarToggleCubit>().setHidden(isHidden: value),
+          ),
         ),
       ),
     );

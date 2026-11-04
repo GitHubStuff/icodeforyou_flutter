@@ -2,7 +2,7 @@ name: since_when_dev
 description: "Development app"
 publish_to: none
 resolution: workspace
-version: 1.0.1
+version: 1.0.8
 
 environment:
   sdk: ^3.13.7
@@ -20,6 +20,7 @@ dependencies:
   go_router: ^18.1.2
   haptic_intensity: ^1.0.0
   launch_splash_screen: ^1.0.0
+  neon: ^1.0.0
   ping_pong: ^1.0.0
   place_holder_widget: ^1.0.1
   prism_bubble_widget: ^1.0.0
