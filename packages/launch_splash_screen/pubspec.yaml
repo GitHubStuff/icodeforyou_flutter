@@ -3,7 +3,7 @@ name: launch_splash_screen
 description: "Launch Animated Splash Screen"
 publish_to: none
 resolution: workspace
-version: 1.0.0
+version: 1.0.9
 
 environment:
   sdk: ^3.13.7

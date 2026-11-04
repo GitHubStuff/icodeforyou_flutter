@@ -3,7 +3,7 @@
 # Installing `status_bar_ios` in a Flutter app
 
 `status_bar_ios` lets Dart code show or hide the iOS status bar (the strip at
-the top with the time, battery and signal) instantly, and makes the app
+the top with the time, battery and signal) instantly, and makes the app  
 launch to a solid dark screen with no white flash and no status bar flicker.
 
 ## Who this guide is for

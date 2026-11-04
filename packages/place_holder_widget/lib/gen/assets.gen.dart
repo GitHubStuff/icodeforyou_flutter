@@ -12,6 +12,8 @@
 import 'package:flutter/widgets.dart';
 
 abstract final class Assets {
+  static const String package = 'place_holder_widget';
+
   static const AssetGenImage placeholder512x512 = AssetGenImage(
     'assets/placeholder512x512.png',
   );
@@ -29,6 +31,8 @@ class AssetGenImage {
   });
 
   final String _assetName;
+
+  static const String package = 'place_holder_widget';
 
   final Size? size;
   final Set<String> flavors;
@@ -54,7 +58,8 @@ class AssetGenImage {
     bool matchTextDirection = false,
     bool gaplessPlayback = true,
     bool isAntiAlias = false,
-    String? package,
+    @Deprecated('Do not specify package for a generated library asset')
+    String? package = package,
     FilterQuality filterQuality = FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
@@ -87,13 +92,17 @@ class AssetGenImage {
     );
   }
 
-  ImageProvider provider({AssetBundle? bundle, String? package}) {
+  ImageProvider provider({
+    AssetBundle? bundle,
+    @Deprecated('Do not specify package for a generated library asset')
+    String? package = package,
+  }) {
     return AssetImage(_assetName, bundle: bundle, package: package);
   }
 
   String get path => _assetName;
 
-  String get keyName => _assetName;
+  String get keyName => 'packages/place_holder_widget/$_assetName';
 }
 
 class AssetGenImageAnimation {

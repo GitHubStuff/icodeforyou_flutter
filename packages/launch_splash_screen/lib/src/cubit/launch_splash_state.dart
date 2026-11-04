@@ -45,15 +45,19 @@ final class LaunchSplashCompleted extends LaunchSplashState {
 
 /// A task threw, or the timeout elapsed before the tasks finished.
 ///
-/// On timeout [error] is a `TimeoutException`; otherwise it is whatever the
-/// task threw.
+/// On timeout [error] is a `TimeoutException` and [stackTrace] marks where
+/// the timeout fired; otherwise they are whatever the task threw and the
+/// trace captured at that throw.
 final class LaunchSplashFailed extends LaunchSplashState {
-  /// Creates the failed state carrying the cause.
-  const LaunchSplashFailed(this.error);
+  /// Creates the failed state carrying the cause and where it arose.
+  const LaunchSplashFailed(this.error, this.stackTrace);
 
   /// The cause of the failure.
   final Object error;
 
+  /// Where [error] arose; suitable for forwarding to crash reporting.
+  final StackTrace stackTrace;
+
   @override
-  List<Object?> get props => [error];
+  List<Object?> get props => [error, stackTrace];
 }

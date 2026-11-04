@@ -22,11 +22,14 @@ typedef LaunchCompletedCallback = void Function(BuildContext context);
 
 /// Called when a task threw or the timeout elapsed.
 ///
-/// On timeout [error] is a `TimeoutException`; otherwise it is whatever the
-/// task threw.
+/// On timeout [error] is a `TimeoutException` and [stackTrace] marks where
+/// the timeout fired; otherwise they are whatever the task threw and the
+/// trace captured at that throw. Both are suitable for forwarding to crash
+/// reporting as-is.
 typedef LaunchFailureCallback = void Function(
   BuildContext context,
   Object error,
+  StackTrace stackTrace,
 );
 
 /// Shows [child] while [backgroundTasks] run, then hands off to the app.
@@ -52,7 +55,7 @@ class LaunchSplashScreen extends StatelessWidget {
     required this.spinner,
     required this.onCompleted,
     required this.onFailure,
-    this.splashDuration = const Duration(milliseconds: 750),
+    required this.splashDuration,
     this.backgroundTasks = const [],
     super.key,
   });
@@ -109,8 +112,8 @@ class LaunchSplashScreen extends StatelessWidget {
     switch (state) {
       case LaunchSplashCompleted():
         onCompleted(context);
-      case LaunchSplashFailed(:final error):
-        onFailure(context, error);
+      case LaunchSplashFailed(:final error, :final stackTrace):
+        onFailure(context, error, stackTrace);
       case LaunchSplashShowing():
       case LaunchSplashWaiting():
         break;

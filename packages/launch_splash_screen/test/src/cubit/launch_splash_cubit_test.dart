@@ -19,6 +19,9 @@ const splash = Duration(milliseconds: 750);
 const timeout = Duration(milliseconds: 2000);
 const tick = Duration(milliseconds: 1);
 
+/// A recognisable trace to fail tasks with; the cubit must forward it as-is.
+final trace = StackTrace.fromString('#0 task (package:test/task.dart:1:1)');
+
 /// Builds a cubit, starts it, and records every emitted state.
 ({LaunchSplashCubit cubit, List<LaunchSplashState> states}) startCubit({
   List<LaunchTask> tasks = const [],
@@ -186,7 +189,7 @@ void main() {
   });
 
   group('tasks exceed timeoutDuration', () {
-    test('emits Waiting then Failed with a TimeoutException', () {
+    test('emits Waiting then Failed with a TimeoutException and a trace', () {
       fakeAsync((async) {
         final completer = Completer<void>();
         final (:cubit, :states) = startCubit(tasks: [() => completer.future]);
@@ -197,15 +200,21 @@ void main() {
         expect(states.first, const LaunchSplashWaiting());
         expect(
           states.last,
-          isA<LaunchSplashFailed>().having(
-            (s) => s.error,
-            'error',
-            isA<TimeoutException>().having(
-              (e) => e.duration,
-              'duration',
-              timeout,
-            ),
-          ),
+          isA<LaunchSplashFailed>()
+              .having(
+                (s) => s.error,
+                'error',
+                isA<TimeoutException>().having(
+                  (e) => e.duration,
+                  'duration',
+                  timeout,
+                ),
+              )
+              .having(
+                (s) => s.stackTrace.toString(),
+                'stackTrace',
+                isNotEmpty,
+              ),
         );
 
         unawaited(cubit.close());
@@ -236,7 +245,7 @@ void main() {
         async.elapse(timeout);
         final afterTimeout = List.of(states);
 
-        completer.completeError(StateError('late'));
+        completer.completeError(StateError('late'), trace);
         async.flushMicrotasks();
         expect(states, afterTimeout);
 
@@ -246,16 +255,16 @@ void main() {
   });
 
   group('a task throws', () {
-    test('fails immediately while still Showing', () {
+    test('fails immediately while still Showing, carrying the trace', () {
       fakeAsync((async) {
         final error = StateError('boom');
         final completer = Completer<void>();
         final (:cubit, :states) = startCubit(tasks: [() => completer.future]);
 
         async.elapse(tick);
-        completer.completeError(error);
+        completer.completeError(error, trace);
         async.flushMicrotasks();
-        expect(states, [LaunchSplashFailed(error)]);
+        expect(states, [LaunchSplashFailed(error, trace)]);
 
         unawaited(cubit.close());
       });
@@ -268,11 +277,11 @@ void main() {
         final (:cubit, :states) = startCubit(tasks: [() => completer.future]);
 
         async.elapse(tick);
-        completer.completeError(error);
+        completer.completeError(error, trace);
         async.flushMicrotasks();
 
         async.elapse(timeout + splash);
-        expect(states, [LaunchSplashFailed(error)]);
+        expect(states, [LaunchSplashFailed(error, trace)]);
 
         unawaited(cubit.close());
       });
@@ -285,11 +294,11 @@ void main() {
         final (:cubit, :states) = startCubit(tasks: [() => completer.future]);
 
         async.elapse(splash);
-        completer.completeError(error);
+        completer.completeError(error, trace);
         async.flushMicrotasks();
         expect(states, [
           const LaunchSplashWaiting(),
-          LaunchSplashFailed(error),
+          LaunchSplashFailed(error, trace),
         ]);
 
         unawaited(cubit.close());
@@ -306,12 +315,12 @@ void main() {
         );
 
         async.elapse(tick);
-        a.completeError(first);
+        a.completeError(first, trace);
         async.flushMicrotasks();
-        b.completeError(StateError('second'));
+        b.completeError(StateError('second'), StackTrace.current);
         async.flushMicrotasks();
 
-        expect(states, [LaunchSplashFailed(first)]);
+        expect(states, [LaunchSplashFailed(first, trace)]);
 
         unawaited(cubit.close());
       });
@@ -349,7 +358,7 @@ void main() {
 
         unawaited(cubit.close());
         async.flushMicrotasks();
-        completer.completeError(StateError('late'));
+        completer.completeError(StateError('late'), trace);
         async.flushMicrotasks();
         expect(states, isEmpty);
       });

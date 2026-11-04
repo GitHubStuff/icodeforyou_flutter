@@ -27,9 +27,10 @@ const Duration minimumTimeoutMargin = Duration(milliseconds: 250);
 /// * If the tasks finish before [timeoutDuration], the state moves to
 ///   [LaunchSplashCompleted].
 /// * If [timeoutDuration] elapses first, the state moves to
-///   [LaunchSplashFailed] carrying a [TimeoutException].
+///   [LaunchSplashFailed] carrying a [TimeoutException] and the trace of
+///   the timer firing.
 /// * If any task throws, the state moves to [LaunchSplashFailed] carrying
-///   that error, regardless of timing.
+///   that error and the trace captured at the throw, regardless of timing.
 ///
 /// [LaunchSplashCompleted] and [LaunchSplashFailed] are terminal; nothing
 /// is emitted after either.
@@ -83,8 +84,8 @@ class LaunchSplashCubit extends Cubit<LaunchSplashState> {
     try {
       await Future.wait(tasks.map((task) => task()), eagerError: true);
       _onTasksFinished();
-    } on Object catch (error) {
-      _fail(error);
+    } on Object catch (error, stackTrace) {
+      _fail(error, stackTrace);
     }
   }
 
@@ -102,12 +103,15 @@ class LaunchSplashCubit extends Cubit<LaunchSplashState> {
     }
   }
 
+  // A timeout is constructed, not thrown, so no trace is captured for us;
+  // StackTrace.current marks the timer firing, which is all a timeout has.
   void _onTimeout() {
     _fail(
       TimeoutException(
         'Launch tasks did not finish within the timeout',
         timeoutDuration,
       ),
+      StackTrace.current,
     );
   }
 
@@ -126,12 +130,12 @@ class LaunchSplashCubit extends Cubit<LaunchSplashState> {
     emit(const LaunchSplashCompleted());
   }
 
-  void _fail(Object error) {
+  void _fail(Object error, StackTrace stackTrace) {
     if (isClosed || _isTerminal) {
       return;
     }
     _cancelTimers();
-    emit(LaunchSplashFailed(error));
+    emit(LaunchSplashFailed(error, stackTrace));
   }
 
   void _cancelTimers() {

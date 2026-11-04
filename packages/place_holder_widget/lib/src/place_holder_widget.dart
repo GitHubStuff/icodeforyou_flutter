@@ -12,9 +12,9 @@ import 'package:place_holder_widget/gen/assets.gen.dart';
 ///
 /// Typically used as a visual fallback while content is loading or when an
 /// image asset is unavailable or just a placeholder widget.
-class PlaceHolderWidget extends StatelessWidget {
-  /// Creates a [PlaceHolderWidget].
-  const PlaceHolderWidget({super.key});
+class PlaceholderWidget extends StatelessWidget {
+  /// Creates a [PlaceholderWidget].
+  const PlaceholderWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

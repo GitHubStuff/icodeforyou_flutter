@@ -15,14 +15,21 @@ const childKey = Key('child');
 const spinnerKey = Key('spinner');
 const homeKey = Key('home');
 
+/// A recognisable trace to fail tasks with; it must reach `onFailure` as-is.
+final trace = StackTrace.fromString('#0 task (package:test/task.dart:1:1)');
+
+/// What `onFailure` received.
+typedef Failure = ({Object error, StackTrace stackTrace});
+
 /// Records every callback the splash makes.
 class CallbackLog {
   final List<BuildContext> completed = [];
-  final List<Object> failures = [];
+  final List<Failure> failures = [];
 
   void onCompleted(BuildContext context) => completed.add(context);
 
-  void onFailure(BuildContext context, Object error) => failures.add(error);
+  void onFailure(BuildContext context, Object error, StackTrace stackTrace) =>
+      failures.add((error: error, stackTrace: stackTrace));
 }
 
 Future<CallbackLog> pumpSplash(
@@ -146,9 +153,8 @@ void main() {
   });
 
   group('failure', () {
-    testWidgets('calls onFailure with a TimeoutException on timeout', (
-      tester,
-    ) async {
+    testWidgets('calls onFailure with a TimeoutException and a trace on '
+        'timeout', (tester) async {
       final log = await pumpSplash(
         tester,
         tasks: [() => Completer<void>().future],
@@ -159,24 +165,24 @@ void main() {
       expect(log.completed, isEmpty);
       expect(log.failures, hasLength(1));
       expect(
-        log.failures.single,
+        log.failures.single.error,
         isA<TimeoutException>().having((e) => e.duration, 'duration', timeout),
       );
+      expect(log.failures.single.stackTrace.toString(), isNotEmpty);
     });
 
-    testWidgets('calls onFailure with the task error when a task throws', (
-      tester,
-    ) async {
+    testWidgets('calls onFailure with the task error and its trace when a '
+        'task throws', (tester) async {
       final error = StateError('boom');
       final completer = Completer<void>();
       final log = await pumpSplash(tester, tasks: [() => completer.future]);
 
       await tester.pump(tick);
-      completer.completeError(error);
+      completer.completeError(error, trace);
       await tester.pump();
 
       expect(log.completed, isEmpty);
-      expect(log.failures, [error]);
+      expect(log.failures, [(error: error, stackTrace: trace)]);
     });
 
     testWidgets('calls onFailure only once', (tester) async {
@@ -184,7 +190,7 @@ void main() {
       final log = await pumpSplash(tester, tasks: [() => completer.future]);
 
       await tester.pump(timeout);
-      completer.completeError(StateError('late'));
+      completer.completeError(StateError('late'), trace);
       await tester.pump();
 
       expect(log.failures, hasLength(1));

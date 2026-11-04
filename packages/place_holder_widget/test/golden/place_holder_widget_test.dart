@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../lib/place_holder_widget.dart' show PlaceHolderWidget;
+import '../../lib/place_holder_widget.dart' show PlaceholderWidget;
 
 void main() {
   /// Tag that keeps these tests out of the coverage run.
@@ -20,14 +20,14 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: PlaceHolderWidget(),
+            body: PlaceholderWidget(),
           ),
         ),
       );
 
       // 3. Ensure asynchronous image decoding completes in real-time execution
       await tester.runAsync(() async {
-        final element = find.byType(PlaceHolderWidget).evaluate().first;
+        final element = find.byType(PlaceholderWidget).evaluate().first;
         final imageElement = find.descendant(
           of: find.byWidget(element.widget),
           matching: find.byType(Image),
@@ -43,7 +43,7 @@ void main() {
 
       // 4. Compare golden file
       await expectLater(
-        find.byType(PlaceHolderWidget),
+        find.byType(PlaceholderWidget),
         matchesGoldenFile('goldens/place_holder_widget.png'),
       );
     },

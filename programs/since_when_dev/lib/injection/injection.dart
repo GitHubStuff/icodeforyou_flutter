@@ -1,7 +1,6 @@
 // programs/since_when_dev/lib/injection/injection.dart
 
 import 'package:get_it/get_it.dart' show GetIt;
-import 'package:launch_splash_screen/launch_splash_screen.dart';
 import 'package:status_bar_visibility/status_bar_visibility.dart'
     show StatusBarVisibility;
 import 'package:status_bar_visibility_abstract/status_bar_visibility_abstract.dart'

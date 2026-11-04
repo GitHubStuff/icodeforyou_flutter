@@ -2,4 +2,4 @@
 /// Local root export
 library;
 
-export 'src/place_holder_widget.dart' show PlaceHolderWidget;
+export 'src/place_holder_widget.dart' show PlaceholderWidget;

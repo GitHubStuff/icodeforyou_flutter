@@ -4,6 +4,7 @@ Alexa Bunny - X
 Alina Angel - 106
 Alisa Wonderland - 167
 ~ Alissa Martinez7 - 7
+~ Allie Nicole James - 48
 ~ Amalia Davis - 23
 ~ Anabel Busty - 9
 ~ Angel Art - 81
@@ -19,7 +20,7 @@ Billie Star - 16
 ~ Blondessa - 200+
 ~ BootyFrutti - 200+
 ~ Bratty Milf = 200+
-Britney Amber - 200+
+~ Britney Amber - 200+
 ~ Brooke Tilli - 32
 BukowskiDirtyWife - 150
 ~ Bunny Madison - 200+
@@ -54,7 +55,7 @@ Hazel Moore - 200+
 Hope Heaven - 29
 horny69rabbits - 200+
 HotPrincessUA - X
-HuneybakedHotwife - 92
+~ HuneybakedHotwife - 94 {3-nov-2026}
 Indica Flower - X
 Jade Harper - X
 Jasmine Summer - 6
@@ -137,6 +138,7 @@ Spirite Moon - 33 [ugly tats]
 ~ Stacy Cruz - 26
 Sumiko Smile - X
 ~ Summer Vixen - 20
+~ Summer_steph - 200+
 ~ Thelymia - 90
 ~ TwixenXX - 31 {30-oct}
 ~ Vallery Ray - 200+
@@ -145,6 +147,7 @@ VeronikaVengeance - 14
 Vesperessa - X
 ~ Viktoria Vares - 12 {1-Nov-2026}
 ~ Yuiwoo - 73 (1-nov-2026)
+~ xorybaby - 35
 Yulia Zorina - 26
 YunaverseX - 200+ [ugly tats]
 Zoe Nell - X

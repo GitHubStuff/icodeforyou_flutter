@@ -1,17 +1,12 @@
-import 'dart:async' show unawaited;
-
-import 'package:custom_widgets/custom_widgets.dart' show CrashScreenArgs;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:since_when_dev/go_routes/routes_framework.dart'
-    show RoutesFramework;
+import 'package:launch_splash_screen/launch_splash_screen.dart'
+    show LaunchSplashScreen;
+import 'package:place_holder_widget/place_holder_widget.dart'
+    show PlaceholderWidget;
 import 'package:since_when_dev/injection/injection.dart' show getIt;
-import 'package:since_when_dev/splash/animated_splash_screen.dart'
-    show AnimatedSplashScreen;
 import 'package:splash_framework/splash_framework.dart' show SplashScreen;
-import 'package:status_bar_visibility_abstract/status_bar_visibility_abstract.dart'
-    show StatusBarVisibilityAbstract;
 import 'package:theme_mode_cubit/theme_mode_cubit.dart' show ThemeModeCubit;
 
 ///
@@ -47,23 +42,18 @@ GoRouter _router = GoRouter(
 GoRoute _splashRoute({required List<Future<void> Function()> tasks}) => GoRoute(
   path: SplashScreen.route,
   builder: (context, state) {
-    return SplashScreen(
-      duration: const Duration(milliseconds: 2500),
-      tasks: tasks,
-      onComplete: () {
-        context.go(RoutesFramework.app);
-        final vis = getIt<StatusBarVisibilityAbstract>();
-        unawaited(vis.setStatusBarVisibility(isHidden: false) as Future<void>?);
+    //return Placeholder();
+    return LaunchSplashScreen(
+      splashDuration: const Duration(milliseconds: 1500),
+      timeoutDuration: const Duration(seconds: 2),
+      spinner: const CircularProgressIndicator(),
+      onCompleted: (context) {
+        debugPrint('Completed');
       },
-      onError: (error, stackTrace) {
-        context.go(
-          RoutesFramework.crash,
-          extra: CrashScreenArgs(error: error, stackTrace: stackTrace),
-        );
-        final vis = getIt<StatusBarVisibilityAbstract>();
-        unawaited(vis.setStatusBarVisibility(isHidden: false) as Future<void>?);
+      onFailure: (context, error, stackTrace) {
+        debugPrint('Failed: $error');
       },
-      child: const AnimatedSplashScreen(),
+      child: const PlaceholderWidget(),
     );
   },
 );

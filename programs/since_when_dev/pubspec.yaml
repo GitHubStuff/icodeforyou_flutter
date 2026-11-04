@@ -21,6 +21,7 @@ dependencies:
   haptic_intensity: ^1.0.0
   launch_splash_screen: ^1.0.0
   ping_pong: ^1.0.0
+  place_holder_widget: ^1.0.1
   prism_bubble_widget: ^1.0.0
   shared_preferences: ^2.5.5
   sincewhen_widgets: ^1.0.0
@@ -39,7 +40,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   icodeforyou_lints: ^1.0.0
-
+ 
 flutter:
   uses-material-design: true
   assets:

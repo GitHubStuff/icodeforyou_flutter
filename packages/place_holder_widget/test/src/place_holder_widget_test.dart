@@ -21,9 +21,9 @@ void main() {
 
   group('PlaceHolderWidget', () {
     testWidgets('can be instantiated as a const widget', (tester) async {
-      await pumpPlaceHolder(tester, const PlaceHolderWidget());
+      await pumpPlaceHolder(tester, const PlaceholderWidget());
 
-      expect(find.byType(PlaceHolderWidget), findsOneWidget);
+      expect(find.byType(PlaceholderWidget), findsOneWidget);
     });
 
     testWidgets('forwards key to the widget', (tester) async {
@@ -31,17 +31,17 @@ void main() {
       // an LCOV hit on the const constructor line.
       final key = UniqueKey();
 
-      await pumpPlaceHolder(tester, PlaceHolderWidget(key: key));
+      await pumpPlaceHolder(tester, PlaceholderWidget(key: key));
 
       expect(find.byKey(key), findsOneWidget);
-      expect(tester.widget(find.byKey(key)), isA<PlaceHolderWidget>());
+      expect(tester.widget(find.byKey(key)), isA<PlaceholderWidget>());
     });
 
     testWidgets('renders the image centered in its parent', (tester) async {
-      await pumpPlaceHolder(tester, const PlaceHolderWidget());
+      await pumpPlaceHolder(tester, const PlaceholderWidget());
 
       final center = find.descendant(
-        of: find.byType(PlaceHolderWidget),
+        of: find.byType(PlaceholderWidget),
         matching: find.byType(Center),
       );
       expect(center, findsOneWidget);
@@ -54,7 +54,7 @@ void main() {
     });
 
     testWidgets('scales the image with BoxFit.contain', (tester) async {
-      await pumpPlaceHolder(tester, const PlaceHolderWidget());
+      await pumpPlaceHolder(tester, const PlaceholderWidget());
 
       final image = tester.widget<Image>(find.byType(Image));
 
@@ -62,7 +62,7 @@ void main() {
     });
 
     testWidgets('loads the bundled placeholder asset', (tester) async {
-      await pumpPlaceHolder(tester, const PlaceHolderWidget());
+      await pumpPlaceHolder(tester, const PlaceholderWidget());
 
       final image = tester.widget<Image>(find.byType(Image));
       final provider = image.image;
@@ -78,7 +78,7 @@ void main() {
     });
 
     testWidgets('caps the decode size at 256x256 pixels', (tester) async {
-      await pumpPlaceHolder(tester, const PlaceHolderWidget());
+      await pumpPlaceHolder(tester, const PlaceholderWidget());
 
       final image = tester.widget<Image>(find.byType(Image));
       final resize = image.image as ResizeImage;
