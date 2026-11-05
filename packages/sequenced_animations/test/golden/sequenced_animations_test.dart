@@ -1,15 +1,15 @@
-// packages/curated_widgets/test/golden/curated_widgets_golden_test.dart
+// packages/sequenced_animations/test/golden/sequenced_animations_golden_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../lib/curated_widgets.dart' show CuratedWidgets;
+import '../../lib/sequenced_animations.dart' show SequencedAnimations;
 
 void main() {
   /// Tag that keeps these tests out of the coverage run.
   const golden = ['golden'];
 
   testWidgets(
-    'CuratedWidgets renders correctly',
+    'SequencedAnimations renders correctly',
     tags: golden,
     (tester) async {
       // 1. Set explicit surface size for consistent rendering across platforms
@@ -20,14 +20,14 @@ void main() {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: CuratedWidgets(),
+            body: SequencedAnimations(),
           ),
         ),
       );
 
       // 3. Ensure asynchronous image decoding completes in real-time execution
       await tester.runAsync(() async {
-        final element = find.byType(CuratedWidgets).evaluate().first;
+        final element = find.byType(SequencedAnimations).evaluate().first;
         final imageElement = find.descendant(
           of: find.byWidget(element.widget),
           matching: find.byType(Image),
@@ -43,8 +43,8 @@ void main() {
 
       // 4. Compare golden file
       await expectLater(
-        find.byType(CuratedWidgets),
-        matchesGoldenFile('goldens/curated_widgets.png'),
+        find.byType(SequencedAnimations),
+        matchesGoldenFile('goldens/sequenced_animations.png'),
       );
     },
   );

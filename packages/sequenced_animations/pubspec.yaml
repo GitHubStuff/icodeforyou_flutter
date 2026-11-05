@@ -1,6 +1,6 @@
-# packages/curated_widgets/pubspec.yaml
-name: curated_widgets
-description: "Widgets with collections of animations"
+# packages/sequenced_animations/pubspec.yaml
+name: sequenced_animations
+description: "Collection curated Grow, Opacity, Rotate animations"
 publish_to: none
 resolution: workspace
 version: 1.0.0

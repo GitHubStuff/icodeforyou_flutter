@@ -1,4 +1,4 @@
-# packages/curated_widgets/dart_test.yaml
+# packages/sequenced_animations/dart_test.yaml
 tags:
   golden:
     description: Writes PNG goldens. Platform-specific; run locally on macOS.

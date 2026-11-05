@@ -1,9 +1,9 @@
-// packages/curated_widgets/lib/src/curated_widgets.dart
+// packages/sequenced_animations/lib/src/sequenced_animations.dart
 
 import 'package:flutter/widgets.dart';
 
-class CuratedWidgets extends StatelessWidget {
-  const CuratedWidgets({super.key});
+class SequencedAnimations extends StatelessWidget {
+  const SequencedAnimations({super.key});
 
   @override
   Widget build(BuildContext context) => 

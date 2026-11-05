@@ -1,9 +1,9 @@
-# CuratedWidgets.md — rendering the widgets to PNG
+# SequencedAnimations.md — rendering the widgets to PNG
 
 ## 1. Folder layout
 
 ```
-packages/curated_widgets/
+packages/sequenced_animations/
   dart_test.yaml                       ← new (step 5)
   test/
     analysis_options.yaml              ← exists
@@ -24,12 +24,12 @@ restores the shadow flag. Each test is one call to it.
 Three details that are easy to get wrong, all verified against
 Flutter 3.47 / `flutter_test`:
 
-- **`tags` in the file /test/golden/curated_widgets_golden_test.dart,
+- **`tags` in the file /test/golden/sequenced_animations_golden_test.dart,
   there is an example of how 'testWidgets()' has a tag. *NOTE:* Tags are
   within testWidgets() NOT in `group`**
 
 To add a scenario: one more `testWidgets` with a `renderGolden` call and a
-new file name. Adjust `logicalSize` if a scenario clips — `CuratedWidgets` at
+new file name. Adjust `logicalSize` if a scenario clips — `SequencedAnimations` at
 `fontSize: 48` with `distance: 1` spreads its outer glow to 144 dp.
 
 ## 4. Register the tag
@@ -37,7 +37,7 @@ new file name. Adjust `logicalSize` if a scenario clips — `CuratedWidgets` at
 **THIS IS AUTO-COPIED FROM THE BRICK
 
 ```yaml
-# packages/curated_widgets/dart_test.yaml
+# packages/sequenced_animations/dart_test.yaml
 tags:
   golden:
     description: Writes PNG goldens. Platform-specific; run locally on macOS.
@@ -51,13 +51,13 @@ exclude_tags: golden
 From the monorepo root:
 
 ```sh
-melos exec --scope="curated_widgets" -- fvm flutter test --update-goldens --tags golden
+melos exec --scope="sequenced_animations" -- fvm flutter test --update-goldens --tags golden
 ```
 
 Or inside the package:
 
 ```sh
-cd packages/curated_widgets
+cd packages/sequenced_animations
 fvm flutter test --update-goldens --tags golden
 ```
 
@@ -66,8 +66,8 @@ Expected tail of the output: `00:0x +5: All tests passed!`
 Output:
 
 ```
-packages/curated_widgets/test/golden/goldens/
-  curated_widgets.png
+packages/sequenced_animations/test/golden/goldens/
+  sequenced_animations.png
 ```
 
 Re-run after any change to the widgets; `--update-goldens` overwrites.
@@ -105,18 +105,18 @@ documentation. The `README.md` is still the pub template with every section
 reading `TODO`; replace it and embed the renders:
 
 ```markdown
-# curated_widgets
+# sequenced_animations
 
-Widgets for curated_widgets
+Widgets for sequenced_animations
 
 ## Quick reference
 
 ```sh
-# Regenerate curated_widgets's PNGs
-melos exec --scope="curated_widgets" -- fvm flutter test --update-goldens --tags golden
+# Regenerate sequenced_animations's PNGs
+melos exec --scope="sequenced_animations" -- fvm flutter test --update-goldens --tags golden
 
 # Normal test + coverage run, goldens excluded
 melos run test
 ```
 
-Output folder: `packages/curated_widgets/test/golden/goldens/`
+Output folder: `packages/sequenced_animations/test/golden/goldens/`
