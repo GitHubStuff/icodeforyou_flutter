@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocProvider;
 import 'package:go_router/go_router.dart';
-import 'package:since_when_dev/injection/injection.dart' show getIt;
+import 'package:since_when_dev/main_app/configure_dependencies.dart' show getIt;
 import 'package:since_when_dev/navigation/dock_items.dart' show DockItems;
 import 'package:since_when_dev/navigation/rail_button_sizes.dart'
     show RailButtonSize;

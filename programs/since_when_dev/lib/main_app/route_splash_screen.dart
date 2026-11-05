@@ -1,7 +1,7 @@
 part of 'material_app_router.dart';
 
 /// How long the splash stays visible before completing.
-const _splashDuration = Duration(milliseconds: 4500);
+const _splashDuration = Duration(milliseconds: 2500);
 
 /// Launch splash. On completion it replaces itself with [HomeScreen] via
 /// `context.go`, leaving [HomeScreen] as the sole root of the stack.
@@ -20,9 +20,17 @@ final GoRoute _splashRoute = GoRoute(
       unawaited(showStatusBarAfterSplashScreen());
       debugPrint('Splash failed: $error');
     },
-    child: const PlaceholderWidget(),
+    child: _animations(),
   ),
 );
+
+Widget _animations() {
+  return const AnimatedTransparency(
+    range: TransparencyRange(0.1, 1),
+    duration: Duration(milliseconds: 1250),
+    child: PlaceholderWidget(),
+  );
+}
 
 /// If the splash screen completes, or errors out, restore the status bar
 Future<void> showStatusBarAfterSplashScreen() async {

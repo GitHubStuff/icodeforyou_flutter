@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:since_when_dev/injection/injection.dart' show getIt;
+import 'package:since_when_dev/main_app/configure_dependencies.dart' show getIt;
 import 'package:status_bar_visibility_abstract/status_bar_visibility_abstract.dart'
     show StatusBarVisibilityAbstract;
 

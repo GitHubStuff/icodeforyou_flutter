@@ -1,6 +1,8 @@
 // programs/since_when_dev/lib/main_app/material_app_router.dart
 import 'dart:async';
 
+import 'package:animated_transparency/animated_transparency.dart'
+    show AnimatedTransparency, TransparencyRange;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -9,7 +11,7 @@ import 'package:launch_splash_screen/launch_splash_screen.dart'
 import 'package:place_holder_widget/place_holder_widget.dart'
     show PlaceholderWidget;
 import 'package:since_when_dev/home/home_screen.dart' show HomeScreen;
-import 'package:since_when_dev/injection/injection.dart' show getIt;
+import 'package:since_when_dev/main_app/configure_dependencies.dart' show getIt;
 import 'package:splash_framework/splash_framework.dart' show SplashScreen;
 import 'package:status_bar_visibility_abstract/status_bar_visibility_abstract.dart'
     show StatusBarVisibilityAbstract;

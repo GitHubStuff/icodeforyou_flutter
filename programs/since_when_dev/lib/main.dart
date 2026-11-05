@@ -2,8 +2,9 @@
 
 import 'dart:async';
 
-import 'package:flutter/widgets.dart' show WidgetsFlutterBinding, runApp;
-import 'package:since_when_dev/injection/injection.dart'
+import 'package:flutter/widgets.dart'
+    show WidgetsFlutterBinding, debugPrint, runApp;
+import 'package:since_when_dev/main_app/configure_dependencies.dart'
     show configureDependencies, getIt;
 import 'package:since_when_dev/main_app/material_app_router.dart'
     show MaterialAppRouter;
@@ -20,6 +21,7 @@ void main() {
 /// Startup task: make the Dart-tracked status bar state agree with the
 /// native launch setup, which already hides the bar before the first frame.
 Future<void> hideStatusBarAtLaunch() async {
+  debugPrint('Hide abstract');
   await getIt<StatusBarVisibilityAbstract>().setStatusBarVisibility(
     isHidden: true,
   );
