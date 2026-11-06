@@ -1,4 +1,4 @@
-// test/status_bar_ios_test.dart
+// plugins/status_bar_ios/test/status_bar_test.dart
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';

@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 # melos_tool/melos_audit
 # Workspace hygiene audit for a pub-workspace / melos monorepo.
-readonly VERSION="2.0.0"
+readonly VERSION="2.0.2"
 
 # ─── configuration ──────────────────────────────────────────────────────────
 # per-repo configurations
@@ -91,6 +91,7 @@ set -uo pipefail
 
 # Generated files are exempt from header checks.
 readonly -a GENERATED_NAME_FILTERS=(
+  -not -name '*.directories.dart'
   -not -name '*.g.dart'
   -not -name '*.freezed.dart'
   -not -name '*.mocks.dart'

@@ -2,7 +2,7 @@
 
 ## When to use this
 
-After running `melos build`, the generated `main.directories.g.dart` will be alphabetically sorted and unstructured. Use this process to produce the hand-maintained `main.directories.dart` with correct package order and structure.
+After running `melos build`, the generated `main.directories.dart` will be alphabetically sorted and unstructured. Use this process to produce the hand-maintained `main.directories.dart` with correct package order and structure.
 
 ## Step 1 — run build_runner
 

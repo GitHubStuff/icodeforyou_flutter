@@ -16,7 +16,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
-  gap: ^3.0.1
+  gap: ^3.1.0
   intl: ^0.20.3
   sincewhen_models: ^1.0.0
 

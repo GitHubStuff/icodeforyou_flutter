@@ -1,4 +1,4 @@
-// packages/app_navigation/lib/src/widgets/button_widget.dart
+// packages/app_navigation/lib/src/widgets/nav_button.dart
 
 import 'package:app_navigation/app_navigation.dart' show NavButtonProperties;
 import 'package:flutter/material.dart';

@@ -9,7 +9,7 @@ environment:
   sdk: ^3.13.7
 
 dependencies:
-  drift: ^2.34.0
+  drift: ^2.35.3
   extensions: ^1.0.0   # color.toInt()
   flutter:
     sdk: flutter

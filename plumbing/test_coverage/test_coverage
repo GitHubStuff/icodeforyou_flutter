@@ -1,0 +1,710 @@
+#!/bin/zsh
+# test_coverage - running tests with LCOV coverage across the icodeforyou_flutter monorepo
+
+readonly VERSION='1.0.0-beta'
+
+readonly TAGLINE='running tests with LCOV coverage across the monorepo'
+
+# Shows what this script is and does, then exits. Displays when "-a" or
+# "--about" is the only parameter (optionally with -x).
+show_about() {
+    printf '%s' "${CYAN}"
+    cat <<'EOF'
+test_coverage is the PRODUCER half of the monorepo's LCOV pipeline. It runs
+the tests of monorepo members (packages, plugins, programs) with coverage
+collection turned on, so that each tested member ends up with a fresh
+tracefile at <member>/coverage/lcov.info.
+
+Where this sits in the LCOV chain:
+
+  1. test_coverage          runs tests, the Dart VM records which lines of
+     (this script)          lib/ executed, and the result is written as
+                            <member>/coverage/lcov.info (Flutter members
+                            write it directly; pure Dart members write VM
+                            JSON that is converted with format_coverage)
+  2. <reporter script>      gathers every <member>/coverage/lcov.info,
+                            rewrites their SF: paths to be repo-relative,
+                            combines them with lcov --add-tracefile, strips
+                            generated files with lcov --remove, and renders
+                            HTML with genhtml
+
+This script never runs lcov or genhtml. It stops when the tracefiles exist.
+
+What it runs:
+
+  --clear-coverage   deletes every <member>/coverage folder under the
+                     search folders, plus the root /coverage (merged
+                     reports), so the next run starts from nothing
+  --test-all         tests every member under /packages, /plugins and
+                     /programs that has a pubspec.yaml and a test folder,
+                     except the excluded ones (widgetbook catalogue, example
+                     apps). A failing member does not stop the run; every
+                     member's output goes to Z_coverage_<timestamp>.txt in
+                     the current folder (one file per run, in time order),
+                     with ❌ marking each failure so they are searchable,
+                     and a summary is printed at the end
+  --test=<path>      tests exactly one member, e.g. --test=plugins/app_preferences;
+                     the member must have a pubspec.yaml and a test folder.
+                     Its coverage folder is deleted first; output goes to
+                     the terminal
+
+Every member's coverage folder is deleted before its tests run, and deleted
+again if its tests fail, so a stale or half-written tracefile can never
+reach the report.
+
+Run from the monorepo root. Requires fvm on PATH; pure Dart members also
+need `fvm dart pub global activate coverage` done once.
+
+Examples:
+  % test_coverage --test-all
+  % test_coverage --test-all --clear-coverage
+  % test_coverage --test=packages/color_grid
+  % test_coverage --clear-coverage
+  % test_coverage -h                          # help (also --help)
+  % test_coverage --about                     # this text (also -a)
+EOF
+    printf '%s\n' "${RESET}"
+}
+
+readonly SCRIPT_NAME="${0:t}"
+readonly DEFAULT_BIN_DIR="$HOME/bin"
+readonly COLORS_LIB="${DEFAULT_BIN_DIR}/lib/colors.zsh"
+
+# Flags that must be the only parameter on the command line (apart from -x).
+readonly -a SOLO_FLAGS=('-a' '--about' '-h' '--help')
+
+# The one flag allowed alongside anything, including a solo flag.
+readonly TRACE_FLAG='-x'
+
+# Work flags. TEST_ALL_FLAG and TEST_OPTION are mutually exclusive;
+# CLEAR_FLAG may accompany either, or stand alone.
+readonly TEST_ALL_FLAG='--test-all'
+readonly TEST_OPTION='--test' # written as --test=<path>
+readonly CLEAR_FLAG='--clear-coverage'
+
+# Positional-argument contract. Exactly one of:
+#   none     - the script takes no positional argument; giving one is an error
+#   optional - the script may take one positional argument
+#   required - the script must be given one positional argument
+readonly POSITIONAL='none'
+
+# Display name of the positional argument in help and error text.
+readonly POSITIONAL_NAME=''
+
+# Monorepo folders that hold testable members. Members are their direct
+# subfolders. Add new content folders here as the monorepo grows.
+readonly -a SEARCH_DIRS=('packages' 'plugins' 'programs')
+
+# Members never tested, as zsh glob patterns matched against the member's
+# repo-relative path. Hidden folders are skipped by the glob itself.
+readonly -a EXCLUDE_PATTERNS=('programs/widgetbook_workspace' '*/example')
+
+# Files and folders that identify the monorepo root and its members.
+readonly ROOT_PUBSPEC='pubspec.yaml'
+readonly MEMBER_PUBSPEC='pubspec.yaml'
+readonly TEST_DIR='test'
+readonly COVERAGE_DIR='coverage'
+readonly LCOV_FILE='lcov.info'
+
+# --test-all writes every member's test output to
+# <REPORT_PREFIX>_<yyyymmdd_hhmmss>.txt in the current folder; the timestamp
+# keeps successive reports in time order.
+readonly REPORT_PREFIX='Z_coverage'
+readonly REPORT_SUFFIX='.txt'
+
+# Markers used in the report so results are searchable.
+readonly MARK_PASS='✅'
+readonly MARK_FAIL='❌'
+readonly MARK_SKIP='⏭️'
+
+# zsh strict mode:
+#  -e (errexit) - exit immediately when any command returns non-zero
+#  -u (nounset) - treat use of unset variables as an error (typo catcher)
+#  -o (pipefail) - pipeline's exit status is the last non-zero status in the pipe,
+#      not just the final command's
+set -euo pipefail
+
+# Help text with colors, displays when "-h" or "--help" is the only parameter
+# (optionally with -x), and on any usage error.
+#
+# Every option listed here must have a matching branch in main()'s case.
+show_help() {
+    cat <<EOF
+${BOLD}USAGE${RESET}
+    ${GREEN}${SCRIPT_NAME}${RESET} ${YELLOW}${TEST_ALL_FLAG}${RESET} [${YELLOW}${CLEAR_FLAG}${RESET}] [${YELLOW}-x${RESET}]
+    ${GREEN}${SCRIPT_NAME}${RESET} ${YELLOW}${TEST_OPTION}=${RESET}${WHITE}<path>${RESET} [${YELLOW}${CLEAR_FLAG}${RESET}] [${YELLOW}-x${RESET}]
+    ${GREEN}${SCRIPT_NAME}${RESET} ${YELLOW}${CLEAR_FLAG}${RESET} [${YELLOW}-x${RESET}]
+    ${GREEN}${SCRIPT_NAME}${RESET} ${YELLOW}-h${RESET}, ${YELLOW}--help${RESET} [${YELLOW}-x${RESET}]
+    ${GREEN}${SCRIPT_NAME}${RESET} ${YELLOW}-a${RESET}, ${YELLOW}--about${RESET} [${YELLOW}-x${RESET}]
+
+    No positional arguments. Options go in any order.
+    ${TEST_ALL_FLAG} and ${TEST_OPTION} cannot be combined; at least one of
+    ${TEST_ALL_FLAG}, ${TEST_OPTION}, ${CLEAR_FLAG} is required.
+    -h/--help and -a/--about must be used alone; only -x may accompany them.
+
+${BOLD}OPTIONS${RESET}
+    ${YELLOW}${TEST_ALL_FLAG}${RESET}             run tests with coverage in every member under
+                           ${GREEN}${(j:, :)SEARCH_DIRS}${RESET} that has a ${MEMBER_PUBSPEC}
+                           and a ${TEST_DIR}/ folder; never stops on a failure; all
+                           output goes to ${WHITE}${REPORT_PREFIX}_<timestamp>${REPORT_SUFFIX}${RESET} in the
+                           current folder, failures marked ${MARK_FAIL}; exits 1 when
+                           any member failed
+                           excluded: ${GREEN}${(j:, :)EXCLUDE_PATTERNS}${RESET}
+    ${YELLOW}${TEST_OPTION}=${RESET}${WHITE}<path>${RESET}          run tests with coverage in one member, e.g.
+                           ${TEST_OPTION}=plugins/app_preferences; the member must
+                           have a ${MEMBER_PUBSPEC} and a ${TEST_DIR}/ folder; output
+                           goes to the terminal
+    ${YELLOW}${CLEAR_FLAG}${RESET}       delete every member's ${COVERAGE_DIR}/ folder and the root
+                           /${COVERAGE_DIR} before anything else runs
+    ${YELLOW}-x${RESET}                     turn on command tracing after the arguments are read
+                           (may be combined with anything)
+    ${YELLOW}-h${RESET}, ${YELLOW}--help${RESET}             show this help, then exit (no other parameters)
+    ${YELLOW}-a${RESET}, ${YELLOW}--about${RESET}            show what this script is and does, then exit
+                           (no other parameters)
+
+${BOLD}WHAT IT DOES${RESET}
+    1. Verifies it is running from the monorepo root (${ROOT_PUBSPEC} with a
+       workspace: key) and that fvm is on PATH.
+    2. ${CLEAR_FLAG}: removes <member>/${COVERAGE_DIR} for every member and the
+       root /${COVERAGE_DIR}.
+    3. For each member to test: removes its ${COVERAGE_DIR}/, detects Flutter
+       vs pure Dart, runs
+         fvm flutter test --coverage --concurrency=1          (Flutter)
+         fvm dart test --coverage=${COVERAGE_DIR} --concurrency=1 then
+         format_coverage --lcov --report-on=lib               (pure Dart)
+       and verifies ${COVERAGE_DIR}/${LCOV_FILE} was produced. A failed member
+       has its ${COVERAGE_DIR}/ removed so it contributes nothing downstream.
+    4. ${TEST_ALL_FLAG}: writes ${REPORT_PREFIX}_<timestamp>${REPORT_SUFFIX} and prints a
+       summary of tested / passed / failed / skipped members.
+
+    The tracefiles this script leaves behind are the input of the reporter,
+    which merges them, strips generated files and renders HTML. This script
+    never runs lcov or genhtml.
+
+${BOLD}EXAMPLES${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} ${TEST_ALL_FLAG}                              ${CYAN}# everything, report in ${REPORT_PREFIX}_<timestamp>${REPORT_SUFFIX}${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} ${TEST_ALL_FLAG} ${CLEAR_FLAG}             ${CYAN}# fresh start, then everything${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} ${TEST_OPTION}=packages/color_grid             ${CYAN}# one member${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} ${CLEAR_FLAG} -x                       ${CYAN}# wipe coverage folders, traced${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} ${TEST_ALL_FLAG} ${TEST_OPTION}=packages/neon    ${CYAN}# INVALID: cannot combine${RESET}
+    % ${GREEN}${SCRIPT_NAME}${RESET} -a -h                                   ${CYAN}# INVALID: solo flags cannot mix${RESET}
+
+EOF
+}
+
+# verify color library
+if [[ ! -r "$COLORS_LIB" ]]; then
+    printf '%s: %s not found, cannot continue\n' "$SCRIPT_NAME" "$COLORS_LIB" >&2
+    exit 1
+fi
+# reads the file and executes its contents in the current shell, rather than
+# in a child process, so every function, variable, alias, and setopt defined
+# in colors.zsh becomes available in this script's own scope.
+source "$COLORS_LIB"
+
+# --- output ----------------------------------------------------------------
+
+show_banner() {
+    printf '\n'
+    version_print "$SCRIPT_NAME" "$VERSION" "$TAGLINE"
+    printf '\n'
+}
+
+error_exit() {
+    printf '\n'
+    error "$1" >&2
+    printf '\n'
+    exit 1
+}
+
+# Any bad input: report it, show help, exit 1.
+usage_exit() {
+    printf '\n'
+    error "$1" >&2
+    printf '\n'
+    show_help >&2
+    exit 1
+}
+
+# --- xtrace record / reset -------------------------------------------------
+# -x records the current trace state, turns tracing on for the run of the
+# script, and at exit resets it to what the parent shell had.
+#
+# zsh restores the XTRACE option when the function that set it returns, so
+# `set -x` must run in the body of the function being traced (main(),
+# handle_about()), never in a helper.
+XTRACE_WAS_ON=false
+
+xtrace_is_on() {
+    [[ -o xtrace ]]
+}
+
+record_xtrace() {
+    if xtrace_is_on; then
+        XTRACE_WAS_ON=true
+    fi
+}
+
+reset_xtrace() {
+    if [[ "$XTRACE_WAS_ON" == false ]] && xtrace_is_on; then
+        set +x
+        info 'tracing is off'
+    fi
+}
+
+trap reset_xtrace EXIT
+
+# --- state -----------------------------------------------------------------
+# Filled by argument parsing and validation.
+
+# true when -x was given; tracing is enabled once the arguments are read.
+trace_requested=false
+
+# true when --test-all was given.
+test_all_requested=false
+
+# The one member to test, from --test=<path>. Empty when not given.
+test_target=''
+
+# true when --clear-coverage was given.
+clear_requested=false
+
+# Report path for this --test-all run, set when the run starts.
+report_file=''
+
+# --test-all tallies. Members are repo-relative paths.
+typeset -a passed_members=()
+typeset -a failed_members=()
+typeset -a skipped_members=()
+
+# --- argument rules --------------------------------------------------------
+
+# Returns 0 when $1 is one of SOLO_FLAGS.
+is_solo_flag() {
+    (( ${SOLO_FLAGS[(Ie)$1]} ))
+}
+
+# Returns 0 when $1 is the trace flag.
+is_trace_flag() {
+    [[ "$1" == "$TRACE_FLAG" ]]
+}
+
+# Returns 0 when any of the given arguments is the trace flag.
+trace_requested_in() {
+    (( ${@[(Ie)$TRACE_FLAG]} ))
+}
+
+# Enforces the solo-flag rule over the full command line:
+#   - at most one of SOLO_FLAGS may appear
+#   - when one appears, nothing else may, except TRACE_FLAG
+# Any violation is a usage error.
+enforce_solo_flags() {
+    local arg
+    local solo=''
+    local -a others=()
+
+    for arg in "$@"; do
+        if is_trace_flag "$arg"; then
+            continue
+        fi
+        if is_solo_flag "$arg"; then
+            if [[ -n "$solo" ]]; then
+                usage_exit "${solo} and ${arg} cannot be combined"
+            fi
+            solo="$arg"
+        else
+            others+=("$arg")
+        fi
+    done
+
+    if [[ -n "$solo" ]] && (( ${#others[@]} > 0 )); then
+        usage_exit "${solo} must be the only parameter (apart from ${TRACE_FLAG}), got: ${others[*]}"
+    fi
+}
+
+# -a / --about is handled before the banner so the output is just the about
+# text. enforce_solo_flags() has already guaranteed nothing else is present
+# except possibly -x, which is honoured.
+handle_about() {
+    if (( ${@[(Ie)--about]} || ${@[(Ie)-a]} )); then
+        if trace_requested_in "$@" && ! xtrace_is_on; then
+            info 'tracing is on'
+            set -x
+        fi
+        show_about
+        exit 0
+    fi
+}
+
+# Rejects a positional argument per the POSITIONAL contract ('none').
+accept_positional() {
+    local arg="$1"
+    if [[ "$POSITIONAL" == 'none' ]]; then
+        usage_exit "${SCRIPT_NAME} takes no positional argument, got: ${arg}"
+    fi
+}
+
+# Accepts --test-all. Sets test_all_requested.
+accept_test_all() {
+    if [[ "$test_all_requested" == true ]]; then
+        usage_exit "${TEST_ALL_FLAG} given twice"
+    fi
+    test_all_requested=true
+}
+
+# Accepts --test=<path>. Sets test_target.
+accept_test_target() {
+    local value="$1"
+    if [[ -z "$value" ]]; then
+        usage_exit "${TEST_OPTION} requires a member path (e.g. ${TEST_OPTION}=plugins/app_preferences)"
+    fi
+    if [[ -n "$test_target" ]]; then
+        usage_exit "one ${TEST_OPTION} at a time, got ${test_target} and ${value}"
+    fi
+    test_target="${value%/}"
+}
+
+# Accepts --clear-coverage. Sets clear_requested.
+accept_clear() {
+    if [[ "$clear_requested" == true ]]; then
+        usage_exit "${CLEAR_FLAG} given twice"
+    fi
+    clear_requested=true
+}
+
+# After parsing: the work flags must make a valid combination.
+require_work() {
+    if [[ "$test_all_requested" == true && -n "$test_target" ]]; then
+        usage_exit "${TEST_ALL_FLAG} and ${TEST_OPTION} cannot be combined"
+    fi
+    if [[ "$test_all_requested" == false && -z "$test_target" && "$clear_requested" == false ]]; then
+        usage_exit "nothing to do: give ${TEST_ALL_FLAG}, ${TEST_OPTION}=<path> or ${CLEAR_FLAG}"
+    fi
+}
+
+# --- paths -----------------------------------------------------------------
+
+# Report path for a --test-all run started now, in the current folder.
+new_report_file() {
+    printf '%s_%s%s' "$REPORT_PREFIX" "$(date '+%Y%m%d_%H%M%S')" "$REPORT_SUFFIX"
+}
+
+# Repo-relative path of a member's pubspec.yaml.
+member_pubspec() {
+    printf '%s/%s' "$1" "$MEMBER_PUBSPEC"
+}
+
+# Repo-relative path of a member's test folder.
+member_test_dir() {
+    printf '%s/%s' "$1" "$TEST_DIR"
+}
+
+# Repo-relative path of a member's coverage folder.
+member_coverage_dir() {
+    printf '%s/%s' "$1" "$COVERAGE_DIR"
+}
+
+# Repo-relative path of a member's tracefile.
+member_lcov_file() {
+    printf '%s/%s/%s' "$1" "$COVERAGE_DIR" "$LCOV_FILE"
+}
+
+# --- validation ------------------------------------------------------------
+
+# The script must run from the monorepo root.
+validate_monorepo_root() {
+    if [[ ! -f "$ROOT_PUBSPEC" ]] || ! grep -q '^workspace:' "$ROOT_PUBSPEC"; then
+        error_exit "run from the monorepo root (${ROOT_PUBSPEC} with a workspace: key required)"
+    fi
+}
+
+# fvm is how every flutter/dart command is invoked.
+validate_tools() {
+    if ! command -v fvm > /dev/null 2>&1; then
+        error_exit 'fvm not found on PATH; it pins the SDK for every test run'
+    fi
+}
+
+# The --test target must be a member with a pubspec.yaml and a test folder.
+validate_test_target() {
+    if [[ -z "$test_target" ]]; then
+        return 0
+    fi
+    if [[ ! -d "$test_target" ]]; then
+        error_exit "${test_target} does not exist (expected e.g. plugins/app_preferences, relative to the monorepo root)"
+    fi
+    if [[ ! -f "$(member_pubspec "$test_target")" ]]; then
+        error_exit "${test_target} has no ${MEMBER_PUBSPEC}; not a monorepo member"
+    fi
+    if [[ ! -d "$(member_test_dir "$test_target")" ]]; then
+        error_exit "${test_target} has no ${TEST_DIR}/ folder; nothing to run"
+    fi
+}
+
+# --- member discovery ------------------------------------------------------
+
+# Returns 0 when the member path matches one of EXCLUDE_PATTERNS.
+is_excluded() {
+    local member="$1"
+    local pattern
+    for pattern in "${EXCLUDE_PATTERNS[@]}"; do
+        if [[ "$member" == ${~pattern} ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
+# Prints every member (direct subfolder of a SEARCH_DIRS entry that has a
+# pubspec.yaml), one per line, excluded ones left out. Hidden folders never
+# match the glob. A missing search folder is simply empty.
+list_members() {
+    local dir member
+    for dir in "${SEARCH_DIRS[@]}"; do
+        if [[ ! -d "$dir" ]]; then
+            continue
+        fi
+        for member in "${dir}"/*(/N); do
+            if is_excluded "$member"; then
+                continue
+            fi
+            if [[ -f "$(member_pubspec "$member")" ]]; then
+                printf '%s\n' "$member"
+            fi
+        done
+    done
+}
+
+# --- runner detection ------------------------------------------------------
+
+# Prints 'flutter' or 'dart'. A direct flutter: dependency settles it. Else
+# the RESOLVED dependency closure is inspected: a pure-looking package that
+# transitively depends on flutter must still run under flutter test. When
+# the closure cannot be resolved, flutter is the safe default.
+detect_runner() {
+    local member="$1"
+    local deps_json
+
+    if grep -q '^[[:space:]]*flutter:' "$(member_pubspec "$member")"; then
+        printf 'flutter'
+        return 0
+    fi
+
+    deps_json="$(cd "$member" && fvm dart pub deps --json 2> /dev/null || true)"
+
+    if [[ -z "$deps_json" || "$deps_json" =~ '"name":[[:space:]]*"flutter"' ]]; then
+        printf 'flutter'
+    else
+        printf 'dart'
+    fi
+}
+
+# --- work ------------------------------------------------------------------
+
+# Removes every member's coverage folder and the root coverage folder.
+clear_coverage() {
+    local member
+    local count=0
+
+    while IFS= read -r member; do
+        if [[ -d "$(member_coverage_dir "$member")" ]]; then
+            rm -rf "$(member_coverage_dir "$member")"
+            count=$((count + 1))
+        fi
+    done < <(list_members)
+
+    if [[ -d "$COVERAGE_DIR" ]]; then
+        rm -rf "$COVERAGE_DIR"
+        count=$((count + 1))
+    fi
+
+    info "cleared ${count} coverage folder(s)"
+}
+
+# Runs one member's tests with coverage. Its coverage folder is removed
+# first; on any failure it is removed again so no tracefile survives.
+# Returns non-zero on failure. All output goes to stdout/stderr; the caller
+# decides where those go.
+run_member_tests() {
+    local member="$1"
+    local runner
+
+    rm -rf "$(member_coverage_dir "$member")"
+    runner="$(detect_runner "$member")"
+
+    if [[ "$runner" == 'flutter' ]]; then
+        printf 'runner: fvm flutter test\n'
+        (cd "$member" && fvm flutter test --coverage --concurrency=1) || return 1
+    else
+        printf 'runner: fvm dart test + format_coverage\n'
+        (
+            cd "$member" &&
+                fvm dart test --coverage="$COVERAGE_DIR" --concurrency=1 &&
+                fvm dart pub global run coverage:format_coverage \
+                    --lcov \
+                    --in="$COVERAGE_DIR" \
+                    --out="${COVERAGE_DIR}/${LCOV_FILE}" \
+                    --report-on=lib
+        ) || return 1
+    fi
+
+    if [[ ! -s "$(member_lcov_file "$member")" ]]; then
+        printf 'tests passed but %s was not produced\n' "$(member_lcov_file "$member")" >&2
+        return 1
+    fi
+}
+
+# Removes a failed member's coverage folder so it contributes nothing.
+discard_member_coverage() {
+    rm -rf "$(member_coverage_dir "$1")"
+}
+
+# --test=<path>: one member, output on the terminal.
+test_one() {
+    info "testing ${test_target}"
+    if run_member_tests "$test_target"; then
+        success "${test_target}: $(member_lcov_file "$test_target")"
+    else
+        discard_member_coverage "$test_target"
+        error_exit "${test_target}: tests failed; its ${COVERAGE_DIR}/ was removed"
+    fi
+}
+
+# --test-all: every member, output in report_file, failures do not stop it.
+test_all() {
+    local member
+    local -a members=()
+
+    while IFS= read -r member; do
+        members+=("$member")
+    done < <(list_members)
+
+    if (( ${#members[@]} == 0 )); then
+        error_exit "no members found under ${(j:, :)SEARCH_DIRS}"
+    fi
+
+    report_file="$(new_report_file)"
+    printf '# %s - %s report, %s\n' "$report_file" "$SCRIPT_NAME" "$(date '+%Y-%m-%d %H:%M:%S')" > "$report_file"
+    info "testing ${#members[@]} member(s); output in ${report_file}"
+
+    for member in "${members[@]}"; do
+        if [[ ! -d "$(member_test_dir "$member")" ]]; then
+            skipped_members+=("$member")
+            printf '\n%s %s - no %s/ folder\n' "$MARK_SKIP" "$member" "$TEST_DIR" >> "$report_file"
+            warning "${member}: skipped, no ${TEST_DIR}/ folder"
+            continue
+        fi
+
+        printf '\n==== %s ====\n' "$member" >> "$report_file"
+        info "testing ${member}"
+        if run_member_tests "$member" >> "$report_file" 2>&1; then
+            passed_members+=("$member")
+            printf '%s %s\n' "$MARK_PASS" "$member" >> "$report_file"
+            success "${member}"
+        else
+            discard_member_coverage "$member"
+            failed_members+=("$member")
+            printf '%s %s - tests failed, %s/ removed\n' "$MARK_FAIL" "$member" "$COVERAGE_DIR" >> "$report_file"
+            error "${member}: failed"
+        fi
+    done
+
+    report_summary
+}
+
+# Appends the summary to report_file and prints it; exits 1 on any failure.
+report_summary() {
+    local -a lines=(
+        "tested:  $(( ${#passed_members[@]} + ${#failed_members[@]} ))"
+        "passed:  ${#passed_members[@]}"
+        "failed:  ${#failed_members[@]}"
+        "skipped: ${#skipped_members[@]}"
+    )
+
+    {
+        printf '\n==== summary ====\n'
+        printf '%s\n' "${lines[@]}"
+        if (( ${#failed_members[@]} > 0 )); then
+            printf '%s failed: %s\n' "$MARK_FAIL" "${(j:, :)failed_members}"
+        fi
+    } >> "$report_file"
+
+    printf '\n'
+    printf '%s\n' "${lines[@]}"
+    printf '\n'
+
+    if (( ${#failed_members[@]} > 0 )); then
+        error_exit "${#failed_members[@]} member(s) failed: ${(j:, :)failed_members}; search ${report_file} for ${MARK_FAIL}"
+    fi
+    success "all tested members produced a tracefile; see ${report_file}"
+}
+
+# -- main ---- where the work is done
+main() {
+    record_xtrace # record current trace
+
+    enforce_solo_flags "$@"
+    handle_about "$@"
+
+    show_banner # banner when the script is started
+
+    # parse/scan the arguments, if any
+    local arg
+    for arg in "$@"; do
+        case "$arg" in
+            -h|--help)
+                show_help
+                exit 0
+                ;;
+            -a|--about)
+                show_about
+                exit 0
+                ;;
+            -x)
+                trace_requested=true
+                ;;
+            --test-all)
+                accept_test_all
+                ;;
+            --test=*)
+                accept_test_target "${arg#--test=}"
+                ;;
+            --test)
+                usage_exit "${arg} needs a value: ${arg}=<path>"
+                ;;
+            --clear-coverage)
+                accept_clear
+                ;;
+            -*)
+                usage_exit "unknown option ${arg}"
+                ;;
+            *)
+                accept_positional "$arg"
+                ;;
+        esac
+    done
+
+    require_work
+
+    if [[ "$trace_requested" == true ]] && ! xtrace_is_on; then
+        info 'tracing is on'
+        set -x
+    fi
+
+    validate_monorepo_root
+    validate_tools
+    validate_test_target
+
+    if [[ "$clear_requested" == true ]]; then
+        clear_coverage
+    fi
+    if [[ "$test_all_requested" == true ]]; then
+        test_all
+    elif [[ -n "$test_target" ]]; then
+        test_one
+    fi
+}
+
+# Run 'main()' with the parameters, and print a blank line
+main "$@"
+printf '\n'

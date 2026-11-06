@@ -1,4 +1,4 @@
-// packages/demo/lib/src/duration/duration_stopwatch_demo.dart
+// packages/demo/lib/duraton_demo/duration_stopwatch_demo.dart
 
 import 'dart:math' show Random;
 

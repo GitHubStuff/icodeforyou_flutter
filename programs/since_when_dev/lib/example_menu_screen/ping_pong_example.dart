@@ -1,4 +1,4 @@
-// programs/since_when_dev/lib/example/ping_pong_example.dart
+// programs/since_when_dev/lib/example_menu_screen/ping_pong_example.dart
 
 import 'dart:math' show Random;
 

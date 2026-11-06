@@ -1,4 +1,4 @@
-// packages/status_bar_visibility_framework/test/status_bar_visiblity_framework_test.dart
+// packages/status_bar_visibility/test/src/status_bar_visibility_test.dart
 import 'package:custom_errors/custom_errors.dart' show PluginError;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:platform_tools/platform_tools.dart' show OSPlatform;

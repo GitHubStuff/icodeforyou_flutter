@@ -6,7 +6,7 @@ Alisa Wonderland - 167
 ~ Alissa Martinez7 - 7
 ~ Allie Nicole James - 48
 = ~ Amalia Davis - 23 [0014]
-~ Anabel Busty - 9
+= ~ Anabel Busty - 9 [0027]
 ~ Angel Art - 81
 = ~ Angelica Heaven - 73 [0001]
 ~ AnissaMiller1 - 108 {5-nov-2026}
@@ -36,8 +36,9 @@ Cherry Kiss - X
 CrepuXCulo - X
 CyberlyCrush - 121
 ~ Danielle Renae - 200+
-~ Denise Anders - 9
-~ ~ Dollorgasm - 15
+= ~ Darkside - 175 [0025]
+= ~ Denise Anders - X
+= ~ Dollorgasm - 15
 = ~ Dolly Rud - 104 {5-nov-2026} [0011]
 Elena Ross - 200+
 ~ Elly Clutch Two - 35
@@ -68,7 +69,7 @@ Jasmine Summer - 6
 ~ JennxXxChars - X
 ~ Jewelz Blu - 65
 Julie Jesse
-~ Kali Roses - 40
+= ~ Kali Roses - 40 [0024]
 ~ Kandy Lux + 200
 Kate Kravets - X
 Katty Soarez - X
@@ -105,11 +106,11 @@ Melissa Stratton - X
 ~ Mila Lioness - 200
 ~ Mila Solana - 77
 ~ Milfetta - 43
-~ Miss Driada - 200+ / Urakadaki - 152 {19-oct}
+~ Miss Driada - 200+ / Urakadaki - 152 {19-oct-2026}
 Misslexa - X
 ~ MissPanthera - 200+
 ~ MissRedStar - 164 {2-Nov-2026}
-msbreewc - 127 {chubby asian}
+= ~ msbreewc - 128 {chubby asian} {6-nov-2026} [0024]
 ~ Molly Pills - 133
 = ~ Murkovski Box - 78 [0004]
 MurkovskiStore - X
@@ -119,7 +120,7 @@ MyAnny - X {hides face/nice tits}
 NaughtyBlossom - X
 = ~ Nelary Love - 53 (24-oct-2026) [0005]
 ~ Nicole Doshi - 200+
-~ NF Busty - 200+
+= ~ NF Busty - 200+ [0022]
 ~ Only Love - 200+
 ~ Owl Crystal - 200+
 ~ Perv Mom - 200+
@@ -144,11 +145,12 @@ Sarah Harlow - 154
 ~ Sophia Locke - 31
 ~ Space Lady - 198
 Spirite Moon - 33 [ugly tats]
-~ Stacy Cruz - 26
+Stacy Cruz - X
 Sumiko Smile - X
 ~ Summer Vixen - 20
 ~ Summer_steph - 200+
 ~ Thelymia - 90
+= ~ TixTok Sluts - 200+ [0026]
 ~ TwixenXX - 31 {30-oct} [0003]
 ~ Vallery Ray - 200+
 ~ Verlonis - 157 {1-nov-2026}
@@ -162,3 +164,4 @@ YunaverseX - 200+ [ugly tats]
 Zoe Nell - X
 Zoe Wilde VIP - X
 Zoey Di Giacomo - 12
+= ~ Zoey Uso - 14 [0023]

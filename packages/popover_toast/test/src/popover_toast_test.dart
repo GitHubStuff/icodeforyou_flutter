@@ -1,4 +1,4 @@
-// packages/popover_toast/test/popover_toast_test.dart
+// packages/popover_toast/test/src/popover_toast_test.dart
 
 import 'package:test/test.dart';
 

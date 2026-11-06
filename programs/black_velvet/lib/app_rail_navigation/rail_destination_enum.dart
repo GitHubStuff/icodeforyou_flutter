@@ -1,4 +1,4 @@
-// packages/rail_navigation/lib/src/enum/rail_destination_enum.dart
+// programs/black_velvet/lib/app_rail_navigation/rail_destination_enum.dart
 
 import 'package:flutter/material.dart' show IconData, Icons;
 

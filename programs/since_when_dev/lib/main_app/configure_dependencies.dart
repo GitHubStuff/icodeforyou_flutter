@@ -1,4 +1,4 @@
-// programs/since_when_dev/lib/injection/injection.dart
+// programs/since_when_dev/lib/main_app/configure_dependencies.dart
 
 import 'package:get_it/get_it.dart' show GetIt;
 import 'package:status_bar_visibility/status_bar_visibility.dart'

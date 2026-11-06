@@ -1,4 +1,4 @@
-// packages/demo/lib/src/duration/duration_demo.dart
+// packages/demo/lib/duraton_demo/duration_demo.dart
 
 import 'package:caption_switch/caption_switch.dart' show CaptionSwitch;
 import 'package:ext_duration/ext_duration.dart' show DurationUnits, ExtDuration;

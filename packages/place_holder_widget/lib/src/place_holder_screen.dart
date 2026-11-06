@@ -1,3 +1,5 @@
+// packages/place_holder_widget/lib/src/place_holder_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:place_holder_widget/place_holder_widget.dart'
     show PlaceholderWidget;

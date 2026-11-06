@@ -1,4 +1,4 @@
-// packages/sequenced_animations/test/golden/sequenced_animations_golden_test.dart
+// packages/sequenced_animations/test/golden/sequenced_animations_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

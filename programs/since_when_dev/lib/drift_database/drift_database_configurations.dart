@@ -1,4 +1,4 @@
-// programs/since_when_dev/lib/app/since_when_configurations.dart
+// programs/since_when_dev/lib/drift_database/drift_database_configurations.dart
 
 import 'package:sincewhen_drift_framework/sincewhen_drift_framework.dart'
     show

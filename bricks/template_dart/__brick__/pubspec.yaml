@@ -13,7 +13,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  gap: ^3.0.1
+  gap: ^3.1.0
 {{/is_widget}}
 dev_dependencies:
 {{#is_widget}}

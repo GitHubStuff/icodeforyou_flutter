@@ -1,4 +1,4 @@
-// packages/popover_toast/test/golden/popover_toast_golden_test.dart
+// packages/popover_toast/test/golden/popover_toast_test.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

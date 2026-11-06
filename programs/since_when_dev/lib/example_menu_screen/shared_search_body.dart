@@ -1,4 +1,4 @@
-// programs/since_when_dev/lib/app_shared_navigation/shared_search_body.dart
+// programs/since_when_dev/lib/example_menu_screen/shared_search_body.dart
 import 'package:custom_widgets/custom_widgets.dart' show IceChip;
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';

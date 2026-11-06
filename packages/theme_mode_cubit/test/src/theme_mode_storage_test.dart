@@ -1,4 +1,4 @@
-// test/src/storage/theme_mode_storage_test.dart
+// packages/theme_mode_cubit/test/src/theme_mode_storage_test.dart
 
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_test/flutter_test.dart';

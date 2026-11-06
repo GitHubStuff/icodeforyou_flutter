@@ -1,4 +1,4 @@
-// packages/sequenced_animations/test/sequenced_animations_test.dart
+// packages/sequenced_animations/test/src/sequenced_animations_test.dart
 
 import 'package:test/test.dart';
 

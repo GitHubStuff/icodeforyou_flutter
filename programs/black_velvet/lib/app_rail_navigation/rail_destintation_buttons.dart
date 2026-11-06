@@ -1,4 +1,4 @@
-// packages/rail_navigation/lib/src/widgets/rail_destination_buttons.dart
+// programs/black_velvet/lib/app_rail_navigation/rail_destintation_buttons.dart
 
 import 'package:flutter/material.dart';
 

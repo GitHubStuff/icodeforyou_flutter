@@ -1,4 +1,4 @@
-// packages/theme_framework/lib/src/storage/theme_mode_storage.dart
+// packages/theme_mode_cubit/lib/src/theme_mode_storage.dart
 
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:shared_preferences/shared_preferences.dart'

@@ -1,4 +1,4 @@
-// programs/black_velvet/lib/screens/app_screen.dart
+// programs/black_velvet/lib/screens/rail_screen.dart
 
 import 'package:analog_clock_widget/analog_clock_widget.dart' show AnalogClock;
 import 'package:flutter/material.dart';

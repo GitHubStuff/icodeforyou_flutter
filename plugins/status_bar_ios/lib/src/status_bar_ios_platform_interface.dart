@@ -1,4 +1,4 @@
-// plugins/status_bar_ios/lib/status_bar_ios_platform_interface.dart
+// plugins/status_bar_ios/lib/src/status_bar_ios_platform_interface.dart
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:status_bar_ios/src/status_bar_ios_method_channel.dart';
 

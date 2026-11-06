@@ -1,4 +1,4 @@
-// packages/sequenced_animations/example/lib/sequenced_animations_demo.dart
+// packages/demo/lib/sequenced_animations_demo/sequenced_animations_demo.dart
 
 import 'package:flutter/material.dart';
 import 'package:sequenced_animations/sequenced_animations.dart'
