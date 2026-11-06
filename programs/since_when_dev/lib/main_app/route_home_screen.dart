@@ -9,6 +9,6 @@ final GoRoute _homeRoute = GoRoute(
     transitionDuration: _crossFadeDuration,
     transitionsBuilder: (_, animation, _, child) =>
         FadeTransition(opacity: animation, child: child),
-    child: const HomeScreen(),
+    child: MenuBarScreen(),
   ),
 );

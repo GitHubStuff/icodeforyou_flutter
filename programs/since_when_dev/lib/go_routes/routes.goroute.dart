@@ -84,7 +84,7 @@ GoRoute _splashRoute({required List<Future<void> Function()> tasks}) => GoRoute(
         final vis = getIt<StatusBarVisibilityAbstract>();
         unawaited(vis.setStatusBarVisibility(isHidden: false) as Future<void>?);
       },
-      child: const AnimatedSplashScreen(),
+      child: const DefaultSplashArt(),
     );
   },
 );

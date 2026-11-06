@@ -12,6 +12,9 @@ dependencies:
   ext_widget: ^1.0.0
   flutter:
     sdk: flutter
+  haptic_intensity: ^1.0.0
+  popover_toast: ^1.0.0
+  sequenced_animations: ^1.0.0
   status_bar_visibility: ^1.0.0
 
 dev_dependencies:

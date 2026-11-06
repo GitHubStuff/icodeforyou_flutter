@@ -1,12 +1,13 @@
 // programs/since_when_dev/lib/home/home_screen.dart
 
+import 'dart:async' show unawaited;
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:since_when_dev/main_app/configure_dependencies.dart' show getIt;
+import 'package:since_when_dev/menu_bar/menu_bar_screen.dart'
+    show MenuBarScreen;
 import 'package:status_bar_visibility_abstract/status_bar_visibility_abstract.dart'
     show StatusBarVisibilityAbstract;
-
-import 'status_bar_toggle_cubit.dart' show StatusBarToggleCubit;
 
 /// POC home: a single switch that hides or shows the status bar.
 class HomeScreen extends StatelessWidget {
@@ -18,31 +19,12 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<StatusBarToggleCubit>(
-      create: (_) => StatusBarToggleCubit(getIt<StatusBarVisibilityAbstract>()),
-      child: const _HomeBody(),
-    );
-  }
-}
-
-class _HomeBody extends StatelessWidget {
-  const _HomeBody();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Since When (dev)')),
-      body: Center(
-        child: BlocBuilder<StatusBarToggleCubit, bool>(
-          builder: (context, isHidden) => SwitchListTile(
-            title: const Text('Hide status bar'),
-            subtitle: Text(isHidden ? 'Hidden' : 'Visible'),
-            value: isHidden,
-            onChanged: (value) =>
-                context.read<StatusBarToggleCubit>().setHidden(isHidden: value),
-          ),
-        ),
+    unawaited(
+      getIt<StatusBarVisibilityAbstract>().setStatusBarVisibility(
+        isHidden: false,
       ),
     );
+    // This is the widget that appears after
+    return MenuBarScreen();
   }
 }

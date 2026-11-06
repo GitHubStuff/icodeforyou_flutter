@@ -8,10 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:splash_framework/splash_framework.dart' show SplashScreen;
-import 'package:status_bar_chameleon/status_bar_chameleon.dart'
-    show StatusBarChameleon;
 
-import '../screens/animated_splash_screen.dart' show AnimatedSplashScreen;
 import '../screens/rail_screen.dart' show RailScreen;
 
 part 'routes.goroute.dart';

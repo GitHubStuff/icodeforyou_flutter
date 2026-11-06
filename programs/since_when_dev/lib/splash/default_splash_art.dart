@@ -1,40 +1,44 @@
 // programs/since_when_dev/lib/splash/default_splash_art.dart
 import 'package:flutter/widgets.dart';
-import 'package:widget_animation_framework/widget_animation_framework.dart'
-    show AnimationCombinerOnWidget;
+import 'package:sequenced_animations/sequenced_animations.dart'
+    show AnimationRange, SequencedGrow, SequencedOpacity, SequencedRotation;
+import 'package:since_when_dev/gen/assets.gen.dart' show Assets;
 
-import '../gen/assets.gen.dart' show Assets;
-
-/// {@template default_splash_screen_child}
-/// The default animated child displayed by the splash screen.
-///
-/// Renders the app icon as a 240-logical-pixel circular image, driven by
-/// [animation] through an [AnimationCombinerOnWidget] that simultaneously
-/// fades in (opacity 0 → 1), scales up (0 → 1), and completes one full
-/// rotation (turns 1 → 2) as the animation progresses.
-/// {@endtemplate}
 class DefaultSplashArt extends StatelessWidget {
   /// {@macro default_splash_screen_child}
   const DefaultSplashArt({
-    required this.animation,
     super.key,
   });
 
-  /// The animation that drives the combined opacity, scale, and rotation
-  /// effects, typically supplied by the owning splash screen's controller.
-  final Animation<double> animation;
-
   @override
-  Widget build(BuildContext context) => AnimationCombinerOnWidget(
-    animation: animation,
-    opacity: Tween<double>(begin: 0, end: 1),
-    scale: Tween<double>(begin: 0, end: 1),
-    turns: Tween<double>(begin: 1, end: 2),
-    child: Center(
-      child: SizedBox.square(
-        dimension: 240,
-        child: ClipOval(child: Assets.iconer.image(fit: BoxFit.cover)),
+  Widget build(BuildContext context) => SequencedOpacity(
+    ranges: _fadeRanges,
+    child: SequencedRotation(
+      ranges: _rotateRanges,
+      child: SequencedGrow(
+        ranges: _growRanges,
+        child: Center(
+          child: SizedBox.square(
+            dimension: 240,
+            child: ClipOval(child: Assets.iconer.image(fit: BoxFit.cover)),
+          ),
+        ),
       ),
     ),
   );
 }
+
+List<AnimationRange> _fadeRanges = [
+  const AnimationRange(0.3, 0.5, duration: Duration(milliseconds: 950)),
+  const AnimationRange(0.5, 1, duration: Duration(milliseconds: 100)),
+];
+
+List<AnimationRange> _growRanges = [
+  const AnimationRange(0, 1.5, duration: Duration(milliseconds: 950)),
+  const AnimationRange(1.5, 1, duration: Duration(milliseconds: 100)),
+];
+
+List<AnimationRange> _rotateRanges = [
+  const AnimationRange(0.3, 0.85, duration: Duration(milliseconds: 850)),
+  const AnimationRange(0.85, 1, duration: Duration(milliseconds: 200)),
+];

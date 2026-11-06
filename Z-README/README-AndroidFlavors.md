@@ -7,9 +7,10 @@ Version number → user-facing Android version
 API level      → developer-facing SDK level
 Codename       → dessert/internal release name
 ```
-w
----
- In Kotlin / Android code
+
+## w
+
+In Kotlin / Android code
 
 ```kotlin
 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
@@ -99,15 +100,15 @@ if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
 
 ### Common constants
 
-| Constant | Android Version | API |
-|---|---:|---:|
-| `Build.VERSION_CODES.Q` | Android 10 | 29 |
-| `Build.VERSION_CODES.R` | Android 11 | 30 |
-| `Build.VERSION_CODES.S` | Android 12 | 31 |
-| `Build.VERSION_CODES.S_V2` | Android 12L | 32 |
-| `Build.VERSION_CODES.TIRAMISU` | Android 13 | 33 |
-| `Build.VERSION_CODES.UPSIDE_DOWN_CAKE` | Android 14 | 34 |
-| `Build.VERSION_CODES.VANILLA_ICE_CREAM` | Android 15 | 35 |
+| Constant                                | Android Version | API |
+| --------------------------------------- | --------------: | --: |
+| `Build.VERSION_CODES.Q`                 |      Android 10 |  29 |
+| `Build.VERSION_CODES.R`                 |      Android 11 |  30 |
+| `Build.VERSION_CODES.S`                 |      Android 12 |  31 |
+| `Build.VERSION_CODES.S_V2`              |     Android 12L |  32 |
+| `Build.VERSION_CODES.TIRAMISU`          |      Android 13 |  33 |
+| `Build.VERSION_CODES.UPSIDE_DOWN_CAKE`  |      Android 14 |  34 |
+| `Build.VERSION_CODES.VANILLA_ICE_CREAM` |      Android 15 |  35 |
 
 ---
 
@@ -118,3 +119,7 @@ Users talk in Android versions.
 Developers code against API levels.
 Codenames are mostly historical/internal labels.
 ```
+
+## Finally
+
+**🌈 Be kind to each other**

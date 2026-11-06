@@ -46,10 +46,9 @@ GoRoute _splashRoute() => GoRoute(
       tasks: const [],
       onComplete: () {
         context.go(RoutesFramework.app);
-        unawaited(StatusBarChameleon.setStatusBarHidden(hidden: false));
       },
       onError: (_, _) => context.go(RoutesFramework.crash),
-      child: const AnimatedSplashScreen(),
+      child: const Text('Shit Fuck'),
     );
   },
 );

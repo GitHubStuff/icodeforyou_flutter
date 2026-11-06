@@ -19,7 +19,6 @@ dependencies:
   google_fonts: ^8.2.1
   haptic_intensity: ^1.0.0
   platform_utils: ^1.0.0
-  status_bar_chameleon: ^1.0.0
   three_d_sphere: ^1.0.0
 
 dev_dependencies:

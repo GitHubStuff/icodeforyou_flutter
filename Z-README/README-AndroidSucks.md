@@ -375,3 +375,7 @@ This setup gets:
 ```
 
 To hide the time/battery line, Android requires hiding system UI. That can trigger the "Viewing full screen" message.
+
+## Finally
+
+**🌈 Be kind to each other**

@@ -9,7 +9,6 @@ environment:
 
 dependencies:
   analog_clock_widget: ^1.0.0
-  animated_transparency: ^1.0.0
   app_navigation: ^1.0.0
   caption_switch: ^1.0.0
   custom_widgets: ^1.0.0
@@ -25,6 +24,7 @@ dependencies:
   ping_pong: ^1.0.0
   place_holder_widget: ^1.0.1
   prism_bubble_widget: ^1.0.0
+  sequenced_animations: ^1.0.0
   shared_preferences: ^2.5.5
   sincewhen_widgets: ^1.0.0
   sliders: ^1.0.0

@@ -32,3 +32,7 @@ The developer story differs by platform:
 - **iOS / macOS** — CoreBluetooth
 - **Android** — the Android BLE APIs
 - **Flutter (cross-platform)** — a plugin such as `flutter_blue_plus`
+
+## Finally
+
+**🌈 Be kind to each other**

@@ -14,8 +14,7 @@ import 'package:since_when_dev/main_app/configure_dependencies.dart' show getIt;
 import 'package:since_when_dev/navigation/dock_items.dart' show DockItems;
 import 'package:since_when_dev/navigation/rail_button_sizes.dart'
     show RailButtonSize;
-import 'package:since_when_dev/splash/animated_splash_screen.dart'
-    show AnimatedSplashScreen;
+import 'package:since_when_dev/splash/default_splash_art.dart' show DefaultSplashArt;
 import 'package:splash_framework/splash_framework.dart' show SplashScreen;
 import 'package:status_bar_visibility_abstract/status_bar_visibility_abstract.dart'
     show StatusBarVisibilityAbstract;

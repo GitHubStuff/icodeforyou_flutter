@@ -45,7 +45,7 @@ class PlaceholderWidget extends StatelessWidget {
         );
 
   Widget _asset() =>
-      header ??
+      body ??
       Assets.placeholder512x512.image(
         // Constrains in-memory decode size (in physical pixels)
         cacheWidth: 256,

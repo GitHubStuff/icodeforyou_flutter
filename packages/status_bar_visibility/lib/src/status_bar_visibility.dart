@@ -2,7 +2,8 @@
 
 import 'dart:async';
 
-import 'package:custom_errors/custom_errors.dart' show PluginError;
+import 'package:custom_errors/custom_errors.dart'
+    show AlreadyInitializedError, NotInitializedError, PluginError;
 import 'package:flutter/cupertino.dart';
 import 'package:platform_tools/platform_tools.dart' show OSPlatform;
 import 'package:status_bar_android/status_bar_android.dart'
@@ -18,8 +19,8 @@ class StatusBarVisibility implements StatusBarVisibilityAbstract {
   /// Creates a new [StatusBarVisibility] instance.
   StatusBarVisibility();
 
-  bool _isInitialized = false;
-  bool? _isHidden;
+  static bool _isInitialized = false;
+  static bool? _isHidden;
 
   /// Whether the status bar visibility state has been successfully set at
   /// least once.
@@ -30,7 +31,18 @@ class StatusBarVisibility implements StatusBarVisibilityAbstract {
   ///
   /// Returns `false` if the visibility has not yet been initialized.
   @override
-  bool isBarHidden() => _isHidden ?? false;
+  bool isBarHidden() {
+    if (_isHidden != null) return _isHidden!;
+    throw NotInitializedError('StatusBarVisibility');
+  }
+
+  @override
+  Future<bool> initialize({required bool isHidden}) async {
+    if (_isInitialized) throw AlreadyInitializedError('StatusBarVisibility');
+    _isInitialized = await _dispatchPlatformSetVisibility(isHidden: isHidden);
+    if (_isInitialized) _isHidden = isHidden;
+    return _isInitialized;
+  }
 
   /// Sets the visibility of the status bar.
   ///
@@ -40,12 +52,10 @@ class StatusBarVisibility implements StatusBarVisibilityAbstract {
   /// Throws a [PluginError] if the underlying platform call fails.
   @override
   Future<bool> setStatusBarVisibility({required bool isHidden}) async {
-    final success = await _dispatchPlatformSetVisibility(isHidden: isHidden);
-    if (success) {
-      _isHidden = isHidden;
-      _isInitialized = true;
-    }
-    return success;
+    if (_isHidden == null) throw NotInitializedError('StatusBarVisiblity');
+    _isInitialized = await _dispatchPlatformSetVisibility(isHidden: isHidden);
+    if (_isInitialized) _isHidden = isHidden;
+    return _isInitialized;
   }
 
   /// Dispatches the visibility update to the active platform's status bar

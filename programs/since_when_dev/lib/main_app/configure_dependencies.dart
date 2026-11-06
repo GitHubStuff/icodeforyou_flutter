@@ -27,16 +27,16 @@ void configureDependencies({GetIt? locator}) {
   _registerThemeCubit(container);
 }
 
-/// The theme cubit to control or query for the active theme
-void _registerThemeCubit(GetIt container) {
-  container.registerSingleton<ThemeModeCubit>(
-    ThemeModeCubit(storage: ThemeModeStorage(prefs: null)),
-  );
-}
-
 /// Controls the visibility of the StatusBar
 void _registerStatusBarVisibilityServices(GetIt container) {
   container.registerSingleton<StatusBarVisibilityAbstract>(
     StatusBarVisibility(),
+  );
+}
+
+/// The theme cubit to control or query for the active theme
+void _registerThemeCubit(GetIt container) {
+  container.registerSingleton<ThemeModeCubit>(
+    ThemeModeCubit(storage: ThemeModeStorage(prefs: null)),
   );
 }

@@ -5,17 +5,18 @@
 /// implementations (e.g., iOS, Android, macOS, Web) must implement.
 library;
 
-import 'dart:async' show FutureOr;
-
 /// Abstract contract defining methods to configure and toggle status
 /// bar visibility.
 abstract class StatusBarVisibilityAbstract {
+  /// Initializes and records the state of Status Bar visilibity
+  Future<bool> initialize({required bool isHidden});
+
   /// Toggles the status bar's visibility.
   ///
   /// Pass `isHidden: true` to conceal the status bar, or `isHidden: false`
   /// to make it visible. Returns `true` if the operation was handled
   /// successfully.
-  FutureOr<bool> setStatusBarVisibility({required bool isHidden});
+  Future<bool> setStatusBarVisibility({required bool isHidden});
 
   /// Get the state of the status bar.
   bool isBarHidden();
